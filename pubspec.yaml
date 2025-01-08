@@ -1,0 +1,42 @@
+name: magic_epaper_app
+description: "A new Flutter project."
+
+# Prevent accidental publishing to pub.dev.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  english_words: ^4.0.0
+  provider: ^6.0.0
+  # nfc_manager: ^3.5.0
+  flutter_nfc_kit: ^3.5.2
+  convert: ^3.1.2
+  flutter_svg_provider: ^1.0.7
+  matrix2d: ^1.0.4
+  image: ^4.3.0
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Enable generation of localized Strings from arb files.
+  generate: true
+
+  assets:
+    # Add assets from the images directory to the application.
+    - assets/images/
