@@ -2,6 +2,17 @@
 
 A new Flutter project.
 
+## Table of Contents
+- [Getting Started](#getting-started)
+- [Assets](#assets)
+- [Localization](#localization)
+- [Installation Steps](#installation-steps)
+  - [Prerequisites](#prerequisites)
+  - [Clone the Repository](#clone-the-repository)
+  - [Install Dependencies](#install-dependencies)
+- [Running the Project](#running-the-project)
+
+
 ## Getting Started
 
 This project is a starting point for a Flutter application that follows the
