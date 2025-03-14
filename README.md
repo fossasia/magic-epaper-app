@@ -46,13 +46,13 @@ Android Studio or VS Code: Recommended IDEs for Flutter development.
 Android Emulator or Physical Device: For running the application.
 
 
-1.Clone the Repository
+1. Clone the Repository
 ```
 git clone https://github.com/fossasia/magic-epaper-app
 cd magic-epaper-app
 ```
 
-2.Install Dependencies
+2. Install Dependencies
 ```
 flutter pub get
 ```
