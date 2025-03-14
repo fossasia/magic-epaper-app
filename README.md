@@ -37,14 +37,15 @@ To support additional languages, please visit the tutorial on
 
 Flutter SDK: Install from Flutter's official website.
 
-Dart SDK: Included with Flutter, but verify installation using dart --version.
+Dart SDK: Included with Flutter, but verify installation using ```dart --version.```
 
 Git: Required for cloning the repository. Install from Git's official site.
 
 Android Studio or VS Code: Recommended IDEs for Flutter development.
 
-
 Android Emulator or Physical Device: For running the application.
+
+
 1.Clone the Repository
 ```
 git clone https://github.com/fossasia/magic-epaper-app
