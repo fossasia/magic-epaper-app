@@ -37,8 +37,8 @@ class MyAppState extends ChangeNotifier {
 class MyHomePage extends StatelessWidget {
   void nfc_write() async {
     ImageHandler imageHandler = ImageHandler();
-    // imageHandler.loadRaster('assets/images/tux-fit.png');
-    await imageHandler.loadRaster('assets/images/black-red.png');
+    // Load an SVG image
+    await imageHandler.loadSVG('assets/images/example.svg');
     var (red, black) = imageHandler.toEpdBiColor();
 
     int chunkSize = 220; // NFC tag can handle 255 bytes per chunk.
