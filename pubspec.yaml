@@ -14,7 +14,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-
+  curved_navigation_bar: ^1.0.6
   english_words: ^4.0.0
   provider: ^6.0.0
   # nfc_manager: ^3.5.0
@@ -40,3 +40,8 @@ flutter:
   assets:
     # Add assets from the images directory to the application.
     - assets/images/
+
+  fonts:
+     - family: Michroma
+       fonts:
+         - asset: fonts/Michroma-Regular.ttf
