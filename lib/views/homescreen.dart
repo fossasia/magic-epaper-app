@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
               onPressed: () async {
                 try {
-                   NfcHandler().nfc_write();
+                   await NfcHandler().nfc_write();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Data transfer started!')),
                   );
