@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 class NfcHandler
 {
-  void nfc_write() async {
+  Future<void> nfc_write() async {
     ImageHandler imageHandler = ImageHandler();
     // imageHandler.loadRaster('assets/images/tux-fit.png');
     await imageHandler.loadRaster('assets/images/black-red.png');
