@@ -12,6 +12,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_colorpicker: ^1.0.3
   flutter_localizations:
     sdk: flutter
   curved_navigation_bar: ^1.0.6

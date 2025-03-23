@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/providers/app_state.dart';
-import 'package:magic_epaper_app/nfc_handler.dart';
-import 'package:provider/provider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:magic_epaper_app/views/share.dart';
+import 'package:magic_epaper_app/views/settings.dart';
+import 'package:magic_epaper_app/views/camera.dart';
+import 'package:magic_epaper_app/views/drawing.dart';
+
 
 class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+
 class _MyHomePageState extends State<MyHomePage> {
   int _page = 0;
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
+    final List<Widget> _pages = [
+      DrawingBoard(),         // Page 1
+    Camera(),       // Page 2
+    Share(),        // Page 3
+    Settings(),     // Page 4
+  ];
+
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
 
     return Scaffold(
       appBar: AppBar(
@@ -31,31 +40,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
 
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('A random idea:'),
-            Text(appState.current.asLowerCase),
-            ElevatedButton(
-              onPressed: () async {
-                try {
-                   await NfcHandler().nfc_write();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Data transfer started!')),
-                  );
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error: $e')),
-                  );
-                }
-              },
+      body: _pages[_page],
 
-              child: Text('Start transfer'),
-            ),
-          ],
-        ),
-      ),
       bottomNavigationBar: CurvedNavigationBar(
         color: Colors.red,
         backgroundColor: Colors.transparent,
