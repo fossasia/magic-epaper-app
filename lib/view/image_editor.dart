@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:magic_epaper_app/view/widget/image_list.dart';
 import 'package:provider/provider.dart';
 
-import 'package:magic_epaper_app/provider/load_image.dart';
+import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
+import 'package:magic_epaper_app/util/nfc_handler.dart';
+import 'package:magic_epaper_app/provider/image_loader.dart';
+import 'package:magic_epaper_app/util/epd/edp.dart';
 
-class EditImage extends StatelessWidget {
-  const EditImage({super.key});
+class ImageEditor extends StatelessWidget {
+  final Epd epd;
+  const ImageEditor({super.key, required this.epd});
 
   @override
   Widget build(BuildContext context) {
   var imgLoader = context.watch<ImageLoader>();
+  final imgList = ImageList(epd: epd);
 
     return Scaffold(
       appBar: AppBar(
@@ -16,7 +22,7 @@ class EditImage extends StatelessWidget {
         actions: <Widget>[
           TextButton(
             onPressed: () {
-              imgLoader.pickImage(width: 240, height: 416); // TODO: change these constants to the selected display size once it's implemented
+              imgLoader.pickImage(width: epd.width, height: epd.height);
             },
             child: const Text("Import Image"),
           ),
@@ -27,20 +33,14 @@ class EditImage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-              // child: Image(image: image, height: 100, isAntiAlias: false,),
-              child: imgLoader.orgCroppedImg,
-            ),
-            Container(
-              child:  imgLoader.processedImgs,
-            ),
+            imgList,
 
             Expanded(child:Container()),
 
             ElevatedButton(
               onPressed: () {
-                imgLoader.writeToNfc();
+                final (red, black) = ImageProcessing.toEpdBiColor(imgList.processedImgs[1]);
+                Protocol(epd: epd).writeImage(red, black);
               },
               child: const Text('Start Transfer'),
             ),

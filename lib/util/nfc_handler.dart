@@ -5,9 +5,9 @@ import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
+import 'package:magic_epaper_app/util/epd/edp.dart';
 
-class MagicEpd {
-
+class Protocol {
   // STMicroelectronics
   static const default_req_flags = 0x20;
 
@@ -22,14 +22,11 @@ class MagicEpd {
   static const epd_cmd = 0x00; // command packet, pull the epd C/D to Low (CMD)
   static const epd_send = 0x01; // data packet, pull the epd C/D to High (DATA)
 
-  // UC8253 commands/registers,
-  // define in the epaper display controller (UC8253) reference manual
-  static const DATA_START_TRANSMISSION_1 = 0x10;
-  static const DISPLAY_REFRESH = 0x12;
-  static const DATA_START_TRANSMISSION_2 = 0x13;
+  final Epd epd;
 
-  static Future<Uint8List> _transceive(nfcvCmd, Uint8List tagId, Uint8List msg) async
-  {
+  Protocol({required this.epd});
+
+  Future<Uint8List> _transceive(nfcvCmd, Uint8List tagId, Uint8List msg) async {
     var b = BytesBuilder();
 
     b.addByte(default_req_flags);
@@ -47,19 +44,16 @@ class MagicEpd {
     return await FlutterNfcKit.transceive(raw, timeout: Duration(seconds: 5));
   }
 
-  static Future<Uint8List> _writeMsg(Uint8List tagId, Uint8List msg) async
-  {
+  Future<Uint8List> _writeMsg(Uint8List tagId, Uint8List msg) async {
     return await _transceive(write_msg_cmd, tagId, msg);
   }
 
-  static Future<Uint8List> _readMsg(Uint8List tagId) async
-  {
+  Future<Uint8List> _readMsg(Uint8List tagId) async {
     // Send 0 will return all message present in the tag's mailbox
     return await _transceive(read_msg_cmd, tagId, Uint8List.fromList([0]));
   }
 
-  static Future<Uint8List> _readDynCfg(Uint8List tagId, int address) async
-  {
+  Future<Uint8List> _readDynCfg(Uint8List tagId, int address) async {
     var b = BytesBuilder();
 
     b.addByte(default_req_flags);
@@ -78,8 +72,7 @@ class MagicEpd {
     return result;
   }
 
-  static Future<Uint8List> _writeDynCfg(Uint8List tagId, int address, int value) async
-  {
+  Future<Uint8List> _writeDynCfg(Uint8List tagId, int address, int value) async {
     var b = BytesBuilder();
 
     b.addByte(default_req_flags);
@@ -99,41 +92,39 @@ class MagicEpd {
     return result;
   }
 
-  static Future<bool> hasI2cGatheredMsg(Uint8List tagId) async
-  {
+  Future<bool> hasI2cGatheredMsg(Uint8List tagId) async {
     return ((await _readDynCfg(tagId, 0x0d)).elementAt(1) & 0x04) != 0x04;
   }
 
-  static Future<Uint8List> enableEnergyHarvesting(Uint8List tagId) async
-  {
+  Future<Uint8List> enableEnergyHarvesting(Uint8List tagId) async {
     return await _writeDynCfg(tagId, 0x02, 0x01);
   }
 
-  static void _sleep()
+  void _sleep()
   {
     sleep(Duration(milliseconds: 20));
   }
 
-static Future<void> wait4msgGathered(Uint8List tagId) async {
-  var attempt = 4;
-  while (attempt > 0) {
-    try {
-      if (await hasI2cGatheredMsg(tagId)) {
-        return; // Exit successfully if message is gathered
+  Future<void> wait4msgGathered(Uint8List tagId) async {
+    var attempt = 4;
+    while (attempt > 0) {
+      try {
+        if (await hasI2cGatheredMsg(tagId)) {
+          return; // Exit successfully if message is gathered
+        }
+      } catch (e) {
+        print("Error checking message: $e");
+        // Decrement attempts even on error
       }
-    } catch (e) {
-      print("Error checking message: $e");
-      // Decrement attempts even on error
+      attempt--;
+      _sleep(); // Wait before the next attempt
     }
-    attempt--;
-    _sleep(); // Wait before the next attempt
+
+    // If the loop completes without returning, it means the attempts timed out
+    throw "Timeout waiting for I2C message"; 
   }
 
-  // If the loop completes without returning, it means the attempts timed out
-  throw "Timeout waiting for I2C message"; 
-}
-
-  static Future<void> writePixel(Uint8List id, List<Uint8List> chunks, int cmd) async {
+  Future<void> writePixel(Uint8List id, List<Uint8List> chunks, int cmd) async {
     await _writeMsg(id, Uint8List.fromList([epd_cmd, cmd])); // enter transmission 1
     _sleep();
     for (int i = 0; i < chunks.length; i++) {
@@ -143,11 +134,10 @@ static Future<void> wait4msgGathered(Uint8List tagId) async {
       await _writeMsg(id, chunk);
       await wait4msgGathered(id);
     }
-    print("All chunks written successfully.");
+    print("Transferred successfully.");
   }
 
-  static Future<void> writeChunk(List<Uint8List> blackChunks, List<Uint8List> redChunks) async
-  {
+  Future<void> writeChunk(List<Uint8List> blackChunks, List<Uint8List> redChunks) async {
     var availability = await FlutterNfcKit.nfcAvailability;
     if (availability != NFCAvailability.available) {
       print("Please turn on the NFC");
@@ -160,14 +150,14 @@ static Future<void> wait4msgGathered(Uint8List tagId) async {
     if (tag.type == NFCTagType.iso15693) {
       await enableEnergyHarvesting(id);
       sleep(Duration(seconds: 2)); // waiting for the power supply stable
-      await writePixel(id, blackChunks, DATA_START_TRANSMISSION_1);
-      await writePixel(id, redChunks, DATA_START_TRANSMISSION_2);
-      await _writeMsg(id, Uint8List.fromList([epd_cmd, DISPLAY_REFRESH]));
+      await writePixel(id, blackChunks, epd.controller.startTransmission1);
+      await writePixel(id, redChunks, epd.controller.startTransmission2);
+      await _writeMsg(id, Uint8List.fromList([epd_cmd, epd.controller.refresh]));
     }
     await FlutterNfcKit.finish();
   }
 
-  static List<Uint8List> divideUint8List(Uint8List data, int chunkSize) {
+  List<Uint8List> divideUint8List(Uint8List data, int chunkSize) {
     List<Uint8List> chunks = [];
     print(data);
     for (int i = 0; i < data.length; i += chunkSize) {
@@ -176,5 +166,12 @@ static Future<void> wait4msgGathered(Uint8List tagId) async {
       chunks.add(chunk);
     }
     return chunks;
+  }
+
+  void writeImage(Uint8List red, Uint8List black) {
+    int chunkSize = 220; // NFC tag can handle 255 bytes per chunk.
+    List<Uint8List> redChunks = divideUint8List(red, chunkSize);
+    List<Uint8List> blackChunks = divideUint8List(black, chunkSize);
+    writeChunk(blackChunks, redChunks);
   }
 }
