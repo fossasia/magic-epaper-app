@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
 import 'package:provider/provider.dart';
 
-import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
-import 'package:magic_epaper_app/util/nfc_handler.dart';
+import 'package:magic_epaper_app/util/protocol.dart';
 import 'package:magic_epaper_app/provider/image_loader.dart';
 import 'package:magic_epaper_app/util/epd/edp.dart';
 
@@ -39,8 +38,7 @@ class ImageEditor extends StatelessWidget {
 
             ElevatedButton(
               onPressed: () {
-                final (red, black) = ImageProcessing.toEpdBiColor(imgList.processedImgs[1]);
-                Protocol(epd: epd).writeImage(red, black);
+                Protocol(epd: epd).writeImages(imgList.processedImgs[1]);
               },
               child: const Text('Start Transfer'),
             ),

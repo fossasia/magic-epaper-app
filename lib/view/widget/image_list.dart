@@ -39,7 +39,7 @@ class ImageList extends StatelessWidget {
 
   void processImg(img.Image image) {
     final imgProcessing = ImageProcessing(image);
-    if (epd.colors.contains(Colors.red)) processedImgs.add(imgProcessing.extractRed());
+    if (epd.colors.contains(Colors.red)) processedImgs.add(imgProcessing.extract(Colors.red));
     // processedImgs.add(imgProcessing.experiment());
     if (epd.colors.contains(Colors.red)) processedImgs.add(imgProcessing.rwbTriColorDither());
     processedImgs.add(imgProcessing.binaryDither());

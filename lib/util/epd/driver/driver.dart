@@ -1,7 +1,4 @@
-
-
 abstract class Driver {
-  late int startTransmission1;
-  late int refresh;
-  late int startTransmission2;
+  List<int> get transmissionLines;
+  int get refresh;
 }

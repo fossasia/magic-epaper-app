@@ -4,6 +4,8 @@ import 'package:magic_epaper_app/util/epd/gdey037z03bw.dart';
 import 'package:magic_epaper_app/util/epd/gdey037z03.dart';
 
 class SelectDisplay extends StatelessWidget {
+  const SelectDisplay({super.key});
+
   @override
   Widget build(BuildContext context) {
 
@@ -17,13 +19,13 @@ class SelectDisplay extends StatelessWidget {
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => ImageEditor(epd: Gdey037z03())));
               },
-              child: const Text('240x416 B/W/R (UC8252)'),
+              child: Text(Gdey037z03().description),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => ImageEditor(epd: Gdey037z03BW())));
               },
-              child: const Text('240x416 B/W (UC8252)'),
+              child: Text(Gdey037z03BW().description),
             ),
           ],
         ),

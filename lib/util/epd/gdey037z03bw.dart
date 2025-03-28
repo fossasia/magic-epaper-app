@@ -1,10 +1,12 @@
-
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/util/epd/driver/uc8252.dart';
 import 'driver/driver.dart';
 import 'edp.dart';
 
-class Gdey037z03BW implements Epd {
+class Gdey037z03BW extends Epd {
+  @override
+  String get description => '240x416 BW (UC8252)';
+
   @override
   get width => 240; // pixels
   
@@ -16,9 +18,4 @@ class Gdey037z03BW implements Epd {
 
   @override
   get controller => Uc8252() as Driver;
-
-  @override
-  noSuchMethod(Invocation invocation) {
-    return super.noSuchMethod(invocation);
-  }
 }
