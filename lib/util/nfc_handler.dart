@@ -8,28 +8,31 @@ import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:magic_epaper_app/util/epd/edp.dart';
 
 class Protocol {
-  // STMicroelectronics
-  static const default_req_flags = 0x20;
 
   // ST25DV commands/registers, define in the ST25DV reference manual
   static const write_msg_cmd = 0xaa;
   static const read_msg_cmd = 0xac;
   static const read_dyncfg_cmd = 0xad;
   static const write_dyncfg_cmd = 0xae;
-  static const ic_mfg_code = 0x02;
+  static const ic_mfg_code = 0x02; // STMicroelectronics
 
   // Firmware commands
   static const epd_cmd = 0x00; // command packet, pull the epd C/D to Low (CMD)
   static const epd_send = 0x01; // data packet, pull the epd C/D to High (DATA)
 
+  final defReqFlags = Iso15693RequestFlags(
+    address: true,
+    highDataRate: true,
+  );
   final Epd epd;
+  final timeout = const Duration(seconds: 5);
 
   Protocol({required this.epd});
 
   Future<Uint8List> _transceive(nfcvCmd, Uint8List tagId, Uint8List msg) async {
     var b = BytesBuilder();
 
-    b.addByte(default_req_flags);
+    b.addByte(defReqFlags.encode());
     b.addByte(nfcvCmd);
     b.addByte(ic_mfg_code);
 
@@ -39,9 +42,8 @@ class Protocol {
     b.add(msg);
 
     var raw = b.toBytes();
-    print("transceive: ${raw}");
 
-    return await FlutterNfcKit.transceive(raw, timeout: Duration(seconds: 5));
+    return await FlutterNfcKit.transceive(raw, timeout: timeout);
   }
 
   Future<Uint8List> _writeMsg(Uint8List tagId, Uint8List msg) async {
@@ -56,7 +58,7 @@ class Protocol {
   Future<Uint8List> _readDynCfg(Uint8List tagId, int address) async {
     var b = BytesBuilder();
 
-    b.addByte(default_req_flags);
+    b.addByte(defReqFlags.encode());
     b.addByte(read_dyncfg_cmd);
     b.addByte(ic_mfg_code);
 
@@ -65,17 +67,14 @@ class Protocol {
     b.addByte(address);
 
     var raw = b.toBytes();
-    print("read dynamic cfg: ${raw}");
 
-    var result = await FlutterNfcKit.transceive(raw, timeout: Duration(seconds: 5));
-    print(result);
-    return result;
+    return await FlutterNfcKit.transceive(raw, timeout: timeout);
   }
 
   Future<Uint8List> _writeDynCfg(Uint8List tagId, int address, int value) async {
     var b = BytesBuilder();
 
-    b.addByte(default_req_flags);
+    b.addByte(defReqFlags.encode());
     b.addByte(write_dyncfg_cmd);
     b.addByte(ic_mfg_code);
 
@@ -85,11 +84,8 @@ class Protocol {
     b.addByte(value);
 
     var raw = b.toBytes();
-    print("write dynamic cfg: ${raw}");
 
-    var result = await FlutterNfcKit.transceive(raw, timeout: Duration(seconds: 5));
-    print(result);
-    return result;
+    return await FlutterNfcKit.transceive(raw, timeout: timeout);
   }
 
   Future<bool> hasI2cGatheredMsg(Uint8List tagId) async {
@@ -102,7 +98,7 @@ class Protocol {
 
   void _sleep()
   {
-    sleep(Duration(milliseconds: 20));
+    sleep(const Duration(milliseconds: 20));
   }
 
   Future<void> wait4msgGathered(Uint8List tagId) async {
@@ -143,13 +139,13 @@ class Protocol {
       print("Please turn on the NFC");
     }
 
-    var tag = await FlutterNfcKit.poll(timeout: Duration(seconds: 5));
+    var tag = await FlutterNfcKit.poll(timeout: timeout);
     print(jsonEncode(tag));
     var id = Uint8List.fromList(hex.decode(tag.id));
 
     if (tag.type == NFCTagType.iso15693) {
       await enableEnergyHarvesting(id);
-      sleep(Duration(seconds: 2)); // waiting for the power supply stable
+      sleep(const Duration(seconds: 2)); // waiting for the power supply stable
       await writePixel(id, blackChunks, epd.controller.startTransmission1);
       await writePixel(id, redChunks, epd.controller.startTransmission2);
       await _writeMsg(id, Uint8List.fromList([epd_cmd, epd.controller.refresh]));
