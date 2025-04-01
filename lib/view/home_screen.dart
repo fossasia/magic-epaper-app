@@ -8,6 +8,8 @@ class SelectDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final gdey037z03 = Gdey037z03();
+    final gdey037z03bw = Gdey037z03BW();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Select Display')),
@@ -17,15 +19,15 @@ class SelectDisplay extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ImageEditor(epd: Gdey037z03())));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ImageEditor(epd: gdey037z03)));
               },
-              child: Text(Gdey037z03().description),
+              child: Text(gdey037z03.description),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ImageEditor(epd: Gdey037z03BW())));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ImageEditor(epd: gdey037z03bw)));
               },
-              child: Text(Gdey037z03BW().description),
+              child: Text(gdey037z03bw.description),
             ),
           ],
         ),

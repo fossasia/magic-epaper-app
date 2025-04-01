@@ -58,14 +58,14 @@ class Protocol {
           return; // Exit successfully if message is gathered
         }
       } catch (e) {
-        throw "Error checking message: $e";
+        throw Exception("Error checking message: $e");
       }
       attempt--;
       await _sleep(); // Wait before the next attempt
     }
 
     // If the loop completes without returning, it means the attempts timed out
-    throw "Timeout waiting for I2C message"; 
+    throw Exception("Timeout waiting for I2C message");
   }
 
   Future<void> writeFrame(Uint8List id, Uint8List frame, int cmd) async {

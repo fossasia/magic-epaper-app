@@ -5,17 +5,18 @@ import 'package:image/image.dart' as img;
 
 class ExtractQuantizer extends img.Quantizer {
   final img.Palette _palette;
-  final Color toBeExtract;
+  late final HSVColor _toBeExtract;
   final double hThres, sThres, vThres;
 
   ExtractQuantizer({
-    this.toBeExtract = Colors.red,
+    Color toBeExtract = Colors.red,
     this.hThres = 40,
     this.sThres = 0.5,
     this.vThres = 0.5,
   }) : _palette = img.PaletteUint8(2, 3) {
     _palette.setRgb(0, toBeExtract.red, toBeExtract.green, toBeExtract.blue);
     _palette.setRgb(1, 255, 255, 255);
+    _toBeExtract = HSVColor.fromColor(toBeExtract);
   }
 
   @override
@@ -71,6 +72,6 @@ class ExtractQuantizer extends img.Quantizer {
     final dartColor = Color.fromRGBO(c.r as int, c.g as int, c.b as int, c.aNormalized as double);
     final hsvColor = HSVColor.fromColor(dartColor);
 
-    return _hsvColorThreshold(hsvColor, HSVColor.fromColor(toBeExtract));
+    return _hsvColorThreshold(hsvColor, _toBeExtract);
   }
 }

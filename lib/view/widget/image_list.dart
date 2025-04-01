@@ -15,7 +15,7 @@ class ImageList extends StatefulWidget {
 }
 
 class _ImageList extends State<ImageList> {
-  int imgSelection = 1;
+  int imgSelection = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -32,29 +32,29 @@ class _ImageList extends State<ImageList> {
     }
 
     return Column(children: [
-          for (final w in imgWidgets)
-            ListTile(
-              title: w,
-              leading: Radio(
-                value: imgWidgets.indexOf(w),
-                groupValue: imgSelection,
-                onChanged: (int? value) {
-                  setState(() {
-                    imgSelection = value!;
-                  });
-                },
-              ),
-            ),
+      for (int index = 0; index < imgWidgets.length; index++)
+        ListTile(
+          title: imgWidgets[index],
+          leading: Radio(
+            value: index,
+            groupValue: imgSelection,
+            onChanged: (int? value) {
+              setState(() {
+                imgSelection = value!;
+              });
+            },
+          ),
+        ),
 
-            Expanded(child:Container()),
+        Expanded(child:Container()),
 
-            ElevatedButton(
-              onPressed: () {
-                Protocol(epd: widget.epd).writeImages(widget.imgList[imgSelection]);
-              },
-              child: const Text('Start Transfer'),
-            )
-        ],
+        ElevatedButton(
+          onPressed: () {
+            Protocol(epd: widget.epd).writeImages(widget.imgList[imgSelection]);
+          },
+          child: const Text('Start Transfer'),
+        )
+      ],
     );
   }
 }
