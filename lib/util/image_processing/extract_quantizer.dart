@@ -40,12 +40,12 @@ class ExtractQuantizer extends img.Quantizer {
     return a <= v && v <= b;
   }
 
-  bool _inAngluarRange(double v, double a, double b) {
+  bool _inAngularRange(double v, double a, double b) {
     return cos((v - a) * (pi / 180)) > cos((b - a) * (pi / 180));
   }
 
   bool _hsvInRange(HSVColor v, HSVColor a, HSVColor b) {
-    return _inAngluarRange(v.hue, a.hue, b.hue)
+    return _inAngularRange(v.hue, a.hue, b.hue)
       && _inLinearRange(v.saturation, a.saturation, b.saturation)
       && _inLinearRange(v.value, a.value, b.value);
   }
