@@ -1,44 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
-import 'package:provider/provider.dart';
-
 import 'package:magic_epaper_app/util/epd/edp.dart';
-import 'package:magic_epaper_app/provider/image_loader.dart';
+import 'package:magic_epaper_app/util/protocol.dart';
 
-class ImageList extends StatelessWidget {
+class ImageList extends StatefulWidget {
+  final List<img.Image> imgList;
   final Epd epd;
-  final List<img.Image> processedImgs = List.empty(growable: true);
 
   @override
-  ImageList({super.key, required this.epd});
+  const ImageList({super.key, required this.imgList, required this.epd});
+
+  @override
+  State<StatefulWidget> createState() => _ImageList();
+}
+
+class _ImageList extends State<ImageList> {
+  int imgSelection = 1;
 
   @override
   Widget build(BuildContext context) {
-    var imgLoader = context.watch<ImageLoader>();
     List<Widget> imgWidgets = List.empty(growable: true);
-    final orgImg = imgLoader.image;
 
-    if (orgImg != null) {
-      final image = img.copyResize(orgImg, width: epd.width, height: epd.height);
-      var rotatedImg = img.copyRotate(image, angle: 90);
-      var uiImage = Image.memory(img.encodePng(rotatedImg), height: 100, isAntiAlias: false);
-      imgWidgets.add(uiImage);
-
-      processImg(image);
-      for (var i in processedImgs) {
-        var rotatedImg = img.copyRotate(i, angle: 90);
-        var uiImage = Image.memory(img.encodePng(rotatedImg), height: 100, isAntiAlias: false);
-        imgWidgets.add(uiImage);
-      }
-    } else {
+    if (widget.imgList.isEmpty) {
       return const Text("Please import an image to continue!");
     }
-    return Wrap(spacing: 10, direction: Axis.vertical, children: imgWidgets);
-  }
 
-  void processImg(img.Image image) {
-    for (final method in epd.processingMethods) {
-      processedImgs.add(method(image));
+    for (var i in widget.imgList) {
+      var rotatedImg = img.copyRotate(i, angle: 90);
+      var uiImage = Image.memory(img.encodePng(rotatedImg), height: 100, isAntiAlias: false);
+      imgWidgets.add(uiImage);
     }
+
+    return Column(children: [
+          for (final w in imgWidgets)
+            ListTile(
+              title: w,
+              leading: Radio(
+                value: imgWidgets.indexOf(w),
+                groupValue: imgSelection,
+                onChanged: (int? value) {
+                  setState(() {
+                    imgSelection = value!;
+                  });
+                },
+              ),
+            ),
+
+            Expanded(child:Container()),
+
+            ElevatedButton(
+              onPressed: () {
+                Protocol(epd: widget.epd).writeImages(widget.imgList[imgSelection]);
+              },
+              child: const Text('Start Transfer'),
+            )
+        ],
+    );
   }
 }

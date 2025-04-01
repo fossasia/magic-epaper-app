@@ -20,7 +20,6 @@ class ImageLoader extends ChangeNotifier {
 
     processedImgs.clear();
     image = await img.decodeImageFile(croppedFile.path);
-    image = image!.convert(numChannels: 4);
 
     notifyListeners();
   }

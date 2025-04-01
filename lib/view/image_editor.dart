@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
 import 'package:provider/provider.dart';
+import 'package:image/image.dart' as img;
 
-import 'package:magic_epaper_app/util/protocol.dart';
 import 'package:magic_epaper_app/provider/image_loader.dart';
 import 'package:magic_epaper_app/util/epd/edp.dart';
 
@@ -12,9 +12,18 @@ class ImageEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  var imgLoader = context.watch<ImageLoader>();
-  final imgList = ImageList(epd: epd);
+    var imgLoader = context.watch<ImageLoader>();
+    final List<img.Image> processedImgs = List.empty(growable: true);
+    final orgImg = imgLoader.image;
 
+    if (orgImg != null) {
+      final image = img.copyResize(imgLoader.image!, width: epd.width, height: epd.height);
+      for (final method in epd.processingMethods) {
+        processedImgs.add(method(image));
+      }
+    }
+
+    final imgList = ImageList(imgList: processedImgs, epd: epd,);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Image'),
@@ -29,21 +38,7 @@ class ImageEditor extends StatelessWidget {
       ),
 
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            imgList,
-
-            Expanded(child:Container()),
-
-            ElevatedButton(
-              onPressed: () {
-                Protocol(epd: epd).writeImages(imgList.processedImgs[1]);
-              },
-              child: const Text('Start Transfer'),
-            ),
-          ],
-        )
+        child: imgList
       ),
 
     );
