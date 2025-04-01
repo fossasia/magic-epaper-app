@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/util/epd/driver/uc8252.dart';
+import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
 import 'driver/driver.dart';
 import 'edp.dart';
 
@@ -18,4 +19,9 @@ class Gdey037z03 extends Epd {
 
   @override
   get controller => Uc8252() as Driver;
+
+  Gdey037z03() {
+    processingMethods.add(ImageProcessing.rwbTriColorDither);
+    processingMethods.add(ImageProcessing.colorHalftone);
+  }
 }

@@ -5,23 +5,19 @@ import 'extract_quantizer.dart';
 import 'remap_quantizer.dart';
 
 class ImageProcessing {
-  final img.Image orgImg;
-
-  ImageProcessing(this.orgImg);
-
-  img.Image binaryDither() {
+  static img.Image binaryDither(img.Image orgImg) {
     var image = img.Image.from(orgImg);
     return img.ditherImage(image, quantizer: img.BinaryQuantizer());
   }
 
-  img.Image halftone() {
+  static img.Image halftone(img.Image orgImg) {
     final image = img.Image.from(orgImg);
     img.grayscale(image);
     img.colorHalftone(image);
     return img.ditherImage(image, quantizer: img.BinaryQuantizer());
   }
 
-  img.Image colorHalftone() {
+  static img.Image colorHalftone(img.Image orgImg) {
     var image = img.Image.from(orgImg);
 
     // Tri-color palette
@@ -36,7 +32,7 @@ class ImageProcessing {
         kernel: img.DitherKernel.floydSteinberg);
   }
 
-  img.Image rwbTriColorDither() {
+  static img.Image rwbTriColorDither(img.Image orgImg) {
     var image = img.Image.from(orgImg);
 
     // Tri-color palette
@@ -50,7 +46,7 @@ class ImageProcessing {
         kernel: img.DitherKernel.floydSteinberg);
   }
 
-  img.Image extract(Color toBeExtract) {
+  static img.Image extract(Color toBeExtract, img.Image orgImg) {
     var image = img.Image.from(orgImg);
 
     return img.ditherImage(image,
@@ -58,7 +54,7 @@ class ImageProcessing {
         kernel: img.DitherKernel.none);
   }
 
-  img.Image experiment() {
+  static img.Image experiment(img.Image orgImg) {
     var image = img.Image.from(orgImg);
 
     // Tri-color palette

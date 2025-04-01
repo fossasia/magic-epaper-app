@@ -7,12 +7,13 @@ import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
 abstract class Epd {
   int get width;
   int get height;
+  final processingMethods = <img.Image Function(img.Image)>[];
   String get description;
   List<Color> get colors;
   Driver get controller;
   
   Uint8List _extractEpaperColorFrame(Color color, img.Image orgImage) {
-    final image = ImageProcessing(orgImage).extract(color);
+    final image = ImageProcessing.extract(color, orgImage);
     final colorPixel = img.ColorRgb8(color.red, color.green, color.blue);
     List<int> bytes = List.empty(growable: true);
     int j=0;

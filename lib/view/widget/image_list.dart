@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import 'package:magic_epaper_app/util/epd/edp.dart';
 import 'package:magic_epaper_app/provider/image_loader.dart';
-import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
 
 class ImageList extends StatelessWidget {
   final Epd epd;
@@ -38,12 +37,8 @@ class ImageList extends StatelessWidget {
   }
 
   void processImg(img.Image image) {
-    final imgProcessing = ImageProcessing(image);
-    if (epd.colors.contains(Colors.red)) processedImgs.add(imgProcessing.extract(Colors.red));
-    // processedImgs.add(imgProcessing.experiment());
-    if (epd.colors.contains(Colors.red)) processedImgs.add(imgProcessing.rwbTriColorDither());
-    processedImgs.add(imgProcessing.binaryDither());
-    processedImgs.add(imgProcessing.halftone());
-    if (epd.colors.contains(Colors.red)) processedImgs.add(imgProcessing.colorHalftone());
+    for (final method in epd.processingMethods) {
+      processedImgs.add(method(image));
+    }
   }
 }
