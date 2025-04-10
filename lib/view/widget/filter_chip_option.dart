@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magic_epaper_app/constants.dart';
 
 /// A custom filter chip with selectable state
 class FilterChipOption extends StatelessWidget {
@@ -15,15 +16,13 @@ class FilterChipOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return GestureDetector(
       onTap: onSelected,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         margin: const EdgeInsets.only(right: 8),
         decoration: BoxDecoration(
-          color: isSelected ? colorScheme.primary : Colors.white,
+          color: isSelected ? colorPrimary : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected ? Colors.transparent : Colors.grey.shade300,

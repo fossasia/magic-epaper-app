@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magic_epaper_app/constants.dart';
 import 'package:magic_epaper_app/model/display_model.dart';
 import 'package:magic_epaper_app/view/widget/color_dot.dart';
 
@@ -19,18 +20,15 @@ class DisplayCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        height: 250,
-        width: 170,
-        margin: const EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: isSelected
-                ? Theme.of(context).colorScheme.primary
-                : Colors.grey.shade300,
-            width: isSelected ? 2.0 : 1.0,
+      child: Card(
+        color: Colors.white,
+        elevation: isSelected ? 4 : 1,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(
+            color: isSelected ? colorPrimary : Colors.grey.shade300,
+            width: isSelected ? 2 : 1,
           ),
-          borderRadius: BorderRadius.circular(12.0),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +42,7 @@ class DisplayCard extends StatelessWidget {
                 ),
                 child: Container(
                   width: double.infinity,
-                  color: Colors.grey.shade100,
+                  color: const Color.fromARGB(255, 255, 255, 255),
                   child: Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Image.asset(

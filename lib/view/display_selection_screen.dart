@@ -4,6 +4,7 @@ import 'package:magic_epaper_app/provider/display_provider.dart';
 import 'package:magic_epaper_app/view/widget/display_card.dart';
 import 'package:magic_epaper_app/view/widget/filter_chip_option.dart';
 import 'package:magic_epaper_app/view/image_editor.dart';
+import 'package:magic_epaper_app/constants.dart';
 
 class DisplaySelectionScreen extends StatelessWidget {
   const DisplaySelectionScreen({super.key});
@@ -11,32 +12,41 @@ class DisplaySelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: colorAccent,
+        elevation: 0, // Remove shadow
+        title: const Padding(
+          padding: EdgeInsets.fromLTRB(5, 16, 16, 5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
-              const Text(
-                'Choose Display',
+              Text(
+                'Magic ePaper',
                 style: TextStyle(
-                  fontSize: 32,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 8),
-
-              // Subtitle
-              const Text(
+              SizedBox(height: 8),
+              Text(
                 'Select your ePaper display type',
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.grey,
+                  color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 24),
-
+            ],
+          ),
+        ),
+        toolbarHeight: 85, // Adjust height to accommodate both texts
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10.0, 14, 16.0, 16.0),
+          child: Column(
+            children: [
               // Filter chips
               _buildFilterChips(),
               const SizedBox(height: 16),
@@ -123,7 +133,7 @@ class DisplaySelectionScreen extends StatelessWidget {
           height: 50,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
+              backgroundColor: colorPrimary,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
