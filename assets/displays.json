@@ -1,0 +1,26 @@
+{
+  "displays": [
+    {
+      "id": "epaper-3.7-bwr",
+      "model": "GDEY037Z03",
+      "name": "E-Paper 3.7\"",
+      "size": 3.7,
+      "resolution": [416, 240],
+      "colors": ["black", "white", "red"],
+      "driver": "UC8253",
+      "imagePath": "assets/images/displays/epaper_3.7_bwr.png",
+      "epdClass": "Gdey037z03"
+    },
+    {
+      "id": "epaper-3.7-bw",
+      "model": "GDEY037T03",
+      "name": "E-Paper 3.7\"",
+      "size": 3.7,
+      "resolution": [416, 240],
+      "colors": ["black", "white"],
+      "driver": "UC8253",
+      "imagePath": "assets/images/displays/epaper_3.7_bw.PNG",
+      "epdClass": "Gdey037z03BW"
+    }
+  ]
+} 
