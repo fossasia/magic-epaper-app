@@ -14,7 +14,8 @@ class ExtractQuantizer extends img.Quantizer {
     this.sThres = 0.5,
     this.vThres = 0.5,
   }) : _palette = img.PaletteUint8(2, 3) {
-    _palette.setRgb(0, toBeExtract.red, toBeExtract.green, toBeExtract.blue);
+    _palette.setRgb(0, (toBeExtract.r * 255).toInt(),
+        (toBeExtract.g * 255).toInt(), (toBeExtract.b * 255).toInt());
     _palette.setRgb(1, 255, 255, 255);
     _toBeExtract = HSVColor.fromColor(toBeExtract);
   }
@@ -25,9 +26,11 @@ class ExtractQuantizer extends img.Quantizer {
   @override
   img.Color getQuantizedColor(img.Color c) {
     return _isIt(c)
-    ? img.ColorRgb8(_palette.getRed(0) as int, _palette.getGreen(0) as int, _palette.getBlue(0) as int)
-    : img.ColorRgb8(_palette.getRed(1) as int, _palette.getGreen(1) as int, _palette.getBlue(1) as int);
-  } 
+        ? img.ColorRgb8(_palette.getRed(0) as int, _palette.getGreen(0) as int,
+            _palette.getBlue(0) as int)
+        : img.ColorRgb8(_palette.getRed(1) as int, _palette.getGreen(1) as int,
+            _palette.getBlue(1) as int);
+  }
 
   @override
   int getColorIndex(img.Color c) => _isIt(c) ? 0 : 1;
@@ -46,9 +49,9 @@ class ExtractQuantizer extends img.Quantizer {
   }
 
   bool _hsvInRange(HSVColor v, HSVColor a, HSVColor b) {
-    return _inAngularRange(v.hue, a.hue, b.hue)
-      && _inLinearRange(v.saturation, a.saturation, b.saturation)
-      && _inLinearRange(v.value, a.value, b.value);
+    return _inAngularRange(v.hue, a.hue, b.hue) &&
+        _inLinearRange(v.saturation, a.saturation, b.saturation) &&
+        _inLinearRange(v.value, a.value, b.value);
   }
 
   bool _hsvColorThreshold(HSVColor v, HSVColor p) {
@@ -56,20 +59,24 @@ class ExtractQuantizer extends img.Quantizer {
     final sHalfThres = sThres / 2;
     final vHalfThres = vThres / 2;
 
-    final sLower = p.saturation - sHalfThres < 0.0 ? 0.0 : p.saturation - sHalfThres;
+    final sLower =
+        p.saturation - sHalfThres < 0.0 ? 0.0 : p.saturation - sHalfThres;
     final vLower = p.value - vHalfThres < 0.0 ? 0.0 : p.value - vHalfThres;
-    final sUpper = p.saturation + sHalfThres > 1.0 ? 1.0 : p.saturation + sHalfThres;
+    final sUpper =
+        p.saturation + sHalfThres > 1.0 ? 1.0 : p.saturation + sHalfThres;
     final vUpper = p.value + vHalfThres > 1.0 ? 1.0 : p.value + vHalfThres;
 
-    final rangeA = HSVColor.fromAHSV(1, (p.hue - hHalfThres) % 360, sLower, vLower);
-    final rangeB = HSVColor.fromAHSV(1, (p.hue + hHalfThres) % 360, sUpper, vUpper);
+    final rangeA =
+        HSVColor.fromAHSV(1, (p.hue - hHalfThres) % 360, sLower, vLower);
+    final rangeB =
+        HSVColor.fromAHSV(1, (p.hue + hHalfThres) % 360, sUpper, vUpper);
 
     return _hsvInRange(v, rangeA, rangeB);
-
   }
 
   bool _isIt(img.Color c) {
-    final dartColor = Color.fromRGBO(c.r as int, c.g as int, c.b as int, c.aNormalized as double);
+    final dartColor = Color.fromRGBO(
+        c.r as int, c.g as int, c.b as int, c.aNormalized as double);
     final hsvColor = HSVColor.fromColor(dartColor);
 
     return _hsvColorThreshold(hsvColor, _toBeExtract);

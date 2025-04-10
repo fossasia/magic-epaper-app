@@ -1,7 +1,7 @@
-
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:image/image.dart' as img;
 import 'package:magic_epaper_app/util/epd/edp.dart';
@@ -23,17 +23,13 @@ class Protocol {
     return await _transceive(fw.tagChip.writeMsgCmd, tagId, msg);
   }
 
-  Future<Uint8List> _readMsg(Uint8List tagId) async {
-    // Send 0 will return all message present in the tag's mailbox
-    return await _transceive(fw.tagChip.readMsgDmd, tagId, Uint8List.fromList([0]));
-  }
-
   Future<Uint8List> _readDynCfg(Uint8List tagId, int address) async {
     final raw = fw.tagChip.buildReadDynCfgCmd(tagId, address);
     return await FlutterNfcKit.transceive(raw, timeout: timeout);
   }
 
-  Future<Uint8List> _writeDynCfg(Uint8List tagId, int address, int value) async {
+  Future<Uint8List> _writeDynCfg(
+      Uint8List tagId, int address, int value) async {
     final raw = fw.tagChip.buildWriteDynCfgCmd(tagId, address, value);
     return await FlutterNfcKit.transceive(raw, timeout: timeout);
   }
@@ -70,23 +66,26 @@ class Protocol {
 
   Future<void> writeFrame(Uint8List id, Uint8List frame, int cmd) async {
     final chunks = _split(data: frame);
-    await _writeMsg(id, Uint8List.fromList([fw.epdCmd, cmd])); // enter transmission 1
+    await _writeMsg(
+        id, Uint8List.fromList([fw.epdCmd, cmd])); // enter transmission 1
     await _sleep();
     for (int i = 0; i < chunks.length; i++) {
       Uint8List chunk = chunks[i];
-      print("Writing chunk ${i + 1}/${chunks.length} len ${chunk.lengthInBytes}: ${chunk.map((e) => e.toRadixString(16)).toList()}");
+      debugPrint(
+          "Writing chunk ${i + 1}/${chunks.length} len ${chunk.lengthInBytes}: ${chunk.map((e) => e.toRadixString(16)).toList()}");
 
       await _writeMsg(id, chunk);
       await wait4msgGathered(id);
     }
-    print("Transferred successfully.");
+    debugPrint("Transferred successfully.");
   }
 
   List<Uint8List> _split({required Uint8List data, int chunkSize = 220}) {
     List<Uint8List> chunks = [];
     for (int i = 0; i < data.length; i += chunkSize) {
       int end = (i + chunkSize > data.length) ? data.length : i + chunkSize;
-      Uint8List chunk = Uint8List.fromList([fw.epdSend, ...data.sublist(i, end)]);
+      Uint8List chunk =
+          Uint8List.fromList([fw.epdSend, ...data.sublist(i, end)]);
       chunks.add(chunk);
     }
     return chunks;
@@ -98,9 +97,9 @@ class Protocol {
       throw "NFC is not available";
     }
 
-    print("Bring your phone near to the Magic Epaper Hardware");
+    debugPrint("Bring your phone near to the Magic Epaper Hardware");
     final tag = await FlutterNfcKit.poll(timeout: timeout);
-    print("Got a tag!");
+    debugPrint("Got a tag!");
 
     var id = Uint8List.fromList(hex.decode(tag.id));
     if (tag.type != NFCTagType.iso15693) {
@@ -108,7 +107,8 @@ class Protocol {
     }
 
     await enableEnergyHarvesting(id);
-    await Future.delayed(const Duration(seconds: 2)); // waiting for the power supply stable
+    await Future.delayed(
+        const Duration(seconds: 2)); // waiting for the power supply stable
 
     final epdColors = epd.extractEpaperColorFrames(image);
     final transmissionLines = epd.controller.transmissionLines.iterator;
@@ -117,7 +117,8 @@ class Protocol {
       await writeFrame(id, c, transmissionLines.current);
     }
 
-    await _writeMsg(id, Uint8List.fromList([fw.epdCmd, epd.controller.refresh]));
+    await _writeMsg(
+        id, Uint8List.fromList([fw.epdCmd, epd.controller.refresh]));
     await FlutterNfcKit.finish();
   }
 }

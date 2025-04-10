@@ -14,7 +14,8 @@ class ImageLoader extends ChangeNotifier {
 
     final croppedFile = await ImageCropper().cropImage(
       sourcePath: file.path,
-      aspectRatio: CropAspectRatio(ratioX: width.toDouble(), ratioY: height.toDouble()),
+      aspectRatio:
+          CropAspectRatio(ratioX: width.toDouble(), ratioY: height.toDouble()),
     );
     if (croppedFile == null) return;
 

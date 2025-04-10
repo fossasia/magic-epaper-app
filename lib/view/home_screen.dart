@@ -19,13 +19,19 @@ class SelectDisplay extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ImageEditor(epd: gdey037z03)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ImageEditor(epd: gdey037z03)));
               },
               child: Text(gdey037z03.description),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ImageEditor(epd: gdey037z03bw)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ImageEditor(epd: gdey037z03bw)));
               },
               child: Text(gdey037z03bw.description),
             ),

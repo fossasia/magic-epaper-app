@@ -11,18 +11,24 @@ abstract class Epd {
   String get description;
   List<Color> get colors;
   Driver get controller;
-  
+
   Uint8List _extractEpaperColorFrame(Color color, img.Image orgImage) {
     final image = ImageProcessing.extract(color, orgImage);
-    final colorPixel = img.ColorRgb8(color.red, color.green, color.blue);
+    final red = (color.r * 255).toInt();
+    final green = (color.g * 255).toInt();
+    final blue = (color.b * 255).toInt();
+    final colorPixel = img.ColorRgb8(red, green, blue);
     List<int> bytes = List.empty(growable: true);
-    int j=0;
+    int j = 0;
     int byte = 0;
-    
+
     for (final pixel in image) {
-      var bin = pixel.rNormalized - colorPixel.rNormalized
-        + pixel.gNormalized - colorPixel.gNormalized
-        + pixel.bNormalized - colorPixel.bNormalized;
+      var bin = pixel.rNormalized -
+          colorPixel.rNormalized +
+          pixel.gNormalized -
+          colorPixel.gNormalized +
+          pixel.bNormalized -
+          colorPixel.bNormalized;
 
       if (bin > 0.5) {
         byte |= 0x80 >> j;
@@ -42,7 +48,7 @@ abstract class Epd {
   List<Uint8List> extractEpaperColorFrames(img.Image orgImage) {
     final retList = <Uint8List>[];
     for (final c in colors) {
-      if(c == Colors.white) continue; // skip white
+      if (c == Colors.white) continue; // skip white
       retList.add(_extractEpaperColorFrame(c, orgImage));
     }
     return retList;

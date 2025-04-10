@@ -17,13 +17,17 @@ class ImageEditor extends StatelessWidget {
     final orgImg = imgLoader.image;
 
     if (orgImg != null) {
-      final image = img.copyResize(imgLoader.image!, width: epd.width, height: epd.height);
+      final image = img.copyResize(imgLoader.image!,
+          width: epd.width, height: epd.height);
       for (final method in epd.processingMethods) {
         processedImgs.add(method(image));
       }
     }
 
-    final imgList = ImageList(imgList: processedImgs, epd: epd,);
+    final imgList = ImageList(
+      imgList: processedImgs,
+      epd: epd,
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Image'),
@@ -36,11 +40,7 @@ class ImageEditor extends StatelessWidget {
           ),
         ],
       ),
-
-      body: Center(
-        child: imgList
-      ),
-
+      body: Center(child: imgList),
     );
   }
 }

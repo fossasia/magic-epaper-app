@@ -1,0 +1,45 @@
+name: "iOS Workflow"
+
+inputs:
+  VERSION_NAME:
+    description: 'Version Name to be used for build'
+    required: false
+    default: '1.0.0'
+  VERSION_CODE:
+    description: 'Version Code to be used for build'
+    required: true
+    default: '1'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        cache: true
+        flutter-version-file: pubspec.yaml
+      
+    - name: Update Podfile
+      shell: bash
+      run: |
+        cd ./iOS
+        flutter pub get
+        pod install --repo-update
+
+    - name: Build iOS IPA (No Code Signing for PRs)
+      if: ${{ github.event_name == 'pull_request' }}
+      shell: bash
+      env:
+        VERSION_NAME: ${{ inputs.VERSION_NAME }}
+        VERSION_CODE: ${{ inputs.VERSION_CODE }}
+      run: |
+        flutter build ipa --no-codesign --build-name $VERSION_NAME --build-number $VERSION_CODE
+
+    - name: Build iOS IPA (With Code Signing)
+      if: ${{ github.event_name == 'push' }}
+      shell: bash
+      env:
+        VERSION_NAME: ${{ inputs.VERSION_NAME }}
+        VERSION_CODE: ${{ inputs.VERSION_CODE }}
+      run: |
+        flutter build ipa --build-name $VERSION_NAME --build-number $VERSION_CODE

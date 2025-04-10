@@ -1,0 +1,198 @@
+name: Magic Epaper Push CI
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  ANDROID_EMULATOR_API: 34
+  ANDROID_EMULATOR_ARCH: x86_64
+  IPHONE_DEVICE_MODEL: iPhone 16 Pro Max
+  IPAD_DEVICE_MODEL: iPad Pro 13-inch (M4)
+
+jobs:
+  common:
+    name: Common Build
+    runs-on: ubuntu-latest
+    outputs:
+      VERSION_NAME: ${{ steps.flutter-version.outputs.VERSION_NAME }}
+      VERSION_CODE: ${{ steps.flutter-version.outputs.VERSION_CODE }}
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Common Workflow
+        uses: ./.github/actions/common
+
+      - name: Hydrate and Update Version
+        id: flutter-version
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          # Get commit message
+          commit_message=$(git log -1 --pretty=format:"%s")
+
+          git clone --branch=version https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} version
+          cd version
+
+          # Read and increment version name
+          IFS='.' read -r major minor patch < versionName.txt
+
+          if [[ "$commit_message" =~ ^feat: ]]; then
+            next_minor=$((minor + 1))
+            next_patch=0
+          else
+            next_minor=$((minor))
+            next_patch=$((patch + 1))
+          fi
+          next_version_name="$major.$next_minor.$next_patch"
+          echo "VERSION_NAME=$next_version_name" >> $GITHUB_OUTPUT
+          echo "$next_version_name" > versionName.txt
+
+          # Read and increment version code
+          read -r version_code < versionCode.txt
+          
+          new_version_code=$((version_code + 1))
+          echo "VERSION_CODE=$new_version_code" >> $GITHUB_OUTPUT
+          echo "$new_version_code" > versionCode.txt
+
+          # Force push to version branch
+          git checkout --orphan temporary
+          git add --all .
+          git commit -am "[Auto] Update versionName: $next_version_name & versionCode: $new_version_code ($(date +%Y-%m-%d.%H:%M:%S))"
+          git branch -D version
+          git branch -m version
+          git push --force origin version
+
+  android:
+    name: Android Flutter Build
+    needs: common
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare Build Keys
+        if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
+        env:
+          ENCRYPTED_F10B5E0E5262_IV: ${{ secrets.ENCRYPTED_F10B5E0E5262_IV }}
+          ENCRYPTED_F10B5E0E5262_KEY: ${{ secrets.ENCRYPTED_F10B5E0E5262_KEY }}
+        run: |
+          bash scripts/prep-android-key.sh
+  
+      - name: Android Workflow
+        uses: ./.github/actions/android
+        with:
+          STORE_PASS: ${{ secrets.STORE_PASS }}
+          ALIAS: ${{ secrets.ALIAS }}
+          KEY_PASS: ${{ secrets.KEY_PASS }}
+          VERSION_NAME: ${{needs.common.outputs.VERSION_NAME}}
+          VERSION_CODE: ${{needs.common.outputs.VERSION_CODE}}
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: APK Generated
+          path: build/app/outputs/flutter-apk
+  
+      - name: Upload AAB Release
+        uses: actions/upload-artifact@v4
+        with:
+          name: AAB Generated
+          path: build/app/outputs/bundle
+      
+      - name: Upload APK/AAB to apk branch
+        if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git clone --branch=apk https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} apk
+          cd apk
+          
+          branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+
+          echo "Removing previous files from branch"
+
+          rm -rf magic-epaper-$branch*
+
+          ls
+
+          echo "Copying new build files"
+
+          find ../build/app/outputs/flutter-apk -type f \( -name '*.apk' -o -name '*.aab' \) -exec cp -v {} . \;
+          find ../build/app/outputs/bundle -type f \( -name '*.apk' -o -name '*.aab' \) -exec cp -v {} . \;
+
+          ls
+
+          echo "Renaming new build files"
+
+          for file in app*; do
+            mv $file magic-epaper-$branch-${file#*-}
+          done
+
+          ls
+
+          echo "Pushing to apk branch"
+
+          git checkout --orphan temporary
+          git add --all .
+          git commit -am "[Auto] Update APK/AAB's from $branch ($(date +%Y-%m-%d.%H:%M:%S))"
+          git branch -D apk
+          git branch -m apk
+          git push --force origin apk
+
+      - name: Push app in open testing track
+        if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
+        run: |
+          cd ./android
+          git clone --branch=fastlane-android --depth=1 https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} fastlane
+          fastlane uploadToOpenTesting
+          if [[ $? -ne 0 ]]; then
+              exit 1
+          fi
+
+  ios:
+    name: iOS Flutter Build
+    needs: common
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare Build Keys
+        if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
+        env:
+          ENCRYPTED_IOS_IV: ${{ secrets.ENCRYPTED_IOS_IV }}
+          ENCRYPTED_IOS_KEY: ${{ secrets.ENCRYPTED_IOS_KEY }}
+        run: |
+          bash scripts/prep-ios-key.sh
+
+      - name: Setup Certs
+        if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+        run: |
+          cd ./iOS
+          git clone --branch=fastlane-ios --depth=1 https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} fastlane
+          fastlane setupCertificates
+          if [[ $? -ne 0 ]]; then
+              exit 1
+          fi
+    
+      - name: iOS Workflow
+        uses: ./.github/actions/ios
+        with:
+          VERSION_NAME: ${{needs.common.outputs.VERSION_NAME}}
+          VERSION_CODE: ${{needs.common.outputs.VERSION_CODE}}
+      
+      - name: Push app to testflight
+        if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
+        run: |
+          cd ./iOS
+          fastlane uploadToBeta
+          if [[ $? -ne 0 ]]; then
+              exit 1
+          fi

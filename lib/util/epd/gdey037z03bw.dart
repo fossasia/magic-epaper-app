@@ -10,10 +10,10 @@ class Gdey037z03BW extends Epd {
 
   @override
   get width => 240; // pixels
-  
+
   @override
   get height => 416; // pixels
-  
+
   @override
   get colors => [Colors.black, Colors.white];
 

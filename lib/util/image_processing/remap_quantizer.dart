@@ -16,7 +16,7 @@ class RemapQuantizer extends img.Quantizer {
   @override
   img.Color getQuantizedColor(img.Color c) {
     return _map(c).$1;
-  } 
+  }
 
   @override
   int getColorIndex(img.Color c) {

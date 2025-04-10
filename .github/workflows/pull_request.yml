@@ -1,0 +1,36 @@
+name: Magic Epaper PR CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  common:
+    name: Common Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Common Workflow
+        uses: ./.github/actions/common
+
+  android:
+    name: Android Flutter Build
+    needs: common
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Android Workflow
+        uses: ./.github/actions/android
+
+  ios:
+    name: iOS Flutter Build
+    needs: common
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: iOS Workflow
+        uses: ./.github/actions/ios

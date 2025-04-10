@@ -1,0 +1,59 @@
+name: "Android Workflow"
+
+inputs:
+  STORE_PASS:
+    description: 'Store Password'
+    required: false
+    default: ''
+  ALIAS:
+    description: 'Certificate Alias'
+    required: false
+    default: ''
+  KEY_PASS:
+    description: 'Key Password'
+    required: false
+    default: ''
+  VERSION_NAME:
+    description: 'Version Name to be used for build'
+    required: false
+    default: '1.0.0'
+  VERSION_CODE:
+    description: 'Version Code to be used for build'
+    required: true
+    default: '1'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: 17
+        distribution: 'adopt'
+        cache: 'gradle'
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        cache: true
+        flutter-version-file: pubspec.yaml
+      
+    - name: Build Android APK/AAB
+      shell: bash
+      env:
+        STORE_PASS: ${{ inputs.STORE_PASS }}
+        ALIAS: ${{ inputs.ALIAS }}
+        KEY_PASS: ${{ inputs.KEY_PASS }}
+        VERSION_NAME: ${{inputs.VERSION_NAME}}
+        VERSION_CODE: ${{inputs.VERSION_CODE}}
+      run: |
+        flutter build apk --debug --build-name $VERSION_NAME --build-number $VERSION_CODE
+        flutter build apk --build-name $VERSION_NAME --build-number $VERSION_CODE
+        flutter build appbundle --build-name $VERSION_NAME --build-number $VERSION_CODE
+
+    - name: Store APK file
+      uses: actions/upload-artifact@v4
+      with:
+        name: apk-files
+        path: |
+          build/app/outputs/flutter-apk/app-debug.apk
