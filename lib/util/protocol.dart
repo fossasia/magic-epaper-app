@@ -1,11 +1,15 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image/image.dart' as img;
 import 'package:magic_epaper_app/util/epd/edp.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:magic_epaper_app/util/magic_epaper_firmware.dart';
+import 'package:magic_epaper_app/util/nfc_settings_launcher.dart';
 
 class Protocol {
   final fw = MagicEpaperFirmware();
@@ -93,10 +97,24 @@ class Protocol {
 
   void writeImages(img.Image image) async {
     var availability = await FlutterNfcKit.nfcAvailability;
-    if (availability != NFCAvailability.available) {
-      throw "NFC is not available";
+    switch (availability) {
+      case NFCAvailability.available:
+        break;
+      case NFCAvailability.disabled:
+        Fluttertoast.showToast(msg: "NFC is disabled. Please enable it.");
+        if (Platform.isAndroid) {
+          await NFCSettingsLauncher.openNFCSettings();
+        } else if (Platform.isIOS) {
+          await AppSettings.openAppSettings();
+        }
+        return;
+      case NFCAvailability.not_supported:
+        Fluttertoast.showToast(msg: "This device does not support NFC.");
+        return;
     }
 
+    Fluttertoast.showToast(
+        msg: "Bring your phone near to the Magic Epaper Hardware");
     debugPrint("Bring your phone near to the Magic Epaper Hardware");
     final tag = await FlutterNfcKit.poll(timeout: timeout);
     debugPrint("Got a tag!");
