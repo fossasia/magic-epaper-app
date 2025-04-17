@@ -28,6 +28,9 @@ dependencies:
   image_cropper: ^9.0.0
   app_settings: ^6.1.1
   fluttertoast: ^8.2.12
+  path_provider: ^2.1.5
+  flutter_colorpicker: ^1.1.0
+  screenshot: ^3.0.0
 
 
 dev_dependencies:
@@ -47,3 +50,20 @@ flutter:
     - assets/images/
     - assets/images/displays/
     - assets/displays.json
+  
+  fonts:
+    - family: Roboto Condensed
+      fonts:
+        - asset: assets/fonts/Roboto_Condensed-Regular.ttf
+    - family: Open Sans
+      fonts:
+        - asset: assets/fonts/OpenSans-Regular.ttf
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/Lato-Regular.ttf
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+    - family: Oswald
+      fonts:
+        - asset: assets/fonts/Oswald-Regular.ttf  
