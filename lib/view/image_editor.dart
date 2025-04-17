@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:magic_epaper_app/draw_canvas/view/drawing_page.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
 
 import 'package:magic_epaper_app/provider/image_loader.dart';
 import 'package:magic_epaper_app/util/epd/edp.dart';
+import 'dart:typed_data';
 
 class ImageEditor extends StatelessWidget {
   final Epd epd;
@@ -37,6 +39,26 @@ class ImageEditor extends StatelessWidget {
               imgLoader.pickImage(width: epd.width, height: epd.height);
             },
             child: const Text("Import Image"),
+          ),
+          TextButton(
+            onPressed: () async {
+              final capturedImage = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => DrawingPage(
+                          epd: epd,
+                        )),
+              );
+
+              if (capturedImage != null && capturedImage is Uint8List) {
+                await context.read<ImageLoader>().loadFromBytes(
+                      bytes: capturedImage,
+                      width: epd.width,
+                      height: epd.height,
+                    );
+              }
+            },
+            child: const Text("Draw Canvas"),
           ),
         ],
       ),
