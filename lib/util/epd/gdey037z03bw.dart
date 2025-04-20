@@ -6,13 +6,21 @@ import 'edp.dart';
 
 class Gdey037z03BW extends Epd {
   @override
-  String get description => '240x416 BW (UC8252)';
-
-  @override
   get width => 240; // pixels
 
   @override
   get height => 416; // pixels
+
+  @override
+  String get name => 'E-Paper 3.7"';
+  @override
+  String get modelId => 'GDEY037T03';
+  @override
+  String get aspectRatio => '26:15';
+  @override
+  String get driverName => 'UC8253';
+  @override
+  String get imgPath => "assets/images/displays/epaper_3.7_bw.PNG";
 
   @override
   get colors => [Colors.black, Colors.white];

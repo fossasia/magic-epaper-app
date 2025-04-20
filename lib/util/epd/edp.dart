@@ -8,7 +8,11 @@ abstract class Epd {
   int get width;
   int get height;
   final processingMethods = <img.Image Function(img.Image)>[];
-  String get description;
+  String get name;
+  String get modelId;
+  String get aspectRatio;
+  String get driverName;
+  String get imgPath;
   List<Color> get colors;
   Driver get controller;
 
