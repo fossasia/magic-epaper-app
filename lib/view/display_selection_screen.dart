@@ -15,7 +15,7 @@ class DisplaySelectionScreen extends StatefulWidget {
 
 class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   final List<Epd> displays = [Gdey037z03(), Gdey037z03BW()];
-  int? selectedIndex;
+  int selectedIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   }
 
   Widget _buildContinueButton(BuildContext context) {
-    final isEnabled = selectedIndex != null;
+    final isEnabled = selectedIndex != -1;
     return SizedBox(
       width: double.infinity,
       height: 50,
@@ -87,7 +87,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ImageEditor(
-                      epd: displays[selectedIndex!],
+                      epd: displays[selectedIndex],
                     ),
                   ),
                 );
