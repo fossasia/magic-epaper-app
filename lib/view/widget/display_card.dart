@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/constants.dart';
-import 'package:magic_epaper_app/util/epd/edp.dart';
+import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/view/widget/color_dot.dart';
 
 class DisplayCard extends StatelessWidget {

@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image/image.dart' as img;
-import 'package:magic_epaper_app/util/epd/edp.dart';
+import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:magic_epaper_app/util/magic_epaper_firmware.dart';
 import 'package:magic_epaper_app/util/nfc_settings_launcher.dart';

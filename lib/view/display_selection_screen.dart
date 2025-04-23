@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/constants.dart';
-import 'package:magic_epaper_app/util/epd/edp.dart';
+import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/util/epd/gdey037z03.dart';
 import 'package:magic_epaper_app/util/epd/gdey037z03bw.dart';
 import 'package:magic_epaper_app/view/image_editor.dart';

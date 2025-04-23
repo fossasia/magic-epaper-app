@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/util/epd/driver/uc8253.dart';
 import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
 import 'driver/driver.dart';
-import 'edp.dart';
+import 'epd.dart';
 
 class Gdey037z03 extends Epd {
   @override
@@ -22,7 +22,7 @@ class Gdey037z03 extends Epd {
   get colors => [Colors.black, Colors.white, Colors.red];
 
   @override
-  get controller => Uc8252() as Driver;
+  get controller => Uc8253() as Driver;
 
   Gdey037z03() {
     processingMethods.add(ImageProcessing.rwbTriColorDither);
