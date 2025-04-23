@@ -10,11 +10,10 @@ abstract class Epd {
   final processingMethods = <img.Image Function(img.Image)>[];
   String get name;
   String get modelId;
-  String get aspectRatio;
-  String get driverName;
   String get imgPath;
   List<Color> get colors;
   Driver get controller;
+  String get driverName => controller.driverName;
 
   Uint8List _extractEpaperColorFrame(Color color, img.Image orgImage) {
     final image = ImageProcessing.extract(color, orgImage);

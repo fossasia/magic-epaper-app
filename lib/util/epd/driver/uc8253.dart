@@ -5,7 +5,8 @@ import 'driver.dart';
 class Uc8252 extends Driver {
   @override
   int get refresh => 0x12;
-
+  @override
+  get driverName => 'UC8253';
   @override
   List<int> get transmissionLines => [0x10, 0x13];
 }

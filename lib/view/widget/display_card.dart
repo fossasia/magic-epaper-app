@@ -16,10 +16,24 @@ class DisplayCard extends StatelessWidget {
   });
 
   String _getColorName(Color color) {
-    if (color == Colors.black) return 'Black';
-    if (color == Colors.white) return 'White';
-    if (color == Colors.red) return 'Red';
-    return "";
+    switch (color) {
+      case Colors.black:
+        return 'Black';
+      case Colors.white:
+        return 'White';
+      case Colors.red:
+        return 'Red';
+      case Colors.yellow:
+        return 'Yellow';
+      case Colors.orange:
+        return 'Orange';
+      case Colors.green:
+        return 'Green';
+      case Colors.blue:
+        return 'Blue';
+      default:
+        return '';
+    }
   }
 
   @override
@@ -101,7 +115,6 @@ class DisplayCard extends StatelessWidget {
                   _buildSpecRow('Model:', display.modelId),
                   _buildSpecRow(
                       'Resolution:', '${display.width} × ${display.height}'),
-                  _buildSpecRow('Aspect Ratio:', display.aspectRatio),
                   _buildSpecRow('Driver:', display.driverName),
                 ],
               ),

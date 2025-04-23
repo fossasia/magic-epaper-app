@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/util/epd/driver/uc8252.dart';
+import 'package:magic_epaper_app/util/epd/driver/uc8253.dart';
 import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
 import 'driver/driver.dart';
 import 'edp.dart';
@@ -15,10 +15,6 @@ class Gdey037z03BW extends Epd {
   String get name => 'E-Paper 3.7"';
   @override
   String get modelId => 'GDEY037T03';
-  @override
-  String get aspectRatio => '26:15';
-  @override
-  String get driverName => 'UC8253';
   @override
   String get imgPath => "assets/images/displays/epaper_3.7_bw.PNG";
 
