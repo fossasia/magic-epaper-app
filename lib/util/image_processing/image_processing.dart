@@ -5,19 +5,38 @@ import 'extract_quantizer.dart';
 import 'remap_quantizer.dart';
 
 class ImageProcessing {
-  static img.Image binaryDither(img.Image orgImg) {
+  static img.Image bwFloydSteinbergDither(img.Image orgImg) {
     var image = img.Image.from(orgImg);
     return img.ditherImage(image, quantizer: img.BinaryQuantizer());
   }
 
-  static img.Image halftone(img.Image orgImg) {
+  static img.Image bwFalseFloydSteinbergDither(img.Image orgImg) {
+    var image = img.Image.from(orgImg);
+    return img.ditherImage(image,
+        quantizer: img.BinaryQuantizer(),
+        kernel: img.DitherKernel.falseFloydSteinberg);
+  }
+
+  static img.Image bwAtkinsonDither(img.Image orgImg) {
+    var image = img.Image.from(orgImg);
+    return img.ditherImage(image,
+        quantizer: img.BinaryQuantizer(), kernel: img.DitherKernel.atkinson);
+  }
+
+  static img.Image bwNoDither(img.Image orgImg) {
+    var image = img.Image.from(orgImg);
+    return img.ditherImage(image,
+        quantizer: img.BinaryQuantizer(), kernel: img.DitherKernel.none);
+  }
+
+  static img.Image bwHalftoneDither(img.Image orgImg) {
     final image = img.Image.from(orgImg);
     img.grayscale(image);
     img.colorHalftone(image);
     return img.ditherImage(image, quantizer: img.BinaryQuantizer());
   }
 
-  static img.Image colorHalftone(img.Image orgImg) {
+  static img.Image bwrHalftone(img.Image orgImg) {
     var image = img.Image.from(orgImg);
 
     // Tri-color palette
@@ -32,7 +51,7 @@ class ImageProcessing {
         kernel: img.DitherKernel.floydSteinberg);
   }
 
-  static img.Image rwbTriColorDither(img.Image orgImg) {
+  static img.Image bwrFloydSteinbergDither(img.Image orgImg) {
     var image = img.Image.from(orgImg);
 
     // Tri-color palette
@@ -44,6 +63,34 @@ class ImageProcessing {
     return img.ditherImage(image,
         quantizer: RemapQuantizer(palette: palette),
         kernel: img.DitherKernel.floydSteinberg);
+  }
+
+  static img.Image bwrFalseFloydSteinbergDither(img.Image orgImg) {
+    var image = img.Image.from(orgImg);
+
+    // Tri-color palette
+    final palette = img.PaletteUint8(3, 3);
+    palette.setRgb(0, 255, 0, 0); // red
+    palette.setRgb(1, 0, 0, 0); // black
+    palette.setRgb(2, 255, 255, 255); // white
+
+    return img.ditherImage(image,
+        quantizer: RemapQuantizer(palette: palette),
+        kernel: img.DitherKernel.falseFloydSteinberg);
+  }
+
+  static img.Image bwrTriColorAtkinsonDither(img.Image orgImg) {
+    var image = img.Image.from(orgImg);
+
+    // Tri-color palette
+    final palette = img.PaletteUint8(3, 3);
+    palette.setRgb(0, 255, 0, 0); // red
+    palette.setRgb(1, 0, 0, 0); // black
+    palette.setRgb(2, 255, 255, 255); // white
+
+    return img.ditherImage(image,
+        quantizer: RemapQuantizer(palette: palette),
+        kernel: img.DitherKernel.atkinson);
   }
 
   static img.Image extract(Color toBeExtract, img.Image orgImg) {
@@ -54,7 +101,7 @@ class ImageProcessing {
         kernel: img.DitherKernel.none);
   }
 
-  static img.Image experiment(img.Image orgImg) {
+  static img.Image bwrNoDither(img.Image orgImg) {
     var image = img.Image.from(orgImg);
 
     // Tri-color palette
