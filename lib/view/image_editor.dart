@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
 
 import 'package:magic_epaper_app/provider/image_loader.dart';
-import 'package:magic_epaper_app/util/epd/edp.dart';
+import 'package:magic_epaper_app/util/epd/epd.dart';
 
 class ImageEditor extends StatelessWidget {
   final Epd epd;
