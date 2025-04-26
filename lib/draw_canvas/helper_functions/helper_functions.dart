@@ -7,7 +7,7 @@ import 'package:magic_epaper_app/draw_canvas/Dialogs/pick_color_dialog.dart';
 import 'package:magic_epaper_app/draw_canvas/Dialogs/show_layer_manager_dialog.dart';
 import 'package:magic_epaper_app/draw_canvas/models/overlay_item.dart';
 import 'package:magic_epaper_app/draw_canvas/view/image_adjust_page.dart';
-import 'package:magic_epaper_app/util/epd/edp.dart';
+import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:screenshot/screenshot.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';

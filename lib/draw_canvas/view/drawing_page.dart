@@ -5,7 +5,7 @@ import 'package:magic_epaper_app/draw_canvas/models/overlay_item.dart';
 import 'package:magic_epaper_app/draw_canvas/models/sketcher.dart';
 import 'package:magic_epaper_app/draw_canvas/overlays/image_overlays.dart';
 import 'package:magic_epaper_app/draw_canvas/overlays/text_overlays.dart';
-import 'package:magic_epaper_app/util/epd/edp.dart';
+import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:screenshot/screenshot.dart';
 
 class DrawingPage extends StatefulWidget {
