@@ -8,7 +8,6 @@ import 'package:magic_epaper_app/provider/image_loader.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/constants.dart';
 
-
 class ImageEditor extends StatelessWidget {
   final Epd epd;
   const ImageEditor({super.key, required this.epd});
