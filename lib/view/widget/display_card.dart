@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/constants.dart';
-import 'package:magic_epaper_app/model/display_model.dart';
+import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/view/widget/color_dot.dart';
 
-/// A card that displays information about an ePaper display
 class DisplayCard extends StatelessWidget {
-  final DisplayModel display;
+  final Epd display;
   final bool isSelected;
   final VoidCallback onTap;
 
@@ -16,10 +15,34 @@ class DisplayCard extends StatelessWidget {
     required this.onTap,
   });
 
+  String _getColorName(Color color) {
+    switch (color) {
+      case Colors.black:
+        return 'Black';
+      case Colors.white:
+        return 'White';
+      case Colors.red:
+        return 'Red';
+      case Colors.yellow:
+        return 'Yellow';
+      case Colors.orange:
+        return 'Orange';
+      case Colors.green:
+        return 'Green';
+      case Colors.blue:
+        return 'Blue';
+      default:
+        return '';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
+      highlightColor: Colors.redAccent,
+      borderRadius: BorderRadius.circular(12),
+      splashColor: Colors.redAccent.withValues(alpha: 0.2),
       child: Card(
         color: Colors.white,
         elevation: isSelected ? 4 : 1,
@@ -33,7 +56,6 @@ class DisplayCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Display image
             Expanded(
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(
@@ -46,13 +68,10 @@ class DisplayCard extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Image.asset(
-                      display.imagePath,
+                      display.imgPath,
                       fit: BoxFit.contain,
                       height: 160,
                       errorBuilder: (context, error, stackTrace) {
-                        print(
-                            'Error loading image: ${display.imagePath} - $error');
-                        // Fallback if image is not available
                         return Center(
                           child: Icon(
                             Icons.display_settings,
@@ -66,14 +85,11 @@ class DisplayCard extends StatelessWidget {
                 ),
               ),
             ),
-
-            // Display information
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Display name and size
                   Text(
                     display.name,
                     style: const TextStyle(
@@ -81,37 +97,25 @@ class DisplayCard extends StatelessWidget {
                       fontSize: 16,
                     ),
                   ),
-
                   const SizedBox(height: 8),
-
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Color dots in a row
-                      Row(
-                        children: display.colors
-                            .map((color) => ColorDot(color: color))
-                            .toList(),
-                      ),
-
-                      // Color names below dots
-                      const SizedBox(height: 4),
-                      Text(
-                        display.colorNames,
-                        style: const TextStyle(fontSize: 10),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                  Row(
+                    children: display.colors
+                        .map((color) => ColorDot(color: color))
+                        .toList(),
                   ),
-
+                  const SizedBox(height: 4),
+                  Text(
+                    display.colors.map(_getColorName).join(', '),
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey,
+                    ),
+                  ),
                   const SizedBox(height: 8),
-
-                  // Specs
-                  _buildSpecRow('Model:', display.ModelName),
-                  _buildSpecRow('Resolution:', display.resolution),
-                  _buildSpecRow('Aspect Ratio:', display.aspectRatio),
-                  _buildSpecRow('Driver:', display.driver),
+                  _buildSpecRow('Model:', display.modelId),
+                  _buildSpecRow(
+                      'Resolution:', '${display.width} × ${display.height}'),
+                  _buildSpecRow('Driver:', display.driverName),
                 ],
               ),
             ),
@@ -121,27 +125,16 @@ class DisplayCard extends StatelessWidget {
     );
   }
 
-  // Helper to build a specification row
   Widget _buildSpecRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 10,
-              color: Colors.grey,
-            ),
-          ),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+          Text(value,
+              style:
+                  const TextStyle(fontSize: 10, fontWeight: FontWeight.w500)),
         ],
       ),
     );
