@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
-import 'package:magic_epaper_app/util/epd/edp.dart';
+import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/util/protocol.dart';
 
 class ImageList extends StatefulWidget {

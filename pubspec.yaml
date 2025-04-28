@@ -26,6 +26,8 @@ dependencies:
   image: ^4.3.0
   image_picker: ^1.1.2
   image_cropper: ^9.0.0
+  app_settings: ^6.1.1
+  fluttertoast: ^8.2.12
 
 
 dev_dependencies:
@@ -43,3 +45,4 @@ flutter:
   assets:
     # Add assets from the images directory to the application.
     - assets/images/
+
