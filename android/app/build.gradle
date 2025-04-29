@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "org.fossasia.magic_epaper_app"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = project.properties['android.ndkVersion']
+    ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
