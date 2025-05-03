@@ -24,4 +24,17 @@ class ImageLoader extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<void> loadFromBytes({
+    required img.Image image,
+    required int width,
+    required int height,
+  }) async {
+    final decoded = image;
+    if (decoded != null) {
+      final resized = img.copyResize(decoded, width: width, height: height);
+      image = resized;
+      notifyListeners();
+    }
+  }
 }
