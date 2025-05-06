@@ -1,8 +1,6 @@
 // Dart imports:
-import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-import 'dart:ui' as ui;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -29,11 +27,9 @@ class _MovableBackgroundImageExampleState
     extends State<MovableBackgroundImageExample>
     with ExampleHelperState<MovableBackgroundImageExample> {
   late final ScrollController _bottomBarScrollCtrl;
-  Uint8List? _transparentBytes;
-  double _transparentAspectRatio = -1;
-
-  final String _imageUrl =
-      'https://picsum.photos/id/${Random().nextInt(200)}/2000';
+  //Uint8List? _transparentBytes;
+  //double _transparentAspectRatio = -1;
+  String _currentCanvasColor = 'white';
 
   /// Better sense of scale when we start with a large number
   final double _initScale = 20;
@@ -46,8 +42,10 @@ class _MovableBackgroundImageExampleState
   @override
   void initState() {
     super.initState();
-    preCacheImage(networkUrl: _imageUrl);
-    _createTransparentImage(_imgRatio);
+    preCacheImage(assetPath: 'assets/canvas/white.png');
+    preCacheImage(assetPath: 'assets/canvas/red.png');
+    preCacheImage(assetPath: 'assets/canvas/black.png');
+    //_createTransparentImage(_imgRatio);
     _bottomBarScrollCtrl = ScrollController();
   }
 
@@ -184,27 +182,82 @@ class _MovableBackgroundImageExampleState
     }
   }
 
-  Future<void> _createTransparentImage(double aspectRatio) async {
-    if (_transparentAspectRatio == aspectRatio) return;
+  // Future<void> _createTransparentImage(double aspectRatio) async {
+  //   //double minSize = 1;
 
-    double minSize = 1;
+  //   double width = 240;
+  //   double height = 416;
 
-    double width = aspectRatio < 1 ? minSize : minSize * aspectRatio;
-    double height = aspectRatio < 1 ? minSize / aspectRatio : minSize;
+  //   final recorder = ui.PictureRecorder();
+  //   final canvas = Canvas(
+  //       recorder, Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble()));
+  //   final paint = Paint()..color = Colors.white;
+  //   canvas.drawRect(
+  //       Rect.fromLTWH(0.0, 0.0, width.toDouble(), height.toDouble()), paint);
 
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(
-        recorder, Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble()));
-    final paint = Paint()..color = Colors.transparent;
-    canvas.drawRect(
-        Rect.fromLTWH(0.0, 0.0, width.toDouble(), height.toDouble()), paint);
+  //   final picture = recorder.endRecording();
+  //   final img = await picture.toImage(width.toInt(), height.toInt());
+  //   final pngBytes = await img.toByteData(format: ui.ImageByteFormat.png);
 
-    final picture = recorder.endRecording();
-    final img = await picture.toImage(width.toInt(), height.toInt());
-    final pngBytes = await img.toByteData(format: ui.ImageByteFormat.png);
+  //   _transparentAspectRatio = aspectRatio;
+  //   _transparentBytes = pngBytes!.buffer.asUint8List();
+  // }
 
-    _transparentAspectRatio = aspectRatio;
-    _transparentBytes = pngBytes!.buffer.asUint8List();
+// Add this method to handle canvas color changes
+  void _changeCanvasColor() {
+    setState(() {
+      // Cycle through colors: white -> red -> black
+      switch (_currentCanvasColor) {
+        case 'white':
+          _currentCanvasColor = 'red';
+          break;
+        case 'red':
+          _currentCanvasColor = 'black';
+          break;
+        case 'black':
+          _currentCanvasColor = 'white';
+          break;
+      }
+    });
+
+    // Update the canvas by replacing the first layer
+    editorKey.currentState?.replaceLayer(
+      index: 0, // Replace first layer (canvas)
+      layer: WidgetLayer(
+        offset: Offset.zero,
+        scale: _initScale,
+        widget: Image.asset(
+          'assets/canvas/${_currentCanvasColor}.png',
+          width: _editorSize.width,
+          height: _editorSize.height,
+          fit: BoxFit.cover,
+          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+            return AnimatedSwitcher(
+              layoutBuilder: (currentChild, previousChildren) {
+                return SizedBox(
+                  width: 240,
+                  height: 416,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      ...previousChildren,
+                      if (currentChild != null) currentChild,
+                    ],
+                  ),
+                );
+              },
+              duration: const Duration(milliseconds: 100),
+              child: frame != null
+                  ? child
+                  : const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   Size get _editorSize => Size(
@@ -236,9 +289,14 @@ class _MovableBackgroundImageExampleState
 
   @override
   Widget build(BuildContext context) {
-    if (_transparentBytes == null || !isPreCached) {
+    /*if (_transparentBytes == null || !isPreCached) {
       return const PrepareImageWidget();
     }
+    print('_transparentBytes: ${_transparentBytes!}');
+    var i;
+    for (i in _transparentBytes!) {
+      print(i);
+    }*/
 
     return LayoutBuilder(builder: (context, constraints) {
       return CustomPaint(
@@ -247,16 +305,18 @@ class _MovableBackgroundImageExampleState
           primary: Colors.white,
           secondary: Color(0xFFE2E2E2),
         ),
-        child: ProImageEditor.memory(
-          _transparentBytes!,
+        child: ProImageEditor.asset(
+          'assets/canvas/white.png',
           key: editorKey,
           callbacks: ProImageEditorCallbacks(
             onImageEditingStarted: onImageEditingStarted,
-            onImageEditingComplete: onImageEditingComplete,
-            onCloseEditor: (editorMode) => onCloseEditor(
-              editorMode: editorMode,
-              enablePop: !isDesktopMode(context),
-            ),
+            onImageEditingComplete: (Uint8List bytes) async {
+              Navigator.pop(context,bytes);
+            },
+            onCloseEditor: (editorMode) {
+              // Handle normal close without editing completion
+              Navigator.of(context).pop();
+            },
             mainEditorCallbacks: MainEditorCallbacks(
               helperLines: HelperLinesCallbacks(onLineHit: vibrateLineHit),
               onAfterViewInit: () {
@@ -264,17 +324,17 @@ class _MovableBackgroundImageExampleState
                   WidgetLayer(
                     offset: Offset.zero,
                     scale: _initScale,
-                    widget: Image.network(
-                      _imageUrl,
-                      width: _editorSize.width,
-                      height: _editorSize.height,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
+                    widget: Image.asset(
+                      'assets/canvas/white.png',
+                      width: 240,
+                      height: 416,
+                      frameBuilder:
+                          (context, child, frame, wasSynchronouslyLoaded) {
                         return AnimatedSwitcher(
                           layoutBuilder: (currentChild, previousChildren) {
                             return SizedBox(
-                              width: 120,
-                              height: 120,
+                              width: 240,
+                              height: 416,
                               child: Stack(
                                 fit: StackFit.expand,
                                 alignment: Alignment.center,
@@ -285,18 +345,11 @@ class _MovableBackgroundImageExampleState
                               ),
                             );
                           },
-                          duration: const Duration(milliseconds: 200),
-                          child: loadingProgress == null
+                          duration: const Duration(milliseconds: 1),
+                          child: frame != null
                               ? child
-                              : Center(
-                                  child: CircularProgressIndicator(
-                                    value: loadingProgress.expectedTotalBytes !=
-                                            null
-                                        ? loadingProgress
-                                                .cumulativeBytesLoaded /
-                                            loadingProgress.expectedTotalBytes!
-                                        : null,
-                                  ),
+                              : const Center(
+                                  child: CircularProgressIndicator(),
                                 ),
                         );
                       },
@@ -427,6 +480,15 @@ class _MovableBackgroundImageExampleState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
+                    FlatIconTextButton(
+                      label: Text('Canvas Color', style: _bottomTextStyle),
+                      icon: const Icon(
+                        Icons.check_box_outline_blank,
+                        size: 22.0,
+                        color: Colors.white,
+                      ),
+                      onPressed: _changeCanvasColor,
+                    ),
                     FlatIconTextButton(
                       label: Text('Add Image', style: _bottomTextStyle),
                       icon: const Icon(
