@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_cropper/image_cropper.dart';
@@ -23,5 +25,18 @@ class ImageLoader extends ChangeNotifier {
     image = await img.decodeImageFile(croppedFile.path);
 
     notifyListeners();
+  }
+
+  Future<void> updateImage({
+    required Uint8List bytes,
+    required int width,
+    required int height,
+  }) async {
+    final decoded = img.decodeImage(bytes);
+    if (decoded != null) {
+      final resized = img.copyResize(decoded, width: width, height: height);
+      image = resized;
+      notifyListeners();
+    }
   }
 }
