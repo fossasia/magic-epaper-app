@@ -311,7 +311,7 @@ class _MovableBackgroundImageExampleState
           callbacks: ProImageEditorCallbacks(
             onImageEditingStarted: onImageEditingStarted,
             onImageEditingComplete: (Uint8List bytes) async {
-              Navigator.pop(context,bytes);
+              Navigator.pop(context, bytes);
             },
             onCloseEditor: (editorMode) {
               // Handle normal close without editing completion
