@@ -27,6 +27,7 @@ class Gdey037z03 extends Epd {
   Gdey037z03() {
     processingMethods.add(ImageProcessing.bwrFloydSteinbergDither);
     processingMethods.add(ImageProcessing.bwrFalseFloydSteinbergDither);
+    processingMethods.add(ImageProcessing.bwrStuckiDither);
     processingMethods.add(ImageProcessing.bwrTriColorAtkinsonDither);
     processingMethods.add(ImageProcessing.bwrHalftone);
     processingMethods.add(ImageProcessing.bwrNoDither);
