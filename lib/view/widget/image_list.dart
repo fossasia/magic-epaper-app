@@ -25,14 +25,14 @@ class _ImageList extends State<ImageList> {
       ImageProcessing.bwFalseFloydSteinbergDither: 'False Floyd-Steinberg',
       ImageProcessing.bwStuckiDither: 'Stucki',
       ImageProcessing.bwAtkinsonDither: 'Atkinson',
-      ImageProcessing.bwNoDither: 'None',
+      ImageProcessing.bwThresholdDither: 'Threshold',
       ImageProcessing.bwHalftoneDither: 'Halftone',
       ImageProcessing.bwrHalftone: 'Color Halftone',
       ImageProcessing.bwrFloydSteinbergDither: 'BWR Floyd-Steinberg',
       ImageProcessing.bwrFalseFloydSteinbergDither: 'BWR False Floyd-Steinberg',
       ImageProcessing.bwrStuckiDither: 'BWR Stucki',
       ImageProcessing.bwrTriColorAtkinsonDither: 'BWR Atkinson',
-      ImageProcessing.bwrNoDither: 'None'
+      ImageProcessing.bwrThresholdDither: 'Threshold',
     };
   }
 
