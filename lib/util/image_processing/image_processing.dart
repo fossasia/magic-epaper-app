@@ -29,7 +29,7 @@ class ImageProcessing {
         quantizer: img.BinaryQuantizer(), kernel: img.DitherKernel.atkinson);
   }
 
-  static img.Image bwNoDither(img.Image orgImg) {
+  static img.Image bwThreshold(img.Image orgImg) {
     var image = img.Image.from(orgImg);
     return img.ditherImage(image,
         quantizer: img.BinaryQuantizer(), kernel: img.DitherKernel.none);
@@ -91,7 +91,7 @@ class ImageProcessing {
         kernel: img.DitherKernel.none);
   }
 
-  static img.Image bwrNoDither(img.Image orgImg) {
+  static img.Image bwrThreshold(img.Image orgImg) {
     var image = img.Image.from(orgImg);
 
     return img.ditherImage(image,

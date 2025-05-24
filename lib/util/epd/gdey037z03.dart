@@ -30,6 +30,6 @@ class Gdey037z03 extends Epd {
     processingMethods.add(ImageProcessing.bwrStuckiDither);
     processingMethods.add(ImageProcessing.bwrTriColorAtkinsonDither);
     processingMethods.add(ImageProcessing.bwrHalftone);
-    processingMethods.add(ImageProcessing.bwrNoDither);
+    processingMethods.add(ImageProcessing.bwrThreshold);
   }
 }

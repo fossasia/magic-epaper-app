@@ -30,6 +30,6 @@ class Gdey037z03BW extends Epd {
     processingMethods.add(ImageProcessing.bwStuckiDither);
     processingMethods.add(ImageProcessing.bwAtkinsonDither);
     processingMethods.add(ImageProcessing.bwHalftoneDither);
-    processingMethods.add(ImageProcessing.bwNoDither);
+    processingMethods.add(ImageProcessing.bwThreshold);
   }
 }
