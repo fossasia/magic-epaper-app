@@ -6,12 +6,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:magic_epaper_app/pro_image_editor/features/bottom_bar.dart';
+import 'package:magic_epaper_app/pro_image_editor/features/text_bottom_bar.dart';
+import 'package:pro_image_editor/designs/whatsapp/whatsapp_paint_colorpicker.dart';
+import 'package:pro_image_editor/designs/whatsapp/whatsapp_text_colorpicker.dart';
+import 'package:pro_image_editor/designs/whatsapp/whatsapp_text_size_slider.dart';
+import 'package:pro_image_editor/designs/whatsapp/widgets/appbar/whatsapp_paint_appbar.dart';
+import 'package:pro_image_editor/designs/whatsapp/widgets/appbar/whatsapp_text_appbar.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import '../core/mixin/example_helper.dart';
 import '../shared/widgets/material_icon_button.dart';
 import '../shared/widgets/pixel_transparent_painter.dart';
 import 'reorder_layer_example.dart';
+
+final bool _useMaterialDesign =
+    platformDesignMode == ImageEditorDesignMode.material;
 
 /// The example for movableBackground
 class MovableBackgroundImageExample extends StatefulWidget {
@@ -421,13 +432,42 @@ class _MovableBackgroundImageExampleState
                 background: Colors.transparent,
               ),
             ),
-            paintEditor: const PaintEditorConfigs(
-              style: PaintEditorStyle(
+            paintEditor: PaintEditorConfigs(
+              widgets: PaintEditorWidgets(
+                colorPicker: (editor, rebuildStream, currentColor, setColor) =>
+                    null,
+                bodyItems: _buildPaintEditorBody,
+              ),
+              style: const PaintEditorStyle(
                 uiOverlayStyle: SystemUiOverlayStyle(
                   statusBarColor: Colors.black,
                 ),
                 background: Colors.transparent,
               ),
+            ),
+            textEditor: TextEditorConfigs(
+              customTextStyles: [
+                GoogleFonts.roboto(),
+                GoogleFonts.averiaLibre(),
+                GoogleFonts.lato(),
+                GoogleFonts.comicNeue(),
+                GoogleFonts.actor(),
+                GoogleFonts.odorMeanChey(),
+                GoogleFonts.nabla(),
+              ],
+              widgets: TextEditorWidgets(
+                appBar: (textEditor, rebuildStream) => null,
+                colorPicker: (editor, rebuildStream, currentColor, setColor) =>
+                    null,
+                bottomBar: (textEditor, rebuildStream) => null,
+                bodyItems: _buildTextEditorBody,
+              ),
+              style: TextEditorStyle(
+                  textFieldMargin: EdgeInsets.zero,
+                  bottomBarBackground: Colors.transparent,
+                  bottomBarMainAxisAlignment: !_useMaterialDesign
+                      ? MainAxisAlignment.spaceEvenly
+                      : MainAxisAlignment.start),
             ),
 
             /// Crop-Rotate, Filter and Blur editors are not supported
@@ -534,4 +574,92 @@ class _MovableBackgroundImageExampleState
       ),
     );
   }
+}
+
+List<ReactiveWidget> _buildPaintEditorBody(
+  PaintEditorState paintEditor,
+  Stream<dynamic> rebuildStream,
+) {
+  return [
+    ReactiveWidget(
+      stream: rebuildStream,
+      builder: (_) => BottomBarCustom(
+        configs: paintEditor.configs,
+        strokeWidth: paintEditor.paintCtrl.strokeWidth,
+        initColor: paintEditor.paintCtrl.color,
+        onColorChanged: (color) {
+          paintEditor.paintCtrl.setColor(color);
+          paintEditor.uiPickerStream.add(null);
+        },
+        onSetLineWidth: paintEditor.setStrokeWidth,
+      ),
+    ),
+    if (!_useMaterialDesign)
+      ReactiveWidget(
+        stream: rebuildStream,
+        builder: (_) => WhatsappPaintColorpicker(paintEditor: paintEditor),
+      ),
+    ReactiveWidget(
+      stream: rebuildStream,
+      builder: (_) => WhatsAppPaintAppBar(
+        configs: paintEditor.configs,
+        canUndo: paintEditor.canUndo,
+        onDone: paintEditor.done,
+        onTapUndo: paintEditor.undoAction,
+        onClose: paintEditor.close,
+        activeColor: paintEditor.activeColor,
+      ),
+    ),
+  ];
+}
+
+List<ReactiveWidget> _buildTextEditorBody(
+  TextEditorState textEditor,
+  Stream<dynamic> rebuildStream,
+) {
+  return [
+    /// Color-Picker
+    if (_useMaterialDesign)
+      ReactiveWidget(
+        stream: rebuildStream,
+        builder: (_) => Padding(
+          padding: const EdgeInsets.only(top: kToolbarHeight),
+          child: WhatsappTextSizeSlider(textEditor: textEditor),
+        ),
+      )
+    else
+      ReactiveWidget(
+        stream: rebuildStream,
+        builder: (_) => Padding(
+          padding: const EdgeInsets.only(top: kToolbarHeight),
+          child: WhatsappTextColorpicker(textEditor: textEditor),
+        ),
+      ),
+
+    /// Appbar
+    ReactiveWidget(
+      stream: rebuildStream,
+      builder: (_) => WhatsAppTextAppBar(
+        configs: textEditor.configs,
+        align: textEditor.align,
+        onDone: textEditor.done,
+        onAlignChange: textEditor.toggleTextAlign,
+        onBackgroundModeChange: textEditor.toggleBackgroundMode,
+      ),
+    ),
+
+    /// Bottombar
+    ReactiveWidget(
+      stream: rebuildStream,
+      builder: (_) => TextBottomBar(
+        configs: textEditor.configs,
+        initColor: textEditor.primaryColor,
+        onColorChanged: (color) {
+          textEditor.primaryColor = color;
+        },
+        selectedStyle: textEditor.selectedTextStyle,
+        onFontChange: textEditor.setTextStyle,
+      ),
+    ),
+  ];
 }
