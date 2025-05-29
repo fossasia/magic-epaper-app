@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
@@ -37,6 +40,21 @@ class ImageEditor extends StatelessWidget {
               imgLoader.pickImage(width: epd.width, height: epd.height);
             },
             child: const Text("Import Image"),
+          ),
+          TextButton(
+            onPressed: () async {
+              final canvasBytes = await Navigator.of(context).push<Uint8List>(
+                MaterialPageRoute(
+                  builder: (context) => const MovableBackgroundImageExample(),
+                ),
+              );
+              imgLoader.updateImage(
+                bytes: canvasBytes!,
+                width: epd.width,
+                height: epd.height,
+              );
+            },
+            child: const Text("Open Editor"),
           ),
         ],
       ),
