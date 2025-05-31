@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/bottom_bar.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/text_bottom_bar.dart';
+import 'package:pro_image_editor/core/models/layers/layer_interaction.dart';
 import 'package:pro_image_editor/designs/whatsapp/whatsapp_paint_colorpicker.dart';
 import 'package:pro_image_editor/designs/whatsapp/whatsapp_text_colorpicker.dart';
 import 'package:pro_image_editor/designs/whatsapp/whatsapp_text_size_slider.dart';
@@ -235,6 +236,13 @@ class _MovableBackgroundImageExampleState
     editorKey.currentState?.replaceLayer(
       index: 0, // Replace first layer (canvas)
       layer: WidgetLayer(
+        interaction: LayerInteraction(
+          enableEdit: false,
+          enableMove: false,
+          enableRotate: false,
+          enableScale: false,
+          enableSelection: false,
+        ),
         offset: Offset.zero,
         scale: _initScale,
         widget: Image.asset(
