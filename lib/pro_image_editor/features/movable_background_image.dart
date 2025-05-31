@@ -439,6 +439,7 @@ class _MovableBackgroundImageExampleState
                 bodyItems: _buildPaintEditorBody,
               ),
               style: const PaintEditorStyle(
+                initialColor: Colors.black,
                 uiOverlayStyle: SystemUiOverlayStyle(
                   statusBarColor: Colors.black,
                 ),

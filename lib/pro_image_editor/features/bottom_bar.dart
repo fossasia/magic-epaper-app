@@ -135,7 +135,6 @@ class _BottomBarCustomState extends State<BottomBarCustom> {
                     ? Expanded(
                         child: ColorPickerCustom(
                           onColorChanged: widget.onColorChanged,
-                          initColor: widget.initColor,
                         ),
                       )
                     : _buildLineWidths(),
