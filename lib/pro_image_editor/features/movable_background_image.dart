@@ -586,7 +586,6 @@ List<ReactiveWidget> _buildPaintEditorBody(
       builder: (_) => BottomBarCustom(
         configs: paintEditor.configs,
         strokeWidth: paintEditor.paintCtrl.strokeWidth,
-        initColor: paintEditor.paintCtrl.color,
         onColorChanged: (color) {
           paintEditor.paintCtrl.setColor(color);
           paintEditor.uiPickerStream.add(null);
