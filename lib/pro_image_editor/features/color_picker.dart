@@ -50,7 +50,6 @@ class _ColorPickerCustomState extends State<ColorPickerCustom> {
   @override
   void initState() {
     super.initState();
-    // Initialize the selected color with the initial color from the widget.
     _selectedColor = widget.initColor;
   }
 
