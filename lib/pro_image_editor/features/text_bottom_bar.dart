@@ -124,7 +124,6 @@ class _TextBottomBarState extends State<TextBottomBar> {
                     ? Expanded(
                         child: ColorPickerCustom(
                           onColorChanged: widget.onColorChanged,
-                          initColor: widget.initColor,
                         ),
                       )
                     : Expanded(

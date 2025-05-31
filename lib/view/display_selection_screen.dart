@@ -4,6 +4,8 @@ import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/util/epd/gdey037z03.dart';
 import 'package:magic_epaper_app/util/epd/gdey037z03bw.dart';
 import 'package:magic_epaper_app/view/image_editor.dart';
+import 'package:provider/provider.dart';
+import 'package:magic_epaper_app/provider/color_palette_provider.dart';
 import 'package:magic_epaper_app/view/widget/display_card.dart';
 
 class DisplaySelectionScreen extends StatefulWidget {
@@ -83,6 +85,10 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
       child: ElevatedButton(
         onPressed: isEnabled
             ? () {
+                context.read<ColorPaletteProvider>().updateColors(
+                      displays[selectedIndex].colors,
+                    );
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
