@@ -1,7 +1,7 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:magic_epaper_app/provider/color_palette_provider.dart';
+import 'package:provider/provider.dart';
 
 /// A stateful widget that provides a color picker inspired by WhatsApp.
 ///
@@ -37,21 +37,14 @@ class ColorPickerCustom extends StatefulWidget {
   ///
   /// This color sets the initial value of the picker, providing a starting
   /// point for color selection.
-  final Color initColor = Colors.black;
 
   @override
   State<ColorPickerCustom> createState() => _ColorPickerCustomState();
 }
 
 class _ColorPickerCustomState extends State<ColorPickerCustom> {
-  late Color _selectedColor;
+  Color _selectedColor = Colors.black;
   List<Color> _colors = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedColor = widget.initColor;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +57,8 @@ class _ColorPickerCustomState extends State<ColorPickerCustom> {
       itemBuilder: (context, index) {
         Color color = _colors[index];
         bool selected = _selectedColor == color;
-
         double size = !selected ? 20 : 24;
         double borderWidth = !selected ? 2.5 : 4;
-
         return Center(
           child: GestureDetector(
             onTap: () {
