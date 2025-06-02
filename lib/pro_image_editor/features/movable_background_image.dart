@@ -332,10 +332,6 @@ class _MovableBackgroundImageExampleState
             onImageEditingComplete: (Uint8List bytes) async {
               Navigator.pop(context, bytes);
             },
-            onCloseEditor: (editorMode) {
-              // Handle normal close without editing completion
-              Navigator.of(context).pop();
-            },
             mainEditorCallbacks: MainEditorCallbacks(
               helperLines: HelperLinesCallbacks(onLineHit: vibrateLineHit),
               onAfterViewInit: () {
