@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/constants.dart';
+import 'package:magic_epaper_app/provider/getitlocator.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/util/epd/gdey037z03.dart';
 import 'package:magic_epaper_app/util/epd/gdey037z03bw.dart';
@@ -21,60 +22,65 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: colorAccent,
-        elevation: 0,
-        title: const Padding(
-          padding: EdgeInsets.fromLTRB(5, 16, 16, 5),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Magic ePaper',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  )),
-              SizedBox(height: 8),
-              Text('Select your ePaper display type',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  )),
-            ],
-          ),
-        ),
-        toolbarHeight: 85,
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(10.0, 14, 16.0, 16.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.6,
-                    mainAxisSpacing: 8,
-                    crossAxisSpacing: 8,
-                  ),
-                  itemCount: displays.length,
-                  itemBuilder: (context, index) => DisplayCard(
-                    display: displays[index],
-                    isSelected: selectedIndex == index,
-                    onTap: () => setState(() => selectedIndex = index),
-                  ),
+    return ChangeNotifierProvider<ColorPaletteProvider>(
+        create: (_) => getIt<ColorPaletteProvider>(),
+        builder: (context, child) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              backgroundColor: colorAccent,
+              elevation: 0,
+              title: const Padding(
+                padding: EdgeInsets.fromLTRB(5, 16, 16, 5),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Magic ePaper',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        )),
+                    SizedBox(height: 8),
+                    Text('Select your ePaper display type',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        )),
+                  ],
                 ),
               ),
-              _buildContinueButton(context),
-            ],
-          ),
-        ),
-      ),
-    );
+              toolbarHeight: 85,
+            ),
+            body: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10.0, 14, 16.0, 16.0),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.6,
+                          mainAxisSpacing: 8,
+                          crossAxisSpacing: 8,
+                        ),
+                        itemCount: displays.length,
+                        itemBuilder: (context, index) => DisplayCard(
+                          display: displays[index],
+                          isSelected: selectedIndex == index,
+                          onTap: () => setState(() => selectedIndex = index),
+                        ),
+                      ),
+                    ),
+                    _buildContinueButton(context),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 
   Widget _buildContinueButton(BuildContext context) {
