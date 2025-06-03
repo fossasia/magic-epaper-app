@@ -443,6 +443,7 @@ class _MovableBackgroundImageExampleState
                 bodyItems: _buildPaintEditorBody,
               ),
               style: const PaintEditorStyle(
+                initialColor: Colors.black,
                 uiOverlayStyle: SystemUiOverlayStyle(
                   statusBarColor: Colors.black,
                 ),
@@ -590,7 +591,6 @@ List<ReactiveWidget> _buildPaintEditorBody(
       builder: (_) => BottomBarCustom(
         configs: paintEditor.configs,
         strokeWidth: paintEditor.paintCtrl.strokeWidth,
-        initColor: paintEditor.paintCtrl.color,
         onColorChanged: (color) {
           paintEditor.paintCtrl.setColor(color);
           paintEditor.uiPickerStream.add(null);
