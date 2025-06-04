@@ -25,7 +25,11 @@ class Gdey037z03 extends Epd {
   get controller => Uc8253() as Driver;
 
   Gdey037z03() {
-    processingMethods.add(ImageProcessing.rwbTriColorDither);
-    processingMethods.add(ImageProcessing.colorHalftone);
+    processingMethods.add(ImageProcessing.bwrFloydSteinbergDither);
+    processingMethods.add(ImageProcessing.bwrFalseFloydSteinbergDither);
+    processingMethods.add(ImageProcessing.bwrStuckiDither);
+    processingMethods.add(ImageProcessing.bwrTriColorAtkinsonDither);
+    processingMethods.add(ImageProcessing.bwrHalftone);
+    processingMethods.add(ImageProcessing.bwrThreshold);
   }
 }

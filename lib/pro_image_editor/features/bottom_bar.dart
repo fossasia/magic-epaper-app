@@ -33,7 +33,6 @@ class BottomBarCustom extends StatefulWidget {
     required this.configs,
     required this.strokeWidth,
     required this.onSetLineWidth,
-    required this.initColor,
     required this.onColorChanged,
     this.iconStrokeWidthThin = ProImageEditorIcons.penSize1,
     this.iconStrokeWidthMedium = ProImageEditorIcons.penSize2,
@@ -62,7 +61,7 @@ class BottomBarCustom extends StatefulWidget {
   ///
   /// This color sets the initial paint color, providing a starting point
   /// for color customization.
-  final Color initColor;
+  final Color initColor = Colors.black;
 
   /// Callback function for handling color changes.
   ///
@@ -136,7 +135,6 @@ class _BottomBarCustomState extends State<BottomBarCustom> {
                     ? Expanded(
                         child: ColorPickerCustom(
                           onColorChanged: widget.onColorChanged,
-                          initColor: widget.initColor,
                         ),
                       )
                     : _buildLineWidths(),
