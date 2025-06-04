@@ -222,12 +222,11 @@ class _MovableBackgroundImageExampleState
   int currentCanvasColorIndex = 0;
 
   String _getCanvasColorName(Color color) {
-    // Map colors to your asset names
-    if (color == Colors.white || color == const Color(0xFFFFFFFF)) {
+    if (color == Colors.white) {
       return 'white';
-    } else if (color == Colors.red || color == const Color(0xFFFF0000)) {
+    } else if (color == Colors.red) {
       return 'red';
-    } else if (color == Colors.black || color == const Color(0xFF000000)) {
+    } else if (color == Colors.black) {
       return 'black';
     }
 
@@ -236,11 +235,9 @@ class _MovableBackgroundImageExampleState
 
   void _changeCanvasColor() {
     setState(() {
-      // Cycle to next color index
       currentCanvasColorIndex =
           (currentCanvasColorIndex + 1) % availableCanvasColors.length;
 
-      // Get the color name for asset path
       _currentCanvasColor =
           _getCanvasColorName(availableCanvasColors[currentCanvasColorIndex]);
     });
