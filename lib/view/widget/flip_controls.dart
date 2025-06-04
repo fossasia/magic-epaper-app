@@ -23,7 +23,7 @@ class FlipControls extends StatelessWidget {
             onPressed: onFlipHorizontal,
             tooltip: 'Flip Horizontally',
             child: Image.asset(
-              "assets/images/vertical_flip.png",
+              "assets/images/h-flip.png",
               height: 24,
               width: 24,
             ),
@@ -35,7 +35,7 @@ class FlipControls extends StatelessWidget {
             onPressed: onFlipVertical,
             tooltip: 'Flip Vertically',
             child: Image.asset(
-              "assets/images/horizontal_flip.png",
+              "assets/images/v-flip.png",
               height: 24,
               width: 24,
             ),
