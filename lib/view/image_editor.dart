@@ -20,6 +20,26 @@ class ImageEditor extends StatefulWidget {
 }
 
 class _ImageEditorState extends State<ImageEditor> {
+  bool flipHorizontal = false;
+  bool flipVertical = false;
+
+  void toggleFlipHorizontal() {
+    setState(() {
+      flipHorizontal = !flipHorizontal;
+    });
+  }
+
+  void toggleFlipVertical() {
+    setState(() {
+      flipVertical = !flipVertical;
+    });
+  }
+
+  @override
+  State<ImageEditor> createState() => _ImageEditorState();
+}
+
+class _ImageEditorState extends State<ImageEditor> {
   int _selectedFilterIndex = 0;
   bool flipHorizontal = false;
   bool flipVertical = false;
@@ -127,6 +147,12 @@ class _ImageEditorState extends State<ImageEditor> {
             ),
         ],
       ),
+      floatingActionButton: orgImg != null
+          ? FlipControls(
+              onFlipHorizontal: toggleFlipHorizontal,
+              onFlipVertical: toggleFlipVertical,
+            )
+          : null,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
