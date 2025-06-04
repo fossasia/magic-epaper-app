@@ -10,6 +10,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/bottom_bar.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/text_bottom_bar.dart';
+import 'package:magic_epaper_app/provider/color_palette_provider.dart';
+import 'package:magic_epaper_app/provider/getitlocator.dart';
 import 'package:pro_image_editor/core/models/layers/layer_interaction.dart';
 import 'package:pro_image_editor/designs/whatsapp/whatsapp_paint_colorpicker.dart';
 import 'package:pro_image_editor/designs/whatsapp/whatsapp_text_colorpicker.dart';
@@ -215,21 +217,32 @@ class _MovableBackgroundImageExampleState
   //   _transparentBytes = pngBytes!.buffer.asUint8List();
   // }
 
-// Add this method to handle canvas color changes
+  final List<Color> availableCanvasColors =
+      getIt<ColorPaletteProvider>().colors;
+  int currentCanvasColorIndex = 0;
+
+  String _getCanvasColorName(Color color) {
+    // Map colors to your asset names
+    if (color == Colors.white || color == const Color(0xFFFFFFFF)) {
+      return 'white';
+    } else if (color == Colors.red || color == const Color(0xFFFF0000)) {
+      return 'red';
+    } else if (color == Colors.black || color == const Color(0xFF000000)) {
+      return 'black';
+    }
+
+    return 'white';
+  }
+
   void _changeCanvasColor() {
     setState(() {
-      // Cycle through colors: white -> red -> black
-      switch (_currentCanvasColor) {
-        case 'white':
-          _currentCanvasColor = 'red';
-          break;
-        case 'red':
-          _currentCanvasColor = 'black';
-          break;
-        case 'black':
-          _currentCanvasColor = 'white';
-          break;
-      }
+      // Cycle to next color index
+      currentCanvasColorIndex =
+          (currentCanvasColorIndex + 1) % availableCanvasColors.length;
+
+      // Get the color name for asset path
+      _currentCanvasColor =
+          _getCanvasColorName(availableCanvasColors[currentCanvasColorIndex]);
     });
 
     // Update the canvas by replacing the first layer
