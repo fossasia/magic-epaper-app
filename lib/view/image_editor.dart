@@ -41,58 +41,97 @@ class ImageEditor extends StatelessWidget {
         ),
         backgroundColor: colorAccent,
         elevation: 0,
-        title: const Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 16.0),
-            child: Text(
-              'Select Your Filter',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+        toolbarHeight: 100,
+        title: null,
+        actions: const [],
+        flexibleSpace: SafeArea(
+          child: Stack(
+            children: [
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Select Your Filter',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            backgroundColor:
+                                Colors.white.withValues(alpha: 0.2),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            minimumSize: const Size(100, 36),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 8),
+                          ),
+                          onPressed: () {
+                            imgLoader.pickImage(
+                                width: epd.width, height: epd.height);
+                          },
+                          child: const Text(
+                            "Import Image",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            backgroundColor:
+                                Colors.white.withValues(alpha: 0.2),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            minimumSize: const Size(100, 36),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 8),
+                          ),
+                          onPressed: () async {
+                            final canvasBytes =
+                                await Navigator.of(context).push<Uint8List>(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const MovableBackgroundImageExample(),
+                              ),
+                            );
+                            if (canvasBytes != null) {
+                              imgLoader.updateImage(
+                                bytes: canvasBytes,
+                                width: epd.width,
+                                height: epd.height,
+                              );
+                            }
+                          },
+                          child: const Text(
+                            "Open Editor",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
-        toolbarHeight: 85,
-        actions: <Widget>[
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.white.withValues(alpha: 0.2),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              onPressed: () {
-                imgLoader.pickImage(width: epd.width, height: epd.height);
-              },
-              child: const Text(
-                "Import Image",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () async {
-              final canvasBytes = await Navigator.of(context).push<Uint8List>(
-                MaterialPageRoute(
-                  builder: (context) => const MovableBackgroundImageExample(),
-                ),
-              );
-              imgLoader.updateImage(
-                bytes: canvasBytes!,
-                width: epd.width,
-                height: epd.height,
-              );
-            },
-            child: const Text("Open Editor"),
-          ),
-        ],
       ),
       body: SafeArea(
         child: Padding(
