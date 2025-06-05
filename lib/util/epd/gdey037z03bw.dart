@@ -19,7 +19,7 @@ class Gdey037z03BW extends Epd {
   String get imgPath => "assets/images/displays/epaper_3.7_bw.PNG";
 
   @override
-  get colors => [Colors.black, Colors.white];
+  get colors => [Colors.white, Colors.black];
 
   @override
   get controller => Uc8253() as Driver;
