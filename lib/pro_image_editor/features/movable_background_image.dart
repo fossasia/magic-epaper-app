@@ -44,7 +44,7 @@ class _MovableBackgroundImageExampleState
   late final ScrollController _bottomBarScrollCtrl;
   //Uint8List? _transparentBytes;
   //double _transparentAspectRatio = -1;
-  String _currentCanvasColor = 'white';
+  String _currentCanvasPath = ImageAssets.whiteBoard;
 
   /// Better sense of scale when we start with a large number
   final double _initScale = 20;
@@ -257,7 +257,7 @@ class _MovableBackgroundImageExampleState
         offset: Offset.zero,
         scale: _initScale,
         widget: Image.asset(
-          'assets/canvas/${_currentCanvasColor}.png',
+          _currentCanvasPath,
           width: _editorSize.width,
           height: _editorSize.height,
           fit: BoxFit.cover,
