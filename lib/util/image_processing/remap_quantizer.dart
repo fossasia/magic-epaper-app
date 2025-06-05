@@ -1,45 +1,103 @@
-import 'dart:math';
 import 'package:image/image.dart' as img;
+import 'dart:typed_data';
 
 class RemapQuantizer extends img.Quantizer {
   @override
   final img.Palette palette;
-  final _colorLut = <img.Color>[];
+
+  final List<img.Color> _colorLut = [];
+
+  late final Int32List _paletteR;
+  late final Int32List _paletteG;
+  late final Int32List _paletteB;
+
+  final Map<int, int> _colorCache = {};
+  static const int _maxCacheSize = 1024;
 
   RemapQuantizer({required this.palette}) {
-    for (int i = 0; i < palette.numColors; i++) {
-      _colorLut.add(img.ColorRgb8(palette.getRed(i) as int,
-          palette.getGreen(i) as int, palette.getBlue(i) as int));
+    final numColors = palette.numColors;
+
+    _paletteR = Int32List(numColors);
+    _paletteG = Int32List(numColors);
+    _paletteB = Int32List(numColors);
+
+    for (int i = 0; i < numColors; i++) {
+      final r = palette.getRed(i) as int;
+      final g = palette.getGreen(i) as int;
+      final b = palette.getBlue(i) as int;
+
+      _colorLut.add(img.ColorRgb8(r, g, b));
+      _paletteR[i] = r;
+      _paletteG[i] = g;
+      _paletteB[i] = b;
     }
   }
 
   @override
   img.Color getQuantizedColor(img.Color c) {
-    return _map(c).$1;
+    final index = _getColorIndexInternal(c.r.toInt(), c.g.toInt(), c.b.toInt());
+    return _colorLut[index];
   }
 
   @override
   int getColorIndex(img.Color c) {
-    return _map(c).$2;
+    return _getColorIndexInternal(c.r.toInt(), c.g.toInt(), c.b.toInt());
   }
 
   @override
   int getColorIndexRgb(int r, int g, int b) {
-    return _map(img.ColorRgb8(r, g, b)).$2;
+    return _getColorIndexInternal(r, g, b);
   }
 
-  num _distance(img.Color a, img.Color b) {
-    return (a.r - b.r) * (a.r - b.r) +
-        (a.g - b.g) * (a.g - b.g) +
-        (a.b - b.b) * (a.b - b.b);
-  }
+  int _getColorIndexInternal(int r, int g, int b) {
+    final cacheKey = (r << 16) | (g << 8) | b;
 
-  (img.Color, int) _map(img.Color c) {
-    final ds = <num>[];
-    for (int i = 0; i < palette.numColors; i++) {
-      ds.add(_distance(c, _colorLut[i]));
+    final cachedResult = _colorCache[cacheKey];
+    if (cachedResult != null) {
+      return cachedResult;
     }
-    final nearestIndex = ds.indexOf(ds.reduce(min));
-    return (_colorLut[nearestIndex], nearestIndex);
+
+    final numColors = _paletteR.length;
+
+    int bestIndex = 0;
+    int minDistance = _fastDistanceSquared(r, g, b, 0);
+
+    if (minDistance == 0) {
+      _addToCache(cacheKey, 0);
+      return 0;
+    }
+
+    for (int i = 1; i < numColors; i++) {
+      final distance = _fastDistanceSquared(r, g, b, i);
+      if (distance == 0) {
+        _addToCache(cacheKey, i);
+        return i;
+      }
+      if (distance < minDistance) {
+        minDistance = distance;
+        bestIndex = i;
+      }
+    }
+
+    _addToCache(cacheKey, bestIndex);
+    return bestIndex;
+  }
+
+  @pragma('vm:prefer-inline')
+  int _fastDistanceSquared(int r, int g, int b, int paletteIndex) {
+    final dr = r - _paletteR[paletteIndex];
+    final dg = g - _paletteG[paletteIndex];
+    final db = b - _paletteB[paletteIndex];
+    return dr * dr + dg * dg + db * db;
+  }
+
+  void _addToCache(int key, int value) {
+    if (_colorCache.length >= _maxCacheSize) {
+      final keysToRemove = _colorCache.keys.take(_maxCacheSize ~/ 4).toList();
+      for (final k in keysToRemove) {
+        _colorCache.remove(k);
+      }
+    }
+    _colorCache[key] = value;
   }
 }
