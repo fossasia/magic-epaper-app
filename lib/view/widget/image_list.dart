@@ -52,8 +52,8 @@ class _ImageList extends State<ImageList> {
     if (widget.imgList.isEmpty) {
       return const Center(
         child: Text(
-          "Please import an image to continue!",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          "Please import an image or open the editor to continue!",
+          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
         ),
       );
     }
