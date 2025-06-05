@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magic_epaper_app/constants/asset_paths.dart';
 import 'package:magic_epaper_app/util/epd/driver/uc8253.dart';
 import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
 import 'driver/driver.dart';
@@ -16,7 +17,7 @@ class Gdey037z03BW extends Epd {
   @override
   String get modelId => 'GDEY037T03';
   @override
-  String get imgPath => "assets/images/displays/epaper_3.7_bw.PNG";
+  String get imgPath => ImageAssets.epaper37Bw;
 
   @override
   get colors => [Colors.black, Colors.white];

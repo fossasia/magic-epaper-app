@@ -10,7 +10,7 @@ import 'package:image/image.dart' as img;
 
 import 'package:magic_epaper_app/provider/image_loader.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
-import 'package:magic_epaper_app/constants.dart';
+import 'package:magic_epaper_app/constants/color_constants.dart';
 
 class ImageEditor extends StatefulWidget {
   final Epd epd;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magic_epaper_app/constants/asset_paths.dart';
 
 class FlipControls extends StatelessWidget {
   final VoidCallback onFlipHorizontal;
@@ -23,7 +24,7 @@ class FlipControls extends StatelessWidget {
             onPressed: onFlipHorizontal,
             tooltip: 'Flip Horizontally',
             child: Image.asset(
-              "assets/images/h-flip.png",
+              ImageAssets.flipHorizontal,
               height: 24,
               width: 24,
             ),
@@ -35,7 +36,7 @@ class FlipControls extends StatelessWidget {
             onPressed: onFlipVertical,
             tooltip: 'Flip Vertically',
             child: Image.asset(
-              "assets/images/v-flip.png",
+              ImageAssets.flipVertical,
               height: 24,
               width: 24,
             ),

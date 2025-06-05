@@ -3,7 +3,7 @@ import 'package:image/image.dart' as img;
 import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/util/protocol.dart';
 import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
-import 'package:magic_epaper_app/constants.dart';
+import 'package:magic_epaper_app/constants/color_constants.dart';
 
 class ImageList extends StatefulWidget {
   final List<img.Image> imgList;

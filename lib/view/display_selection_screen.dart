@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/constants.dart';
+import 'package:magic_epaper_app/constants/color_constants.dart';
+import 'package:magic_epaper_app/constants/string_constants.dart';
 import 'package:magic_epaper_app/provider/getitlocator.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/util/epd/gdey037z03.dart';
@@ -35,7 +36,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Magic ePaper',
+                    Text(StringConstants.appName,
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,

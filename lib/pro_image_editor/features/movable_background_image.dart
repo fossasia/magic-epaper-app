@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:magic_epaper_app/constants/asset_paths.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/bottom_bar.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/text_bottom_bar.dart';
 import 'package:pro_image_editor/core/models/layers/layer_interaction.dart';
@@ -41,7 +42,7 @@ class _MovableBackgroundImageExampleState
   late final ScrollController _bottomBarScrollCtrl;
   //Uint8List? _transparentBytes;
   //double _transparentAspectRatio = -1;
-  String _currentCanvasColor = 'white';
+  String _currentCanvasPath = ImageAssets.whiteBoard;
 
   /// Better sense of scale when we start with a large number
   final double _initScale = 20;
@@ -54,9 +55,9 @@ class _MovableBackgroundImageExampleState
   @override
   void initState() {
     super.initState();
-    preCacheImage(assetPath: 'assets/canvas/white.png');
-    preCacheImage(assetPath: 'assets/canvas/red.png');
-    preCacheImage(assetPath: 'assets/canvas/black.png');
+    preCacheImage(assetPath: ImageAssets.whiteBoard);
+    preCacheImage(assetPath: ImageAssets.redBoard);
+    preCacheImage(assetPath: ImageAssets.blackBoard);
     //_createTransparentImage(_imgRatio);
     _bottomBarScrollCtrl = ScrollController();
   }
@@ -218,16 +219,16 @@ class _MovableBackgroundImageExampleState
 // Add this method to handle canvas color changes
   void _changeCanvasColor() {
     setState(() {
-      // Cycle through colors: white -> red -> black
-      switch (_currentCanvasColor) {
-        case 'white':
-          _currentCanvasColor = 'red';
+      switch (_currentCanvasPath) {
+        case ImageAssets.whiteBoard:
+          _currentCanvasPath = ImageAssets.redBoard;
           break;
-        case 'red':
-          _currentCanvasColor = 'black';
+        case ImageAssets.redBoard:
+          _currentCanvasPath = ImageAssets.blackBoard;
           break;
-        case 'black':
-          _currentCanvasColor = 'white';
+        case ImageAssets.blackBoard:
+        default:
+          _currentCanvasPath = ImageAssets.whiteBoard;
           break;
       }
     });
@@ -246,7 +247,7 @@ class _MovableBackgroundImageExampleState
         offset: Offset.zero,
         scale: _initScale,
         widget: Image.asset(
-          'assets/canvas/${_currentCanvasColor}.png',
+          _currentCanvasPath,
           width: _editorSize.width,
           height: _editorSize.height,
           fit: BoxFit.cover,
@@ -325,7 +326,7 @@ class _MovableBackgroundImageExampleState
           secondary: Color(0xFFE2E2E2),
         ),
         child: ProImageEditor.asset(
-          'assets/canvas/white.png',
+          ImageAssets.whiteBoard,
           key: editorKey,
           callbacks: ProImageEditorCallbacks(
             onImageEditingStarted: onImageEditingStarted,
@@ -340,7 +341,7 @@ class _MovableBackgroundImageExampleState
                     offset: Offset.zero,
                     scale: _initScale,
                     widget: Image.asset(
-                      'assets/canvas/white.png',
+                      ImageAssets.whiteBoard,
                       width: 240,
                       height: 416,
                       frameBuilder:
