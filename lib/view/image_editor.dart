@@ -44,8 +44,6 @@ class _ImageEditorState extends State<ImageEditor> {
     final List<img.Image> processedImgs = orgImg != null
         ? processImages(
             originalImage: orgImg,
-            flipHorizontal: flipHorizontal,
-            flipVertical: flipVertical,
             epd: widget.epd,
           )
         : [];
@@ -53,6 +51,8 @@ class _ImageEditorState extends State<ImageEditor> {
     final imgList = ImageList(
       imgList: processedImgs,
       epd: widget.epd,
+      flipHorizontal: flipHorizontal,
+      flipVertical: flipVertical,
     );
 
     return Scaffold(
