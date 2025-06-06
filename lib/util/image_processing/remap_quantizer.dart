@@ -7,9 +7,9 @@ class RemapQuantizer extends img.Quantizer {
 
   final List<img.Color> _colorLut = [];
 
-  late final Int32List _paletteR;
-  late final Int32List _paletteG;
-  late final Int32List _paletteB;
+  late final Uint8List _paletteR;
+  late final Uint8List _paletteG;
+  late final Uint8List _paletteB;
 
   final Map<int, int> _colorCache = {};
   static const int _maxCacheSize = 1024;
@@ -17,9 +17,9 @@ class RemapQuantizer extends img.Quantizer {
   RemapQuantizer({required this.palette}) {
     final numColors = palette.numColors;
 
-    _paletteR = Int32List(numColors);
-    _paletteG = Int32List(numColors);
-    _paletteB = Int32List(numColors);
+    _paletteR = Uint8List(numColors);
+    _paletteG = Uint8List(numColors);
+    _paletteB = Uint8List(numColors);
 
     for (int i = 0; i < numColors; i++) {
       final r = palette.getRed(i) as int;
@@ -50,7 +50,7 @@ class RemapQuantizer extends img.Quantizer {
   }
 
   int _getColorIndexInternal(int r, int g, int b) {
-    final cacheKey = (r << 16) | (g << 8) | b;
+    final cacheKey = ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
 
     final cachedResult = _colorCache[cacheKey];
     if (cachedResult != null) {
