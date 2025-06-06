@@ -35,10 +35,13 @@ class FlipControls extends StatelessWidget {
             heroTag: 'flipV',
             onPressed: onFlipVertical,
             tooltip: 'Flip Vertically',
-            child: Image.asset(
-              ImageAssets.flipVertical,
-              height: 24,
-              width: 24,
+            child: Transform.rotate(
+              angle: -1.5708,
+              child: Image.asset(
+                ImageAssets.flipHorizontal,
+                height: 24,
+                width: 24,
+              ),
             ),
           ),
         ],
