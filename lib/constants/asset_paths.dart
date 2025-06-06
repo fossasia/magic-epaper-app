@@ -1,6 +1,5 @@
 class ImageAssets {
   static const String flipHorizontal = 'assets/images/h-flip.png';
-  static const String flipVertical = 'assets/images/v-flip.png';
   static const String whiteBoard = 'assets/canvas/white.png';
   static const String redBoard = 'assets/canvas/red.png';
   static const String blackBoard = 'assets/canvas/black.png';
