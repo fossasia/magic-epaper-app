@@ -3,14 +3,21 @@ import 'package:image/image.dart' as img;
 import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/util/protocol.dart';
 import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
-import 'package:magic_epaper_app/constants.dart';
+import 'package:magic_epaper_app/constants/color_constants.dart';
 
 class ImageList extends StatefulWidget {
   final List<img.Image> imgList;
   final Epd epd;
+  final bool flipHorizontal;
+  final bool flipVertical;
 
   @override
-  const ImageList({super.key, required this.imgList, required this.epd});
+  const ImageList(
+      {super.key,
+      required this.imgList,
+      required this.epd,
+      required this.flipHorizontal,
+      required this.flipVertical});
 
   @override
   State<StatefulWidget> createState() => _ImageList();
@@ -60,10 +67,16 @@ class _ImageList extends State<ImageList> {
 
     for (var i = 0; i < widget.imgList.length; i++) {
       var rotatedImg = img.copyRotate(widget.imgList[i], angle: 90);
-      var uiImage = Image.memory(
-        img.encodePng(rotatedImg),
-        height: 100,
-        isAntiAlias: false,
+      var uiImage = Transform(
+        alignment: Alignment.center,
+        transform: Matrix4.identity()
+          ..scale(widget.flipHorizontal ? -1.0 : 1.0,
+              widget.flipVertical ? -1.0 : 1.0),
+        child: Image.memory(
+          img.encodePng(rotatedImg),
+          height: 100,
+          isAntiAlias: false,
+        ),
       );
       imgWidgets.add(uiImage);
 
@@ -137,10 +150,16 @@ class _ImageList extends State<ImageList> {
             borderRadius: BorderRadius.circular(8),
           ),
           child: imgSelection < imgWidgets.length
-              ? Image.memory(
-                  img.encodePng(
-                      img.copyRotate(widget.imgList[imgSelection], angle: 90)),
-                  fit: BoxFit.contain,
+              ? Transform(
+                  alignment: Alignment.center,
+                  transform: Matrix4.identity()
+                    ..scale(widget.flipHorizontal ? -1.0 : 1.0,
+                        widget.flipVertical ? -1.0 : 1.0),
+                  child: Image.memory(
+                    img.encodePng(img.copyRotate(widget.imgList[imgSelection],
+                        angle: 90)),
+                    fit: BoxFit.contain,
+                  ),
                 )
               : const Center(child: Text("No filter selected")),
         ),
@@ -190,8 +209,14 @@ class _ImageList extends State<ImageList> {
                   ),
                 ),
                 onPressed: () {
-                  Protocol(epd: widget.epd)
-                      .writeImages(widget.imgList[imgSelection]);
+                  img.Image finalImg = widget.imgList[imgSelection];
+                  if (widget.flipHorizontal) {
+                    finalImg = img.flipHorizontal(finalImg);
+                  }
+                  if (widget.flipVertical) {
+                    finalImg = img.flipVertical(finalImg);
+                  }
+                  Protocol(epd: widget.epd).writeImages(finalImg);
                 },
                 child: const Text(
                   'Start Transfer',
