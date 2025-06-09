@@ -2,35 +2,57 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
+import 'package:magic_epaper_app/view/widget/flip_controls.dart';
+import 'package:magic_epaper_app/util/image_editor_utils.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
 
 import 'package:magic_epaper_app/provider/image_loader.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
-import 'package:magic_epaper_app/constants.dart';
+import 'package:magic_epaper_app/constants/color_constants.dart';
 
-class ImageEditor extends StatelessWidget {
+class ImageEditor extends StatefulWidget {
   final Epd epd;
   const ImageEditor({super.key, required this.epd});
 
   @override
+  State<ImageEditor> createState() => _ImageEditorState();
+}
+
+class _ImageEditorState extends State<ImageEditor> {
+  bool flipHorizontal = false;
+  bool flipVertical = false;
+
+  void toggleFlipHorizontal() {
+    setState(() {
+      flipHorizontal = !flipHorizontal;
+    });
+  }
+
+  void toggleFlipVertical() {
+    setState(() {
+      flipVertical = !flipVertical;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var imgLoader = context.watch<ImageLoader>();
-    final List<img.Image> processedImgs = List.empty(growable: true);
     final orgImg = imgLoader.image;
 
-    if (orgImg != null) {
-      final image = img.copyResize(imgLoader.image!,
-          width: epd.width, height: epd.height);
-      for (final method in epd.processingMethods) {
-        processedImgs.add(method(image));
-      }
-    }
+    final List<img.Image> processedImgs = orgImg != null
+        ? processImages(
+            originalImage: orgImg,
+            epd: widget.epd,
+          )
+        : [];
 
     final imgList = ImageList(
       imgList: processedImgs,
-      epd: epd,
+      epd: widget.epd,
+      flipHorizontal: flipHorizontal,
+      flipVertical: flipVertical,
     );
 
     return Scaffold(
@@ -69,7 +91,8 @@ class ImageEditor extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                imgLoader.pickImage(width: epd.width, height: epd.height);
+                imgLoader.pickImage(
+                    width: widget.epd.width, height: widget.epd.height);
               },
               child: const Text(
                 "Import Image",
@@ -86,14 +109,20 @@ class ImageEditor extends StatelessWidget {
               );
               imgLoader.updateImage(
                 bytes: canvasBytes!,
-                width: epd.width,
-                height: epd.height,
+                width: widget.epd.width,
+                height: widget.epd.height,
               );
             },
             child: const Text("Open Editor"),
           ),
         ],
       ),
+      floatingActionButton: orgImg != null
+          ? FlipControls(
+              onFlipHorizontal: toggleFlipHorizontal,
+              onFlipVertical: toggleFlipVertical,
+            )
+          : null,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),

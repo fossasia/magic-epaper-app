@@ -1,6 +1,7 @@
 // Flutter imports:
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:magic_epaper_app/constants/asset_paths.dart';
 
 // Package imports:
 import 'package:pro_image_editor/pro_image_editor.dart';
@@ -40,7 +41,7 @@ class _ReorderLayerExampleState extends State<ReorderLayerExample>
   @override
   void initState() {
     super.initState();
-    preCacheImage(assetPath: 'assets/canvas/white.png');
+    preCacheImage(assetPath: ImageAssets.whiteBoard);
   }
 
   @override
@@ -48,7 +49,7 @@ class _ReorderLayerExampleState extends State<ReorderLayerExample>
     if (!isPreCached) return const PrepareImageWidget();
 
     return ProImageEditor.asset(
-      'assets/canvas/white.png',
+      ImageAssets.whiteBoard,
       key: editorKey,
       callbacks: ProImageEditorCallbacks(
         onImageEditingStarted: onImageEditingStarted,
