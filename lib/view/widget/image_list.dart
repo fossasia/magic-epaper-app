@@ -1,27 +1,28 @@
-import 'dart:typed_data'; // Still needed for img.encodePng
-
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
+import 'package:magic_epaper_app/constants/asset_paths.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
-import 'package:magic_epaper_app/util/protocol.dart';
 import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
 import 'package:magic_epaper_app/constants/color_constants.dart';
 
-// Main list widget
 class ImageList extends StatefulWidget {
-  // Change to List<img.Image> as per the new ImageEditor's _rawImages
   final List<img.Image> imgList;
   final Epd epd;
-  // New flip properties from 'main' branch
   final bool flipHorizontal;
   final bool flipVertical;
+  final Function() onFlipHorizontal;
+  final Function() onFlipVertical;
 
-  const ImageList(
-      {super.key,
-      required this.imgList,
-      required this.epd,
-      required this.flipHorizontal,
-      required this.flipVertical});
+  @override
+  const ImageList({
+    super.key,
+    required this.imgList,
+    required this.epd,
+    required this.flipHorizontal,
+    required this.flipVertical,
+    required this.onFlipHorizontal,
+    required this.onFlipVertical,
+  });
 
   @override
   State<StatefulWidget> createState() => _ImageList();
@@ -30,7 +31,6 @@ class ImageList extends StatefulWidget {
 class _ImageList extends State<ImageList> {
   int imgSelection = 0;
 
-  // The getFilterName() method now provides the map of functions to names.
   Map<Function, String> getFilterName() {
     return {
       ImageProcessing.bwFloydSteinbergDither: 'Floyd-Steinberg',
@@ -44,23 +44,22 @@ class _ImageList extends State<ImageList> {
       ImageProcessing.bwrFalseFloydSteinbergDither: 'BWR False Floyd-Steinberg',
       ImageProcessing.bwrStuckiDither: 'BWR Stucki',
       ImageProcessing.bwrTriColorAtkinsonDither: 'BWR Atkinson',
-      ImageProcessing.bwrThreshold: 'BWR Threshold',
+      ImageProcessing.bwrThreshold: 'Threshold',
     };
   }
 
-  // Renamed to clarify its purpose
   String getFilterNameByIndex(int index) {
     var methods = widget.epd.processingMethods;
     if (index < 0 || index >= methods.length) return "Unknown";
 
-    var filterMap = getFilterName(); // Get the map
+    var filterMap = getFilterName();
     return filterMap[methods[index]] ?? "Unknown";
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> imgWidgets = []; // Initialize as empty growable list
-    List<Widget> filterCards = []; // Initialize as empty growable list
+    List<Widget> imgWidgets = List.empty(growable: true);
+    List<Widget> filterCards = List.empty(growable: true);
 
     if (widget.imgList.isEmpty) {
       return const Center(
@@ -73,15 +72,13 @@ class _ImageList extends State<ImageList> {
 
     for (var i = 0; i < widget.imgList.length; i++) {
       var rotatedImg = img.copyRotate(widget.imgList[i], angle: 90);
-
-      // Apply flip transformations here as per 'main' branch
       var uiImage = Transform(
         alignment: Alignment.center,
         transform: Matrix4.identity()
           ..scale(widget.flipHorizontal ? -1.0 : 1.0,
               widget.flipVertical ? -1.0 : 1.0),
         child: Image.memory(
-          img.encodePng(rotatedImg), // Encode to PNG here for display
+          img.encodePng(rotatedImg),
           height: 100,
           isAntiAlias: false,
         ),
@@ -96,13 +93,13 @@ class _ImageList extends State<ImageList> {
             });
           },
           child: Card(
-            color: Colors.white,
+            color: colorWhite,
             margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
             elevation: imgSelection == i ? 3 : 1,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
               side: BorderSide(
-                color: imgSelection == i ? colorPrimary : Colors.grey.shade300,
+                color: imgSelection == i ? colorPrimary : mdGrey400,
                 width: imgSelection == i ? 2 : 1,
               ),
             ),
@@ -119,8 +116,7 @@ class _ImageList extends State<ImageList> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
-                          color:
-                              imgSelection == i ? colorPrimary : Colors.black87,
+                          color: imgSelection == i ? colorPrimary : colorBlack,
                         ),
                       ),
                     ),
@@ -136,29 +132,18 @@ class _ImageList extends State<ImageList> {
         ),
       );
     }
-
     Widget previewWidget = Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.only(top: 12.0, bottom: 8.0),
-          child: Text(
-            "Preview",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
-          ),
-        ),
+        const SizedBox(height: 8),
         Container(
           width: double.infinity,
           height: 200,
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade300),
+            border: Border.all(color: mdGrey400),
             borderRadius: BorderRadius.circular(8),
           ),
           child: imgSelection < imgWidgets.length
-              ? Transform( // Apply flip transformations here as well
+              ? Transform(
                   alignment: Alignment.center,
                   transform: Matrix4.identity()
                     ..scale(widget.flipHorizontal ? -1.0 : 1.0,
@@ -171,7 +156,63 @@ class _ImageList extends State<ImageList> {
                 )
               : const Center(child: Text("No filter selected")),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: colorWhite,
+                boxShadow: [
+                  BoxShadow(
+                    color: colorBlack.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 3,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
+              child: IconButton(
+                icon: Image.asset(
+                  ImageAssets.flipHorizontal,
+                  height: 24,
+                  width: 24,
+                ),
+                onPressed: widget.onFlipHorizontal,
+                tooltip: 'Flip Horizontally',
+              ),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: colorWhite,
+                boxShadow: [
+                  BoxShadow(
+                    color: colorBlack.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 3,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
+              child: IconButton(
+                icon: Transform.rotate(
+                  angle: -1.5708,
+                  child: Image.asset(
+                    ImageAssets.flipHorizontal,
+                    height: 24,
+                    width: 24,
+                  ),
+                ),
+                onPressed: widget.onFlipVertical,
+                tooltip: 'Flip Vertically',
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
         const Divider(),
       ],
     );
@@ -195,46 +236,14 @@ class _ImageList extends State<ImageList> {
           right: 0,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colorWhite,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: colorBlack.withValues(alpha: 0.1),
                   blurRadius: 4,
                   offset: const Offset(0, -2),
                 ),
               ],
-            ),
-            padding: const EdgeInsets.all(16),
-            child: SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorPrimary,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-                onPressed: () {
-                  // Apply flip logic to the final image before sending
-                  img.Image finalImg = widget.imgList[imgSelection];
-                  if (widget.flipHorizontal) {
-                    finalImg = img.flipHorizontal(finalImg);
-                  }
-                  if (widget.flipVertical) {
-                    finalImg = img.flipVertical(finalImg);
-                  }
-                  Protocol(epd: widget.epd).writeImages(finalImg);
-                },
-                child: const Text(
-                  'Start Transfer',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
             ),
           ),
         ),
