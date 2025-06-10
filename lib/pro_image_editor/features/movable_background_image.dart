@@ -8,8 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:magic_epaper_app/constants/asset_paths.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/bottom_bar.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/text_bottom_bar.dart';
+import 'package:magic_epaper_app/provider/color_palette_provider.dart';
+import 'package:magic_epaper_app/provider/getitlocator.dart';
 import 'package:pro_image_editor/core/models/layers/layer_interaction.dart';
 import 'package:pro_image_editor/designs/whatsapp/whatsapp_paint_colorpicker.dart';
 import 'package:pro_image_editor/designs/whatsapp/whatsapp_text_colorpicker.dart';
@@ -54,9 +57,9 @@ class _MovableBackgroundImageExampleState
   @override
   void initState() {
     super.initState();
-    preCacheImage(assetPath: 'assets/canvas/white.png');
-    preCacheImage(assetPath: 'assets/canvas/red.png');
-    preCacheImage(assetPath: 'assets/canvas/black.png');
+    preCacheImage(assetPath: ImageAssets.whiteBoard);
+    preCacheImage(assetPath: ImageAssets.redBoard);
+    preCacheImage(assetPath: ImageAssets.blackBoard);
     //_createTransparentImage(_imgRatio);
     _bottomBarScrollCtrl = ScrollController();
   }
@@ -215,21 +218,29 @@ class _MovableBackgroundImageExampleState
   //   _transparentBytes = pngBytes!.buffer.asUint8List();
   // }
 
-// Add this method to handle canvas color changes
+  final List<Color> availableCanvasColors =
+      getIt<ColorPaletteProvider>().colors;
+  int currentCanvasColorIndex = 0;
+
+  String _getCanvasColorName(Color color) {
+    if (color == Colors.white) {
+      return 'white';
+    } else if (color == Colors.red) {
+      return 'red';
+    } else if (color == Colors.black) {
+      return 'black';
+    }
+
+    return 'white';
+  }
+
   void _changeCanvasColor() {
     setState(() {
-      // Cycle through colors: white -> red -> black
-      switch (_currentCanvasColor) {
-        case 'white':
-          _currentCanvasColor = 'red';
-          break;
-        case 'red':
-          _currentCanvasColor = 'black';
-          break;
-        case 'black':
-          _currentCanvasColor = 'white';
-          break;
-      }
+      currentCanvasColorIndex =
+          (currentCanvasColorIndex + 1) % availableCanvasColors.length;
+
+      _currentCanvasColor =
+          _getCanvasColorName(availableCanvasColors[currentCanvasColorIndex]);
     });
 
     // Update the canvas by replacing the first layer
@@ -325,7 +336,7 @@ class _MovableBackgroundImageExampleState
           secondary: Color(0xFFE2E2E2),
         ),
         child: ProImageEditor.asset(
-          'assets/canvas/white.png',
+          ImageAssets.whiteBoard,
           key: editorKey,
           callbacks: ProImageEditorCallbacks(
             onImageEditingStarted: onImageEditingStarted,
@@ -340,7 +351,7 @@ class _MovableBackgroundImageExampleState
                     offset: Offset.zero,
                     scale: _initScale,
                     widget: Image.asset(
-                      'assets/canvas/white.png',
+                      ImageAssets.whiteBoard,
                       width: 240,
                       height: 416,
                       frameBuilder:

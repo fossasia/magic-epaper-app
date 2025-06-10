@@ -1,27 +1,38 @@
-import 'dart:typed_data';
+import 'dart:typed_data'; // Still needed for img.encodePng
 
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
 import 'package:magic_epaper_app/util/epd/epd.dart';
+import 'package:magic_epaper_app/util/protocol.dart';
 import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
-import 'package:magic_epaper_app/constants.dart';
+import 'package:magic_epaper_app/constants/color_constants.dart';
 
-// Main list widget - now highly performant
-class ImageList extends StatelessWidget {
-  final List<Uint8List> processedPngs; // Takes pre-processed image data
+// Main list widget
+class ImageList extends StatefulWidget {
+  // Change to List<img.Image> as per the new ImageEditor's _rawImages
+  final List<img.Image> imgList;
   final Epd epd;
-  final Function(int) onFilterSelected;
-  final int selectedIndex;
+  // New flip properties from 'main' branch
+  final bool flipHorizontal;
+  final bool flipVertical;
 
-  const ImageList({
-    super.key,
-    required this.processedPngs,
-    required this.epd,
-    required this.onFilterSelected,
-    required this.selectedIndex,
-  });
+  const ImageList(
+      {super.key,
+      required this.imgList,
+      required this.epd,
+      required this.flipHorizontal,
+      required this.flipVertical});
 
-  String _getFilterNameByIndex(int index) {
-    const Map<Function, String> filterMap = {
+  @override
+  State<StatefulWidget> createState() => _ImageList();
+}
+
+class _ImageList extends State<ImageList> {
+  int imgSelection = 0;
+
+  // The getFilterName() method now provides the map of functions to names.
+  Map<Function, String> getFilterName() {
+    return {
       ImageProcessing.bwFloydSteinbergDither: 'Floyd-Steinberg',
       ImageProcessing.bwFalseFloydSteinbergDither: 'False Floyd-Steinberg',
       ImageProcessing.bwStuckiDither: 'Stucki',
@@ -35,139 +46,199 @@ class ImageList extends StatelessWidget {
       ImageProcessing.bwrTriColorAtkinsonDither: 'BWR Atkinson',
       ImageProcessing.bwrThreshold: 'BWR Threshold',
     };
-    var methods = epd.processingMethods;
+  }
+
+  // Renamed to clarify its purpose
+  String getFilterNameByIndex(int index) {
+    var methods = widget.epd.processingMethods;
     if (index < 0 || index >= methods.length) return "Unknown";
+
+    var filterMap = getFilterName(); // Get the map
     return filterMap[methods[index]] ?? "Unknown";
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Preview Widget
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-          child: Column(
-            children: [
-              const Text(
-                "Preview",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black
-                ),
+    List<Widget> imgWidgets = []; // Initialize as empty growable list
+    List<Widget> filterCards = []; // Initialize as empty growable list
+
+    if (widget.imgList.isEmpty) {
+      return const Center(
+        child: Text(
+          "Please import an image to continue!",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+      );
+    }
+
+    for (var i = 0; i < widget.imgList.length; i++) {
+      var rotatedImg = img.copyRotate(widget.imgList[i], angle: 90);
+
+      // Apply flip transformations here as per 'main' branch
+      var uiImage = Transform(
+        alignment: Alignment.center,
+        transform: Matrix4.identity()
+          ..scale(widget.flipHorizontal ? -1.0 : 1.0,
+              widget.flipVertical ? -1.0 : 1.0),
+        child: Image.memory(
+          img.encodePng(rotatedImg), // Encode to PNG here for display
+          height: 100,
+          isAntiAlias: false,
+        ),
+      );
+      imgWidgets.add(uiImage);
+
+      filterCards.add(
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              imgSelection = i;
+            });
+          },
+          child: Card(
+            color: Colors.white,
+            margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            elevation: imgSelection == i ? 3 : 1,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+              side: BorderSide(
+                color: imgSelection == i ? colorPrimary : Colors.grey.shade300,
+                width: imgSelection == i ? 2 : 1,
               ),
-              const SizedBox(height: 8),
-              Container(
-                width: double.infinity,
-                height: 200,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.grey.shade300),
-                  borderRadius: BorderRadius.circular(12),
-                  image: DecorationImage(
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        getFilterNameByIndex(i),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          color:
+                              imgSelection == i ? colorPrimary : Colors.black87,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: imgWidgets[i],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget previewWidget = Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(top: 12.0, bottom: 8.0),
+          child: Text(
+            "Preview",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+        ),
+        Container(
+          width: double.infinity,
+          height: 200,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: imgSelection < imgWidgets.length
+              ? Transform( // Apply flip transformations here as well
+                  alignment: Alignment.center,
+                  transform: Matrix4.identity()
+                    ..scale(widget.flipHorizontal ? -1.0 : 1.0,
+                        widget.flipVertical ? -1.0 : 1.0),
+                  child: Image.memory(
+                    img.encodePng(img.copyRotate(widget.imgList[imgSelection],
+                        angle: 90)),
                     fit: BoxFit.contain,
-                    image: MemoryImage(processedPngs[selectedIndex]),
+                  ),
+                )
+              : const Center(child: Text("No filter selected")),
+        ),
+        const SizedBox(height: 16),
+        const Divider(),
+      ],
+    );
+
+    return Stack(
+      children: [
+        Column(
+          children: [
+            previewWidget,
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.only(bottom: 80),
+                children: filterCards,
+              ),
+            ),
+          ],
+        ),
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 4,
+                  offset: const Offset(0, -2),
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.all(16),
+            child: SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorPrimary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                onPressed: () {
+                  // Apply flip logic to the final image before sending
+                  img.Image finalImg = widget.imgList[imgSelection];
+                  if (widget.flipHorizontal) {
+                    finalImg = img.flipHorizontal(finalImg);
+                  }
+                  if (widget.flipVertical) {
+                    finalImg = img.flipVertical(finalImg);
+                  }
+                  Protocol(epd: widget.epd).writeImages(finalImg);
+                },
+                child: const Text(
+                  'Start Transfer',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-        const Divider(indent: 20, endIndent: 20, height: 24),
-        // The Performant List
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.only(bottom: 24, left: 8, right: 8),
-            itemCount: processedPngs.length,
-            itemBuilder: (context, index) {
-              return FilterCard(
-                key: ValueKey(index), // Use index for the key
-                imageData: processedPngs[index],
-                filterName: _getFilterNameByIndex(index),
-                isSelected: index == selectedIndex,
-                onTap: () => onFilterSelected(index),
-              );
-            },
+            ),
           ),
         ),
       ],
-    );
-  }
-}
-
-// The individual list item - it's a stateless widget for max performance
-class FilterCard extends StatelessWidget {
-  final Uint8List imageData;
-  final String filterName;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const FilterCard({
-    super.key,
-    required this.imageData,
-    required this.filterName,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected ? colorAccent : Colors.grey.shade300,
-            width: isSelected ? 2.5 : 1,
-          ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: colorAccent.withOpacity(0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  )
-                ]
-              : [],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 4, // Give more space to the name
-                child: Text(
-                  filterName,
-                  style: TextStyle(
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                    fontSize: 15,
-                    color: isSelected ? colorAccent : Colors.black
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                flex: 5,
-                child: Container(
-                  height: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    image: DecorationImage(
-                      image: MemoryImage(imageData),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
