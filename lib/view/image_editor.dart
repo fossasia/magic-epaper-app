@@ -37,6 +37,20 @@ class _ImageEditorState extends State<ImageEditor> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      final imgLoader = context.read<ImageLoader>();
+      if (imgLoader.image == null) {
+        imgLoader.loadFinalizedImage(
+          width: widget.epd.width,
+          height: widget.epd.height,
+        );
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var imgLoader = context.watch<ImageLoader>();
     final orgImg = imgLoader.image;
@@ -90,9 +104,16 @@ class _ImageEditorState extends State<ImageEditor> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              onPressed: () {
-                imgLoader.pickImage(
-                    width: widget.epd.width, height: widget.epd.height);
+              onPressed: () async {
+                final success = await imgLoader.pickImage(
+                  width: widget.epd.width,
+                  height: widget.epd.height,
+                );
+                if (success && imgLoader.image != null) {
+                  final bytes =
+                      Uint8List.fromList(img.encodePng(imgLoader.image!));
+                  await imgLoader.saveFinalizedImageBytes(bytes);
+                }
               },
               child: const Text(
                 "Import Image",
@@ -107,11 +128,14 @@ class _ImageEditorState extends State<ImageEditor> {
                   builder: (context) => const MovableBackgroundImageExample(),
                 ),
               );
-              imgLoader.updateImage(
-                bytes: canvasBytes!,
-                width: widget.epd.width,
-                height: widget.epd.height,
-              );
+              if (canvasBytes != null) {
+                await imgLoader.updateImage(
+                  bytes: canvasBytes,
+                  width: widget.epd.width,
+                  height: widget.epd.height,
+                );
+                await imgLoader.saveFinalizedImageBytes(canvasBytes);
+              }
             },
             child: const Text("Open Editor"),
           ),
@@ -126,7 +150,8 @@ class _ImageEditorState extends State<ImageEditor> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: imgList,
+          child:
+              imgLoader.isLoading ? Center(child: Text('Loading..')) : imgList,
         ),
       ),
     );
