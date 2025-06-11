@@ -45,7 +45,7 @@ class ImageLoader extends ChangeNotifier {
   }) async {
     isLoading = true;
     notifyListeners();
-    
+
     try {
       final dir = await getApplicationDocumentsDirectory();
       final file = File('${dir.path}/last_finalized.png');
