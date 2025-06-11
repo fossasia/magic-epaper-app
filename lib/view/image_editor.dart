@@ -20,8 +20,21 @@ class ImageEditor extends StatefulWidget {
 }
 
 class _ImageEditorState extends State<ImageEditor> {
+  int _selectedFilterIndex = 0;
   bool flipHorizontal = false;
   bool flipVertical = false;
+
+  img.Image? _processedSourceImage;
+  List<img.Image> _rawImages = [];
+  List<Uint8List> _processedPngs = [];
+
+  void _onFilterSelected(int index) {
+    if (_selectedFilterIndex != index) {
+      setState(() {
+        _selectedFilterIndex = index;
+      });
+    }
+  }
 
   void toggleFlipHorizontal() {
     setState(() {
@@ -35,17 +48,44 @@ class _ImageEditorState extends State<ImageEditor> {
     });
   }
 
+  void _updateProcessedImages(img.Image? sourceImage) {
+    if (sourceImage == null) {
+      if (_rawImages.isNotEmpty) {
+        setState(() {
+          _processedSourceImage = null;
+          _rawImages = [];
+          _processedPngs = [];
+        });
+      }
+      return;
+    }
+
+    if (_processedSourceImage == sourceImage) {
+      return;
+    }
+
+    _rawImages = processImages(
+      originalImage: sourceImage,
+      epd: widget.epd,
+    );
+
+    _processedPngs = _rawImages
+        .map((rawImg) => img.encodePng(img.copyRotate(rawImg, angle: 90)))
+        .toList();
+
+    setState(() {
+      _processedSourceImage = sourceImage;
+      _selectedFilterIndex = 0;
+      flipHorizontal = false;
+      flipVertical = false;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     var imgLoader = context.watch<ImageLoader>();
-    final orgImg = imgLoader.image;
-
-    final List<img.Image> processedImgs = orgImg != null
-        ? processImages(
-            originalImage: orgImg,
-            epd: widget.epd,
-          )
-        : [];
+    _updateProcessedImages(imgLoader.image);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -60,12 +100,13 @@ class _ImageEditorState extends State<ImageEditor> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         actions: <Widget>[
-          if (processedImgs.isNotEmpty)
+          if (_rawImages.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(right: 12.0),
               child: TextButton(
                 onPressed: () {
-                  img.Image finalImg = processedImgs[0];
+                  img.Image finalImg = _rawImages[_selectedFilterIndex];
+
                   if (flipHorizontal) {
                     finalImg = img.flipHorizontal(finalImg);
                   }
@@ -90,12 +131,15 @@ class _ImageEditorState extends State<ImageEditor> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: processedImgs.isNotEmpty
+          child: _processedPngs.isNotEmpty
               ? ImageList(
-                  imgList: processedImgs,
+                  key: ValueKey(_processedSourceImage),
+                  processedPngs: _processedPngs,
                   epd: widget.epd,
+                  selectedIndex: _selectedFilterIndex,
                   flipHorizontal: flipHorizontal,
                   flipVertical: flipVertical,
+                  onFilterSelected: _onFilterSelected,
                   onFlipHorizontal: toggleFlipHorizontal,
                   onFlipVertical: toggleFlipVertical,
                 )
@@ -128,7 +172,7 @@ class BottomActionMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 82,
+      height: 75,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
