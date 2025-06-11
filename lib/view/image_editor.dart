@@ -81,7 +81,6 @@ class _ImageEditorState extends State<ImageEditor> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     var imgLoader = context.watch<ImageLoader>();

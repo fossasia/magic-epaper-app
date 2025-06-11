@@ -88,7 +88,9 @@ class ImageList extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 4),
-        const Divider(thickness: 0.4,),
+        const Divider(
+          thickness: 0.4,
+        ),
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.only(bottom: 4),
@@ -193,7 +195,8 @@ class FilterCard extends StatelessWidget {
                   child: Text(
                     filterName,
                     style: TextStyle(
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
                       fontSize: 14,
                       color: isSelected ? colorPrimary : colorBlack,
                     ),
@@ -205,7 +208,8 @@ class FilterCard extends StatelessWidget {
                 child: Transform(
                   alignment: Alignment.center,
                   transform: Matrix4.identity()
-                    ..scale(flipHorizontal ? -1.0 : 1.0, flipVertical ? -1.0 : 1.0),
+                    ..scale(
+                        flipHorizontal ? -1.0 : 1.0, flipVertical ? -1.0 : 1.0),
                   child: Image.memory(
                     imageData,
                     height: 100,
