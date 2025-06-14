@@ -1,6 +1,6 @@
 name: "Unsigned Android Build Workflow"
 
-description: "Build unsigned APK and push to apk-unsigned branch"
+description: "Build unsigned APK and push to app branch"
 
 inputs:
   VERSION_NAME:
@@ -35,22 +35,18 @@ runs:
           exit 1
         fi
 
-    - name: Clone or Init apk-unsigned Branch
+    - name: Create app Branch
       shell: bash
       run: |
         git clone https://x-access-token:${{ inputs.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git apk-temp
         cd apk-temp
-        if git ls-remote --exit-code --heads origin apk-unsigned; then
-          git checkout apk-unsigned
-        else
-          git checkout --orphan apk-unsigned
-          git rm -rf . || true
-        fi
+        git checkout --orphan app
+        git rm -rf . || true
 
     - name: Store Unsigned APK
       shell: bash
       run: |
-        cp build/app/outputs/flutter-apk/app-release.apk apk-temp/unsigned.apk
+        cp build/app/outputs/flutter-apk/app-release.apk apk-temp/magic-epaper-unsigned.apk
 
     - name: Commit & Push Unsigned APK
       shell: bash
@@ -60,12 +56,12 @@ runs:
         cd apk-temp
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add unsigned.apk
-        git commit -m "[Unsigned APK] Update for v${{ inputs.VERSION_NAME }} (#${{ inputs.VERSION_CODE }})" || echo "Nothing to commit"
-        git push -u origin apk-unsigned
+        git add .
+        git commit -m "[Unsigned APK] v${{ inputs.VERSION_NAME }} (#${{ inputs.VERSION_CODE }})"
+        git push --force origin app
 
     - name: Upload Unsigned APK as Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: unsigned-apk
+        name: magic-epaper-unsigned-apk
         path: build/app/outputs/flutter-apk/app-release.apk
