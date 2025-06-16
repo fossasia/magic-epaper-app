@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
 import 'package:magic_epaper_app/util/image_editor_utils.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
+import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
 
@@ -214,6 +215,50 @@ class BottomActionMenu extends StatelessWidget {
                       bytes: canvasBytes,
                       width: epd.width,
                       height: epd.height,
+                    );
+                  }
+                },
+              ),
+              _buildActionButton(
+                context: context,
+                icon: Icons.tune_rounded,
+                label: 'Adjust',
+                onTap: () async 
+                {
+                  if (imgLoader.image != null) {
+                    final canvasBytes = await Navigator.of(context)
+                        .push<Uint8List>(MaterialPageRoute(
+                      builder: (context) => ProImageEditor.memory(
+                        img.encodeJpg(imgLoader.image!),
+                        callbacks: ProImageEditorCallbacks(
+                          onImageEditingComplete: (Uint8List bytes) async {
+                            Navigator.pop(context, bytes);
+                          },
+                        ),
+                        configs: const ProImageEditorConfigs(
+                          paintEditor: PaintEditorConfigs(enabled: false),
+                          textEditor: TextEditorConfigs(enabled: false),
+                          cropRotateEditor: CropRotateEditorConfigs(
+                            enabled: false,
+                          ),
+                          emojiEditor: EmojiEditorConfigs(enabled: false),
+                        ),
+                      ),
+                    )
+                    );
+                    if (canvasBytes != null) {
+                      imgLoader.updateImage(
+                        bytes: canvasBytes,
+                        width: epd.width,
+                        height: epd.height,
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          duration: Durations.medium4,
+                          content: Text('Import an image first!'),
+                          backgroundColor: colorPrimary),
                     );
                   }
                 },
