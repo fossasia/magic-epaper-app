@@ -223,8 +223,7 @@ class BottomActionMenu extends StatelessWidget {
                 context: context,
                 icon: Icons.tune_rounded,
                 label: 'Adjust',
-                onTap: () async 
-                {
+                onTap: () async {
                   if (imgLoader.image != null) {
                     final canvasBytes = await Navigator.of(context)
                         .push<Uint8List>(MaterialPageRoute(
@@ -244,8 +243,7 @@ class BottomActionMenu extends StatelessWidget {
                           emojiEditor: EmojiEditorConfigs(enabled: false),
                         ),
                       ),
-                    )
-                    );
+                    ));
                     if (canvasBytes != null) {
                       imgLoader.updateImage(
                         bytes: canvasBytes,
