@@ -7,7 +7,8 @@ import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
 abstract class Epd {
   int get width;
   int get height;
-  final processingMethods = <img.Image Function(img.Image)>[];
+  final processingMethods =
+      <img.Image Function(img.Image, Map<Color, double>)>[];
   String get name;
   String get modelId;
   String get imgPath;
