@@ -1,7 +1,10 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
+import 'package:magic_epaper_app/image_library/services/image_save_handler.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
 import 'package:magic_epaper_app/util/image_editor_utils.dart';
+import 'package:magic_epaper_app/image_library/image_library.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
@@ -24,9 +27,34 @@ class _ImageEditorState extends State<ImageEditor> {
   bool flipHorizontal = false;
   bool flipVertical = false;
 
+  String _currentImageSource = 'imported';
   img.Image? _processedSourceImage;
   List<img.Image> _rawImages = [];
   List<Uint8List> _processedPngs = [];
+  ImageSaveHandler? _imageSaveHandler;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _imageSaveHandler = ImageSaveHandler(
+      context: context,
+      provider: context.read<ImageLibraryProvider>(),
+    );
+  }
+
+  void _saveCurrentImage() async {
+    if (_imageSaveHandler == null) return;
+
+    await _imageSaveHandler!.saveCurrentImage(
+      rawImages: _rawImages,
+      selectedFilterIndex: _selectedFilterIndex,
+      flipHorizontal: flipHorizontal,
+      flipVertical: flipVertical,
+      currentImageSource: _currentImageSource,
+      processingMethods: widget.epd.processingMethods,
+      modelId: widget.epd.modelId,
+    );
+  }
 
   void _onFilterSelected(int index) {
     if (_selectedFilterIndex != index) {
@@ -99,7 +127,24 @@ class _ImageEditorState extends State<ImageEditor> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         actions: <Widget>[
-          if (_rawImages.isNotEmpty)
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ImageLibraryScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.photo_library_outlined),
+            tooltip: 'Image Library',
+          ),
+          if (_rawImages.isNotEmpty) ...[
+            IconButton(
+              onPressed: _saveCurrentImage,
+              icon: const Icon(Icons.save_outlined),
+              tooltip: 'Save to Library',
+            ),
             Padding(
               padding: const EdgeInsets.only(right: 12.0),
               child: TextButton(
@@ -125,6 +170,7 @@ class _ImageEditorState extends State<ImageEditor> {
                 child: const Text('Transfer'),
               ),
             ),
+          ],
         ],
       ),
       body: SafeArea(
@@ -151,9 +197,13 @@ class _ImageEditorState extends State<ImageEditor> {
         ),
       ),
       bottomNavigationBar: BottomActionMenu(
-        epd: widget.epd,
-        imgLoader: imgLoader,
-      ),
+          epd: widget.epd,
+          imgLoader: imgLoader,
+          onSourceChanged: (String source) {
+            setState(() {
+              _currentImageSource = source;
+            });
+          }),
     );
   }
 }
@@ -161,11 +211,13 @@ class _ImageEditorState extends State<ImageEditor> {
 class BottomActionMenu extends StatelessWidget {
   final Epd epd;
   final ImageLoader imgLoader;
+  final Function(String)? onSourceChanged;
 
   const BottomActionMenu({
     super.key,
     required this.epd,
     required this.imgLoader,
+    this.onSourceChanged,
   });
 
   @override
@@ -195,6 +247,7 @@ class BottomActionMenu extends StatelessWidget {
                 label: 'Import New',
                 onTap: () {
                   imgLoader.pickImage(width: epd.width, height: epd.height);
+                  onSourceChanged?.call('imported');
                 },
               ),
               _buildActionButton(
@@ -215,7 +268,21 @@ class BottomActionMenu extends StatelessWidget {
                       width: epd.width,
                       height: epd.height,
                     );
+                    onSourceChanged?.call('editor');
                   }
+                },
+              ),
+              _buildActionButton(
+                context: context,
+                icon: Icons.photo_library_outlined,
+                label: 'Library',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ImageLibraryScreen(),
+                    ),
+                  );
                 },
               ),
             ],
