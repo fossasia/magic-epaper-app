@@ -1,9 +1,11 @@
+import 'dart:ui';
 import 'package:image/image.dart' as img;
 import 'package:magic_epaper_app/util/epd/epd.dart';
 
 List<img.Image> processImages({
   required img.Image originalImage,
   required Epd epd,
+  required Map<Color, double> weights,
 }) {
   final List<img.Image> processedImgs = [];
 
@@ -14,7 +16,7 @@ List<img.Image> processImages({
   );
 
   for (final method in epd.processingMethods) {
-    processedImgs.add(method(transformed));
+    processedImgs.add(method(transformed, weights));
   }
 
   return processedImgs;

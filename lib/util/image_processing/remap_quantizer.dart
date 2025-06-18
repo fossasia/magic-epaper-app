@@ -1,5 +1,6 @@
 import 'package:image/image.dart' as img;
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 
 class RemapQuantizer extends img.Quantizer {
   @override
@@ -10,11 +11,12 @@ class RemapQuantizer extends img.Quantizer {
   late final Uint8List _paletteR;
   late final Uint8List _paletteG;
   late final Uint8List _paletteB;
+  final Map<Color, double> weights;
 
   final Map<int, int> _colorCache = {};
   static const int _maxCacheSize = 1024;
 
-  RemapQuantizer({required this.palette}) {
+  RemapQuantizer({required this.palette, this.weights = const {}}) {
     final numColors = palette.numColors;
 
     _paletteR = Uint8List(numColors);
@@ -88,7 +90,15 @@ class RemapQuantizer extends img.Quantizer {
     final dr = r - _paletteR[paletteIndex];
     final dg = g - _paletteG[paletteIndex];
     final db = b - _paletteB[paletteIndex];
-    return dr * dr + dg * dg + db * db;
+    final distanceSq = dr * dr + dg * dg + db * db;
+    final paletteColor = Color.fromARGB(255, _paletteR[paletteIndex],
+        _paletteG[paletteIndex], _paletteB[paletteIndex]);
+
+    final weight = weights[paletteColor] ?? 1.0;
+
+    if (weight <= 0) return 2147483647;
+
+    return (distanceSq / weight).round();
   }
 
   void _addToCache(int key, int value) {
