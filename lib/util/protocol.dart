@@ -45,6 +45,36 @@ class Protocol {
   Future<Uint8List> enableEnergyHarvesting(Uint8List tagId) async {
     return await _writeDynCfg(tagId, 0x02, 0x01);
   }
+  
+  // `pt_scan = true` means don't touch the outside pixels while refreshing
+  Future<Uint8List> _setPartialWindow(Uint8List tagId, int xsbank, int xebank, int ys, int ye, bool pt_scan) async {
+    // FIXME: move these constants to a specific controller
+    if (xsbank > 0x1d) throw "Horizontal start channel bank must be <= 0x1D";
+    if (xebank > 0x1d) throw "Horizontal end channel bank must be <= 0x1D";
+    if (xsbank >= xebank) throw "Start channel must be < End channel bank";
+    
+    if (ys > 0x1df) throw "Horizontal start channel bank must be <= 0x1DF";
+    if (ye > 0x1df) throw "Horizontal end channel bank must be <= 0x1DF";
+    if (ys >= ye) throw "Start channel must be < End channel bank";
+
+    int HRST73 = xsbank << 3;
+    int HRED73 = (xebank << 3) | 0x07;
+    int VRST8 = (ys >> 8) & 1;
+    int VRST70 = ys & 0xff;
+    int VRED8 = (ye >> 8) & 1;
+    int VRED70 = ye & 0xff;
+
+    await _writeMsg(tagId, Uint8List.fromList([fw.epdCmd, 0x90]));
+    return await _writeMsg(tagId, Uint8List.fromList([fw.epdSend, HRST73, HRED73, VRST8, VRST70, VRED8, VRED70, pt_scan ? 1 : 0]));
+  }
+
+  void _partialIn(Uint8List tagId) async {
+    await _writeMsg(tagId, Uint8List.fromList([fw.epdCmd, 0x91]));
+  }
+
+  void _partialOut(Uint8List tagId) async {
+    await _writeMsg(tagId, Uint8List.fromList([fw.epdCmd, 0x92]));
+  }
 
   Future<void> _sleep() async {
     await Future.delayed(const Duration(milliseconds: 20));
@@ -128,6 +158,8 @@ class Protocol {
     await Future.delayed(
         const Duration(seconds: 2)); // waiting for the power supply stable
 
+    await _setPartialWindow(id, 0, epd.width ~/ 8 - 1, 0, epd.height - 1, true);
+
     final epdColors = epd.extractEpaperColorFrames(image);
     final transmissionLines = epd.controller.transmissionLines.iterator;
     for (final c in epdColors) {
@@ -135,6 +167,8 @@ class Protocol {
       await writeFrame(id, c, transmissionLines.current);
     }
 
+    await _setPartialWindow(id, 0, 15, 0, 200, true);
+    _partialIn(id);
     await _writeMsg(
         id, Uint8List.fromList([fw.epdCmd, epd.controller.refresh]));
     await FlutterNfcKit.finish();
