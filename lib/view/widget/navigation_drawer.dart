@@ -1,0 +1,180 @@
+import 'package:flutter/material.dart';
+import 'package:magic_epaper_app/constants/color_constants.dart';
+import 'package:magic_epaper_app/constants/url_constant.dart';
+import 'package:share_plus/share_plus.dart';
+
+class AppDrawer extends StatefulWidget {
+  final int selectedIndex;
+
+  const AppDrawer({super.key, required this.selectedIndex});
+
+  @override
+  State<AppDrawer> createState() => _AppDrawerState();
+}
+
+class _AppDrawerState extends State<AppDrawer> {
+  late int currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    currentIndex = widget.selectedIndex;
+  }
+
+  void updateSelectedIndex(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      backgroundColor: drawerHeaderTitle,
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          const AspectRatio(
+            aspectRatio: 16 / 9,
+            child: DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.red,
+              ),
+              child: Center(
+                child: Text(
+                  'Magic ePaper',
+                  style: TextStyle(
+                      color: drawerHeaderTitle,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ),
+          _buildListTile(
+            index: 0,
+            icon: Icons.edit,
+            title: 'Select Display',
+            routeName: '/',
+          ),
+
+          _buildListTile(
+            index: 1,
+            icon: Icons.settings,
+            title: 'Settings',
+            routeName: '/settings',
+          ),
+          _buildListTile(
+            index: 2,
+            icon: Icons.people,
+            title: 'About Us',
+            routeName: '/aboutUs',
+          ),
+          const Divider(),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
+            child: Text(
+              'Other',
+              style: TextStyle(
+                color: Colors.black54,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          _buildListTile(
+            index: 3,
+            icon: Icons.shopping_cart,
+            title: 'Buy Badge',
+            routeName: '/buyBadge',
+            externalLink: 'https://fossasia.com/',
+          ),
+          //TODO after adding app to the appstore
+          // _buildListTile(
+          //   index: 4,
+          //   icon: Icons.share,
+          //   title: 'Share',
+          //   routeName: '/share',
+          //   shareText:
+          //       'Badge Magic is an app to control LED name badges. This app provides features to portray names, graphics and simple animations on LED badges.You can also download it from below link https://play.google.com/store/apps/details?id=org.fossasia.badgemagic',
+          // ),
+          // _buildListTile(
+          //   index: 8,
+          //   icon: Icons.star,
+          //   title: 'Rate Us',
+          //   routeName: '/rateUs',
+          //   externalLink: Platform.isIOS
+          //       ? 'https://apps.apple.com/us/app/badge-magic/id6740176888?action=write-review'
+          //       : 'https://play.google.com/store/apps/details?id=org.fossasia.badgemagic',
+          // ),
+          _buildListTile(
+            index: 4,
+            icon: Icons.bug_report,
+            title: 'Feedback/Bug Reports',
+            routeName: '/feedback',
+            externalLink: 'https://github.com/fossasia/magic-epaper-app/issues',
+          ),
+          //TODO after adding privacy policy
+          // _buildListTile(
+          //   index: 10,
+          //   assetIcon: "assets/icons/r_insurance.png",
+          //   title: 'Privacy Policy',
+          //   routeName: '/privacyPolicy',
+          //   externalLink: 'https://badgemagic.fossasia.org/privacy/',
+          // ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildListTile({
+    required int index,
+    IconData? icon,
+    String? assetIcon,
+    required String title,
+    required String routeName,
+    String? externalLink,
+    String? shareText,
+  }) {
+    return ListTile(
+      dense: true,
+      leading: icon != null
+          ? Icon(
+              icon,
+              color: currentIndex == index ? colorAccent : colorBlack,
+            )
+          : Image.asset(
+              assetIcon!,
+              height: 18,
+              color: currentIndex == index ? colorAccent : colorBlack,
+            ),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: currentIndex == index ? colorAccent : colorBlack,
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+        ),
+      ),
+      selected: currentIndex == index,
+      selectedTileColor: dividerColor,
+      onTap: () {
+        updateSelectedIndex(index);
+
+        Navigator.pop(context);
+
+        if (externalLink != null) {
+          openUrl(externalLink);
+        } else if (shareText != null) {
+          Share.share(shareText);
+        } else {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            routeName,
+            (route) => route.isFirst,
+          );
+        }
+      },
+    );
+  }
+}
