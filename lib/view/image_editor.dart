@@ -10,6 +10,7 @@ import 'package:image/image.dart' as img;
 import 'package:magic_epaper_app/provider/image_loader.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/constants/color_constants.dart';
+import 'package:magic_epaper_app/constants/string_constants.dart';
 import 'package:magic_epaper_app/util/protocol.dart';
 
 class ImageEditor extends StatefulWidget {
@@ -96,7 +97,7 @@ class _ImageEditorState extends State<ImageEditor> {
         backgroundColor: colorAccent,
         elevation: 0,
         title: const Text(
-          'Select a Filter',
+          StringConstants.filterScreenTitle,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         actions: <Widget>[
@@ -123,7 +124,7 @@ class _ImageEditorState extends State<ImageEditor> {
                     side: const BorderSide(color: Colors.white, width: 1),
                   ),
                 ),
-                child: const Text('Transfer'),
+                child: const Text(StringConstants.transferButtonLabel),
               ),
             ),
         ],
@@ -145,7 +146,7 @@ class _ImageEditorState extends State<ImageEditor> {
                 )
               : const Center(
                   child: Text(
-                    "Import an image to begin",
+                    StringConstants.importStartingImageFeedback,
                     style: TextStyle(color: Colors.grey, fontSize: 16),
                   ),
                 ),
@@ -177,7 +178,7 @@ class BottomActionMenu extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: colorBlack.withOpacity(0.1),
+            color: colorBlack.withValues(alpha: .1),
             spreadRadius: 0,
             blurRadius: 10,
             offset: const Offset(0, -5),
@@ -193,7 +194,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.add_photo_alternate_outlined,
-                label: 'Import New',
+                label: StringConstants.importImageButtonLabel,
                 onTap: () {
                   imgLoader.pickImage(width: epd.width, height: epd.height);
                 },
@@ -201,7 +202,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.edit_outlined,
-                label: 'Open Editor',
+                label: StringConstants.openEditor,
                 onTap: () async {
                   final canvasBytes =
                       await Navigator.of(context).push<Uint8List>(
@@ -222,7 +223,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.tune_rounded,
-                label: 'Adjust',
+                label: StringConstants.adjustButtonLabel,
                 onTap: () async {
                   if (imgLoader.image != null) {
                     final canvasBytes = await Navigator.of(context)
@@ -255,7 +256,7 @@ class BottomActionMenu extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           duration: Durations.medium4,
-                          content: Text('Import an image first!'),
+                          content: Text(StringConstants.noImageSelectedFeedback),
                           backgroundColor: colorPrimary),
                     );
                   }
