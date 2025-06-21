@@ -30,6 +30,20 @@ class _ImageEditorState extends State<ImageEditor> {
   List<img.Image> _rawImages = [];
   List<Uint8List> _processedPngs = [];
 
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      final imgLoader = context.read<ImageLoader>();
+      if (imgLoader.image == null) {
+        imgLoader.loadFinalizedImage(
+          width: widget.epd.width,
+          height: widget.epd.height,
+        );
+      }
+    });
+  }
+
   void _onFilterSelected(int index) {
     if (_selectedFilterIndex != index) {
       setState(() {
@@ -129,29 +143,36 @@ class _ImageEditorState extends State<ImageEditor> {
             ),
         ],
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: _processedPngs.isNotEmpty
-              ? ImageList(
-                  key: ValueKey(_processedSourceImage),
-                  processedPngs: _processedPngs,
-                  epd: widget.epd,
-                  selectedIndex: _selectedFilterIndex,
-                  flipHorizontal: flipHorizontal,
-                  flipVertical: flipVertical,
-                  onFilterSelected: _onFilterSelected,
-                  onFlipHorizontal: toggleFlipHorizontal,
-                  onFlipVertical: toggleFlipVertical,
-                )
-              : const Center(
-                  child: Text(
-                    StringConstants.importStartingImageFeedback,
-                    style: TextStyle(color: Colors.grey, fontSize: 16),
-                  ),
-                ),
-        ),
-      ),
+      body: imgLoader.isLoading
+          ? const Center(
+              child: Text('Loading...',
+                  style: TextStyle(
+                    color: colorBlack,
+                    fontSize: 14,
+                  )))
+          : SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: _processedPngs.isNotEmpty
+                    ? ImageList(
+                        key: ValueKey(_processedSourceImage),
+                        processedPngs: _processedPngs,
+                        epd: widget.epd,
+                        selectedIndex: _selectedFilterIndex,
+                        flipHorizontal: flipHorizontal,
+                        flipVertical: flipVertical,
+                        onFilterSelected: _onFilterSelected,
+                        onFlipHorizontal: toggleFlipHorizontal,
+                        onFlipVertical: toggleFlipVertical,
+                      )
+                    : const Center(
+                        child: Text(
+                          "Import an image to begin",
+                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                        ),
+                      ),
+              ),
+            ),
       bottomNavigationBar: BottomActionMenu(
         epd: widget.epd,
         imgLoader: imgLoader,
@@ -195,8 +216,14 @@ class BottomActionMenu extends StatelessWidget {
                 context: context,
                 icon: Icons.add_photo_alternate_outlined,
                 label: StringConstants.importImageButtonLabel,
-                onTap: () {
-                  imgLoader.pickImage(width: epd.width, height: epd.height);
+                onTap: () async {
+                  final success = await imgLoader.pickImage(
+                      width: epd.width, height: epd.height);
+                  if (success && imgLoader.image != null) {
+                    final bytes =
+                        Uint8List.fromList(img.encodePng(imgLoader.image!));
+                    await imgLoader.saveFinalizedImageBytes(bytes);
+                  }
                 },
               ),
               _buildActionButton(
@@ -212,11 +239,12 @@ class BottomActionMenu extends StatelessWidget {
                     ),
                   );
                   if (canvasBytes != null) {
-                    imgLoader.updateImage(
+                    await imgLoader.updateImage(
                       bytes: canvasBytes,
                       width: epd.width,
                       height: epd.height,
                     );
+                    await imgLoader.saveFinalizedImageBytes(canvasBytes);
                   }
                 },
               ),
