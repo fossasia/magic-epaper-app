@@ -256,7 +256,8 @@ class BottomActionMenu extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           duration: Durations.medium4,
-                          content: Text(StringConstants.noImageSelectedFeedback),
+                          content:
+                              Text(StringConstants.noImageSelectedFeedback),
                           backgroundColor: colorPrimary),
                     );
                   }
