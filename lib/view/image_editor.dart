@@ -31,6 +31,7 @@ class _ImageEditorState extends State<ImageEditor> {
   img.Image? _processedSourceImage;
   List<img.Image> _rawImages = [];
   List<Uint8List> _processedPngs = [];
+  ImageSaveHandler? _imageSaveHandler;
 
   @override
   void initState() {
@@ -45,7 +46,6 @@ class _ImageEditorState extends State<ImageEditor> {
       }
     });
   }
-  ImageSaveHandler? _imageSaveHandler;
 
   @override
   void didChangeDependencies() {

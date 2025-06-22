@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/image_library/model/saved_image_model.dart';
-import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
 import 'package:magic_epaper_app/constants/color_constants.dart';
+import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
 import 'package:magic_epaper_app/image_library/utils/epd_utils.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
@@ -118,15 +118,22 @@ class ImageOperationsService {
     return filterMap[processingMethods[index]] ?? "Unknown";
   }
 
-  void transferSingleImage(SavedImage image) {
-    final imageEpd = getEpdFromImage(image);
-    final decodedImage = img.decodeImage(image.imageData);
-
-    if (decodedImage != null) {
-      Protocol(epd: imageEpd).writeImages(decodedImage);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Transferred "${image.name}" to ePaper')),
-      );
+  Future<void> transferSingleImage(SavedImage image) async {
+    try {
+      final imageEpd = getEpdFromImage(image);
+      final imageData = await image.getImageData();
+      if (imageData == null) {
+        _showErrorSnackBar('Failed to load image data for "${image.name}"');
+        return;
+      }
+      final decodedImage = img.decodeImage(imageData);
+      if (decodedImage != null) {
+        Protocol(epd: imageEpd).writeImages(decodedImage);
+      } else {
+        _showErrorSnackBar('Failed to decode image "${image.name}"');
+      }
+    } catch (e) {
+      _showErrorSnackBar('Failed to transfer "${image.name}": ${e.toString()}');
     }
   }
 
@@ -240,7 +247,7 @@ class ImageOperationsService {
           children: [
             const Icon(Icons.error, color: Colors.white, size: 20),
             const SizedBox(width: 12),
-            Text(message),
+            Expanded(child: Text(message)),
           ],
         ),
         backgroundColor: Colors.red,
@@ -307,7 +314,7 @@ class ImageOperationsService {
               size: 20,
             ),
             const SizedBox(width: 12),
-            Text('Failed to save image: $error'),
+            Expanded(child: Text('Failed to save image: $error')),
           ],
         ),
         backgroundColor: Colors.red,

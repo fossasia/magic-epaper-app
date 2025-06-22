@@ -1,10 +1,11 @@
+import 'dart:io';
 import 'dart:typed_data';
-import 'dart:convert';
+import 'package:flutter/material.dart';
 
 class SavedImage {
   final String id;
   final String name;
-  final Uint8List imageData;
+  final String filePath;
   final DateTime createdAt;
   final String source;
   final Map<String, dynamic>? metadata;
@@ -12,7 +13,7 @@ class SavedImage {
   SavedImage({
     required this.id,
     required this.name,
-    required this.imageData,
+    required this.filePath,
     required this.createdAt,
     required this.source,
     this.metadata,
@@ -22,7 +23,7 @@ class SavedImage {
     return {
       'id': id,
       'name': name,
-      'imageData': base64Encode(imageData),
+      'filePath': filePath,
       'createdAt': createdAt.toIso8601String(),
       'source': source,
       'metadata': metadata,
@@ -30,26 +31,35 @@ class SavedImage {
   }
 
   factory SavedImage.fromJson(Map<String, dynamic> json) {
-    Uint8List imageData;
-    final imageDataJson = json['imageData'];
-
-    if (imageDataJson is String) {
-      imageData = base64Decode(imageDataJson);
-    } else if (imageDataJson is List) {
-      print("this method");
-
-      imageData = Uint8List.fromList(List<int>.from(imageDataJson));
-    } else {
-      throw FormatException('Invalid imageData format');
-    }
-
     return SavedImage(
       id: json['id'],
       name: json['name'],
-      imageData: imageData,
+      filePath: json['filePath'],
       createdAt: DateTime.parse(json['createdAt']),
       source: json['source'],
       metadata: json['metadata'],
     );
+  }
+
+  Future<Uint8List?> getImageData() async {
+    try {
+      final file = File(filePath);
+      if (await file.exists()) {
+        return await file.readAsBytes();
+      }
+      return null;
+    } catch (e) {
+      debugPrint('Error reading image file: $e');
+      return null;
+    }
+  }
+
+  Future<bool> fileExists() async {
+    try {
+      final file = File(filePath);
+      return await file.exists();
+    } catch (e) {
+      return false;
+    }
   }
 }

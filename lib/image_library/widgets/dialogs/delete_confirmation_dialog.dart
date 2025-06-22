@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/image_library/model/saved_image_model.dart';
 
@@ -108,7 +109,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.memory(image.imageData, fit: BoxFit.cover),
+              child: Image.file(File(image.filePath), fit: BoxFit.cover),
             ),
           ),
           const SizedBox(height: 12),

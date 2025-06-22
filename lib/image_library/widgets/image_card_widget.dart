@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/constants/color_constants.dart';
 import 'package:magic_epaper_app/image_library/model/saved_image_model.dart';
@@ -48,8 +49,8 @@ class ImageCardWidget extends StatelessWidget {
                   ClipRRect(
                     borderRadius:
                         const BorderRadius.vertical(top: Radius.circular(12)),
-                    child: Image.memory(
-                      image.imageData,
+                    child: Image.file(
+                      File(image.filePath),
                       fit: BoxFit.cover,
                       width: double.infinity,
                       isAntiAlias: false,

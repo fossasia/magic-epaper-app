@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/image_library/model/saved_image_model.dart';
 
@@ -118,7 +119,7 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.memory(image.imageData,
+                            child: Image.file(File(image.filePath),
                                 fit: BoxFit.cover),
                           ),
                         ),

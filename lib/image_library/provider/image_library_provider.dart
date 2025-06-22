@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/image_library/model/saved_image_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 class ImageLibraryProvider extends ChangeNotifier {
   List<SavedImage> _savedImages = [];
@@ -17,6 +19,8 @@ class ImageLibraryProvider extends ChangeNotifier {
   String _selectedSource = 'all';
   String get selectedSource => _selectedSource;
 
+  Directory? _imageDirectory;
+
   List<SavedImage> get filteredImages {
     var filtered = _savedImages.where((image) {
       final matchesSearch =
@@ -30,23 +34,46 @@ class ImageLibraryProvider extends ChangeNotifier {
     return filtered;
   }
 
+  Future<void> _initializeDirectory() async {
+    if (_imageDirectory == null) {
+      final appDir = await getApplicationDocumentsDirectory();
+      _imageDirectory = Directory('${appDir.path}/saved_images');
+      if (!await _imageDirectory!.exists()) {
+        await _imageDirectory!.create(recursive: true);
+      }
+    }
+  }
+
   Future<void> loadSavedImages() async {
     _isLoading = true;
     notifyListeners();
 
     try {
+      await _initializeDirectory();
       final prefs = await SharedPreferences.getInstance();
-      final savedImagesJson = prefs.getStringList('saved_images') ?? [];
-
-      _savedImages = savedImagesJson
-          .map((json) => SavedImage.fromJson(jsonDecode(json)))
-          .toList();
+      final savedImagesJson =
+          prefs.getStringList('saved_images_metadata') ?? [];
+      _savedImages = [];
+      for (String json in savedImagesJson) {
+        try {
+          final image = SavedImage.fromJson(jsonDecode(json));
+          if (await image.fileExists()) {
+            _savedImages.add(image);
+          } else {
+            debugPrint('Image file not found: ${image.filePath}');
+          }
+        } catch (e) {
+          debugPrint('Error parsing image metadata: $e');
+        }
+      }
+      await _cleanupOrphanedFiles();
+      debugPrint('Loaded ${_savedImages.length} images successfully');
     } catch (e) {
       debugPrint('Error loading saved images: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 
   Future<void> saveImage({
@@ -55,40 +82,68 @@ class ImageLibraryProvider extends ChangeNotifier {
     required String source,
     Map<String, dynamic>? metadata,
   }) async {
-    final savedImage = SavedImage(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: name,
-      imageData: imageData,
-      createdAt: DateTime.now(),
-      source: source,
-      metadata: metadata,
-    );
-
-    _savedImages.add(savedImage);
-    await _persistImages();
-    notifyListeners();
+    try {
+      await _initializeDirectory();
+      final imageId = DateTime.now().millisecondsSinceEpoch.toString();
+      final fileName =
+          '${imageId}_${name.replaceAll(RegExp(r'[^\w\s-]'), '')}.jpg';
+      final filePath = '${_imageDirectory!.path}/$fileName';
+      final file = File(filePath);
+      await file.writeAsBytes(imageData);
+      final savedImage = SavedImage(
+        id: imageId,
+        name: name,
+        filePath: filePath,
+        createdAt: DateTime.now(),
+        source: source,
+        metadata: metadata,
+      );
+      _savedImages.add(savedImage);
+      await _persistMetadata();
+      debugPrint('Successfully saved image: $name (${imageData.length} bytes)');
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error saving image: $e');
+      rethrow;
+    }
   }
 
   Future<void> deleteImage(String id) async {
-    _savedImages.removeWhere((image) => image.id == id);
-    await _persistImages();
-    notifyListeners();
+    try {
+      final imageIndex = _savedImages.indexWhere((image) => image.id == id);
+      if (imageIndex == -1) return;
+      final image = _savedImages[imageIndex];
+      final file = File(image.filePath);
+      if (await file.exists()) {
+        await file.delete();
+      }
+      _savedImages.removeAt(imageIndex);
+      await _persistMetadata();
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error deleting image: $e');
+      rethrow;
+    }
   }
 
   Future<void> renameImage(String id, String newName) async {
-    final index = _savedImages.indexWhere((image) => image.id == id);
-    if (index != -1) {
+    try {
+      final index = _savedImages.indexWhere((image) => image.id == id);
+      if (index == -1) return;
       final oldImage = _savedImages[index];
       _savedImages[index] = SavedImage(
         id: oldImage.id,
         name: newName,
-        imageData: oldImage.imageData,
+        filePath: oldImage.filePath,
         createdAt: oldImage.createdAt,
         source: oldImage.source,
         metadata: oldImage.metadata,
       );
-      await _persistImages();
+      await _persistMetadata();
       notifyListeners();
+    } catch (e) {
+      debugPrint('Error renaming image: $e');
+      rethrow;
     }
   }
 
@@ -102,14 +157,33 @@ class ImageLibraryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _persistImages() async {
+  Future<void> _persistMetadata() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final savedImagesJson =
+      final metadataJson =
           _savedImages.map((image) => jsonEncode(image.toJson())).toList();
-      await prefs.setStringList('saved_images', savedImagesJson);
+      await prefs.setStringList('saved_images_metadata', metadataJson);
+      final totalSize = metadataJson.join().length;
+      debugPrint('Metadata size: ${totalSize} bytes');
     } catch (e) {
-      debugPrint('Error persisting images: $e');
+      debugPrint('Error persisting metadata: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> _cleanupOrphanedFiles() async {
+    try {
+      if (_imageDirectory == null) return;
+      final files = await _imageDirectory!.list().toList();
+      final validFilePaths = _savedImages.map((img) => img.filePath).toSet();
+      for (final file in files) {
+        if (file is File && !validFilePaths.contains(file.path)) {
+          debugPrint('Deleting orphaned file: ${file.path}');
+          await file.delete();
+        }
+      }
+    } catch (e) {
+      debugPrint('Error cleaning up orphaned files: $e');
     }
   }
 }
