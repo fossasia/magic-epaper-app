@@ -1,4 +1,3 @@
-// display_selection_screen.dart
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/constants/color_constants.dart';
 import 'package:magic_epaper_app/constants/string_constants.dart';
@@ -46,7 +45,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'Select your ePaper display type',
+                  StringConstants.selectDisplayType,
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,
@@ -117,7 +116,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
           ),
         ),
         child: const Text(
-          'Continue',
+          StringConstants.continueButton,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,

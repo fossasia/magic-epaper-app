@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/constants/color_constants.dart';
+import 'package:magic_epaper_app/constants/string_constants.dart';
 import 'package:magic_epaper_app/constants/url_constant.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -42,7 +43,7 @@ class _AppDrawerState extends State<AppDrawer> {
               ),
               child: Center(
                 child: Text(
-                  'Magic ePaper',
+                  StringConstants.appName,
                   style: TextStyle(
                       color: drawerHeaderTitle,
                       fontSize: 25,
@@ -54,27 +55,27 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTile(
             index: 0,
             icon: Icons.edit,
-            title: 'Select Display',
+            title: StringConstants.selectDisplay,
             routeName: '/',
           ),
 
           _buildListTile(
             index: 1,
             icon: Icons.settings,
-            title: 'Settings',
+            title: StringConstants.settings,
             routeName: '/settings',
           ),
           _buildListTile(
             index: 2,
             icon: Icons.people,
-            title: 'About Us',
+            title: StringConstants.aboutUs,
             routeName: '/aboutUs',
           ),
           const Divider(),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
             child: Text(
-              'Other',
+              StringConstants.other,
               style: TextStyle(
                 color: Colors.black54,
                 fontWeight: FontWeight.bold,
@@ -85,7 +86,7 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTile(
             index: 3,
             icon: Icons.shopping_cart,
-            title: 'Buy Badge',
+            title: StringConstants.buyBadge,
             routeName: '/buyBadge',
             externalLink: 'https://fossasia.com/',
           ),
@@ -110,7 +111,7 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTile(
             index: 4,
             icon: Icons.bug_report,
-            title: 'Feedback/Bug Reports',
+            title: StringConstants.feedbackBugReports,
             routeName: '/feedback',
             externalLink: 'https://github.com/fossasia/magic-epaper-app/issues',
           ),

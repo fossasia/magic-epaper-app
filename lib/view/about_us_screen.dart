@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:magic_epaper_app/constants/asset_paths.dart';
+import 'package:magic_epaper_app/constants/string_constants.dart';
 import 'package:magic_epaper_app/constants/url_constant.dart';
 import 'package:magic_epaper_app/view/widget/common_scaffold_widget.dart';
 
@@ -56,16 +58,14 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                       ),
                       Center(
                         child: Image.asset(
-                          'assets/icons/icon.png',
+                          ImageAssets.tempIcon,
                           height: 100,
                           fit: BoxFit.contain,
                         ),
                       ),
                       const SizedBox(height: 30),
                       Text(
-                        "Magic ePaper is an app designed to control and update ePaper displays."
-                        "The goal is to provide tools for customizing and transferring images, text, and patterns to ePaper screens using NFC."
-                        "Data transfer from the smartphone to the ePaper hardware is done wirelessly via NFC. The project is built on top of custom firmware and display drivers for seamless communication and efficient image rendering.",
+                        StringConstants.aboutUsDescription,
                         textAlign: TextAlign.justify,
                         style: GoogleFonts.sora(
                           wordSpacing: 3,
@@ -81,7 +81,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         children: [
                           Flexible(
                             child: Text(
-                              'Developed by',
+                              StringConstants.developedBy,
                               style: GoogleFonts.sora(
                                 fontWeight: FontWeight.w500,
                                 color: Colors.grey,
@@ -95,7 +95,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                               onTap: () => openUrl(
                                   'https://github.com/fossasia/magic-epaper-app/graphs/contributors'),
                               child: Text(
-                                'FOSSASIA contributors',
+                                StringConstants.fossasiaContributors,
                                 style: GoogleFonts.sora(
                                   fontWeight: FontWeight.w500,
                                   color: Colors.red,
@@ -130,7 +130,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 12.0, top: 12.0),
                       child: Text(
-                        'Contact With Us',
+                        StringConstants.contactWithUs,
                         style: GoogleFonts.sora(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -140,12 +140,12 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                     ),
                     ListTile(
                       leading: Image.asset(
-                        'assets/icons/github.png',
+                        ImageAssets.githubIcon,
                         height: 40,
                         fit: BoxFit.contain,
                       ),
                       title: Text(
-                        'GitHub',
+                        StringConstants.github,
                         style: GoogleFonts.sora(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -153,7 +153,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         ),
                       ),
                       subtitle: Text(
-                        'Fork the repo and push changes or submit new issues.',
+                        StringConstants.githubSubtitle,
                         style: GoogleFonts.sora(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -186,7 +186,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
-                        "License",
+                        StringConstants.license,
                         style: GoogleFonts.sora(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
@@ -196,12 +196,12 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                     ),
                     ListTile(
                       leading: Image.asset(
-                        'assets/icons/badge.png',
+                        ImageAssets.badgeIcon,
                         height: 40,
                         fit: BoxFit.contain,
                       ),
                       title: Text(
-                        'License',
+                        StringConstants.license,
                         style: GoogleFonts.sora(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -209,7 +209,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         ),
                       ),
                       subtitle: Text(
-                        'Check Apache License 2.0 terms used on Magic ePaper.',
+                        StringConstants.licenseSubtitle,
                         style: GoogleFonts.sora(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -245,7 +245,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
           ),
         ),
       ),
-      title: 'Magic ePaper',
+      title: StringConstants.appName,
     );
   }
 }
