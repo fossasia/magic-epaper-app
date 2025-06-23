@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
 import 'package:magic_epaper_app/util/image_editor_utils.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
+import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
 
 import 'package:magic_epaper_app/provider/image_loader.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/constants/color_constants.dart';
+import 'package:magic_epaper_app/constants/string_constants.dart';
 import 'package:magic_epaper_app/util/protocol.dart';
 
 class ImageEditor extends StatefulWidget {
@@ -109,7 +111,7 @@ class _ImageEditorState extends State<ImageEditor> {
         backgroundColor: colorAccent,
         elevation: 0,
         title: const Text(
-          'Select a Filter',
+          StringConstants.filterScreenTitle,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         actions: <Widget>[
@@ -136,7 +138,7 @@ class _ImageEditorState extends State<ImageEditor> {
                     side: const BorderSide(color: Colors.white, width: 1),
                   ),
                 ),
-                child: const Text('Transfer'),
+                child: const Text(StringConstants.transferButtonLabel),
               ),
             ),
         ],
@@ -197,7 +199,7 @@ class BottomActionMenu extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: colorBlack.withOpacity(0.1),
+            color: colorBlack.withValues(alpha: .1),
             spreadRadius: 0,
             blurRadius: 10,
             offset: const Offset(0, -5),
@@ -213,7 +215,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.add_photo_alternate_outlined,
-                label: 'Import New',
+                label: StringConstants.importImageButtonLabel,
                 onTap: () async {
                   final success = await imgLoader.pickImage(
                       width: epd.width, height: epd.height);
@@ -227,7 +229,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.edit_outlined,
-                label: 'Open Editor',
+                label: StringConstants.openEditor,
                 onTap: () async {
                   final canvasBytes =
                       await Navigator.of(context).push<Uint8List>(
@@ -243,6 +245,49 @@ class BottomActionMenu extends StatelessWidget {
                       height: epd.height,
                     );
                     await imgLoader.saveFinalizedImageBytes(canvasBytes);
+                  }
+                },
+              ),
+              _buildActionButton(
+                context: context,
+                icon: Icons.tune_rounded,
+                label: StringConstants.adjustButtonLabel,
+                onTap: () async {
+                  if (imgLoader.image != null) {
+                    final canvasBytes = await Navigator.of(context)
+                        .push<Uint8List>(MaterialPageRoute(
+                      builder: (context) => ProImageEditor.memory(
+                        img.encodeJpg(imgLoader.image!),
+                        callbacks: ProImageEditorCallbacks(
+                          onImageEditingComplete: (Uint8List bytes) async {
+                            Navigator.pop(context, bytes);
+                          },
+                        ),
+                        configs: const ProImageEditorConfigs(
+                          paintEditor: PaintEditorConfigs(enabled: false),
+                          textEditor: TextEditorConfigs(enabled: false),
+                          cropRotateEditor: CropRotateEditorConfigs(
+                            enabled: false,
+                          ),
+                          emojiEditor: EmojiEditorConfigs(enabled: false),
+                        ),
+                      ),
+                    ));
+                    if (canvasBytes != null) {
+                      imgLoader.updateImage(
+                        bytes: canvasBytes,
+                        width: epd.width,
+                        height: epd.height,
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          duration: Durations.medium4,
+                          content:
+                              Text(StringConstants.noImageSelectedFeedback),
+                          backgroundColor: colorPrimary),
+                    );
                   }
                 },
               ),
