@@ -47,7 +47,7 @@ To support additional languages, please visit the tutorial on
 
 Flutter SDK: Install from Flutter's official website.
 
-Dart SDK: Included with Flutter, but verify installation using ```dart --version```
+Dart SDK: Included with Flutter, but verify installation using `dart --version`
 
 Git: Required for cloning the repository. Install from Git's official site.
 
