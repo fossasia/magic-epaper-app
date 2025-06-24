@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/constants/asset_paths.dart';
 import 'package:magic_epaper_app/image_library/services/image_filter_helper.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
-import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
 import 'package:magic_epaper_app/constants/color_constants.dart';
 
 class ImageList extends StatelessWidget {
