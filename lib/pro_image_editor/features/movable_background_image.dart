@@ -76,20 +76,15 @@ class _MovableBackgroundImageExampleState
     super.dispose();
   }
 
-  /// Calculate canvas dimensions based on screen size and aspect ratio
   void _calculateCanvasDimensions(Size screenSize) {
     final double targetAspectRatio = widget.width / widget.height;
-    final double availableWidth = screenSize.width - 32; // padding
-    final double availableHeight = screenSize.height -
-        kToolbarHeight -
-        kBottomNavigationBarHeight -
-        100; // extra padding
+    final double availableWidth = screenSize.width - 32;
+    final double availableHeight =
+        screenSize.height - kToolbarHeight - kBottomNavigationBarHeight - 100;
 
-    // Calculate dimensions while maintaining aspect ratio
     double calculatedWidth = min(widget.width.toDouble(), availableWidth);
     double calculatedHeight = calculatedWidth / targetAspectRatio;
 
-    // If height exceeds available space, recalculate based on height
     if (calculatedHeight > availableHeight) {
       calculatedHeight = availableHeight;
       calculatedWidth = calculatedHeight * targetAspectRatio;
