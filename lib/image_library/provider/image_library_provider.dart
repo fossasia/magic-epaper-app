@@ -20,7 +20,7 @@ class ImageLibraryProvider extends ChangeNotifier {
   String get selectedSource => _selectedSource;
 
   Directory? _imageDirectory;
-  bool _isInitialized = false; 
+  bool _isInitialized = false;
 
   List<SavedImage> get filteredImages {
     var filtered = _savedImages.where((image) {
@@ -81,7 +81,7 @@ class ImageLibraryProvider extends ChangeNotifier {
       }
       await _cleanupOrphanedFiles();
       debugPrint('Loaded ${_savedImages.length} images successfully');
-      _isInitialized = true; 
+      _isInitialized = true;
     } catch (e) {
       debugPrint('Error loading saved images: $e');
     } finally {

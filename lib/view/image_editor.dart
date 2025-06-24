@@ -32,7 +32,7 @@ class _ImageEditorState extends State<ImageEditor> {
   String _currentImageSource = 'imported';
   img.Image? _processedSourceImage;
   List<img.Image> _rawImages = [];
-  List<img.Image> _rotatedImages = []; 
+  List<img.Image> _rotatedImages = [];
   List<Uint8List> _processedPngs = [];
   ImageSaveHandler? _imageSaveHandler;
 
@@ -63,7 +63,7 @@ class _ImageEditorState extends State<ImageEditor> {
     if (_imageSaveHandler == null) return;
 
     await _imageSaveHandler!.saveCurrentImage(
-      rawImages: _rotatedImages, 
+      rawImages: _rotatedImages,
       selectedFilterIndex: _selectedFilterIndex,
       flipHorizontal: flipHorizontal,
       flipVertical: flipVertical,
@@ -99,7 +99,7 @@ class _ImageEditorState extends State<ImageEditor> {
         setState(() {
           _processedSourceImage = null;
           _rawImages = [];
-          _rotatedImages = []; 
+          _rotatedImages = [];
           _processedPngs = [];
         });
       }
@@ -168,8 +168,7 @@ class _ImageEditorState extends State<ImageEditor> {
               padding: const EdgeInsets.only(right: 12.0),
               child: TextButton(
                 onPressed: () {
-                  img.Image finalImg =
-                      _rotatedImages[_selectedFilterIndex]; 
+                  img.Image finalImg = _rotatedImages[_selectedFilterIndex];
 
                   if (flipHorizontal) {
                     finalImg = img.flipHorizontal(finalImg);
