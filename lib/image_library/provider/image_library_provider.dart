@@ -20,6 +20,7 @@ class ImageLibraryProvider extends ChangeNotifier {
   String get selectedSource => _selectedSource;
 
   Directory? _imageDirectory;
+  bool _isInitialized = false; 
 
   List<SavedImage> get filteredImages {
     var filtered = _savedImages.where((image) {
@@ -29,7 +30,6 @@ class ImageLibraryProvider extends ChangeNotifier {
           _selectedSource == 'all' || image.source == _selectedSource;
       return matchesSearch && matchesSource;
     }).toList();
-
     filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return filtered;
   }
@@ -44,10 +44,15 @@ class ImageLibraryProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> _ensureInitialized() async {
+    if (!_isInitialized) {
+      await loadSavedImages();
+    }
+  }
+
   Future<void> loadSavedImages() async {
     _isLoading = true;
     notifyListeners();
-
     try {
       await _initializeDirectory();
       final prefs = await SharedPreferences.getInstance();
@@ -66,8 +71,17 @@ class ImageLibraryProvider extends ChangeNotifier {
           debugPrint('Error parsing image metadata: $e');
         }
       }
+      if (_savedImages.isNotEmpty) {
+        final encoder = JsonEncoder.withIndent('  ');
+        final imageJsonList = _savedImages.map((img) => img.toJson()).toList();
+        final prettyJson = encoder.convert(imageJsonList);
+        debugPrint('Loaded image metadata (JSON):\n$prettyJson');
+      } else {
+        debugPrint('No saved images to print.');
+      }
       await _cleanupOrphanedFiles();
       debugPrint('Loaded ${_savedImages.length} images successfully');
+      _isInitialized = true; 
     } catch (e) {
       debugPrint('Error loading saved images: $e');
     } finally {
@@ -83,6 +97,7 @@ class ImageLibraryProvider extends ChangeNotifier {
     Map<String, dynamic>? metadata,
   }) async {
     try {
+      await _ensureInitialized();
       await _initializeDirectory();
       final imageId = DateTime.now().millisecondsSinceEpoch.toString();
       final fileName =
@@ -110,6 +125,7 @@ class ImageLibraryProvider extends ChangeNotifier {
 
   Future<void> deleteImage(String id) async {
     try {
+      await _ensureInitialized();
       final imageIndex = _savedImages.indexWhere((image) => image.id == id);
       if (imageIndex == -1) return;
       final image = _savedImages[imageIndex];
@@ -128,6 +144,7 @@ class ImageLibraryProvider extends ChangeNotifier {
 
   Future<void> renameImage(String id, String newName) async {
     try {
+      await _ensureInitialized();
       final index = _savedImages.indexWhere((image) => image.id == id);
       if (index == -1) return;
       final oldImage = _savedImages[index];

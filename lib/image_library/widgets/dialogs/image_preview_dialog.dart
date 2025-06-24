@@ -4,6 +4,7 @@ import 'package:magic_epaper_app/image_library/model/saved_image_model.dart';
 import 'package:magic_epaper_app/image_library/utils/date_utils.dart' as dt;
 import 'package:magic_epaper_app/image_library/utils/filter_utils.dart';
 import 'package:magic_epaper_app/image_library/utils/source_utils.dart';
+import 'package:magic_epaper_app/image_library/widgets/dialogs/image_properties_dialog.dart';
 import 'package:magic_epaper_app/image_library/widgets/dialogs/image_rename_dialog.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/constants/color_constants.dart';
@@ -68,6 +69,11 @@ class ImagePreviewDialog extends StatelessWidget {
             ),
           ),
           IconButton(
+            onPressed: () => _showPropertiesDialog(context),
+            icon: const Icon(Icons.info_outline, color: Colors.white),
+            tooltip: 'Image Properties',
+          ),
+          IconButton(
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.close, color: Colors.white),
           ),
@@ -94,7 +100,6 @@ class ImagePreviewDialog extends StatelessWidget {
 
   Widget _buildImageContainer() {
     return Container(
-      height: 200,
       decoration: BoxDecoration(
         border: Border.all(color: mdGrey400),
         borderRadius: BorderRadius.circular(8),
@@ -196,6 +201,13 @@ class ImagePreviewDialog extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _showPropertiesDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => ImagePropertiesDialog(image: image),
     );
   }
 

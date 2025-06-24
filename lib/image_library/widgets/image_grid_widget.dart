@@ -31,7 +31,7 @@ class ImageGridWidget extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.8,
+        childAspectRatio: 1.2,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
       ),

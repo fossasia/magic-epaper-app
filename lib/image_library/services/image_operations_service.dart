@@ -1,4 +1,7 @@
+import 'dart:io';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:magic_epaper_app/image_library/model/image_properties.dart';
 import 'package:magic_epaper_app/image_library/model/saved_image_model.dart';
 import 'package:magic_epaper_app/constants/color_constants.dart';
 import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
@@ -134,6 +137,54 @@ class ImageOperationsService {
       }
     } catch (e) {
       _showErrorSnackBar('Failed to transfer "${image.name}": ${e.toString()}');
+    }
+  }
+
+  Future<ImageProperties?> loadImageProperties(SavedImage image) async {
+    try {
+      final file = File(image.filePath);
+      if (!await file.exists()) {
+        return null;
+      }
+      final fileStat = await file.stat();
+      final fileSize = await file.length();
+      final imageData = await file.readAsBytes();
+      final codec = await ui.instantiateImageCodec(imageData);
+      final frame = await codec.getNextFrame();
+      final imageFrame = frame.image;
+      final extension = image.filePath.split('.').last.toLowerCase();
+      String format;
+      switch (extension) {
+        case 'jpg':
+        case 'jpeg':
+          format = 'JPEG';
+          break;
+        case 'png':
+          format = 'PNG';
+          break;
+        case 'bmp':
+          format = 'BMP';
+          break;
+        case 'webp':
+          format = 'WebP';
+          break;
+        default:
+          format = extension.toUpperCase();
+      }
+      final properties = ImageProperties(
+        fileSizeBytes: fileSize,
+        width: imageFrame.width,
+        height: imageFrame.height,
+        format: format,
+        aspectRatio: imageFrame.width / imageFrame.height,
+        lastModified: fileStat.modified,
+        filePath: image.filePath,
+      );
+      imageFrame.dispose();
+      return properties;
+    } catch (e) {
+      debugPrint('Error loading image properties: $e');
+      return null;
     }
   }
 
