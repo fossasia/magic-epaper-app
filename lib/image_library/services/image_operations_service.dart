@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:magic_epaper_app/image_library/services/image_filter_helper.dart';
 import 'package:magic_epaper_app/image_library/model/image_properties.dart';
 import 'package:magic_epaper_app/image_library/model/saved_image_model.dart';
 import 'package:magic_epaper_app/constants/color_constants.dart';
 import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
 import 'package:magic_epaper_app/image_library/utils/epd_utils.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
-import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
 import 'package:magic_epaper_app/util/protocol.dart';
 import 'package:image/image.dart' as img;
 import 'dart:typed_data';
@@ -103,22 +103,7 @@ class ImageOperationsService {
   }
 
   String getFilterNameByIndex(int index, List<Function> processingMethods) {
-    const Map<Function, String> filterMap = {
-      ImageProcessing.bwFloydSteinbergDither: 'Floyd-Steinberg',
-      ImageProcessing.bwFalseFloydSteinbergDither: 'False Floyd-Steinberg',
-      ImageProcessing.bwStuckiDither: 'Stucki',
-      ImageProcessing.bwAtkinsonDither: 'Atkinson',
-      ImageProcessing.bwThreshold: 'Threshold',
-      ImageProcessing.bwHalftoneDither: 'Halftone',
-      ImageProcessing.bwrHalftone: 'Color Halftone',
-      ImageProcessing.bwrFloydSteinbergDither: 'BWR Floyd-Steinberg',
-      ImageProcessing.bwrFalseFloydSteinbergDither: 'BWR False Floyd-Steinberg',
-      ImageProcessing.bwrStuckiDither: 'BWR Stucki',
-      ImageProcessing.bwrTriColorAtkinsonDither: 'BWR Atkinson',
-      ImageProcessing.bwrThreshold: 'BWR Threshold',
-    };
-    if (index < 0 || index >= processingMethods.length) return "Unknown";
-    return filterMap[processingMethods[index]] ?? "Unknown";
+    return ImageFilterHelper.getFilterNameByIndex(index, processingMethods);
   }
 
   Future<void> transferSingleImage(SavedImage image) async {
