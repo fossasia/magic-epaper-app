@@ -116,7 +116,8 @@ class ImageOperationsService {
       }
       final decodedImage = img.decodeImage(imageData);
       if (decodedImage != null) {
-        Protocol(epd: imageEpd).writeImages(decodedImage);
+        final rotatedImage = img.copyRotate(decodedImage, angle: -90);
+        Protocol(epd: imageEpd).writeImages(rotatedImage);
       } else {
         _showErrorSnackBar('Failed to decode image "${image.name}"');
       }

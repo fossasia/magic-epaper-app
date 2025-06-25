@@ -168,7 +168,7 @@ class _ImageEditorState extends State<ImageEditor> {
               padding: const EdgeInsets.only(right: 12.0),
               child: TextButton(
                 onPressed: () {
-                  img.Image finalImg = _rotatedImages[_selectedFilterIndex];
+                  img.Image finalImg = _rawImages[_selectedFilterIndex];
 
                   if (flipHorizontal) {
                     finalImg = img.flipHorizontal(finalImg);
