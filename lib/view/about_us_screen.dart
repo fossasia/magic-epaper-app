@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:magic_epaper_app/constants/asset_paths.dart';
 import 'package:magic_epaper_app/constants/string_constants.dart';
-import 'package:magic_epaper_app/constants/url_constant.dart';
+import 'package:magic_epaper_app/util/orientation_util.dart';
+import 'package:magic_epaper_app/util/url_util.dart';
 import 'package:magic_epaper_app/view/widget/common_scaffold_widget.dart';
 
 class AboutUsScreen extends StatefulWidget {
@@ -16,15 +16,8 @@ class AboutUsScreen extends StatefulWidget {
 class _AboutUsScreenState extends State<AboutUsScreen> {
   @override
   void initState() {
-    _setOrientation();
+    setPortraitOrientation();
     super.initState();
-  }
-
-  void _setOrientation() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
   }
 
   @override
@@ -171,7 +164,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       blurRadius: 1,
                       color: Colors.grey,
