@@ -92,7 +92,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           const SizedBox(width: 10),
                           Flexible(
                             child: GestureDetector(
-                              onTap: () => openUrl(
+                              onTap: () => openUrl(context,
                                   'https://github.com/fossasia/magic-epaper-app/graphs/contributors'),
                               child: Text(
                                 StringConstants.fossasiaContributors,
@@ -161,7 +161,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         ),
                         softWrap: true,
                       ),
-                      onTap: () => openUrl(
+                      onTap: () => openUrl(context,
                           'https://github.com/fossasia/magic-epaper-app'),
                     ),
                   ],
@@ -217,7 +217,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         ),
                         softWrap: true,
                       ),
-                      onTap: () => openUrl(
+                      onTap: () => openUrl(context,
                           'https://github.com/fossasia/magic-epaper-app/blob/main/LICENSE.md'),
                     ),
                     // ListTile(
