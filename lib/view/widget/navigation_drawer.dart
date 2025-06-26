@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/constants/color_constants.dart';
 import 'package:magic_epaper_app/constants/string_constants.dart';
-import 'package:share_plus/share_plus.dart';
+//import 'package:share_plus/share_plus.dart';
 import 'package:magic_epaper_app/util/url_util.dart';
 
 class AppDrawer extends StatefulWidget {
@@ -165,7 +165,7 @@ class _AppDrawerState extends State<AppDrawer> {
         if (externalLink != null) {
           openUrl(context, externalLink);
         } else if (shareText != null) {
-          SharePlus.instance.share(ShareParams(text: shareText));
+          //SharePlus.instance.share(ShareParams(text: shareText));
         } else {
           Navigator.pushNamedAndRemoveUntil(
             context,

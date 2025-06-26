@@ -29,5 +29,4 @@ class StringConstants {
   static const String importStartingImageFeedback = "Import an image to begin";
   static const String transferButtonLabel = 'Transfer';
   static const String filterScreenTitle = 'Select a Filter';
-
 }
