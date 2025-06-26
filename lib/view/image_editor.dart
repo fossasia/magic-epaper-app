@@ -158,6 +158,8 @@ class _ImageEditorState extends State<ImageEditor> {
                         key: ValueKey(_processedSourceImage),
                         processedPngs: _processedPngs,
                         epd: widget.epd,
+                        width: widget.epd.width,
+                        height: widget.epd.height,
                         selectedIndex: _selectedFilterIndex,
                         flipHorizontal: flipHorizontal,
                         flipVertical: flipVertical,
@@ -234,8 +236,10 @@ class BottomActionMenu extends StatelessWidget {
                   final canvasBytes =
                       await Navigator.of(context).push<Uint8List>(
                     MaterialPageRoute(
-                      builder: (context) =>
-                          const MovableBackgroundImageExample(),
+                      builder: (context) => MovableBackgroundImageExample(
+                        width: epd.width,
+                        height: epd.height,
+                      ),
                     ),
                   );
                   if (canvasBytes != null) {
