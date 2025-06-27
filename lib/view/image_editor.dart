@@ -1,7 +1,10 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
+import 'package:magic_epaper_app/image_library/services/image_save_handler.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
 import 'package:magic_epaper_app/util/image_editor_utils.dart';
+import 'package:magic_epaper_app/image_library/image_library.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:provider/provider.dart';
@@ -26,9 +29,12 @@ class _ImageEditorState extends State<ImageEditor> {
   bool flipHorizontal = false;
   bool flipVertical = false;
 
+  String _currentImageSource = 'imported';
   img.Image? _processedSourceImage;
   List<img.Image> _rawImages = [];
+  List<img.Image> _rotatedImages = [];
   List<Uint8List> _processedPngs = [];
+  ImageSaveHandler? _imageSaveHandler;
 
   @override
   void initState() {
@@ -42,6 +48,29 @@ class _ImageEditorState extends State<ImageEditor> {
         );
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _imageSaveHandler = ImageSaveHandler(
+      context: context,
+      provider: context.read<ImageLibraryProvider>(),
+    );
+  }
+
+  void _saveCurrentImage() async {
+    if (_imageSaveHandler == null) return;
+
+    await _imageSaveHandler!.saveCurrentImage(
+      rawImages: _rotatedImages,
+      selectedFilterIndex: _selectedFilterIndex,
+      flipHorizontal: flipHorizontal,
+      flipVertical: flipVertical,
+      currentImageSource: _currentImageSource,
+      processingMethods: widget.epd.processingMethods,
+      modelId: widget.epd.modelId,
+    );
   }
 
   void _onFilterSelected(int index) {
@@ -70,6 +99,7 @@ class _ImageEditorState extends State<ImageEditor> {
         setState(() {
           _processedSourceImage = null;
           _rawImages = [];
+          _rotatedImages = [];
           _processedPngs = [];
         });
       }
@@ -85,9 +115,10 @@ class _ImageEditorState extends State<ImageEditor> {
       epd: widget.epd,
     );
 
-    _processedPngs = _rawImages
-        .map((rawImg) => img.encodePng(img.copyRotate(rawImg, angle: 90)))
-        .toList();
+    _rotatedImages =
+        _rawImages.map((rawImg) => img.copyRotate(rawImg, angle: 90)).toList();
+    _processedPngs =
+        _rotatedImages.map((rotatedImg) => img.encodePng(rotatedImg)).toList();
 
     setState(() {
       _processedSourceImage = sourceImage;
@@ -115,7 +146,24 @@ class _ImageEditorState extends State<ImageEditor> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         actions: <Widget>[
-          if (_rawImages.isNotEmpty)
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ImageLibraryScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.photo_library_outlined),
+            tooltip: 'Image Library',
+          ),
+          if (_rawImages.isNotEmpty) ...[
+            IconButton(
+              onPressed: _saveCurrentImage,
+              icon: const Icon(Icons.save_outlined),
+              tooltip: 'Save to Library',
+            ),
             Padding(
               padding: const EdgeInsets.only(right: 12.0),
               child: TextButton(
@@ -141,6 +189,7 @@ class _ImageEditorState extends State<ImageEditor> {
                 child: const Text(StringConstants.transferButtonLabel),
               ),
             ),
+          ],
         ],
       ),
       body: imgLoader.isLoading
@@ -174,9 +223,13 @@ class _ImageEditorState extends State<ImageEditor> {
               ),
             ),
       bottomNavigationBar: BottomActionMenu(
-        epd: widget.epd,
-        imgLoader: imgLoader,
-      ),
+          epd: widget.epd,
+          imgLoader: imgLoader,
+          onSourceChanged: (String source) {
+            setState(() {
+              _currentImageSource = source;
+            });
+          }),
     );
   }
 }
@@ -184,11 +237,13 @@ class _ImageEditorState extends State<ImageEditor> {
 class BottomActionMenu extends StatelessWidget {
   final Epd epd;
   final ImageLoader imgLoader;
+  final Function(String)? onSourceChanged;
 
   const BottomActionMenu({
     super.key,
     required this.epd,
     required this.imgLoader,
+    this.onSourceChanged,
   });
 
   @override
@@ -224,6 +279,7 @@ class BottomActionMenu extends StatelessWidget {
                         Uint8List.fromList(img.encodePng(imgLoader.image!));
                     await imgLoader.saveFinalizedImageBytes(bytes);
                   }
+                  onSourceChanged?.call('imported');
                 },
               ),
               _buildActionButton(
@@ -245,6 +301,7 @@ class BottomActionMenu extends StatelessWidget {
                       height: epd.height,
                     );
                     await imgLoader.saveFinalizedImageBytes(canvasBytes);
+                    onSourceChanged?.call('editor');
                   }
                 },
               ),
@@ -289,6 +346,19 @@ class BottomActionMenu extends StatelessWidget {
                           backgroundColor: colorPrimary),
                     );
                   }
+                },
+              ),
+              _buildActionButton(
+                context: context,
+                icon: Icons.photo_library_outlined,
+                label: 'Library',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ImageLibraryScreen(),
+                    ),
+                  );
                 },
               ),
             ],
