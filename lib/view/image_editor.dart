@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
 import 'package:magic_epaper_app/util/image_editor_utils.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
+import 'package:magic_epaper_app/view/widget/transfer_progress_dialog.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
@@ -97,6 +98,21 @@ class _ImageEditorState extends State<ImageEditor> {
     });
   }
 
+  Future<void> _showTransferProgress(img.Image finalImg) async {
+    await TransferProgressDialog.show(
+      context: context,
+      finalImg: finalImg,
+      transferFunction: (image, onProgress, onTagDetected) async {
+        return await Protocol(epd: widget.epd).writeImages(
+          image,
+          onProgress: onProgress,
+          onTagDetected: onTagDetected,
+        );
+      },
+      colorAccent: colorAccent,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var imgLoader = context.watch<ImageLoader>();
@@ -119,7 +135,7 @@ class _ImageEditorState extends State<ImageEditor> {
             Padding(
               padding: const EdgeInsets.only(right: 12.0),
               child: TextButton(
-                onPressed: () {
+                onPressed: () async {
                   img.Image finalImg = _rawImages[_selectedFilterIndex];
 
                   if (flipHorizontal) {
@@ -128,7 +144,7 @@ class _ImageEditorState extends State<ImageEditor> {
                   if (flipVertical) {
                     finalImg = img.flipVertical(finalImg);
                   }
-                  Protocol(epd: widget.epd).writeImages(finalImg);
+                  await _showTransferProgress(finalImg);
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: colorAccent,
