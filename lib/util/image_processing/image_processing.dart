@@ -98,6 +98,55 @@ class ImageProcessing {
         quantizer: RemapQuantizer(palette: _createTriColorPalette()),
         kernel: img.DitherKernel.none);
   }
+
+  // Custom palette methods for ConfigurableEpd
+  static img.Image customFloydSteinbergDither(
+      img.Image orgImg, img.PaletteUint8 palette) {
+    var image = img.Image.from(orgImg);
+    return img.ditherImage(image,
+        quantizer: RemapQuantizer(palette: palette),
+        kernel: img.DitherKernel.floydSteinberg);
+  }
+
+  static img.Image customFalseFloydSteinbergDither(
+      img.Image orgImg, img.PaletteUint8 palette) {
+    var image = img.Image.from(orgImg);
+    return img.ditherImage(image,
+        quantizer: RemapQuantizer(palette: palette),
+        kernel: img.DitherKernel.falseFloydSteinberg);
+  }
+
+  static img.Image customStuckiDither(
+      img.Image orgImg, img.PaletteUint8 palette) {
+    var image = img.Image.from(orgImg);
+    return img.ditherImage(image,
+        quantizer: RemapQuantizer(palette: palette),
+        kernel: img.DitherKernel.stucki);
+  }
+
+  static img.Image customAtkinsonDither(
+      img.Image orgImg, img.PaletteUint8 palette) {
+    var image = img.Image.from(orgImg);
+    return img.ditherImage(image,
+        quantizer: RemapQuantizer(palette: palette),
+        kernel: img.DitherKernel.atkinson);
+  }
+
+  static img.Image customThreshold(img.Image orgImg, img.PaletteUint8 palette) {
+    var image = img.Image.from(orgImg);
+    return img.ditherImage(image,
+        quantizer: RemapQuantizer(palette: palette),
+        kernel: img.DitherKernel.none);
+  }
+
+  static img.Image customHalftoneDither(
+      img.Image orgImg, img.PaletteUint8 palette) {
+    var image = img.Image.from(orgImg);
+    img.colorHalftone(image, size: 3);
+    return img.ditherImage(image,
+        quantizer: RemapQuantizer(palette: palette),
+        kernel: img.DitherKernel.floydSteinberg);
+  }
 }
 
 img.PaletteUint8 _createTriColorPalette() {
