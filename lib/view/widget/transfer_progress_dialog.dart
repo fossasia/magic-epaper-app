@@ -50,14 +50,18 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
   String status = "Initializing...";
   bool tagDetected = false;
   bool transferComplete = false;
+  bool showHoldStillMessage = false;
+  bool displayRefreshComplete = false;
   String? errorMessage;
 
   late AnimationController _pulseController;
   late AnimationController _slideController;
   late AnimationController _scaleController;
+  late AnimationController _holdStillController;
   late Animation<double> _pulseAnimation;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _scaleAnimation;
+  late Animation<double> _holdStillPulseAnimation;
 
   @override
   void initState() {
@@ -79,6 +83,10 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
       duration: const Duration(milliseconds: 400),
       vsync: this,
     );
+    _holdStillController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    )..repeat(reverse: true);
     _pulseAnimation = Tween<double>(
       begin: 0.8,
       end: 1.2,
@@ -100,6 +108,13 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
       parent: _scaleController,
       curve: Curves.elasticOut,
     ));
+    _holdStillPulseAnimation = Tween<double>(
+      begin: 0.9,
+      end: 1.1,
+    ).animate(CurvedAnimation(
+      parent: _holdStillController,
+      curve: Curves.easeInOut,
+    ));
     _slideController.forward();
     _scaleController.forward();
   }
@@ -109,7 +124,22 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
     _pulseController.dispose();
     _slideController.dispose();
     _scaleController.dispose();
+    _holdStillController.dispose();
     super.dispose();
+  }
+
+  String _getErrorMessage(dynamic error) {
+    String errorString = error.toString().toLowerCase();
+    if (errorString.contains('platformexception(408') &&
+        errorString.contains('polling tag timeout')) {
+      return "Device connection timed out. Please try bringing your phone closer to the device and try again.";
+    }
+    if (errorString.contains('platformexception(500') &&
+        errorString.contains('communication error') &&
+        errorString.contains('tag was lost')) {
+      return "Connection was lost during transfer. Please keep your phone close to the device and try again.";
+    }
+    return error.toString();
   }
 
   Future<void> _startTransfer() async {
@@ -121,7 +151,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
       );
     } catch (e) {
       setState(() {
-        errorMessage = e.toString();
+        errorMessage = _getErrorMessage(e);
       });
     }
   }
@@ -132,6 +162,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
       status = newStatus;
       if (newProgress >= 1.0) {
         transferComplete = true;
+        _showHoldStillMessage();
       }
     });
   }
@@ -141,6 +172,22 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
       tagDetected = true;
     });
     _pulseController.stop();
+  }
+
+  void _showHoldStillMessage() {
+    setState(() {
+      showHoldStillMessage = true;
+    });
+
+    Future.delayed(const Duration(seconds: 15), () {
+      if (mounted) {
+        setState(() {
+          displayRefreshComplete = true;
+          showHoldStillMessage = false;
+        });
+        _holdStillController.stop();
+      }
+    });
   }
 
   Widget _buildNFCSearchingState() {
@@ -240,23 +287,6 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
             ),
           ],
         ),
-        const SizedBox(height: 24),
-        Container(
-          width: double.infinity,
-          height: 8,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4),
-            color: Colors.grey[200],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: progress,
-              backgroundColor: Colors.transparent,
-              valueColor: AlwaysStoppedAnimation<Color>(widget.colorAccent),
-            ),
-          ),
-        ),
         const SizedBox(height: 16),
         Text(
           status,
@@ -265,6 +295,90 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
             fontSize: 14,
             color: Colors.grey[700],
             fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHoldStillState() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AnimatedBuilder(
+          animation: _holdStillPulseAnimation,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _holdStillPulseAnimation.value,
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.orange.shade50,
+                  border: Border.all(
+                    color: Colors.orange.shade300,
+                    width: 2,
+                  ),
+                ),
+                child: Icon(
+                  Icons.pan_tool_outlined,
+                  size: 48,
+                  color: Colors.orange.shade600,
+                ),
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 24),
+        Text(
+          "Keep your phone close!",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.orange.shade800,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          "The display is refreshing. Please keep your phone near the device until the image appears completely.",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey[700],
+            height: 1.4,
+          ),
+        ),
+        const SizedBox(height: 20),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.orange.shade50,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.orange.shade200),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(Colors.orange.shade600),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                "Display refreshing...",
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.orange.shade700,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -377,19 +491,25 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                     child: Icon(
                       !tagDetected
                           ? Icons.nfc
-                          : transferComplete
-                              ? Icons.check_circle
-                              : Icons.upload,
+                          : showHoldStillMessage
+                              ? Icons.pan_tool_outlined
+                              : displayRefreshComplete
+                                  ? Icons.check_circle
+                                  : Icons.upload,
                       key: ValueKey(!tagDetected
                           ? 'nfc'
-                          : transferComplete
-                              ? 'complete'
-                              : 'upload'),
+                          : showHoldStillMessage
+                              ? 'hold'
+                              : displayRefreshComplete
+                                  ? 'complete'
+                                  : 'upload'),
                       color: !tagDetected
                           ? widget.colorAccent
-                          : transferComplete
-                              ? Colors.green.shade600
-                              : widget.colorAccent,
+                          : showHoldStillMessage
+                              ? Colors.orange.shade600
+                              : displayRefreshComplete
+                                  ? Colors.green.shade600
+                                  : widget.colorAccent,
                       size: 28,
                     ),
                   ),
@@ -400,14 +520,18 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                       child: Text(
                         !tagDetected
                             ? "Searching for Device"
-                            : transferComplete
-                                ? "Transfer Complete"
-                                : "Writing to E-Paper",
+                            : showHoldStillMessage
+                                ? "Display Refreshing"
+                                : displayRefreshComplete
+                                    ? "Transfer Complete"
+                                    : "Writing to E-Paper",
                         key: ValueKey(!tagDetected
                             ? 'search'
-                            : transferComplete
-                                ? 'complete'
-                                : 'write'),
+                            : showHoldStillMessage
+                                ? 'refresh'
+                                : displayRefreshComplete
+                                    ? 'complete'
+                                    : 'write'),
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -422,20 +546,22 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                 duration: const Duration(milliseconds: 500),
                 child: errorMessage != null
                     ? _buildErrorState()
-                    : transferComplete
-                        ? _buildSuccessState()
-                        : !tagDetected
-                            ? _buildNFCSearchingState()
-                            : _buildTransferProgressState(),
+                    : showHoldStillMessage
+                        ? _buildHoldStillState()
+                        : displayRefreshComplete
+                            ? _buildSuccessState()
+                            : !tagDetected
+                                ? _buildNFCSearchingState()
+                                : _buildTransferProgressState(),
               ),
-              if (transferComplete || errorMessage != null) ...[
+              if (displayRefreshComplete || errorMessage != null) ...[
                 const SizedBox(height: 24),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: transferComplete
+                      backgroundColor: displayRefreshComplete
                           ? Colors.green.shade600
                           : Colors.red.shade600,
                       foregroundColor: Colors.white,
@@ -446,7 +572,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                       elevation: 2,
                     ),
                     child: Text(
-                      transferComplete ? "Done" : "Close",
+                      displayRefreshComplete ? "Done" : "Close",
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
