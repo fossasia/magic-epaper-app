@@ -24,9 +24,10 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
     Gdey037z03(),
     Gdey037z03BW(),
     ConfigurableEpd(
-        width: 240,
-        height: 416,
-        colors: [Colors.white, Colors.black, Colors.red]),
+      width: 240,
+      height: 416,
+      colors: [Colors.white, Colors.black, Colors.red],
+    ),
   ];
   int selectedIndex = -1;
 
@@ -77,42 +78,39 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                 SizedBox(height: 8),
                 Text(
                   StringConstants.selectDisplayType,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ],
             ),
-            body: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10.0, 14, 16.0, 16.0),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.6,
-                          mainAxisSpacing: 8,
-                          crossAxisSpacing: 8,
-                        ),
-                        itemCount: displays.length,
-                        itemBuilder: (context, index) {
-                          return DisplayCard(
-                            display: displays[index],
-                            isSelected: selectedIndex == index,
-                            onTap: () {
-                              if (index == displays.length - 1) {
-                                _showConfigurableDialog();
-                              } else {
-                                setState(() => selectedIndex = index);
-                              }
-                            },
-                          );
-                        },
+          ),
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10.0, 14, 16.0, 16.0),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.6,
+                        mainAxisSpacing: 8,
+                        crossAxisSpacing: 8,
                       ),
+                      itemCount: displays.length,
+                      itemBuilder: (context, index) {
+                        return DisplayCard(
+                          display: displays[index],
+                          isSelected: selectedIndex == index,
+                          onTap: () {
+                            if (index == displays.length - 1) {
+                              _showConfigurableDialog();
+                            } else {
+                              setState(() => selectedIndex = index);
+                            }
+                          },
+                        );
+                      },
                     ),
                   ),
                   _buildContinueButton(context),
@@ -157,10 +155,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
         ),
         child: const Text(
           StringConstants.continueButton,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -172,8 +167,11 @@ class _CustomEpdConfig {
   final int width;
   final int height;
   final List<Color> colors;
-  _CustomEpdConfig(
-      {required this.width, required this.height, required this.colors});
+  _CustomEpdConfig({
+    required this.width,
+    required this.height,
+    required this.colors,
+  });
 }
 
 class _CustomEpdDialog extends StatefulWidget {
@@ -203,10 +201,10 @@ class _CustomEpdDialogState extends State<_CustomEpdDialog> {
     _ColorChoice(color: Colors.blue, label: 'Blue'),
   ];
 
-  static const List<_ColorChoice> fixedColorChoices = [
-    _ColorChoice(color: Colors.white, label: 'White'),
-    _ColorChoice(color: Colors.black, label: 'Black'),
-  ];
+  // static const List<_ColorChoice> fixedColorChoices = [
+  //   _ColorChoice(color: Colors.white, label: 'White'),
+  //   _ColorChoice(color: Colors.black, label: 'Black'),
+  // ];
 
   @override
   void initState() {
@@ -216,8 +214,9 @@ class _CustomEpdDialogState extends State<_CustomEpdDialog> {
     // Always start with white and black, then any valid extra colors
     colors = [Colors.white, Colors.black];
     for (final c in widget.initialColors.skip(2)) {
-      if (availableColorChoices
-          .any((choice) => choice.color.value == c.value)) {
+      if (availableColorChoices.any(
+        (choice) => choice.color.value == c.value,
+      )) {
         colors.add(c);
       }
     }
@@ -237,11 +236,13 @@ class _CustomEpdDialogState extends State<_CustomEpdDialog> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: choices
-              .map((choice) => ListTile(
-                    leading: CircleAvatar(backgroundColor: choice.color),
-                    title: Text(choice.label),
-                    onTap: () => Navigator.of(context).pop(choice),
-                  ))
+              .map(
+                (choice) => ListTile(
+                  leading: CircleAvatar(backgroundColor: choice.color),
+                  title: Text(choice.label),
+                  onTap: () => Navigator.of(context).pop(choice),
+                ),
+              )
               .toList(),
         ),
       ),
@@ -316,8 +317,10 @@ class _CustomEpdDialogState extends State<_CustomEpdDialog> {
               const SizedBox(height: 16),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Colors:',
-                    style: Theme.of(context).textTheme.bodyMedium),
+                child: Text(
+                  'Colors:',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ),
               const SizedBox(height: 8),
               Wrap(
@@ -369,8 +372,13 @@ class _CustomEpdDialogState extends State<_CustomEpdDialog> {
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               _formKey.currentState!.save();
-              Navigator.of(context).pop(_CustomEpdConfig(
-                  width: width, height: height, colors: List.from(colors)));
+              Navigator.of(context).pop(
+                _CustomEpdConfig(
+                  width: width,
+                  height: height,
+                  colors: List.from(colors),
+                ),
+              );
             }
           },
           child: const Text('OK'),
