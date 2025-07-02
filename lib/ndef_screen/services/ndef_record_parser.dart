@@ -34,7 +34,8 @@ class NDEFRecordFactory {
       throw ArgumentError(StringConstants.wifiSsidCannotBeEmpty);
     }
 
-    String wifiConfig = '${StringConstants.wifiConfigFormat}${ssid.trim()}${StringConstants.wifiPasswordPrefix}${password.trim()}${StringConstants.wifiConfigSuffix}';
+    String wifiConfig =
+        '${StringConstants.wifiConfigFormat}${ssid.trim()}${StringConstants.wifiPasswordPrefix}${password.trim()}${StringConstants.wifiConfigSuffix}';
     return ndef.TextRecord(
       text: wifiConfig,
       language: StringConstants.defaultLanguage,
@@ -122,10 +123,13 @@ class NDEFRecordParser {
     StringBuffer buffer = StringBuffer();
     for (int i = 0; i < records.length; i++) {
       var record = records[i];
-      buffer.writeln('${StringConstants.recordPrefix}${i + 1}${StringConstants.recordSuffix}');
+      buffer.writeln(
+          '${StringConstants.recordPrefix}${i + 1}${StringConstants.recordSuffix}');
       buffer.writeln('${StringConstants.tnfLabel}${record.tnf}');
-      buffer.writeln('${StringConstants.typeLabel}${getRecordTypeString(record)}');
-      buffer.writeln('${StringConstants.payloadSizeLabel}${record.payload?.length ?? 0}${StringConstants.bytesLabel}');
+      buffer.writeln(
+          '${StringConstants.typeLabel}${getRecordTypeString(record)}');
+      buffer.writeln(
+          '${StringConstants.payloadSizeLabel}${record.payload?.length ?? 0}${StringConstants.bytesLabel}');
       buffer.writeln('${StringConstants.contentLabel}${getRecordInfo(record)}');
 
       if (record.payload != null) {
@@ -134,7 +138,8 @@ class NDEFRecordParser {
             .join(' ');
         buffer.writeln('${StringConstants.rawPayloadLabel}$hexPayload');
       } else {
-        buffer.writeln('${StringConstants.rawPayloadLabel}${StringConstants.nullPayload}');
+        buffer.writeln(
+            '${StringConstants.rawPayloadLabel}${StringConstants.nullPayload}');
       }
       buffer.writeln();
     }

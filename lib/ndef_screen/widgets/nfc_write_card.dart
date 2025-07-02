@@ -75,7 +75,9 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                         height: 20,
                         child: CircularProgressIndicator(strokeWidth: 2))
                     : const Icon(Icons.edit),
-                label: Text(widget.isWriting ? StringConstants.writing : StringConstants.writeText),
+                label: Text(widget.isWriting
+                    ? StringConstants.writing
+                    : StringConstants.writeText),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   foregroundColor: Colors.white,
@@ -106,7 +108,9 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                         height: 20,
                         child: CircularProgressIndicator(strokeWidth: 2))
                     : const Icon(Icons.link),
-                label: Text(widget.isWriting ? StringConstants.writing : StringConstants.writeUrl),
+                label: Text(widget.isWriting
+                    ? StringConstants.writing
+                    : StringConstants.writeUrl),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.purple,
                   foregroundColor: Colors.white,
@@ -148,7 +152,9 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                         height: 20,
                         child: CircularProgressIndicator(strokeWidth: 2))
                     : const Icon(Icons.wifi),
-                label: Text(widget.isWriting ? StringConstants.writing : StringConstants.writeWifi),
+                label: Text(widget.isWriting
+                    ? StringConstants.writing
+                    : StringConstants.writeWifi),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal,
                   foregroundColor: Colors.white,
@@ -173,8 +179,9 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                         height: 20,
                         child: CircularProgressIndicator(strokeWidth: 2))
                     : const Icon(Icons.layers),
-                label: Text(
-                    widget.isWriting ? StringConstants.writing : StringConstants.writeMultipleRecords),
+                label: Text(widget.isWriting
+                    ? StringConstants.writing
+                    : StringConstants.writeMultipleRecords),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.indigo,
                   foregroundColor: Colors.white,

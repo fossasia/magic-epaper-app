@@ -45,7 +45,9 @@ class NFCReadCard extends StatelessWidget {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.nfc),
-                    label: Text(isReading ? StringConstants.reading : StringConstants.readNfcTag),
+                    label: Text(isReading
+                        ? StringConstants.reading
+                        : StringConstants.readNfcTag),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
@@ -80,7 +82,9 @@ class NFCReadCard extends StatelessWidget {
                         ),
                       )
                     : const Icon(Icons.delete_forever),
-                label: Text(isClearing ? StringConstants.clearing : StringConstants.clearNfcTag),
+                label: Text(isClearing
+                    ? StringConstants.clearing
+                    : StringConstants.clearNfcTag),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red[700],
                   foregroundColor: Colors.white,

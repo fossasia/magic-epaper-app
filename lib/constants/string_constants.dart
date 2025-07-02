@@ -117,7 +117,7 @@ class StringConstants {
   static const String emptyTextRecord = 'empty text record';
   static const String emptyNdefRecord = 'empty NDEF record';
   static const String minimalSpaceCharacter = 'minimal space character';
-  static const String emptyRecordList = 'empty record list'; 
+  static const String emptyRecordList = 'empty record list';
   static const String allClearingMethodsFailed =
       'All clearing methods failed: ';
   static const String verificationResults = '🔍 VERIFICATION RESULTS:';
