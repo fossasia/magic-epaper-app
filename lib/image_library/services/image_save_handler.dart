@@ -1,6 +1,10 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
+import 'package:magic_epaper_app/constants/color_constants.dart';
+import 'package:magic_epaper_app/image_library/image_library.dart';
+import 'package:magic_epaper_app/image_library/widgets/dialogs/storage_permisson_dialog.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
 import 'package:magic_epaper_app/image_library/services/image_operations_service.dart';
 import 'package:magic_epaper_app/image_library/widgets/dialogs/image_save_dialog.dart';
@@ -9,11 +13,14 @@ class ImageSaveHandler {
   final BuildContext context;
   final ImageLibraryProvider provider;
   final ImageOperationsService imageOpsService;
+  bool _hasStoragePermission = false;
 
   ImageSaveHandler({
     required this.context,
     required this.provider,
   }) : imageOpsService = ImageOperationsService(context);
+
+  bool get hasStoragePermission => _hasStoragePermission;
 
   Future<void> saveCurrentImage({
     required List<img.Image> rawImages,
@@ -25,6 +32,10 @@ class ImageSaveHandler {
     required String modelId,
   }) async {
     if (rawImages.isEmpty) return;
+    final hasPermission = await checkPermissionBeforeAction();
+    if (!hasPermission) {
+      return;
+    }
 
     img.Image finalImg = rawImages[selectedFilterIndex];
 
@@ -46,6 +57,77 @@ class ImageSaveHandler {
       flipVertical,
       modelId,
     );
+  }
+
+  Future<bool> requestStoragePermission() async {
+    try {
+      var status = await Permission.storage.status;
+      if (status.isGranted) {
+        _hasStoragePermission = true;
+        return true;
+      }
+      if (await Permission.manageExternalStorage.status.isGranted) {
+        _hasStoragePermission = true;
+        return true;
+      }
+      if (status.isDenied) {
+        status = await Permission.storage.request();
+      }
+      if (status.isDenied || status.isPermanentlyDenied) {
+        final manageStorageStatus =
+            await Permission.manageExternalStorage.request();
+        if (manageStorageStatus.isGranted) {
+          _hasStoragePermission = true;
+          return true;
+        }
+      }
+      _hasStoragePermission = status.isGranted;
+      if (!_hasStoragePermission) {
+        await _showPermissionDialog();
+      }
+      return _hasStoragePermission;
+    } catch (e) {
+      debugPrint('Error requesting storage permission: $e');
+      _hasStoragePermission = false;
+      return false;
+    }
+  }
+
+  Future<void> _showPermissionDialog() async {
+    await StoragePermissionDialog.show(
+      context,
+      onGrantPermission: () async {
+        await requestStoragePermission();
+      },
+      onCancel: () {
+        debugPrint('Storage permission dialog cancelled');
+      },
+      colorAccent: colorAccent,
+      colorBlack: colorBlack,
+    );
+  }
+
+  Future<bool> checkPermissionBeforeAction() async {
+    if (_hasStoragePermission) {
+      return true;
+    }
+    final granted = await requestStoragePermission();
+    return granted;
+  }
+
+  Future<void> navigateToImageLibrary() async {
+    final hasPermission = await checkPermissionBeforeAction();
+    if (!hasPermission) {
+      return;
+    }
+    if (context.mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ImageLibraryScreen(),
+        ),
+      );
+    }
   }
 
   void _showSaveDialog(

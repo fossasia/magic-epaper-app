@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/image_library/model/saved_image_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -19,7 +18,9 @@ class ImageLibraryProvider extends ChangeNotifier {
   String _selectedSource = 'all';
   String get selectedSource => _selectedSource;
 
+  Directory? _magicEpaperDirectory;
   Directory? _imageDirectory;
+  File? _metadataFile;
   bool _isInitialized = false;
 
   List<SavedImage> get filteredImages {
@@ -34,13 +35,25 @@ class ImageLibraryProvider extends ChangeNotifier {
     return filtered;
   }
 
-  Future<void> _initializeDirectory() async {
-    if (_imageDirectory == null) {
-      final appDir = await getApplicationDocumentsDirectory();
-      _imageDirectory = Directory('${appDir.path}/saved_images');
+  Future<void> _initializeDirectories() async {
+    if (_magicEpaperDirectory == null) {
+      final externalDir = await getExternalStorageDirectory();
+      if (externalDir != null) {
+        final storageRoot = Directory('/storage/emulated/0');
+        _magicEpaperDirectory = Directory('${storageRoot.path}/MagicEpaper');
+      } else {
+        final fallbackDir = await getApplicationDocumentsDirectory();
+        _magicEpaperDirectory = Directory('${fallbackDir.path}/MagicEpaper');
+      }
+      if (!await _magicEpaperDirectory!.exists()) {
+        await _magicEpaperDirectory!.create(recursive: true);
+      }
+      _imageDirectory = Directory('${_magicEpaperDirectory!.path}/images');
       if (!await _imageDirectory!.exists()) {
         await _imageDirectory!.create(recursive: true);
       }
+      _metadataFile =
+          File('${_magicEpaperDirectory!.path}/images_metadata.json');
     }
   }
 
@@ -54,25 +67,32 @@ class ImageLibraryProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     try {
-      await _initializeDirectory();
-      final prefs = await SharedPreferences.getInstance();
-      final savedImagesJson =
-          prefs.getStringList('saved_images_metadata') ?? [];
+      await _initializeDirectories();
       _savedImages = [];
-      for (String json in savedImagesJson) {
-        try {
-          final image = SavedImage.fromJson(jsonDecode(json));
-          if (await image.fileExists()) {
-            _savedImages.add(image);
-          } else {
-            debugPrint('Image file not found: ${image.filePath}');
+      if (await _metadataFile!.exists()) {
+        final jsonString = await _metadataFile!.readAsString();
+        if (jsonString.isNotEmpty) {
+          try {
+            final List<dynamic> jsonList = jsonDecode(jsonString);
+            for (var json in jsonList) {
+              try {
+                final image = SavedImage.fromJson(json);
+                if (await image.fileExists()) {
+                  _savedImages.add(image);
+                } else {
+                  debugPrint('Image file not found: ${image.filePath}');
+                }
+              } catch (e) {
+                debugPrint('Error parsing individual image metadata: $e');
+              }
+            }
+          } catch (e) {
+            debugPrint('Error parsing JSON metadata file: $e');
           }
-        } catch (e) {
-          debugPrint('Error parsing image metadata: $e');
         }
       }
       if (_savedImages.isNotEmpty) {
-        final encoder = JsonEncoder.withIndent('  ');
+        const encoder = JsonEncoder.withIndent('  ');
         final imageJsonList = _savedImages.map((img) => img.toJson()).toList();
         final prettyJson = encoder.convert(imageJsonList);
         debugPrint('Loaded image metadata (JSON):\n$prettyJson');
@@ -98,7 +118,7 @@ class ImageLibraryProvider extends ChangeNotifier {
   }) async {
     try {
       await _ensureInitialized();
-      await _initializeDirectory();
+      await _initializeDirectories();
       final imageId = DateTime.now().millisecondsSinceEpoch.toString();
       final fileName =
           '${imageId}_${name.replaceAll(RegExp(r'[^\w\s-]'), '')}.jpg';
@@ -176,12 +196,14 @@ class ImageLibraryProvider extends ChangeNotifier {
 
   Future<void> _persistMetadata() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final metadataJson =
-          _savedImages.map((image) => jsonEncode(image.toJson())).toList();
-      await prefs.setStringList('saved_images_metadata', metadataJson);
-      final totalSize = metadataJson.join().length;
-      debugPrint('Metadata size: ${totalSize} bytes');
+      await _initializeDirectories();
+      final imageJsonList =
+          _savedImages.map((image) => image.toJson()).toList();
+      final jsonString = jsonEncode(imageJsonList);
+      await _metadataFile!.writeAsString(jsonString);
+      final fileSize = await _metadataFile!.length();
+      debugPrint('Metadata file size: $fileSize bytes');
+      debugPrint('Metadata saved to: ${_metadataFile!.path}');
     } catch (e) {
       debugPrint('Error persisting metadata: $e');
       rethrow;

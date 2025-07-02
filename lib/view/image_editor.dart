@@ -4,7 +4,6 @@ import 'package:magic_epaper_app/image_library/provider/image_library_provider.d
 import 'package:magic_epaper_app/image_library/services/image_save_handler.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
 import 'package:magic_epaper_app/util/image_editor_utils.dart';
-import 'package:magic_epaper_app/image_library/image_library.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:provider/provider.dart';
@@ -59,6 +58,12 @@ class _ImageEditorState extends State<ImageEditor> {
     );
   }
 
+  // Navigate to Image Library using ImageSaveHandler
+  Future<void> _navigateToImageLibrary() async {
+    await _imageSaveHandler!.navigateToImageLibrary();
+  }
+
+  // Save image using ImageSaveHandler
   void _saveCurrentImage() async {
     if (_imageSaveHandler == null) return;
 
@@ -147,14 +152,7 @@ class _ImageEditorState extends State<ImageEditor> {
         ),
         actions: <Widget>[
           IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ImageLibraryScreen(),
-                ),
-              );
-            },
+            onPressed: _navigateToImageLibrary,
             icon: const Icon(Icons.photo_library_outlined),
             tooltip: 'Image Library',
           ),
@@ -227,6 +225,7 @@ class _ImageEditorState extends State<ImageEditor> {
       bottomNavigationBar: BottomActionMenu(
           epd: widget.epd,
           imgLoader: imgLoader,
+          imageSaveHandler: _imageSaveHandler,
           onSourceChanged: (String source) {
             setState(() {
               _currentImageSource = source;
@@ -239,12 +238,14 @@ class _ImageEditorState extends State<ImageEditor> {
 class BottomActionMenu extends StatelessWidget {
   final Epd epd;
   final ImageLoader imgLoader;
+  final ImageSaveHandler? imageSaveHandler;
   final Function(String)? onSourceChanged;
 
   const BottomActionMenu({
     super.key,
     required this.epd,
     required this.imgLoader,
+    required this.imageSaveHandler,
     this.onSourceChanged,
   });
 
@@ -356,13 +357,8 @@ class BottomActionMenu extends StatelessWidget {
                 context: context,
                 icon: Icons.photo_library_outlined,
                 label: 'Library',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ImageLibraryScreen(),
-                    ),
-                  );
+                onTap: () async {
+                  await imageSaveHandler?.navigateToImageLibrary();
                 },
               ),
             ],
