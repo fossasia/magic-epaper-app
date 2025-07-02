@@ -7,6 +7,7 @@ import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/util/epd/gdey037z03.dart';
 import 'package:magic_epaper_app/util/epd/gdey037z03bw.dart';
 import 'package:magic_epaper_app/view/image_editor.dart';
+import 'package:magic_epaper_app/view/widget/common_scaffold_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:magic_epaper_app/provider/color_palette_provider.dart';
 import 'package:magic_epaper_app/view/widget/display_card.dart';
@@ -55,34 +56,33 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ColorPaletteProvider>(
-        create: (_) => getIt<ColorPaletteProvider>(),
-        builder: (context, child) {
-          return Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-              backgroundColor: colorAccent,
-              elevation: 0,
-              title: const Padding(
-                padding: EdgeInsets.fromLTRB(5, 16, 16, 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(StringConstants.appName,
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        )),
-                    SizedBox(height: 8),
-                    Text('Select your ePaper display type',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        )),
-                  ],
+      create: (_) => getIt<ColorPaletteProvider>(),
+      builder: (context, child) {
+        return CommonScaffold(
+          index: 0,
+          toolbarHeight: 85,
+          titleWidget: const Padding(
+            padding: EdgeInsets.fromLTRB(5, 16, 16, 5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  StringConstants.appName,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              toolbarHeight: 85,
+                SizedBox(height: 8),
+                Text(
+                  StringConstants.selectDisplayType,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
             body: SafeArea(
               child: Padding(
@@ -114,13 +114,15 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                         },
                       ),
                     ),
-                    _buildContinueButton(context),
-                  ],
-                ),
+                  ),
+                  _buildContinueButton(context),
+                ],
               ),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
   Widget _buildContinueButton(BuildContext context) {
@@ -154,7 +156,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
           ),
         ),
         child: const Text(
-          'Continue',
+          StringConstants.continueButton,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
