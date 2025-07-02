@@ -14,6 +14,8 @@ class ImageList extends StatelessWidget {
   final Function(int) onFilterSelected;
   final Function() onFlipHorizontal;
   final Function() onFlipVertical;
+  final int width;
+  final int height;
 
   const ImageList({
     super.key,
@@ -25,6 +27,8 @@ class ImageList extends StatelessWidget {
     required this.onFilterSelected,
     required this.onFlipHorizontal,
     required this.onFlipVertical,
+    required this.width,
+    required this.height,
   });
 
   String getFilterNameByIndex(int index) {
@@ -49,23 +53,30 @@ class ImageList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double aspectRatio = height / width;
     return Column(
       children: [
         const SizedBox(height: 8),
-        Container(
-          width: double.infinity,
-          height: 200,
-          decoration: BoxDecoration(
-            border: Border.all(color: mdGrey400),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Transform(
-            alignment: Alignment.center,
-            transform: Matrix4.identity()
-              ..scale(flipHorizontal ? -1.0 : 1.0, flipVertical ? -1.0 : 1.0),
-            child: Image.memory(
-              processedPngs[selectedIndex],
-              fit: BoxFit.contain,
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 202),
+          child: AspectRatio(
+            aspectRatio: aspectRatio,
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(color: mdGrey400),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.identity()
+                  ..scale(
+                      flipHorizontal ? -1.0 : 1.0, flipVertical ? -1.0 : 1.0),
+                child: Image.memory(
+                  processedPngs[selectedIndex],
+                  fit: BoxFit.contain,
+                ),
+              ),
             ),
           ),
         ),
@@ -167,6 +178,7 @@ class FilterCard extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+        height: 100,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -177,7 +189,7 @@ class FilterCard extends StatelessWidget {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: colorPrimary.withValues(alpha: .2),
+                    color: colorPrimary.withValues(alpha: .4),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   )
@@ -204,16 +216,23 @@ class FilterCard extends StatelessWidget {
                 ),
               ),
               Expanded(
-                flex: 3,
-                child: Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.identity()
-                    ..scale(
-                        flipHorizontal ? -1.0 : 1.0, flipVertical ? -1.0 : 1.0),
-                  child: Image.memory(
-                    imageData,
-                    height: 100,
-                    isAntiAlias: false,
+                flex: 2,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: mdGrey400, width: 1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.identity()
+                      ..scale(flipHorizontal ? -1.0 : 1.0,
+                          flipVertical ? -1.0 : 1.0),
+                    child: Image.memory(
+                      filterQuality: FilterQuality.high,
+                      imageData,
+                      fit: BoxFit.contain,
+                      isAntiAlias: false,
+                    ),
                   ),
                 ),
               ),
