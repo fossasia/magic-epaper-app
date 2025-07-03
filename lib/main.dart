@@ -4,6 +4,7 @@ import 'package:magic_epaper_app/provider/image_loader.dart';
 import 'package:magic_epaper_app/view/about_us_screen.dart';
 import 'package:magic_epaper_app/view/settings_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:magic_epaper_app/ndef_screen/ndef_screen.dart';
 import 'package:magic_epaper_app/view/display_selection_screen.dart';
 
 void main() {
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const DisplaySelectionScreen(),
         '/aboutUs': (context) => const AboutUsScreen(),
         '/settings': (context) => const SettingsScreen(),
+        '/ndefScreen': (context) => const NDEFScreen(),
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,
