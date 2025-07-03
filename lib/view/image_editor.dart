@@ -83,10 +83,7 @@ class _ImageEditorState extends State<ImageEditor> {
       return;
     }
 
-    _rawImages = processImages(
-      originalImage: sourceImage,
-      epd: widget.epd,
-    );
+    _rawImages = processImages(originalImage: sourceImage, epd: widget.epd);
 
     _processedPngs = _rawImages
         .map((rawImg) => img.encodePng(img.copyRotate(rawImg, angle: 90)))
@@ -108,7 +105,7 @@ class _ImageEditorState extends State<ImageEditor> {
     if (color == Colors.blue) return 'blue';
     if (color == Colors.green) return 'green';
     // Fallback for other colors.
-    return color.value.toRadixString(16);
+    return color.toARGB32().toRadixString(16);
   }
 
   /// Handles the logic for exporting the processed image as XBM files.
@@ -118,8 +115,9 @@ class _ImageEditorState extends State<ImageEditor> {
     final messenger = ScaffoldMessenger.of(context);
     messenger.showSnackBar(
       const SnackBar(
-          duration: Duration(seconds: 2),
-          content: Text('Exporting XBM files...')),
+        duration: Duration(seconds: 2),
+        content: Text('Exporting XBM files...'),
+      ),
     );
 
     try {
@@ -137,14 +135,16 @@ class _ImageEditorState extends State<ImageEditor> {
       final nonWhiteColors = widget.epd.colors.where((c) => c != Colors.white);
 
       int exportedCount = 0;
-      print(nonWhiteColors);
+      //print(nonWhiteColors);
       for (final color in nonWhiteColors) {
         final colorName = _getColorName(color);
-        final variableName = 'image_${colorName}';
+        final variableName = 'image_$colorName';
 
         // Extract the monochrome image for the current color plane.
-        final colorPlaneImage =
-            widget.epd.extractColorPlaneAsImage(color, baseImage);
+        final colorPlaneImage = widget.epd.extractColorPlaneAsImage(
+          color,
+          baseImage,
+        );
 
         // Encode the monochrome image to the XBM format.
         final xbmContent = XbmEncoder.encode(colorPlaneImage, variableName);
@@ -161,13 +161,12 @@ class _ImageEditorState extends State<ImageEditor> {
 
       messenger.showSnackBar(
         SnackBar(
-            content: Text('$exportedCount XBM file(s) exported successfully!')),
+          content: Text('$exportedCount XBM file(s) exported successfully!'),
+        ),
       );
     } catch (e) {
-      messenger.showSnackBar(
-        SnackBar(content: Text('Export failed: $e')),
-      );
-      print(e);
+      messenger.showSnackBar(SnackBar(content: Text('Export failed: $e')));
+      //print(e);
     }
   }
 
@@ -179,9 +178,7 @@ class _ImageEditorState extends State<ImageEditor> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: colorAccent,
         elevation: 0,
         title: const Text(
@@ -224,11 +221,11 @@ class _ImageEditorState extends State<ImageEditor> {
       ),
       body: imgLoader.isLoading
           ? const Center(
-              child: Text('Loading...',
-                  style: TextStyle(
-                    color: colorBlack,
-                    fontSize: 14,
-                  )))
+              child: Text(
+                'Loading...',
+                style: TextStyle(color: colorBlack, fontSize: 14),
+              ),
+            )
           : SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -299,10 +296,13 @@ class BottomActionMenu extends StatelessWidget {
                 label: StringConstants.importImageButtonLabel,
                 onTap: () async {
                   final success = await imgLoader.pickImage(
-                      width: epd.width, height: epd.height);
+                    width: epd.width,
+                    height: epd.height,
+                  );
                   if (success && imgLoader.image != null) {
-                    final bytes =
-                        Uint8List.fromList(img.encodePng(imgLoader.image!));
+                    final bytes = Uint8List.fromList(
+                      img.encodePng(imgLoader.image!),
+                    );
                     await imgLoader.saveFinalizedImageBytes(bytes);
                   }
                 },
@@ -337,25 +337,27 @@ class BottomActionMenu extends StatelessWidget {
                 label: StringConstants.adjustButtonLabel,
                 onTap: () async {
                   if (imgLoader.image != null) {
-                    final canvasBytes = await Navigator.of(context)
-                        .push<Uint8List>(MaterialPageRoute(
-                      builder: (context) => ProImageEditor.memory(
-                        img.encodeJpg(imgLoader.image!),
-                        callbacks: ProImageEditorCallbacks(
-                          onImageEditingComplete: (Uint8List bytes) async {
-                            Navigator.pop(context, bytes);
-                          },
-                        ),
-                        configs: const ProImageEditorConfigs(
-                          paintEditor: PaintEditorConfigs(enabled: false),
-                          textEditor: TextEditorConfigs(enabled: false),
-                          cropRotateEditor: CropRotateEditorConfigs(
-                            enabled: false,
+                    final canvasBytes =
+                        await Navigator.of(context).push<Uint8List>(
+                      MaterialPageRoute(
+                        builder: (context) => ProImageEditor.memory(
+                          img.encodeJpg(imgLoader.image!),
+                          callbacks: ProImageEditorCallbacks(
+                            onImageEditingComplete: (Uint8List bytes) async {
+                              Navigator.pop(context, bytes);
+                            },
                           ),
-                          emojiEditor: EmojiEditorConfigs(enabled: false),
+                          configs: const ProImageEditorConfigs(
+                            paintEditor: PaintEditorConfigs(enabled: false),
+                            textEditor: TextEditorConfigs(enabled: false),
+                            cropRotateEditor: CropRotateEditorConfigs(
+                              enabled: false,
+                            ),
+                            emojiEditor: EmojiEditorConfigs(enabled: false),
+                          ),
                         ),
                       ),
-                    ));
+                    );
                     if (canvasBytes != null) {
                       imgLoader.updateImage(
                         bytes: canvasBytes,
@@ -366,10 +368,10 @@ class BottomActionMenu extends StatelessWidget {
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          duration: Durations.medium4,
-                          content:
-                              Text(StringConstants.noImageSelectedFeedback),
-                          backgroundColor: colorPrimary),
+                        duration: Durations.medium4,
+                        content: Text(StringConstants.noImageSelectedFeedback),
+                        backgroundColor: colorPrimary,
+                      ),
                     );
                   }
                 },
@@ -399,8 +401,10 @@ class BottomActionMenu extends StatelessWidget {
             children: [
               Icon(icon, color: colorAccent, size: 26),
               const SizedBox(height: 4),
-              Text(label,
-                  style: const TextStyle(color: colorBlack, fontSize: 12)),
+              Text(
+                label,
+                style: const TextStyle(color: colorBlack, fontSize: 12),
+              ),
             ],
           ),
         ),

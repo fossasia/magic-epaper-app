@@ -215,7 +215,7 @@ class _CustomEpdDialogState extends State<_CustomEpdDialog> {
     colors = [Colors.white, Colors.black];
     for (final c in widget.initialColors.skip(2)) {
       if (availableColorChoices.any(
-        (choice) => choice.color.value == c.value,
+        (choice) => choice.color.toARGB32() == c.toARGB32(),
       )) {
         colors.add(c);
       }
@@ -224,9 +224,9 @@ class _CustomEpdDialogState extends State<_CustomEpdDialog> {
 
   void _addColor() async {
     // Show dialog to pick from available colors not already selected
-    final usedColors = colors.map((c) => c.value).toSet();
+    final usedColors = colors.map((c) => c.toARGB32()).toSet();
     final choices = availableColorChoices
-        .where((c) => !usedColors.contains(c.color.value))
+        .where((c) => !usedColors.contains(c.color.toARGB32()))
         .toList();
     if (choices.isEmpty) return;
     final picked = await showDialog<_ColorChoice>(
@@ -263,10 +263,10 @@ class _CustomEpdDialogState extends State<_CustomEpdDialog> {
   }
 
   String _getColorLabel(Color color) {
-    if (color.value == Colors.white.value) return 'White';
-    if (color.value == Colors.black.value) return 'Black';
+    if (color.toARGB32() == Colors.white.toARGB32()) return 'White';
+    if (color.toARGB32() == Colors.black.toARGB32()) return 'Black';
     final found = availableColorChoices.firstWhere(
-      (c) => c.color.value == color.value,
+      (c) => c.color.toARGB32() == color.toARGB32(),
       orElse: () => _ColorChoice(color: color, label: 'Color'),
     );
     return found.label;

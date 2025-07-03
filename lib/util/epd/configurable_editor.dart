@@ -3,7 +3,6 @@ import 'package:magic_epaper_app/constants/asset_paths.dart';
 import 'package:magic_epaper_app/util/epd/driver/driver.dart';
 import 'package:magic_epaper_app/util/epd/driver/uc8253.dart';
 import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
-import 'package:magic_epaper_app/util/image_processing/remap_quantizer.dart';
 import 'package:image/image.dart' as img;
 import 'epd.dart';
 
@@ -63,7 +62,8 @@ class ConfigurableEpd extends Epd {
     final palette = img.PaletteUint8(colors.length, 3);
     for (int i = 0; i < colors.length; i++) {
       final color = colors[i];
-      palette.setRgb(i, color.red, color.green, color.blue);
+      palette.setRgb(i, (color.r * 255.0).round(), (color.g * 255.0).round(),
+          (color.b * 255.0).round());
     }
     return palette;
   }
@@ -76,50 +76,80 @@ class ConfigurableEpd extends Epd {
   /// A future improvement would be to store filter names in the Epd class itself.
   void _addProcessingMethods() {
     namedProcessingMethods.clear();
-    final isBlackAndWhite = colors.length == 2 &&
-        colors.any((c) => c.value == Colors.black.value) &&
-        colors.any((c) => c.value == Colors.white.value);
-
+    final isBlackAndWhite = colors.length == 2;
     if (isBlackAndWhite) {
-      namedProcessingMethods.add(NamedImageFilter(
-          ImageProcessing.bwFloydSteinbergDither, 'Floyd-Steinberg'));
-      namedProcessingMethods.add(NamedImageFilter(
+      namedProcessingMethods.add(
+        NamedImageFilter(
+          ImageProcessing.bwFloydSteinbergDither,
+          'Floyd-Steinberg',
+        ),
+      );
+      namedProcessingMethods.add(
+        NamedImageFilter(
           ImageProcessing.bwFalseFloydSteinbergDither,
-          'False Floyd-Steinberg'));
-      namedProcessingMethods
-          .add(NamedImageFilter(ImageProcessing.bwStuckiDither, 'Stucki'));
-      namedProcessingMethods
-          .add(NamedImageFilter(ImageProcessing.bwAtkinsonDither, 'Atkinson'));
-      namedProcessingMethods
-          .add(NamedImageFilter(ImageProcessing.bwHalftoneDither, 'Halftone'));
-      namedProcessingMethods
-          .add(NamedImageFilter(ImageProcessing.bwThreshold, 'Threshold'));
+          'False Floyd-Steinberg',
+        ),
+      );
+      namedProcessingMethods.add(
+        NamedImageFilter(ImageProcessing.bwStuckiDither, 'Stucki'),
+      );
+      namedProcessingMethods.add(
+        NamedImageFilter(ImageProcessing.bwAtkinsonDither, 'Atkinson'),
+      );
+      namedProcessingMethods.add(
+        NamedImageFilter(ImageProcessing.bwHalftoneDither, 'Halftone'),
+      );
+      namedProcessingMethods.add(
+        NamedImageFilter(ImageProcessing.bwThreshold, 'Threshold'),
+      );
     } else {
       final dynamicPalette = _createDynamicPalette();
-      namedProcessingMethods.add(NamedImageFilter(
+      namedProcessingMethods.add(
+        NamedImageFilter(
           (img.Image orgImg) => ImageProcessing.customFloydSteinbergDither(
-              orgImg, dynamicPalette),
-          'Custom Floyd-Steinberg'));
-      namedProcessingMethods.add(NamedImageFilter(
+            orgImg,
+            dynamicPalette,
+          ),
+          'Custom Floyd-Steinberg',
+        ),
+      );
+      namedProcessingMethods.add(
+        NamedImageFilter(
           (img.Image orgImg) => ImageProcessing.customFalseFloydSteinbergDither(
-              orgImg, dynamicPalette),
-          'Custom False Floyd-Steinberg'));
-      namedProcessingMethods.add(NamedImageFilter(
+            orgImg,
+            dynamicPalette,
+          ),
+          'Custom False Floyd-Steinberg',
+        ),
+      );
+      namedProcessingMethods.add(
+        NamedImageFilter(
           (img.Image orgImg) =>
               ImageProcessing.customStuckiDither(orgImg, dynamicPalette),
-          'Custom Stucki'));
-      namedProcessingMethods.add(NamedImageFilter(
+          'Custom Stucki',
+        ),
+      );
+      namedProcessingMethods.add(
+        NamedImageFilter(
           (img.Image orgImg) =>
               ImageProcessing.customAtkinsonDither(orgImg, dynamicPalette),
-          'Custom Atkinson'));
-      namedProcessingMethods.add(NamedImageFilter(
+          'Custom Atkinson',
+        ),
+      );
+      namedProcessingMethods.add(
+        NamedImageFilter(
           (img.Image orgImg) =>
               ImageProcessing.customHalftoneDither(orgImg, dynamicPalette),
-          'Custom Halftone'));
-      namedProcessingMethods.add(NamedImageFilter(
+          'Custom Halftone',
+        ),
+      );
+      namedProcessingMethods.add(
+        NamedImageFilter(
           (img.Image orgImg) =>
               ImageProcessing.customThreshold(orgImg, dynamicPalette),
-          'Custom Threshold'));
+          'Custom Threshold',
+        ),
+      );
     }
   }
 }
