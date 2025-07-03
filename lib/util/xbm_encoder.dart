@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:image/image.dart' as img;
 
 /// A utility class to encode an image into the XBM format.
