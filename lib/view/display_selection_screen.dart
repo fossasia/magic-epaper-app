@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/constants/color_constants.dart';
 import 'package:magic_epaper_app/constants/string_constants.dart';
 import 'package:magic_epaper_app/provider/getitlocator.dart';
+import 'package:magic_epaper_app/util/color_util.dart';
 import 'package:magic_epaper_app/util/epd/configurable_editor.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/util/epd/gdey037z03.dart';
@@ -214,9 +215,8 @@ class _CustomEpdDialogState extends State<_CustomEpdDialog> {
     // Always start with white and black, then any valid extra colors
     colors = [Colors.white, Colors.black];
     for (final c in widget.initialColors.skip(2)) {
-      if (availableColorChoices.any(
-        (choice) => choice.color.toARGB32() == c.toARGB32(),
-      )) {
+      if (availableColorChoices
+          .any((choice) => ColorUtils.colorsEqual(choice.color, c))) {
         colors.add(c);
       }
     }
@@ -224,9 +224,8 @@ class _CustomEpdDialogState extends State<_CustomEpdDialog> {
 
   void _addColor() async {
     // Show dialog to pick from available colors not already selected
-    final usedColors = colors.map((c) => c.toARGB32()).toSet();
     final choices = availableColorChoices
-        .where((c) => !usedColors.contains(c.color.toARGB32()))
+        .where((choice) => !ColorUtils.colorExistsInList(choice.color, colors))
         .toList();
     if (choices.isEmpty) return;
     final picked = await showDialog<_ColorChoice>(
@@ -260,16 +259,6 @@ class _CustomEpdDialogState extends State<_CustomEpdDialog> {
         colors.removeAt(index);
       });
     }
-  }
-
-  String _getColorLabel(Color color) {
-    if (color.toARGB32() == Colors.white.toARGB32()) return 'White';
-    if (color.toARGB32() == Colors.black.toARGB32()) return 'Black';
-    final found = availableColorChoices.firstWhere(
-      (c) => c.color.toARGB32() == color.toARGB32(),
-      orElse: () => _ColorChoice(color: color, label: 'Color'),
-    );
-    return found.label;
   }
 
   @override
@@ -328,7 +317,8 @@ class _CustomEpdDialogState extends State<_CustomEpdDialog> {
                 runSpacing: 8,
                 children: List.generate(colors.length, (i) {
                   final color = colors[i];
-                  final label = _getColorLabel(color);
+                  final label =
+                      ColorUtils.getColorLabel(color, availableColorChoices);
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [

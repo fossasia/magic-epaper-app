@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
+import 'package:magic_epaper_app/util/color_util.dart';
 import 'package:magic_epaper_app/util/image_editor_utils.dart';
 import 'package:magic_epaper_app/util/xbm_encoder.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
@@ -98,15 +99,6 @@ class _ImageEditorState extends State<ImageEditor> {
   }
 
   /// Gets a simple string name for a color, used for filenames.
-  String _getColorName(Color color) {
-    if (color == Colors.black) return 'black';
-    if (color == Colors.red) return 'red';
-    if (color == Colors.yellow) return 'yellow';
-    if (color == Colors.blue) return 'blue';
-    if (color == Colors.green) return 'green';
-    // Fallback for other colors.
-    return color.toARGB32().toRadixString(16);
-  }
 
   /// Handles the logic for exporting the processed image as XBM files.
   Future<void> _exportXbmFiles() async {
@@ -137,7 +129,7 @@ class _ImageEditorState extends State<ImageEditor> {
       int exportedCount = 0;
       //print(nonWhiteColors);
       for (final color in nonWhiteColors) {
-        final colorName = _getColorName(color);
+        final colorName = ColorUtils.getColorFileName(color);
         final variableName = 'image_$colorName';
 
         // Extract the monochrome image for the current color plane.
