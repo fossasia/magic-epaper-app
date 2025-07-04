@@ -39,6 +39,7 @@ class ColorUtils {
     if (colorsEqual(color, Colors.yellow)) return 'yellow';
     if (colorsEqual(color, Colors.blue)) return 'blue';
     if (colorsEqual(color, Colors.green)) return 'green';
+    if (colorsEqual(color, Colors.orange)) return 'orange';
     // Fallback for other colors
     return color.toARGB32().toRadixString(16);
   }

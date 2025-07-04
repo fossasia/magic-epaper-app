@@ -17,7 +17,6 @@ class XbmEncoder {
     buffer.writeln('static unsigned char ${variableName}_bits[] = {');
 
     final bytes = <String>[];
-    // Calculate the number of bytes needed for each row of pixels.
     final rowStride = (width + 7) ~/ 8;
 
     for (var y = 0; y < height; y++) {
@@ -26,19 +25,18 @@ class XbmEncoder {
         for (var bit = 0; bit < 8; bit++) {
           final x = xByte * 8 + bit;
 
-          // Ensure we don't read past the image's width
           if (x < width) {
             final pixel = image.getPixel(x, y);
-            // In a monochrome image, a pixel's "on" state is typically white.
-            // We check the red channel, but luminance would also work.
-            if (pixel.r > 128) {
-              // Set the corresponding bit in the byte.
-              // XBM bits are typically ordered from right to left.
+            // CORRECTED LOGIC: A pixel is part of the foreground if it is NOT
+            // pure white. The ExtractQuantizer ensures that all non-target
+            // pixels are turned white, so this reliably finds the extracted color.
+            if (pixel.r != 255 || pixel.g != 255 || pixel.b != 255) {
+              // Set the corresponding bit in the byte. XBM bits are typically
+              // ordered from right to left (least significant first).
               currentByte |= (1 << bit);
             }
           }
         }
-        // Add the hex representation of the byte to our list.
         bytes.add('0x${currentByte.toRadixString(16).padLeft(2, '0')}');
       }
     }
