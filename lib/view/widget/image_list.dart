@@ -4,6 +4,7 @@ import 'package:magic_epaper_app/constants/asset_paths.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
 import 'package:magic_epaper_app/constants/color_constants.dart';
+import 'package:magic_epaper_app/util/epd/configurable_editor.dart';
 
 class ImageList extends StatelessWidget {
   final List<Uint8List> processedPngs;
@@ -32,6 +33,13 @@ class ImageList extends StatelessWidget {
   });
 
   String getFilterNameByIndex(int index) {
+    // If the EPD is a ConfigurableEpd, use its processingMethodNames
+    if (epd is ConfigurableEpd) {
+      final configurable = epd as ConfigurableEpd;
+      if (index >= 0 && index < configurable.processingMethodNames.length) {
+        return configurable.processingMethodNames[index];
+      }
+    }
     const Map<Function, String> filterMap = {
       ImageProcessing.bwFloydSteinbergDither: 'Floyd-Steinberg',
       ImageProcessing.bwFalseFloydSteinbergDither: 'False Floyd-Steinberg',
@@ -45,6 +53,13 @@ class ImageList extends StatelessWidget {
       ImageProcessing.bwrStuckiDither: 'BWR Stucki',
       ImageProcessing.bwrTriColorAtkinsonDither: 'BWR Atkinson',
       ImageProcessing.bwrThreshold: 'Threshold',
+      ImageProcessing.customFloydSteinbergDither: 'Custom Floyd-Steinberg',
+      ImageProcessing.customFalseFloydSteinbergDither:
+          'Custom False Floyd-Steinberg',
+      ImageProcessing.customStuckiDither: 'Custom Stucki',
+      ImageProcessing.customAtkinsonDither: 'Custom Atkinson',
+      ImageProcessing.customThreshold: 'Custom Threshold',
+      ImageProcessing.customHalftoneDither: 'Custom Halftone',
     };
     var methods = epd.processingMethods;
     if (index < 0 || index >= methods.length) return "Unknown";

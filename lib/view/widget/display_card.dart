@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/constants/color_constants.dart';
+import 'package:magic_epaper_app/util/color_util.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:magic_epaper_app/view/widget/color_dot.dart';
 
@@ -14,27 +15,6 @@ class DisplayCard extends StatelessWidget {
     required this.isSelected,
     required this.onTap,
   });
-
-  String _getColorName(Color color) {
-    switch (color) {
-      case Colors.black:
-        return 'Black';
-      case Colors.white:
-        return 'White';
-      case Colors.red:
-        return 'Red';
-      case Colors.yellow:
-        return 'Yellow';
-      case Colors.orange:
-        return 'Orange';
-      case Colors.green:
-        return 'Green';
-      case Colors.blue:
-        return 'Blue';
-      default:
-        return '';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +85,9 @@ class DisplayCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    display.colors.map(_getColorName).join(', '),
+                    display.colors
+                        .map(ColorUtils.getColorDisplayName)
+                        .join(', '),
                     style: const TextStyle(
                       fontSize: 10,
                       color: Colors.grey,
