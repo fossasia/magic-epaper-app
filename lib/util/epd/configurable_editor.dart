@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/constants/asset_paths.dart';
 import 'package:magic_epaper_app/util/epd/driver/driver.dart';
 import 'package:magic_epaper_app/util/epd/driver/dummy_driver.dart';
+import 'package:magic_epaper_app/util/epd/driver/uc8253.dart';
 import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
 import 'package:image/image.dart' as img;
 import 'epd.dart';
@@ -55,7 +56,7 @@ class ConfigurableEpd extends Epd {
 
   /// Using a dummy driver as this is only for exporting images.
   @override
-  Driver get controller => DummyDriver() as Driver;
+  Driver get controller => Uc8253() as Driver;
 
   /// The list of named image processing methods available for this display.
   final List<NamedImageFilter> namedProcessingMethods = [];
