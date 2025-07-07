@@ -7,4 +7,4 @@ class DummyDriver extends Driver {
   get driverName => 'NA';
   @override
   List<int> get transmissionLines => [0x10, 0x13];
-  }
+}
