@@ -163,7 +163,6 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   }
 }
 
-// Custom EPD dialog and config class
 class _CustomEpdConfig {
   final int width;
   final int height;
@@ -202,17 +201,11 @@ class _CustomEpdDialogState extends State<_CustomEpdDialog> {
     _ColorChoice(color: Colors.blue, label: 'Blue'),
   ];
 
-  // static const List<_ColorChoice> fixedColorChoices = [
-  //   _ColorChoice(color: Colors.white, label: 'White'),
-  //   _ColorChoice(color: Colors.black, label: 'Black'),
-  // ];
-
   @override
   void initState() {
     super.initState();
     width = widget.initialWidth;
     height = widget.initialHeight;
-    // Always start with white and black, then any valid extra colors
     colors = [Colors.white, Colors.black];
     for (final c in widget.initialColors.skip(2)) {
       if (availableColorChoices
@@ -223,7 +216,6 @@ class _CustomEpdDialogState extends State<_CustomEpdDialog> {
   }
 
   void _addColor() async {
-    // Show dialog to pick from available colors not already selected
     final choices = availableColorChoices
         .where((choice) => !ColorUtils.colorExistsInList(choice.color, colors))
         .toList();

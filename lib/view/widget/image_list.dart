@@ -33,7 +33,6 @@ class ImageList extends StatelessWidget {
   });
 
   String getFilterNameByIndex(int index) {
-    // If the EPD is a ConfigurableEpd, use its processingMethodNames
     if (epd is ConfigurableEpd) {
       final configurable = epd as ConfigurableEpd;
       if (index >= 0 && index < configurable.processingMethodNames.length) {
@@ -53,13 +52,6 @@ class ImageList extends StatelessWidget {
       ImageProcessing.bwrStuckiDither: 'BWR Stucki',
       ImageProcessing.bwrTriColorAtkinsonDither: 'BWR Atkinson',
       ImageProcessing.bwrThreshold: 'Threshold',
-      ImageProcessing.customFloydSteinbergDither: 'Custom Floyd-Steinberg',
-      ImageProcessing.customFalseFloydSteinbergDither:
-          'Custom False Floyd-Steinberg',
-      ImageProcessing.customStuckiDither: 'Custom Stucki',
-      ImageProcessing.customAtkinsonDither: 'Custom Atkinson',
-      ImageProcessing.customThreshold: 'Custom Threshold',
-      ImageProcessing.customHalftoneDither: 'Custom Halftone',
     };
     var methods = epd.processingMethods;
     if (index < 0 || index >= methods.length) return "Unknown";

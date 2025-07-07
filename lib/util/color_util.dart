@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// A utility class for color-related operations and mappings.
 class ColorUtils {
-  // Define color mapping
+  /// A mapping from [Color] objects to their display names.
   static final Map<Color, String> _colorMap = {
     Colors.black: 'Black',
     Colors.white: 'White',
@@ -12,17 +13,23 @@ class ColorUtils {
     Colors.blue: 'Blue',
   };
 
-  // Helper method to compare colors without toARGB32
+  /// Compares two [Color] objects for equality based on their ARGB values.
+  ///
+  /// Returns `true` if both colors have the same ARGB value, otherwise `false`.
   static bool colorsEqual(Color a, Color b) {
     return a.toARGB32() == b.toARGB32();
   }
 
-  // Helper method to check if a color exists in a list
+  /// Checks if a given [color] exists within the provided [colorList].
+  ///
+  /// Returns `true` if the color is found in the list, otherwise `false`.
   static bool colorExistsInList(Color color, List<Color> colorList) {
     return colorList.any((c) => colorsEqual(c, color));
   }
 
-  // Get display name for color (used in UI)
+  /// Returns a user-friendly display name for the given [color].
+  ///
+  /// If the color is not found in the predefined color map, returns 'Color'.
   static String getColorDisplayName(Color color) {
     for (final entry in _colorMap.entries) {
       if (colorsEqual(entry.key, color)) {
@@ -32,7 +39,9 @@ class ColorUtils {
     return 'Color';
   }
 
-  // Get file name for color (used in exports)
+  /// Returns a file-friendly name for the given [color], used in exports.
+  ///
+  /// If the color is not a predefined one, returns its ARGB value as a hex string.
   static String getColorFileName(Color color) {
     if (colorsEqual(color, Colors.black)) return 'black';
     if (colorsEqual(color, Colors.red)) return 'red';
@@ -40,18 +49,18 @@ class ColorUtils {
     if (colorsEqual(color, Colors.blue)) return 'blue';
     if (colorsEqual(color, Colors.green)) return 'green';
     if (colorsEqual(color, Colors.orange)) return 'orange';
-    // Fallback for other colors
     return color.toARGB32().toRadixString(16);
   }
 
-  // Get color label with fallback to available choices
+  /// Returns a label for the given [color], using available color choices as fallback.
+  ///
+  /// If the color is not a predefined one, checks [availableColorChoices] for a matching label.
+  /// If no match is found, returns 'Color'.
   static String getColorLabel(
       Color color, List<dynamic> availableColorChoices) {
-    // Check predefined colors first
     final displayName = getColorDisplayName(color);
     if (displayName != 'Color') return displayName;
 
-    // Check available color choices
     for (final choice in availableColorChoices) {
       if (colorsEqual(choice.color, color)) {
         return choice.label;

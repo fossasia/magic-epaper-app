@@ -1,10 +1,18 @@
 import 'package:image/image.dart' as img;
 
-/// A utility class to encode an image into the XBM format.
+/// Provides functionality to encode images into the XBM (X BitMap) format.
+///
+/// The XBM format is a monochrome bitmap format commonly used for embedding images in C source code, such as for e-paper displays or microcontroller projects.
 class XbmEncoder {
   /// Encodes a given monochrome [image] into an XBM formatted string.
   ///
-  /// The [variableName] is used for the C variable definitions in the output.
+  /// The [image] must be a monochrome (black and white) image. Each non-white pixel is treated as foreground (bit set to 1),
+  /// and white pixels are treated as background (bit set to 0). The resulting string contains C definitions for the image width,
+  /// height, and a static unsigned char array with the image data in XBM format.
+  ///
+  /// The [variableName] parameter is used as the base name for the C variable definitions in the output.
+  ///
+  /// Returns a string containing the XBM representation of the image, suitable for direct inclusion in C/C++ source files.
   static String encode(img.Image image, String variableName) {
     final width = image.width;
     final height = image.height;
@@ -27,12 +35,9 @@ class XbmEncoder {
 
           if (x < width) {
             final pixel = image.getPixel(x, y);
-            // CORRECTED LOGIC: A pixel is part of the foreground if it is NOT
-            // pure white. The ExtractQuantizer ensures that all non-target
-            // pixels are turned white, so this reliably finds the extracted color.
+            // Treat any non-white pixel as foreground (bit set to 1) for XBM encoding.
             if (pixel.r != 255 || pixel.g != 255 || pixel.b != 255) {
-              // Set the corresponding bit in the byte. XBM bits are typically
-              // ordered from right to left (least significant first).
+              // Set the corresponding bit in the byte. XBM format expects bits to be ordered from least significant to most significant within each byte.
               currentByte |= (1 << bit);
             }
           }
@@ -41,7 +46,6 @@ class XbmEncoder {
       }
     }
 
-    // Write the byte array to the buffer, formatted for C.
     for (int i = 0; i < bytes.length; i++) {
       if (i % 12 == 0) {
         buffer.write('\n  ');

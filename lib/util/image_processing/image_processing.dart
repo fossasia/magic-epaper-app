@@ -99,7 +99,6 @@ class ImageProcessing {
         kernel: img.DitherKernel.none);
   }
 
-  // Custom palette methods for ConfigurableEpd
   static img.Image customFloydSteinbergDither(
       img.Image orgImg, img.PaletteUint8 palette) {
     var image = img.Image.from(orgImg);

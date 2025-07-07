@@ -58,7 +58,6 @@ abstract class Epd {
   }
 
   img.Image extractColorPlaneAsImage(Color color, img.Image orgImage) {
-    // This method relies on your existing ImageProcessing.extract function.
     return ImageProcessing.extract(color, orgImage);
   }
   // TODO: howToAdjust ???

@@ -1,44 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/constants/asset_paths.dart';
 import 'package:magic_epaper_app/util/epd/driver/driver.dart';
-import 'package:magic_epaper_app/util/epd/driver/uc8253.dart';
+import 'package:magic_epaper_app/util/epd/driver/dummy_driver.dart';
 import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
 import 'package:image/image.dart' as img;
 import 'epd.dart';
 
-/// Represents a dynamically configurable e-paper display.
+/// Represents a named image filter for use in e-paper image processing.
 ///
-/// Used for the "Arduino Export Tool" to allow users to specify
-/// custom dimensions and color palettes for image processing.
+/// Associates a filter function with a display name for UI and export purposes.
 class NamedImageFilter {
+  /// The image filter function to apply.
   final img.Image Function(img.Image) filter;
+
+  /// The display name of the filter.
   final String name;
+
+  /// Creates a [NamedImageFilter] with the given [filter] and [name].
   NamedImageFilter(this.filter, this.name);
 }
 
+/// A dynamically configurable e-paper display for custom export and processing.
+///
+/// This class is used to export dithered images and supports:
+/// - Changing the color palette for dithering (custom colors)
+/// - Setting the height and width of the display
+/// - Generating XBM output for custom displays
+///
+/// It allows users to experiment with different display configurations and image processing methods.
 class ConfigurableEpd extends Epd {
+  /// The width of the display in pixels.
   @override
   final int width;
 
+  /// The height of the display in pixels.
   @override
   final int height;
 
+  /// The display name for UI and export.
   @override
   final String name;
 
+  /// The list of supported colors for dithering and export.
   @override
   final List<Color> colors;
 
+  /// The model identifier for this configurable export display.
   @override
-  String get modelId => 'CustomTool';
+  String get modelId => 'NA';
 
+  /// The asset path for the display image (custom export icon).
   @override
-  // NOTE: You might want to add a specific asset for this tool.
-  String get imgPath => ImageAssets.epaper37Bwr;
+  String get imgPath => ImageAssets.customExport;
 
+  /// Using a dummy driver as this is only for exporting images.
   @override
-  Driver get controller => Uc8253() as Driver;
+  Driver get controller => DummyDriver() as Driver;
 
+  /// The list of named image processing methods available for this display.
   final List<NamedImageFilter> namedProcessingMethods = [];
 
   @override
@@ -48,6 +67,9 @@ class ConfigurableEpd extends Epd {
   List<String> get processingMethodNames =>
       namedProcessingMethods.map((f) => f.name).toList();
 
+  /// Creates a [ConfigurableEpd] with the given [width], [height], [colors], and optional [name].
+  ///
+  /// The color palette and display size can be customized, and dithering methods can be chosen.
   ConfigurableEpd({
     required this.width,
     required this.height,
@@ -57,7 +79,9 @@ class ConfigurableEpd extends Epd {
     _addProcessingMethods();
   }
 
-  /// Creates a palette for the 'image' library from a list of Flutter Colors.
+  /// Creates a palette for the 'image' library from a list of Flutter [Color]s.
+  ///
+  /// Used for custom dithering with custom color palettes.
   img.PaletteUint8 _createDynamicPalette() {
     final palette = img.PaletteUint8(colors.length, 3);
     for (int i = 0; i < colors.length; i++) {
@@ -69,11 +93,6 @@ class ConfigurableEpd extends Epd {
   }
 
   /// Populates the list of processing methods based on the color palette.
-  ///
-  /// IMPORTANT: This class creates new function instances for dithering.
-  /// The current `ImageList` widget identifies filters by their function
-  /// reference, so these dynamic filters will be named "Unknown" in the UI.
-  /// A future improvement would be to store filter names in the Epd class itself.
   void _addProcessingMethods() {
     namedProcessingMethods.clear();
     final isBlackAndWhite = colors.length == 2;
@@ -110,7 +129,7 @@ class ConfigurableEpd extends Epd {
             orgImg,
             dynamicPalette,
           ),
-          'Custom Floyd-Steinberg',
+          'Floyd-Steinberg',
         ),
       );
       namedProcessingMethods.add(
@@ -119,35 +138,35 @@ class ConfigurableEpd extends Epd {
             orgImg,
             dynamicPalette,
           ),
-          'Custom False Floyd-Steinberg',
+          'False Floyd-Steinberg',
         ),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
           (img.Image orgImg) =>
               ImageProcessing.customStuckiDither(orgImg, dynamicPalette),
-          'Custom Stucki',
+          'Stucki',
         ),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
           (img.Image orgImg) =>
               ImageProcessing.customAtkinsonDither(orgImg, dynamicPalette),
-          'Custom Atkinson',
+          'Atkinson',
         ),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
           (img.Image orgImg) =>
               ImageProcessing.customHalftoneDither(orgImg, dynamicPalette),
-          'Custom Halftone',
+          'Halftone',
         ),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
           (img.Image orgImg) =>
               ImageProcessing.customThreshold(orgImg, dynamicPalette),
-          'Custom Threshold',
+          'Threshold',
         ),
       );
     }

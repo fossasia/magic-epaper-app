@@ -98,9 +98,6 @@ class _ImageEditorState extends State<ImageEditor> {
     });
   }
 
-  /// Gets a simple string name for a color, used for filenames.
-
-  /// Handles the logic for exporting the processed image as XBM files.
   Future<void> _exportXbmFiles() async {
     if (_rawImages.isEmpty) return;
 
@@ -115,7 +112,6 @@ class _ImageEditorState extends State<ImageEditor> {
     try {
       img.Image baseImage = _rawImages[_selectedFilterIndex];
 
-      // Apply flips to the base image before extracting color planes.
       if (flipHorizontal) {
         baseImage = img.flipHorizontal(baseImage);
       }
@@ -123,25 +119,20 @@ class _ImageEditorState extends State<ImageEditor> {
         baseImage = img.flipVertical(baseImage);
       }
 
-      // We only export non-white colors.
       final nonWhiteColors = widget.epd.colors.where((c) => c != Colors.white);
 
       int exportedCount = 0;
-      //print(nonWhiteColors);
       for (final color in nonWhiteColors) {
         final colorName = ColorUtils.getColorFileName(color);
         final variableName = 'image_$colorName';
 
-        // Extract the monochrome image for the current color plane.
         final colorPlaneImage = widget.epd.extractColorPlaneAsImage(
           color,
           baseImage,
         );
 
-        // Encode the monochrome image to the XBM format.
         final xbmContent = XbmEncoder.encode(colorPlaneImage, variableName);
 
-        // Save the generated string as a file.
         await FileSaver.instance.saveFile(
           name: variableName,
           bytes: Uint8List.fromList(xbmContent.codeUnits),
@@ -158,7 +149,6 @@ class _ImageEditorState extends State<ImageEditor> {
       );
     } catch (e) {
       messenger.showSnackBar(SnackBar(content: Text('Export failed: $e')));
-      //print(e);
     }
   }
 
