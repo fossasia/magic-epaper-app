@@ -15,46 +15,46 @@ class Protocol {
   final fw = MagicEpaperFirmware();
   final Epd epd;
   final timeout = const Duration(seconds: 5);
+  late Uint8List tagId;
 
   Protocol({required this.epd});
 
-  Future<Uint8List> _transceive(nfcvCmd, Uint8List tagId, Uint8List msg) async {
+  Future<Uint8List> _transceive(nfcvCmd, Uint8List msg) async {
     final raw = fw.tagChip.buildMessage(nfcvCmd, tagId, msg);
     return await FlutterNfcKit.transceive(raw, timeout: timeout);
   }
 
-  Future<Uint8List> _writeMsg(Uint8List tagId, Uint8List msg) async {
-    return await _transceive(fw.tagChip.writeMsgCmd, tagId, msg);
+  Future<Uint8List> writeMsg(Uint8List msg) async {
+    return await _transceive(fw.tagChip.writeMsgCmd, msg);
   }
 
-  Future<Uint8List> _readDynCfg(Uint8List tagId, int address) async {
+  Future<Uint8List> _readDynCfg(int address) async {
     final raw = fw.tagChip.buildReadDynCfgCmd(tagId, address);
     return await FlutterNfcKit.transceive(raw, timeout: timeout);
   }
 
-  Future<Uint8List> _writeDynCfg(
-      Uint8List tagId, int address, int value) async {
+  Future<Uint8List> _writeDynCfg(int address, int value) async {
     final raw = fw.tagChip.buildWriteDynCfgCmd(tagId, address, value);
     return await FlutterNfcKit.transceive(raw, timeout: timeout);
   }
 
-  Future<bool> hasI2cGatheredMsg(Uint8List tagId) async {
-    return ((await _readDynCfg(tagId, 0x0d)).elementAt(1) & 0x04) != 0x04;
+  Future<bool> hasI2cGatheredMsg() async {
+    return ((await _readDynCfg(0x0d)).elementAt(1) & 0x04) != 0x04;
   }
 
-  Future<Uint8List> enableEnergyHarvesting(Uint8List tagId) async {
-    return await _writeDynCfg(tagId, 0x02, 0x01);
+  Future<Uint8List> enableEnergyHarvesting() async {
+    return await _writeDynCfg(0x02, 0x01);
   }
 
   Future<void> _sleep() async {
     await Future.delayed(const Duration(milliseconds: 20));
   }
 
-  Future<void> wait4msgGathered(Uint8List tagId) async {
+  Future<void> wait4msgGathered() async {
     var attempt = 4;
     while (attempt > 0) {
       try {
-        if (await hasI2cGatheredMsg(tagId)) {
+        if (await hasI2cGatheredMsg()) {
           return; // Exit successfully if message is gathered
         }
       } catch (e) {
@@ -70,16 +70,16 @@ class Protocol {
 
   Future<void> writeFrame(Uint8List id, Uint8List frame, int cmd) async {
     final chunks = _split(data: frame);
-    await _writeMsg(
-        id, Uint8List.fromList([fw.epdCmd, cmd])); // enter transmission 1
+    await writeMsg(
+        Uint8List.fromList([fw.epdCmd, cmd])); // enter transmission 1
     await _sleep();
     for (int i = 0; i < chunks.length; i++) {
       Uint8List chunk = chunks[i];
       debugPrint(
           "Writing chunk ${i + 1}/${chunks.length} len ${chunk.lengthInBytes}: ${chunk.map((e) => e.toRadixString(16)).toList()}");
 
-      await _writeMsg(id, chunk);
-      await wait4msgGathered(id);
+      await writeMsg(chunk);
+      await wait4msgGathered();
     }
     debugPrint("Transferred successfully.");
   }
@@ -119,24 +119,24 @@ class Protocol {
     final tag = await FlutterNfcKit.poll(timeout: timeout);
     debugPrint("Got a tag!");
 
-    var id = Uint8List.fromList(hex.decode(tag.id));
+    tagId = Uint8List.fromList(hex.decode(tag.id));
     if (tag.type != NFCTagType.iso15693) {
       throw "Not a Magic Epaper Hardware";
     }
 
-    await enableEnergyHarvesting(id);
+    await enableEnergyHarvesting();
     await Future.delayed(
         const Duration(seconds: 2)); // waiting for the power supply stable
+
+    await epd.controller.init(this);
 
     final epdColors = epd.extractEpaperColorFrames(image);
     final transmissionLines = epd.controller.transmissionLines.iterator;
     for (final c in epdColors) {
       transmissionLines.moveNext();
-      await writeFrame(id, c, transmissionLines.current);
+      await writeFrame(tagId, c, transmissionLines.current);
     }
 
-    await _writeMsg(
-        id, Uint8List.fromList([fw.epdCmd, epd.controller.refresh]));
-    await FlutterNfcKit.finish();
+    await writeMsg(Uint8List.fromList([fw.epdCmd, epd.controller.refresh]));
   }
 }
