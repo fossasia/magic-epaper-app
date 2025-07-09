@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/constants/asset_paths.dart';
+import 'package:magic_epaper_app/image_library/services/image_filter_helper.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
-import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
 import 'package:magic_epaper_app/constants/color_constants.dart';
 
 class ImageList extends StatelessWidget {
@@ -32,23 +32,7 @@ class ImageList extends StatelessWidget {
   });
 
   String getFilterNameByIndex(int index) {
-    const Map<Function, String> filterMap = {
-      ImageProcessing.bwFloydSteinbergDither: 'Floyd-Steinberg',
-      ImageProcessing.bwFalseFloydSteinbergDither: 'False Floyd-Steinberg',
-      ImageProcessing.bwStuckiDither: 'Stucki',
-      ImageProcessing.bwAtkinsonDither: 'Atkinson',
-      ImageProcessing.bwThreshold: 'Threshold',
-      ImageProcessing.bwHalftoneDither: 'Halftone',
-      ImageProcessing.bwrHalftone: 'Color Halftone',
-      ImageProcessing.bwrFloydSteinbergDither: 'BWR Floyd-Steinberg',
-      ImageProcessing.bwrFalseFloydSteinbergDither: 'BWR False Floyd-Steinberg',
-      ImageProcessing.bwrStuckiDither: 'BWR Stucki',
-      ImageProcessing.bwrTriColorAtkinsonDither: 'BWR Atkinson',
-      ImageProcessing.bwrThreshold: 'Threshold',
-    };
-    var methods = epd.processingMethods;
-    if (index < 0 || index >= methods.length) return "Unknown";
-    return filterMap[methods[index]] ?? "Unknown";
+    return ImageFilterHelper.getFilterNameByIndex(index, epd.processingMethods);
   }
 
   @override

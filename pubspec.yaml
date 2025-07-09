@@ -43,6 +43,7 @@ dependencies:
   path_provider: ^2.0.15
   get_it: ^8.0.3
   path: ^1.9.1
+  permission_handler: ^11.0.1
 
 dev_dependencies:
   flutter_test:
