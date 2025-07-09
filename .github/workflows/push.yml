@@ -67,6 +67,21 @@ jobs:
           git branch -m version
           git push --force origin version
 
+  unsigned:
+    name: Unsigned Android Build
+    needs: common
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Main
+        uses: actions/checkout@v4
+
+      - name: Unsigned APK Workflow
+        uses: ./.github/actions/android/unsigned
+        with:
+          VERSION_NAME: ${{ needs.common.outputs.VERSION_NAME }}
+          VERSION_CODE: ${{ needs.common.outputs.VERSION_CODE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   android:
     name: Android Flutter Build
     needs: common

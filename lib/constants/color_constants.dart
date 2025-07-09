@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 const Color colorPrimary = Color(0xFFD32F2F);
 const Color colorPrimaryDark = Color(0xFFC72C2C);
 const Color colorAccent = Color(0xFFD32F2F);
+const Color colorBlack = Colors.black;
+const Color colorWhite = Colors.white;
 
 /// Knob Colors
 const Color backCircleColor = Color(0xFFEDEDED);

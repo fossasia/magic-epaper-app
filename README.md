@@ -3,8 +3,6 @@
 
 **Create and Transfer Customized Content to Tri-Color ePaper Badges via NFC**
 
-The Magic ePaper Badge app lets you create and customize rich content for tri-color ePaper displays. Design text, import images, add emojis, and apply various effects before transferring your creations to the badge via NFC. The project aims to provide an intuitive interface for interacting with this unique battery-free hardware platform.
-
 ## Features in Development
 
 - **Content Creation**: Design badges with text, drawings, emojis, and imported images
@@ -125,3 +123,50 @@ To make the review process smooth and ensure good code, let's keep these simple 
 ## LICENSE
 
 The application is licensed under the [Apache License 2.0](https://github.com/fossasia/magic-epaper-app/blob/main/LICENSE.md). Copyright is owned by FOSSASIA and its contributors.
+=======
+To support additional languages, please visit the tutorial on
+[Internationalizing Flutter apps](https://flutter.dev/to/internationalization).
+
+## Installation Steps
+
+### Prerequisites
+
+##### Before setting up the project, ensure you have the following installed:
+
+Flutter SDK: Install from Flutter's official website.
+
+Dart SDK: Included with Flutter, but verify installation using `dart --version`
+
+Git: Required for cloning the repository. Install from Git's official site.
+
+Android Studio or VS Code: Recommended IDEs for Flutter development.
+
+Android Emulator or Physical Device: For running the application.
+
+
+1. Clone the Repository
+```
+git clone https://github.com/fossasia/magic-epaper-app
+cd magic-epaper-app
+```
+
+2. Install Dependencies
+```
+flutter pub get
+```
+
+## Running the Project
+
+1. Run on an Emulator or Physical Device
+
+Ensure an emulator is running or a device is connected.
+
+Execute:
+```
+flutter run
+```
+2. Build the App (For production/testing)
+```
+flutter build apk  # For Android
+flutter build ios  # For iOS (macOS required)
+```
