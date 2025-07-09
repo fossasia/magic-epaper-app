@@ -1,0 +1,43 @@
+name: New feature
+description: Suggest or request a new feature
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please fill out the sections below to properly describe the new feature you are suggesting.
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the feature
+      placeholder: A button in the screen X that allows to do Y
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: It should be implemented because
+      placeholder: It will allow to do Y that is needed for Z
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Did you think about any alternative?
+      placeholder: We could do A or B instead
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      placeholder: |
+        Add any other context or screenshots about the feature request here.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Extra fields
+      options:
+        - label: I have used the search function to check if an issue already exists
+          required: true
+        - label: I'd like to work on this issue
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your suggestion! Let's see together if it can be implemented.
