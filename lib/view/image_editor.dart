@@ -25,6 +25,7 @@ class _ImageEditorState extends State<ImageEditor> {
   int _selectedFilterIndex = 0;
   bool flipHorizontal = false;
   bool flipVertical = false;
+  bool isQuickLutEnabled = false;
 
   img.Image? _processedSourceImage;
   List<img.Image> _rawImages = [];
@@ -116,30 +117,57 @@ class _ImageEditorState extends State<ImageEditor> {
         ),
         actions: <Widget>[
           if (_rawImages.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(right: 12.0),
-              child: TextButton(
-                onPressed: () {
-                  img.Image finalImg = _rawImages[_selectedFilterIndex];
-
-                  if (flipHorizontal) {
-                    finalImg = img.flipHorizontal(finalImg);
-                  }
-                  if (flipVertical) {
-                    finalImg = img.flipVertical(finalImg);
-                  }
-                  Protocol(epd: widget.epd).writeImages(finalImg);
-                },
-                style: TextButton.styleFrom(
-                  backgroundColor: colorAccent,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    side: const BorderSide(color: Colors.white, width: 1),
+            Row(
+              children: [
+                IconButton(
+                  tooltip: isQuickLutEnabled ? 'Quick Mode' : 'Normal Mode',
+                  onPressed: () {
+                    setState(() {
+                      isQuickLutEnabled = !isQuickLutEnabled;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        duration: Durations.medium3,
+                        content: Text(
+                          isQuickLutEnabled
+                              ? "Quick Refresh Enabled"
+                              : "Normal Refresh Enabled",
+                        ),
+                        backgroundColor: colorPrimary,
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    isQuickLutEnabled ? Icons.flash_on : Icons.flash_off,
+                    color: Colors.white,
                   ),
                 ),
-                child: const Text(StringConstants.transferButtonLabel),
-              ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 12.0),
+                  child: TextButton(
+                    onPressed: () {
+                      img.Image finalImg = _rawImages[_selectedFilterIndex];
+
+                      if (flipHorizontal) {
+                        finalImg = img.flipHorizontal(finalImg);
+                      }
+                      if (flipVertical) {
+                        finalImg = img.flipVertical(finalImg);
+                      }
+                      Protocol(epd: widget.epd).writeImages(finalImg);
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: colorAccent,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: const BorderSide(color: Colors.white, width: 1),
+                      ),
+                    ),
+                    child: const Text(StringConstants.transferButtonLabel),
+                  ),
+                ),
+              ],
             ),
         ],
       ),
