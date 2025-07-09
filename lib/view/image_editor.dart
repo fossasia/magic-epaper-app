@@ -154,7 +154,8 @@ class _ImageEditorState extends State<ImageEditor> {
                       if (flipVertical) {
                         finalImg = img.flipVertical(finalImg);
                       }
-                      Protocol(epd: widget.epd).writeImages(finalImg);
+                      Protocol(epd: widget.epd).writeImages(finalImg,
+                          useQuickLut: isQuickLutEnabled);
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: colorAccent,
