@@ -192,27 +192,25 @@ class _ImageEditorState extends State<ImageEditor> {
               child: TextButton(
                 onPressed: () {
                   img.Image finalImg = _rawImages[_selectedFilterIndex];
-                      if (flipHorizontal) {
-                        finalImg = img.flipHorizontal(finalImg);
-                      }
-                      if (flipVertical) {
-                        finalImg = img.flipVertical(finalImg);
-                      }
-                      Protocol(epd: widget.epd).writeImages(finalImg,
-                          useQuickLut: isQuickLutEnabled);
-                    },
-                    style: TextButton.styleFrom(
-                      backgroundColor: colorAccent,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: const BorderSide(color: Colors.white, width: 1),
-                      ),
-                    ),
-                    child: const Text(StringConstants.transferButtonLabel),
+
+                  if (flipHorizontal) {
+                    finalImg = img.flipHorizontal(finalImg);
+                  }
+                  if (flipVertical) {
+                    finalImg = img.flipVertical(finalImg);
+                  }
+                  Protocol(epd: widget.epd).writeImages(finalImg);
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: colorAccent,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    side: const BorderSide(color: Colors.white, width: 1),
                   ),
                 ),
-              ],
+                child: const Text(StringConstants.transferButtonLabel),
+              ),
             ),
           ],
         ],
