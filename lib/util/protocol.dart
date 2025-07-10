@@ -95,7 +95,7 @@ class Protocol {
     return chunks;
   }
 
-  void writeImages(img.Image image) async {
+  void writeImages(img.Image image, {bool useQuickLut = false}) async {
     var availability = await FlutterNfcKit.nfcAvailability;
     switch (availability) {
       case NFCAvailability.available:
@@ -128,7 +128,7 @@ class Protocol {
     await Future.delayed(
         const Duration(seconds: 2)); // waiting for the power supply stable
 
-    await epd.controller.init(this);
+    await epd.controller.init(this, useQuickLut: useQuickLut);
 
     final epdColors = epd.extractEpaperColorFrames(image);
     final transmissionLines = epd.controller.transmissionLines.iterator;

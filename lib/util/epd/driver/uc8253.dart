@@ -123,7 +123,7 @@ class Uc8253 extends Driver {
   }
 
   @override
-  Future<void> init(Protocol p) async {
+  Future<void> init(Protocol p, {bool useQuickLut = false}) async {
     // power on
     // FIXME: this command require polling the busy state but currently there is no way to do this in the app
     await p.writeMsg(Uint8List.fromList([p.fw.epdCmd, 0x04]));
@@ -133,10 +133,12 @@ class Uc8253 extends Driver {
     await p.writeMsg(Uint8List.fromList([p.fw.epdSend, 0xff, 0x0f]));
 
     await p.writeMsg(Uint8List.fromList([p.fw.epdCmd, panelSetting]));
-    // 480x240, built-in LUTs
-    await p.writeMsg(Uint8List.fromList([p.fw.epdSend, 0xCF, 0x8D]));
-    // 480x240, LUTs from register
-    // await p.writeMsg(Uint8List.fromList([p.fw.epdSend, 0xEF, 0x8D]));
-    // await setlut(p, waveforms[0]);
+
+    if (useQuickLut) {
+      await p.writeMsg(Uint8List.fromList([p.fw.epdSend, 0xEF, 0x8D]));
+      await setlut(p, waveforms[0]);
+    } else {
+      await p.writeMsg(Uint8List.fromList([p.fw.epdSend, 0xCF, 0x8D]));
+    }
   }
 }

@@ -27,6 +27,7 @@ class _ImageEditorState extends State<ImageEditor> {
   int _selectedFilterIndex = 0;
   bool flipHorizontal = false;
   bool flipVertical = false;
+  bool isQuickLutEnabled = false;
 
   String _currentImageSource = 'imported';
   img.Image? _processedSourceImage;
@@ -151,6 +152,30 @@ class _ImageEditorState extends State<ImageEditor> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         actions: <Widget>[
+          if (_rawImages.isNotEmpty)
+            IconButton(
+              tooltip: isQuickLutEnabled ? 'Quick Mode' : 'Normal Mode',
+              onPressed: () {
+                setState(() {
+                  isQuickLutEnabled = !isQuickLutEnabled;
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    duration: Durations.medium3,
+                    content: Text(
+                      isQuickLutEnabled
+                          ? "Quick Refresh Enabled"
+                          : "Normal Refresh Enabled",
+                    ),
+                    backgroundColor: colorPrimary,
+                  ),
+                );
+              },
+              icon: Icon(
+                isQuickLutEnabled ? Icons.flash_on : Icons.flash_off,
+                color: Colors.white,
+              ),
+            ),
           IconButton(
             onPressed: _navigateToImageLibrary,
             icon: const Icon(Icons.photo_library_outlined),
