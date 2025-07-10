@@ -38,9 +38,9 @@ class ImageList extends StatelessWidget {
       if (index >= 0 && index < configurable.processingMethodNames.length) {
         return configurable.processingMethodNames[index];
       }
-    }
-    else{
-    return ImageFilterHelper.getFilterNameByIndex(index, epd.processingMethods);
+    } else {
+      return ImageFilterHelper.getFilterNameByIndex(
+          index, epd.processingMethods);
     }
   }
 
