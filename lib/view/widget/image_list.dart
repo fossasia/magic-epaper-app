@@ -38,6 +38,7 @@ class ImageList extends StatelessWidget {
       if (index >= 0 && index < configurable.processingMethodNames.length) {
         return configurable.processingMethodNames[index];
       }
+      throw RangeError('Index $index out of range for processingMethodNames');
     } else {
       return ImageFilterHelper.getFilterNameByIndex(
           index, epd.processingMethods);
