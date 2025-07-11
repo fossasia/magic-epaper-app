@@ -105,8 +105,6 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                           display: displays[index],
                           isSelected: selectedIndex == index,
                           onTap: () {
-                            // If the last item (our tool) is tapped, show the dialog.
-                            // Otherwise, just select the display.
                             if (index == displays.length - 1) {
                               _showConfigurableDialog();
                             } else {
