@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:magic_epaper_app/employee_id_generator/employee_id_generator_screen.dart';
 import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
 import 'package:magic_epaper_app/image_library/services/image_save_handler.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
@@ -307,6 +308,27 @@ class BottomActionMenu extends StatelessWidget {
                     );
                     await imgLoader.saveFinalizedImageBytes(canvasBytes);
                     onSourceChanged?.call('editor');
+                  }
+                },
+              ),
+              _buildActionButton(
+                context: context,
+                icon: Icons.badge_outlined,
+                label: 'ID Card',
+                onTap: () async {
+                  final idCardBytes =
+                      await Navigator.of(context).push<Uint8List>(
+                    MaterialPageRoute(
+                      builder: (context) => EmployeeIdGeneratorScreen(epd: epd),
+                    ),
+                  );
+                  if (idCardBytes != null) {
+                    await imgLoader.updateImage(
+                      bytes: idCardBytes,
+                      width: epd.width,
+                      height: epd.height,
+                    );
+                    await imgLoader.saveFinalizedImageBytes(idCardBytes);
                   }
                 },
               ),
