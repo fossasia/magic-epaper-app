@@ -1,9 +1,12 @@
 import 'dart:typed_data';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
 import 'package:magic_epaper_app/image_library/services/image_save_handler.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
+import 'package:magic_epaper_app/util/color_util.dart';
 import 'package:magic_epaper_app/util/image_editor_utils.dart';
+import 'package:magic_epaper_app/util/xbm_encoder.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +20,8 @@ import 'package:magic_epaper_app/util/protocol.dart';
 
 class ImageEditor extends StatefulWidget {
   final Epd epd;
-  const ImageEditor({super.key, required this.epd});
+  final bool isExportOnly;
+  const ImageEditor({super.key, required this.epd, this.isExportOnly = false});
 
   @override
   State<ImageEditor> createState() => _ImageEditorState();
@@ -115,10 +119,7 @@ class _ImageEditorState extends State<ImageEditor> {
       return;
     }
 
-    _rawImages = processImages(
-      originalImage: sourceImage,
-      epd: widget.epd,
-    );
+    _rawImages = processImages(originalImage: sourceImage, epd: widget.epd);
 
     _rotatedImages =
         _rawImages.map((rawImg) => img.copyRotate(rawImg, angle: 90)).toList();
@@ -133,6 +134,60 @@ class _ImageEditorState extends State<ImageEditor> {
     });
   }
 
+  Future<void> _exportXbmFiles() async {
+    if (_rawImages.isEmpty) return;
+
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.showSnackBar(
+      const SnackBar(
+        duration: Duration(seconds: 2),
+        content: Text('Exporting XBM files...'),
+      ),
+    );
+
+    try {
+      img.Image baseImage = _rawImages[_selectedFilterIndex];
+
+      if (flipHorizontal) {
+        baseImage = img.flipHorizontal(baseImage);
+      }
+      if (flipVertical) {
+        baseImage = img.flipVertical(baseImage);
+      }
+
+      final nonWhiteColors = widget.epd.colors.where((c) => c != Colors.white);
+
+      int exportedCount = 0;
+      for (final color in nonWhiteColors) {
+        final colorName = ColorUtils.getColorFileName(color);
+        final variableName = 'image_$colorName';
+
+        final colorPlaneImage = widget.epd.extractColorPlaneAsImage(
+          color,
+          baseImage,
+        );
+
+        final xbmContent = XbmEncoder.encode(colorPlaneImage, variableName);
+
+        await FileSaver.instance.saveFile(
+          name: variableName,
+          bytes: Uint8List.fromList(xbmContent.codeUnits),
+          ext: 'xbm',
+          mimeType: MimeType.text,
+        );
+        exportedCount++;
+      }
+
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text('$exportedCount XBM file(s) exported successfully!'),
+        ),
+      );
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(content: Text('Export failed: $e')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var imgLoader = context.watch<ImageLoader>();
@@ -141,9 +196,7 @@ class _ImageEditorState extends State<ImageEditor> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: colorAccent,
         elevation: 0,
         title: const Text(
@@ -165,17 +218,20 @@ class _ImageEditorState extends State<ImageEditor> {
             Padding(
               padding: const EdgeInsets.only(right: 12.0),
               child: TextButton(
-                onPressed: () {
-                  img.Image finalImg = _rawImages[_selectedFilterIndex];
+                onPressed: widget.isExportOnly
+                    ? _exportXbmFiles
+                    : () {
+                        _exportXbmFiles();
+                        img.Image finalImg = _rawImages[_selectedFilterIndex];
 
-                  if (flipHorizontal) {
-                    finalImg = img.flipHorizontal(finalImg);
-                  }
-                  if (flipVertical) {
-                    finalImg = img.flipVertical(finalImg);
-                  }
-                  Protocol(epd: widget.epd).writeImages(finalImg);
-                },
+                        if (flipHorizontal) {
+                          finalImg = img.flipHorizontal(finalImg);
+                        }
+                        if (flipVertical) {
+                          finalImg = img.flipVertical(finalImg);
+                        }
+                        Protocol(epd: widget.epd).writeImages(finalImg);
+                      },
                 style: TextButton.styleFrom(
                   backgroundColor: colorAccent,
                   foregroundColor: Colors.white,
@@ -184,7 +240,9 @@ class _ImageEditorState extends State<ImageEditor> {
                     side: const BorderSide(color: Colors.white, width: 1),
                   ),
                 ),
-                child: const Text(StringConstants.transferButtonLabel),
+                child: widget.isExportOnly
+                    ? const Text('Export XBM')
+                    : const Text(StringConstants.transferButtonLabel),
               ),
             ),
           ],
@@ -192,11 +250,11 @@ class _ImageEditorState extends State<ImageEditor> {
       ),
       body: imgLoader.isLoading
           ? const Center(
-              child: Text('Loading...',
-                  style: TextStyle(
-                    color: colorBlack,
-                    fontSize: 14,
-                  )))
+              child: Text(
+                'Loading...',
+                style: TextStyle(color: colorBlack, fontSize: 14),
+              ),
+            )
           : SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -276,10 +334,13 @@ class BottomActionMenu extends StatelessWidget {
                 label: StringConstants.importImageButtonLabel,
                 onTap: () async {
                   final success = await imgLoader.pickImage(
-                      width: epd.width, height: epd.height);
+                    width: epd.width,
+                    height: epd.height,
+                  );
                   if (success && imgLoader.image != null) {
-                    final bytes =
-                        Uint8List.fromList(img.encodePng(imgLoader.image!));
+                    final bytes = Uint8List.fromList(
+                      img.encodePng(imgLoader.image!),
+                    );
                     await imgLoader.saveFinalizedImageBytes(bytes);
                   }
                   onSourceChanged?.call('imported');
@@ -316,25 +377,27 @@ class BottomActionMenu extends StatelessWidget {
                 label: StringConstants.adjustButtonLabel,
                 onTap: () async {
                   if (imgLoader.image != null) {
-                    final canvasBytes = await Navigator.of(context)
-                        .push<Uint8List>(MaterialPageRoute(
-                      builder: (context) => ProImageEditor.memory(
-                        img.encodeJpg(imgLoader.image!),
-                        callbacks: ProImageEditorCallbacks(
-                          onImageEditingComplete: (Uint8List bytes) async {
-                            Navigator.pop(context, bytes);
-                          },
-                        ),
-                        configs: const ProImageEditorConfigs(
-                          paintEditor: PaintEditorConfigs(enabled: false),
-                          textEditor: TextEditorConfigs(enabled: false),
-                          cropRotateEditor: CropRotateEditorConfigs(
-                            enabled: false,
+                    final canvasBytes =
+                        await Navigator.of(context).push<Uint8List>(
+                      MaterialPageRoute(
+                        builder: (context) => ProImageEditor.memory(
+                          img.encodeJpg(imgLoader.image!),
+                          callbacks: ProImageEditorCallbacks(
+                            onImageEditingComplete: (Uint8List bytes) async {
+                              Navigator.pop(context, bytes);
+                            },
                           ),
-                          emojiEditor: EmojiEditorConfigs(enabled: false),
+                          configs: const ProImageEditorConfigs(
+                            paintEditor: PaintEditorConfigs(enabled: false),
+                            textEditor: TextEditorConfigs(enabled: false),
+                            cropRotateEditor: CropRotateEditorConfigs(
+                              enabled: false,
+                            ),
+                            emojiEditor: EmojiEditorConfigs(enabled: false),
+                          ),
                         ),
                       ),
-                    ));
+                    );
                     if (canvasBytes != null) {
                       imgLoader.updateImage(
                         bytes: canvasBytes,
@@ -345,10 +408,10 @@ class BottomActionMenu extends StatelessWidget {
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          duration: Durations.medium4,
-                          content:
-                              Text(StringConstants.noImageSelectedFeedback),
-                          backgroundColor: colorPrimary),
+                        duration: Durations.medium4,
+                        content: Text(StringConstants.noImageSelectedFeedback),
+                        backgroundColor: colorPrimary,
+                      ),
                     );
                   }
                 },
@@ -386,8 +449,10 @@ class BottomActionMenu extends StatelessWidget {
             children: [
               Icon(icon, color: colorAccent, size: 26),
               const SizedBox(height: 4),
-              Text(label,
-                  style: const TextStyle(color: colorBlack, fontSize: 12)),
+              Text(
+                label,
+                style: const TextStyle(color: colorBlack, fontSize: 12),
+              ),
             ],
           ),
         ),

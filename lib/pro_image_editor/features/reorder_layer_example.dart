@@ -8,7 +8,6 @@ import 'package:pro_image_editor/pro_image_editor.dart';
 
 // Project imports:
 import '../core/mixin/example_helper.dart';
-import '../shared/widgets/prepare_image_widget.dart';
 
 /// A widget that demonstrates the ability to reorder layers within a UI.
 ///
