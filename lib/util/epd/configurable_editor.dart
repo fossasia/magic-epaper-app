@@ -46,8 +46,9 @@ class ConfigurableEpd extends Epd {
   final List<Color> colors;
 
   /// The model identifier for this configurable export display.
+  final String _modelId;
   @override
-  String get modelId => 'NA';
+  String get modelId => _modelId;
 
   /// The asset path for the display image (custom export icon).
   @override
@@ -67,15 +68,16 @@ class ConfigurableEpd extends Epd {
   List<String> get processingMethodNames =>
       namedProcessingMethods.map((f) => f.name).toList();
 
-  /// Creates a [ConfigurableEpd] with the given [width], [height], [colors], and optional [name].
+  /// Creates a [ConfigurableEpd] with the given [width], [height], [colors], and optional [name] and [modelId].
   ///
   /// The color palette and display size can be customized, and dithering methods can be chosen.
   ConfigurableEpd({
     required this.width,
     required this.height,
     required this.colors,
-    this.name = 'Custom Export',
-  }) {
+    this.name = 'Arduino Export',
+    String modelId = 'NA',
+  }) : _modelId = modelId {
     _addProcessingMethods();
   }
 

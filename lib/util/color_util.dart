@@ -69,4 +69,11 @@ class ColorUtils {
 
     return 'Color';
   }
+
+  static bool colorListsEqual(List<Color> a, List<Color> b) {
+    if (a.length != b.length) return false;
+    final aValues = a.map((c) => c.value).toSet();
+    final bValues = b.map((c) => c.value).toSet();
+    return aValues.difference(bValues).isEmpty;
+  }
 }
