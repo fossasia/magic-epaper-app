@@ -50,8 +50,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
   String status = "Initializing...";
   bool tagDetected = false;
   bool transferComplete = false;
-  bool showHoldStillMessage = false;
-  bool displayRefreshComplete = false;
+  bool showRefreshingMessage = false;
   String? errorMessage;
 
   late AnimationController _pulseController;
@@ -162,7 +161,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
       status = newStatus;
       if (newProgress >= 1.0) {
         transferComplete = true;
-        _showHoldStillMessage();
+        _showRefreshingMessage();
       }
     });
   }
@@ -174,18 +173,13 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
     _pulseController.stop();
   }
 
-  void _showHoldStillMessage() {
-    setState(() {
-      showHoldStillMessage = true;
-    });
-
-    Future.delayed(const Duration(seconds: 15), () {
+  void _showRefreshingMessage() {
+    // Show complete message first for 2 seconds
+    Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
         setState(() {
-          displayRefreshComplete = true;
-          showHoldStillMessage = false;
+          showRefreshingMessage = true;
         });
-        _holdStillController.stop();
       }
     });
   }
@@ -301,7 +295,50 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
     );
   }
 
-  Widget _buildHoldStillState() {
+  Widget _buildTransferCompleteState() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ScaleTransition(
+          scale: _scaleAnimation,
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.green.shade50,
+              border: Border.all(color: Colors.green.shade200, width: 2),
+            ),
+            child: Icon(
+              Icons.check_circle,
+              size: 48,
+              color: Colors.green.shade600,
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          "Transfer Complete!",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.green.shade800,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          "Data transfer successful. The display will now refresh.",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey[700],
+            height: 1.3,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRefreshingState() {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -349,38 +386,6 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
             height: 1.4,
           ),
         ),
-        const SizedBox(height: 20),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: Colors.orange.shade50,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.orange.shade200),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(Colors.orange.shade600),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                "Display refreshing...",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.orange.shade700,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
       ],
     );
   }
@@ -425,49 +430,6 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
     );
   }
 
-  Widget _buildSuccessState() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        ScaleTransition(
-          scale: _scaleAnimation,
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.green.shade50,
-              border: Border.all(color: Colors.green.shade200, width: 2),
-            ),
-            child: Icon(
-              Icons.check_circle,
-              size: 48,
-              color: Colors.green.shade600,
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          "Transfer Complete!",
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.green.shade800,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          "Your image has been successfully transferred to the E-Paper device.",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[700],
-            height: 1.3,
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return SlideTransition(
@@ -491,23 +453,23 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                     child: Icon(
                       !tagDetected
                           ? Icons.nfc
-                          : showHoldStillMessage
+                          : showRefreshingMessage
                               ? Icons.pan_tool_outlined
-                              : displayRefreshComplete
+                              : transferComplete
                                   ? Icons.check_circle
                                   : Icons.upload,
                       key: ValueKey(!tagDetected
                           ? 'nfc'
-                          : showHoldStillMessage
-                              ? 'hold'
-                              : displayRefreshComplete
+                          : showRefreshingMessage
+                              ? 'refresh'
+                              : transferComplete
                                   ? 'complete'
                                   : 'upload'),
                       color: !tagDetected
                           ? widget.colorAccent
-                          : showHoldStillMessage
+                          : showRefreshingMessage
                               ? Colors.orange.shade600
-                              : displayRefreshComplete
+                              : transferComplete
                                   ? Colors.green.shade600
                                   : widget.colorAccent,
                       size: 28,
@@ -520,16 +482,16 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                       child: Text(
                         !tagDetected
                             ? "Searching for Device"
-                            : showHoldStillMessage
+                            : showRefreshingMessage
                                 ? "Display Refreshing"
-                                : displayRefreshComplete
+                                : transferComplete
                                     ? "Transfer Complete"
                                     : "Writing to E-Paper",
                         key: ValueKey(!tagDetected
                             ? 'search'
-                            : showHoldStillMessage
-                                ? 'refresh'
-                                : displayRefreshComplete
+                            : showRefreshingMessage
+                                ? 'refreshing'
+                                : transferComplete
                                     ? 'complete'
                                     : 'write'),
                         style: const TextStyle(
@@ -546,23 +508,23 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                 duration: const Duration(milliseconds: 500),
                 child: errorMessage != null
                     ? _buildErrorState()
-                    : showHoldStillMessage
-                        ? _buildHoldStillState()
-                        : displayRefreshComplete
-                            ? _buildSuccessState()
+                    : showRefreshingMessage
+                        ? _buildRefreshingState()
+                        : transferComplete
+                            ? _buildTransferCompleteState()
                             : !tagDetected
                                 ? _buildNFCSearchingState()
                                 : _buildTransferProgressState(),
               ),
-              if (displayRefreshComplete || errorMessage != null) ...[
+              if (showRefreshingMessage || errorMessage != null) ...[
                 const SizedBox(height: 24),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: displayRefreshComplete
-                          ? Colors.green.shade600
+                      backgroundColor: showRefreshingMessage
+                          ? Colors.orange.shade600
                           : Colors.red.shade600,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -572,7 +534,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                       elevation: 2,
                     ),
                     child: Text(
-                      displayRefreshComplete ? "Done" : "Close",
+                      showRefreshingMessage ? "Done" : "Close",
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
