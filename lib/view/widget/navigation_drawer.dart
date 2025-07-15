@@ -58,15 +58,20 @@ class _AppDrawerState extends State<AppDrawer> {
             title: StringConstants.selectDisplay,
             routeName: '/',
           ),
-
           _buildListTile(
             index: 1,
+            icon: Icons.nfc,
+            title: StringConstants.ndefScreen,
+            routeName: '/ndefScreen',
+          ),
+          _buildListTile(
+            index: 2,
             icon: Icons.settings,
             title: StringConstants.settings,
             routeName: '/settings',
           ),
           _buildListTile(
-            index: 2,
+            index: 3,
             icon: Icons.people,
             title: StringConstants.aboutUs,
             routeName: '/aboutUs',
