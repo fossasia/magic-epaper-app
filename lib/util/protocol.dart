@@ -96,7 +96,7 @@ class Protocol {
     return chunks;
   }
 
- void writeImages(img.Image image, {Waveform? waveform}) async {
+  void writeImages(img.Image image, {Waveform? waveform}) async {
     var availability = await FlutterNfcKit.nfcAvailability;
     switch (availability) {
       case NFCAvailability.available:

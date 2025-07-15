@@ -125,7 +125,7 @@ class Uc8253 extends Driver {
   }
 
   @override
-   Future<void> init(Protocol p, {Waveform? waveform}) async {
+  Future<void> init(Protocol p, {Waveform? waveform}) async {
     // power on
     // FIXME: this command require polling the busy state but currently there is no way to do this in the app
     await p.writeMsg(Uint8List.fromList([p.fw.epdCmd, 0x04]));

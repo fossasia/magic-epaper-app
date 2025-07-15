@@ -145,7 +145,7 @@ class _ImageEditorState extends State<ImageEditor> {
       ),
       ...widget.epd.controller.waveforms.map((waveform) {
         return DropdownMenuItem<String?>(
-          value: waveform.name, 
+          value: waveform.name,
           child: Text(
             waveform.name,
             overflow: TextOverflow.ellipsis,
