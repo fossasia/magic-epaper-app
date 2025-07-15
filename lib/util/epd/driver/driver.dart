@@ -15,5 +15,5 @@ abstract class Driver {
   WaveformList get waveforms;
   Future<void> setlut(Protocol p, Waveform waveform);
 
-  Future<void> init(Protocol p, {bool useQuickLut = false});
+  Future<void> init(Protocol p, {Waveform? waveform});
 }

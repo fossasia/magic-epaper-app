@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image/image.dart' as img;
+import 'package:magic_epaper_app/util/epd/driver/waveform.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:magic_epaper_app/util/magic_epaper_firmware.dart';
@@ -95,7 +96,7 @@ class Protocol {
     return chunks;
   }
 
-  void writeImages(img.Image image, {bool useQuickLut = false}) async {
+ void writeImages(img.Image image, {Waveform? waveform}) async {
     var availability = await FlutterNfcKit.nfcAvailability;
     switch (availability) {
       case NFCAvailability.available:
@@ -128,7 +129,7 @@ class Protocol {
     await Future.delayed(
         const Duration(seconds: 2)); // waiting for the power supply stable
 
-    await epd.controller.init(this, useQuickLut: useQuickLut);
+    await epd.controller.init(this, waveform: waveform);
 
     final epdColors = epd.extractEpaperColorFrames(image);
     final transmissionLines = epd.controller.transmissionLines.iterator;

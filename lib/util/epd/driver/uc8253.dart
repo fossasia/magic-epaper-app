@@ -11,6 +11,8 @@ class QuickLut extends Waveform {
   @override
   String get desc => "Quick waveform for R_sense = 4R7 and PLL = 10Hz";
   @override
+  String get name => "Quick Refresh";
+  @override
   int get pll => 0x01; // 10Hz
   @override
   List<Lut> get luts => [
@@ -123,7 +125,7 @@ class Uc8253 extends Driver {
   }
 
   @override
-  Future<void> init(Protocol p, {bool useQuickLut = false}) async {
+   Future<void> init(Protocol p, {Waveform? waveform}) async {
     // power on
     // FIXME: this command require polling the busy state but currently there is no way to do this in the app
     await p.writeMsg(Uint8List.fromList([p.fw.epdCmd, 0x04]));
@@ -134,10 +136,11 @@ class Uc8253 extends Driver {
 
     await p.writeMsg(Uint8List.fromList([p.fw.epdCmd, panelSetting]));
 
-    if (useQuickLut) {
+    if (waveform != null) {
       await p.writeMsg(Uint8List.fromList([p.fw.epdSend, 0xEF, 0x8D]));
-      await setlut(p, waveforms[0]);
+      await setlut(p, waveform);
     } else {
+      // Otherwise, use the settings for a full refresh.
       await p.writeMsg(Uint8List.fromList([p.fw.epdSend, 0xCF, 0x8D]));
     }
   }

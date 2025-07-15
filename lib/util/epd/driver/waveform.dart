@@ -11,6 +11,7 @@ class Lut {
 // A set of luts for a display
 abstract class Waveform {
   String get desc;
+  String get name;
   int get pll;
   List<Lut> get luts;
 }
