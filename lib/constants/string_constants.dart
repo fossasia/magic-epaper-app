@@ -199,7 +199,6 @@ class StringConstants {
       'Review your image before processing';
   static const String close = 'Close';
   static const String processing = 'Processing...';
-  static const String confirm = 'Confirm';
   static const String selectImageSource = 'Select Image Source';
   static const String chooseImageSource =
       'Choose how you want to add your image';
@@ -207,7 +206,6 @@ class StringConstants {
   static const String takeNewPhoto = 'Take a new photo';
   static const String gallery = 'Gallery';
   static const String chooseFromPhotos = 'Choose from your photos';
-  static const String cancel = 'Cancel';
   static const String removeProfilePhoto = 'Remove Profile Photo';
   static const String removeProfilePhotoSubtitle =
       'This will remove your current profile photo';
