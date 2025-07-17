@@ -134,7 +134,8 @@ class _ImageEditorState extends State<ImageEditor> {
     });
   }
 
-  Future<void> _showTransferProgress(img.Image finalImg) async {
+  Future<void> _showTransferProgress(img.Image finalImg,
+      {Waveform? waveform}) async {
     await TransferProgressDialog.show(
       context: context,
       finalImg: finalImg,
@@ -143,6 +144,7 @@ class _ImageEditorState extends State<ImageEditor> {
           image,
           onProgress: onProgress,
           onTagDetected: onTagDetected,
+          waveform: waveform,
         );
       },
       colorAccent: colorAccent,
@@ -244,11 +246,8 @@ class _ImageEditorState extends State<ImageEditor> {
                   if (flipVertical) {
                     finalImg = img.flipVertical(finalImg);
                   }
-                  Protocol(epd: widget.epd).writeImages(
-                    finalImg,
-                    waveform: _selectedWaveform,
-                  );
-                  await _showTransferProgress(finalImg);
+                  await _showTransferProgress(finalImg,
+                      waveform: _selectedWaveform);
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: colorAccent,

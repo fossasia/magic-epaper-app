@@ -104,14 +104,12 @@ class Protocol {
     return chunks;
   }
 
-
-Future<void> writeImages(
+  Future<void> writeImages(
     img.Image image, {
     ProgressCallback? onProgress,
     TagDetectedCallback? onTagDetected,
-    {Waveform? waveform}
+    Waveform? waveform,
   }) async {
-
     var availability = await FlutterNfcKit.nfcAvailability;
     switch (availability) {
       case NFCAvailability.available:
