@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
 import 'package:magic_epaper_app/image_library/services/image_save_handler.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
+import 'package:magic_epaper_app/card_templates/card_template_selection_view.dart';
 import 'package:magic_epaper_app/util/image_editor_utils.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
@@ -359,6 +360,48 @@ class BottomActionMenu extends StatelessWidget {
                 label: 'Library',
                 onTap: () async {
                   await imageSaveHandler?.navigateToImageLibrary();
+                },
+              ),
+              _buildActionButton(
+                context: context,
+                icon: Icons.dashboard_customize_outlined,
+                label: 'Templates',
+                onTap: () async {
+                  // Navigate to the template selection screen and await a list of layers.
+                  final layers =
+                      await Navigator.of(context).push<List<LayerSpec>>(
+                    MaterialPageRoute(
+                      builder: (context) => CardTemplateSelectionView(
+                        width: epd.width,
+                        height: epd.height,
+                      ),
+                    ),
+                  );
+
+                  // If layers are returned, open the editor with them.
+                  if (layers != null && layers.isNotEmpty) {
+                    final canvasBytes =
+                        await Navigator.of(context).push<Uint8List>(
+                      MaterialPageRoute(
+                        builder: (context) => MovableBackgroundImageExample(
+                          width: epd.width,
+                          height: epd.height,
+                          initialLayers: layers,
+                        ),
+                      ),
+                    );
+
+                    // If the editor returns a rendered image, update the main view.
+                    if (canvasBytes != null) {
+                      await imgLoader.updateImage(
+                        bytes: canvasBytes,
+                        width: epd.width,
+                        height: epd.height,
+                      );
+                      await imgLoader.saveFinalizedImageBytes(canvasBytes);
+                      onSourceChanged?.call('editor');
+                    }
+                  }
                 },
               ),
             ],

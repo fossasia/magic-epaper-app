@@ -29,16 +29,33 @@ import 'reorder_layer_example.dart';
 final bool _useMaterialDesign =
     platformDesignMode == ImageEditorDesignMode.material;
 
+/// Data class for specifying a widget and its properties for layer addition.
+class LayerSpec {
+  final Widget widget;
+  final Offset offset;
+  final double scale;
+  final double rotation;
+
+  const LayerSpec({
+    required this.widget,
+    this.offset = Offset.zero,
+    this.scale = 1.0,
+    this.rotation = 0.0,
+  });
+}
+
 /// The example for movableBackground
 class MovableBackgroundImageExample extends StatefulWidget {
   /// Creates a new [MovableBackgroundImageExample] widget.
   final int width;
   final int height;
+  final List<LayerSpec>? initialLayers;
 
   const MovableBackgroundImageExample({
     super.key,
     required this.width,
     required this.height,
+    this.initialLayers,
   });
 
   @override
@@ -74,6 +91,29 @@ class _MovableBackgroundImageExampleState
   void dispose() {
     _bottomBarScrollCtrl.dispose();
     super.dispose();
+  }
+
+  /// Add multiple widgets as separate layers after editor is ready, with custom offset, scale and rotation
+  void addInitialLayers(List<LayerSpec> layers) {
+    final editor = editorKey.currentState;
+    if (editor == null) return;
+    for (final layer in layers) {
+      editor.addLayer(
+        WidgetLayer(
+          interaction: LayerInteraction(
+            enableEdit: true,
+            enableMove: true,
+            enableRotate: true,
+            enableScale: true,
+            enableSelection: true,
+          ),
+          offset: layer.offset,
+          scale: layer.scale,
+          rotation: layer.rotation,
+          widget: layer.widget,
+        ),
+      );
+    }
   }
 
   void _calculateCanvasDimensions(Size screenSize) {
@@ -337,7 +377,6 @@ class _MovableBackgroundImageExampleState
   @override
   Widget build(BuildContext context) {
     _calculateCanvasDimensions(MediaQuery.sizeOf(context));
-
     return LayoutBuilder(builder: (context, constraints) {
       return CustomPaint(
         size: Size(constraints.maxWidth, constraints.maxHeight),
@@ -398,6 +437,14 @@ class _MovableBackgroundImageExampleState
                         ),
                       ),
                     );
+
+                    // Add initial layers from widget parameter
+                    if (widget.initialLayers != null) {
+                      addInitialLayers(widget.initialLayers!);
+                    }
+                    //code testing
+                    //editorKey.currentState!.openTextEditor(initialText: "Hello World");
+                    //editorKey.currentState!.addLayer(TextLayer(text: 'Hello World',interaction: LayerInteraction(enableEdit: true, enableMove: true, enableRotate: true, enableScale: true, enableSelection: true,)),blockSelectLayer: true,);
                   },
                 ),
               ),
@@ -590,7 +637,7 @@ class _MovableBackgroundImageExampleState
                         size: 22.0,
                         color: Colors.white,
                       ),
-                      onPressed: editor.openTextEditor,
+                      onPressed: () => editorKey.currentState!.openTextEditor(),
                     ),
                     FlatIconTextButton(
                       label: Text('Emoji', style: _bottomTextStyle),
