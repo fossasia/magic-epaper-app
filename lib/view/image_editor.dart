@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
 import 'package:magic_epaper_app/image_library/services/image_save_handler.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
+import 'package:magic_epaper_app/util/epd/driver/waveform.dart';
 import 'package:magic_epaper_app/util/image_editor_utils.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
 import 'package:magic_epaper_app/view/widget/transfer_progress_dialog.dart';
@@ -28,6 +29,8 @@ class _ImageEditorState extends State<ImageEditor> {
   int _selectedFilterIndex = 0;
   bool flipHorizontal = false;
   bool flipVertical = false;
+  Waveform? _selectedWaveform;
+  String? _selectedWaveformName;
 
   String _currentImageSource = 'imported';
   img.Image? _processedSourceImage;
@@ -39,6 +42,8 @@ class _ImageEditorState extends State<ImageEditor> {
   @override
   void initState() {
     super.initState();
+    _selectedWaveform = null;
+    _selectedWaveformName = null;
     Future.microtask(() {
       final imgLoader = context.read<ImageLoader>();
       if (imgLoader.image == null) {
@@ -57,11 +62,6 @@ class _ImageEditorState extends State<ImageEditor> {
       context: context,
       provider: context.read<ImageLibraryProvider>(),
     );
-  }
-
-  // Navigate to Image Library using ImageSaveHandler
-  Future<void> _navigateToImageLibrary() async {
-    await _imageSaveHandler!.navigateToImageLibrary();
   }
 
   // Save image using ImageSaveHandler
@@ -134,7 +134,8 @@ class _ImageEditorState extends State<ImageEditor> {
     });
   }
 
-  Future<void> _showTransferProgress(img.Image finalImg) async {
+  Future<void> _showTransferProgress(img.Image finalImg,
+      {Waveform? waveform}) async {
     await TransferProgressDialog.show(
       context: context,
       finalImg: finalImg,
@@ -143,6 +144,7 @@ class _ImageEditorState extends State<ImageEditor> {
           image,
           onProgress: onProgress,
           onTagDetected: onTagDetected,
+          waveform: waveform,
         );
       },
       colorAccent: colorAccent,
@@ -154,43 +156,98 @@ class _ImageEditorState extends State<ImageEditor> {
     var imgLoader = context.watch<ImageLoader>();
     _updateProcessedImages(imgLoader.image);
 
+    final List<DropdownMenuItem<String?>> dropdownItems = [
+      const DropdownMenuItem<String?>(
+        value: null,
+        child: Text("Full Refresh"),
+      ),
+      ...widget.epd.controller.waveforms.map((waveform) {
+        return DropdownMenuItem<String?>(
+          value: waveform.name,
+          child: Text(
+            waveform.name,
+            overflow: TextOverflow.ellipsis,
+          ),
+        );
+      }),
+    ];
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
+        titleSpacing: 0.0,
         backgroundColor: colorAccent,
         elevation: 0,
         title: const Text(
           StringConstants.filterScreenTitle,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13.8),
         ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: _navigateToImageLibrary,
-            icon: const Icon(Icons.photo_library_outlined),
-            tooltip: 'Image Library',
-          ),
+        actions: [
           if (_rawImages.isNotEmpty) ...[
-            IconButton(
-              onPressed: _saveCurrentImage,
-              icon: const Icon(Icons.save_outlined),
-              tooltip: 'Save to Library',
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white, width: 1.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String?>(
+                    value: _selectedWaveformName,
+                    hint: const Text(
+                      "Full Refresh",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                    isDense: true,
+                    dropdownColor: colorAccent,
+                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                    borderRadius: BorderRadius.circular(8),
+                    icon: const SizedBox.shrink(),
+                    items: dropdownItems,
+                    onChanged: (String? newName) {
+                      setState(() {
+                        _selectedWaveformName = newName;
+                        if (newName == null) {
+                          _selectedWaveform = null; // Full Refresh
+                        } else {
+                          _selectedWaveform = widget.epd.controller.waveforms
+                              .firstWhere((w) => w.name == newName);
+                        }
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          duration: Durations.medium3,
+                          content: Text(
+                            _selectedWaveform == null
+                                ? "Full Refresh Selected"
+                                : "${_selectedWaveform!.name} Selected",
+                          ),
+                          backgroundColor: colorPrimary,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(right: 12.0),
               child: TextButton(
                 onPressed: () async {
                   img.Image finalImg = _rawImages[_selectedFilterIndex];
-
                   if (flipHorizontal) {
                     finalImg = img.flipHorizontal(finalImg);
                   }
                   if (flipVertical) {
                     finalImg = img.flipVertical(finalImg);
                   }
-                  await _showTransferProgress(finalImg);
+                  await _showTransferProgress(finalImg,
+                      waveform: _selectedWaveform);
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: colorAccent,
@@ -229,6 +286,7 @@ class _ImageEditorState extends State<ImageEditor> {
                         onFilterSelected: _onFilterSelected,
                         onFlipHorizontal: toggleFlipHorizontal,
                         onFlipVertical: toggleFlipVertical,
+                        onSave: _saveCurrentImage,
                       )
                     : const Center(
                         child: Text(

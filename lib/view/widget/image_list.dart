@@ -14,6 +14,7 @@ class ImageList extends StatelessWidget {
   final Function(int) onFilterSelected;
   final Function() onFlipHorizontal;
   final Function() onFlipVertical;
+  final Function()? onSave;
   final int width;
   final int height;
 
@@ -29,6 +30,7 @@ class ImageList extends StatelessWidget {
     required this.onFlipVertical,
     required this.width,
     required this.height,
+    this.onSave,
   });
 
   String getFilterNameByIndex(int index) {
@@ -80,6 +82,14 @@ class ImageList extends StatelessWidget {
               tooltip: 'Flip Vertically',
               rotation: -1.5708,
             ),
+            if (onSave != null) ...[
+              const SizedBox(width: 16),
+              _buildFlipButton(
+                icon: Icons.save_outlined,
+                onPressed: onSave!,
+                tooltip: 'Save to Library',
+              ),
+            ],
           ],
         ),
         const SizedBox(height: 4),
@@ -107,11 +117,14 @@ class ImageList extends StatelessWidget {
   }
 
   Widget _buildFlipButton({
-    required String assetPath,
+    String? assetPath,
+    IconData? icon,
     required VoidCallback onPressed,
     required String tooltip,
     double rotation = 0.0,
   }) {
+    assert(assetPath != null || icon != null,
+        'Either assetPath or icon must be provided');
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -128,7 +141,9 @@ class ImageList extends StatelessWidget {
       child: IconButton(
         icon: Transform.rotate(
           angle: rotation,
-          child: Image.asset(assetPath, height: 24, width: 24),
+          child: assetPath != null
+              ? Image.asset(assetPath, height: 24, width: 24)
+              : Icon(icon, size: 24, color: colorBlack),
         ),
         onPressed: onPressed,
         tooltip: tooltip,
