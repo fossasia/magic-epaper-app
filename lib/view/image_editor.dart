@@ -135,7 +135,6 @@ class _ImageEditorState extends State<ImageEditor> {
     });
   }
 
-
   Future<void> _exportXbmFiles() async {
     if (_rawImages.isEmpty) return;
 
@@ -188,6 +187,7 @@ class _ImageEditorState extends State<ImageEditor> {
     } catch (e) {
       messenger.showSnackBar(SnackBar(content: Text('Export failed: $e')));
     }
+  }
 
   Future<void> _showTransferProgress(img.Image finalImg) async {
     await TransferProgressDialog.show(
@@ -202,7 +202,6 @@ class _ImageEditorState extends State<ImageEditor> {
       },
       colorAccent: colorAccent,
     );
-
   }
 
   @override
