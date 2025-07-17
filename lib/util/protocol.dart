@@ -11,6 +11,9 @@ import 'package:app_settings/app_settings.dart';
 import 'package:magic_epaper_app/util/magic_epaper_firmware.dart';
 import 'package:magic_epaper_app/util/nfc_settings_launcher.dart';
 
+typedef ProgressCallback = void Function(double progress, String status);
+typedef TagDetectedCallback = void Function();
+
 class Protocol {
   final fw = MagicEpaperFirmware();
   final Epd epd;
@@ -68,7 +71,8 @@ class Protocol {
     throw Exception("Timeout waiting for I2C message");
   }
 
-  Future<void> writeFrame(Uint8List id, Uint8List frame, int cmd) async {
+  Future<void> writeFrame(Uint8List id, Uint8List frame, int cmd,
+      {ProgressCallback? onProgress}) async {
     final chunks = _split(data: frame);
     await writeMsg(
         Uint8List.fromList([fw.epdCmd, cmd])); // enter transmission 1
@@ -80,6 +84,10 @@ class Protocol {
 
       await writeMsg(chunk);
       await wait4msgGathered();
+      if (onProgress != null) {
+        final progress = (i + 1) / chunks.length;
+        onProgress(progress, "Writing chunk ${i + 1}/${chunks.length}");
+      }
     }
     debugPrint("Transferred successfully.");
   }
@@ -95,7 +103,11 @@ class Protocol {
     return chunks;
   }
 
-  void writeImages(img.Image image) async {
+  Future<void> writeImages(
+    img.Image image, {
+    ProgressCallback? onProgress,
+    TagDetectedCallback? onTagDetected,
+  }) async {
     var availability = await FlutterNfcKit.nfcAvailability;
     switch (availability) {
       case NFCAvailability.available:
@@ -113,30 +125,50 @@ class Protocol {
         return;
     }
 
+    onProgress?.call(0.0, "Waiting for NFC tag...");
     Fluttertoast.showToast(
         msg: "Bring your phone near to the Magic Epaper Hardware");
     debugPrint("Bring your phone near to the Magic Epaper Hardware");
     final tag = await FlutterNfcKit.poll(timeout: timeout);
     debugPrint("Got a tag!");
+    onTagDetected?.call();
+    onProgress?.call(0.1, "Tag detected! Initializing...");
 
     tagId = Uint8List.fromList(hex.decode(tag.id));
     if (tag.type != NFCTagType.iso15693) {
       throw "Not a Magic Epaper Hardware";
     }
 
+    onProgress?.call(0.15, "Enabling energy harvesting...");
     await enableEnergyHarvesting();
     await Future.delayed(
         const Duration(seconds: 2)); // waiting for the power supply stable
 
     await epd.controller.init(this);
 
+    onProgress?.call(0.2, "Processing image data...");
+
     final epdColors = epd.extractEpaperColorFrames(image);
     final transmissionLines = epd.controller.transmissionLines.iterator;
+    double baseProgress = 0.2;
+    double frameProgressStep = 0.7 / epdColors.length;
+    int frameIndex = 0;
     for (final c in epdColors) {
       transmissionLines.moveNext();
-      await writeFrame(tagId, c, transmissionLines.current);
+      final frameStartProgress =
+          baseProgress + (frameIndex * frameProgressStep);
+      await writeFrame(tagId, c, transmissionLines.current,
+          onProgress: (chunkProgress, chunkStatus) {
+        final totalProgress =
+            frameStartProgress + (chunkProgress * frameProgressStep);
+        onProgress?.call(totalProgress,
+            "Frame ${frameIndex + 1}/${epdColors.length}: $chunkStatus");
+      });
+      frameIndex++;
     }
-
+    onProgress?.call(0.95, "Refreshing display...");
     await writeMsg(Uint8List.fromList([fw.epdCmd, epd.controller.refresh]));
+    onProgress?.call(1.0, "Transfer complete!");
+    await FlutterNfcKit.finish();
   }
 }

@@ -8,6 +8,7 @@ import 'package:magic_epaper_app/util/color_util.dart';
 import 'package:magic_epaper_app/util/image_editor_utils.dart';
 import 'package:magic_epaper_app/util/xbm_encoder.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
+import 'package:magic_epaper_app/view/widget/transfer_progress_dialog.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
@@ -134,6 +135,7 @@ class _ImageEditorState extends State<ImageEditor> {
     });
   }
 
+
   Future<void> _exportXbmFiles() async {
     if (_rawImages.isEmpty) return;
 
@@ -186,6 +188,21 @@ class _ImageEditorState extends State<ImageEditor> {
     } catch (e) {
       messenger.showSnackBar(SnackBar(content: Text('Export failed: $e')));
     }
+
+  Future<void> _showTransferProgress(img.Image finalImg) async {
+    await TransferProgressDialog.show(
+      context: context,
+      finalImg: finalImg,
+      transferFunction: (image, onProgress, onTagDetected) async {
+        return await Protocol(epd: widget.epd).writeImages(
+          image,
+          onProgress: onProgress,
+          onTagDetected: onTagDetected,
+        );
+      },
+      colorAccent: colorAccent,
+    );
+
   }
 
   @override
@@ -220,8 +237,7 @@ class _ImageEditorState extends State<ImageEditor> {
               child: TextButton(
                 onPressed: widget.isExportOnly
                     ? _exportXbmFiles
-                    : () {
-                        _exportXbmFiles();
+                    : () async {
                         img.Image finalImg = _rawImages[_selectedFilterIndex];
 
                         if (flipHorizontal) {
@@ -230,7 +246,7 @@ class _ImageEditorState extends State<ImageEditor> {
                         if (flipVertical) {
                           finalImg = img.flipVertical(finalImg);
                         }
-                        Protocol(epd: widget.epd).writeImages(finalImg);
+                        await _showTransferProgress(finalImg);
                       },
                 style: TextButton.styleFrom(
                   backgroundColor: colorAccent,
