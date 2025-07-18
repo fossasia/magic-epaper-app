@@ -1,5 +1,7 @@
 import 'dart:typed_data';
-import 'package:file_saver/file_saver.dart';
+import 'dart:io';
+import 'package:magic_epaper_app/view/widget/transfer_progress_dialog.dart';
+
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
 import 'package:magic_epaper_app/image_library/services/image_save_handler.dart';
@@ -8,7 +10,6 @@ import 'package:magic_epaper_app/util/color_util.dart';
 import 'package:magic_epaper_app/util/image_editor_utils.dart';
 import 'package:magic_epaper_app/util/xbm_encoder.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
-import 'package:magic_epaper_app/view/widget/transfer_progress_dialog.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
@@ -137,28 +138,33 @@ class _ImageEditorState extends State<ImageEditor> {
 
   Future<void> _exportXbmFiles() async {
     if (_rawImages.isEmpty) return;
+    final now = DateTime.now();
+    final timestamp =
+        "${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}_${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}-${now.second.toString().padLeft(2, '0')}";
 
-    final messenger = ScaffoldMessenger.of(context);
-    messenger.showSnackBar(
-      const SnackBar(
-        duration: Duration(seconds: 2),
-        content: Text('Exporting XBM files...'),
-      ),
-    );
+    final magicEpaperDir = Directory('/storage/emulated/0/MagicEpaper');
+    if (!await magicEpaperDir.exists()) {
+      await magicEpaperDir.create(recursive: true);
+    }
 
+    final xbmDir = Directory('${magicEpaperDir.path}/XBM');
+    if (!await xbmDir.exists()) {
+      await xbmDir.create(recursive: true);
+    }
+
+    img.Image baseImage = _rawImages[_selectedFilterIndex];
+
+    if (flipHorizontal) {
+      baseImage = img.flipHorizontal(baseImage);
+    }
+    if (flipVertical) {
+      baseImage = img.flipVertical(baseImage);
+    }
+
+    final nonWhiteColors = widget.epd.colors.where((c) => c != Colors.white);
+
+    int exportedCount = 0;
     try {
-      img.Image baseImage = _rawImages[_selectedFilterIndex];
-
-      if (flipHorizontal) {
-        baseImage = img.flipHorizontal(baseImage);
-      }
-      if (flipVertical) {
-        baseImage = img.flipVertical(baseImage);
-      }
-
-      final nonWhiteColors = widget.epd.colors.where((c) => c != Colors.white);
-
-      int exportedCount = 0;
       for (final color in nonWhiteColors) {
         final colorName = ColorUtils.getColorFileName(color);
         final variableName = 'image_$colorName';
@@ -170,23 +176,26 @@ class _ImageEditorState extends State<ImageEditor> {
 
         final xbmContent = XbmEncoder.encode(colorPlaneImage, variableName);
 
-        await FileSaver.instance.saveFile(
-          name: variableName,
-          bytes: Uint8List.fromList(xbmContent.codeUnits),
-          ext: 'xbm',
-          mimeType: MimeType.text,
-        );
+        final file = File('${xbmDir.path}/${variableName}_$timestamp.xbm');
+        await file.writeAsString(xbmContent);
         exportedCount++;
       }
-
-      messenger.showSnackBar(
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('$exportedCount XBM file(s) exported successfully!'),
+          content: Text('Export failed: $e'),
         ),
       );
-    } catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text('Export failed: $e')));
+      return;
     }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 2),
+        content:
+            Text('Exported $exportedCount XBM file(s) to MagicEpaper/XBM/'),
+      ),
+    );
   }
 
   Future<void> _showTransferProgress(img.Image finalImg) async {

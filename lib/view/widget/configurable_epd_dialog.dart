@@ -316,6 +316,13 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
     });
   }
 
+  static final ButtonStyle _dialogButtonStyle = ElevatedButton.styleFrom(
+    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+    visualDensity: VisualDensity.compact,
+    textStyle: const TextStyle(fontSize: 14),
+  );
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -388,41 +395,47 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                   );
                 }).toList(),
               ),
-              if (_isCustom) ...[
-                const SizedBox(height: 8),
-                ElevatedButton.icon(
-                  onPressed: _addColor,
-                  icon: const Icon(Icons.add),
-                  label: const Text("Add Color"),
-                  style: ElevatedButton.styleFrom(
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                )
-              ]
             ],
           ),
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
-              Navigator.of(context).pop(
-                CustomEpdConfig(
-                  width: int.parse(_widthController.text),
-                  height: int.parse(_heightController.text),
-                  colors: _currentColors,
-                  presetName: _selectedPreset?.name ?? 'Custom',
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (_isCustom)
+                ElevatedButton.icon(
+                  onPressed: _addColor,
+                  icon: const Icon(Icons.add),
+                  label: const Text("Add Color"),
+                  style: _dialogButtonStyle,
                 ),
-              );
-            }
-          },
-          child: const Text('OK'),
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                style: _dialogButtonStyle,
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                style: _dialogButtonStyle,
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    Navigator.of(context).pop(
+                      CustomEpdConfig(
+                        width: int.parse(_widthController.text),
+                        height: int.parse(_heightController.text),
+                        colors: _currentColors,
+                        presetName: _selectedPreset?.name ?? 'Custom',
+                      ),
+                    );
+                  }
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
         ),
       ],
     );
