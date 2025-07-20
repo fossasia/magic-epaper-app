@@ -24,6 +24,14 @@ jobs:
 
       - name: Android Workflow
         uses: ./.github/actions/android
+        with:
+          pr_number: ${{ github.event.pull_request.number }}
+          run_id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          pr_head_sha: ${{ github.event.pull_request.head.sha }}
+          pr_head_ref: ${{ github.event.pull_request.head.ref }}
+          github_server_url: ${{ github.server_url }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
   ios:
     name: iOS Flutter Build

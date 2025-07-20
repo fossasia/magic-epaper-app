@@ -21,6 +21,34 @@ inputs:
     description: 'Version Code to be used for build'
     required: true
     default: '1'
+  pr_number:
+    description: "Pull request number"
+    required: false
+    default: ''
+  run_id:
+    description: "GitHub Actions run ID"
+    required: false
+    default: ''
+  repository:
+    description: "Repository name"
+    required: false
+    default: ''
+  pr_head_sha:
+    description: "PR head commit SHA"
+    required: false
+    default: ''
+  pr_head_ref:
+    description: "PR head branch name"
+    required: false
+    default: ''
+  github_server_url:
+    description: "GitHub server URL"
+    required: false
+    default: ''
+  github_token:
+    description: "GitHub token for API access"
+    required: false
+    default: ''
 
 runs:
   using: "composite"
@@ -50,10 +78,59 @@ runs:
         flutter build apk --debug --build-name $VERSION_NAME --build-number $VERSION_CODE
         flutter build apk --build-name $VERSION_NAME --build-number $VERSION_CODE
         flutter build appbundle --build-name $VERSION_NAME --build-number $VERSION_CODE
+        
+        if [ ! -f build/app/outputs/flutter-apk/app-release.apk ]; then
+          echo "Release APK build failed"
+          exit 1
+        fi
 
     - name: Store APK file
       uses: actions/upload-artifact@v4
+      id: upload-apk
       with:
-        name: apk-files
+        name: magic-epaper-apk-pr-${{ inputs.pr_number || 'build' }}
         path: |
           build/app/outputs/flutter-apk/app-debug.apk
+          build/app/outputs/flutter-apk/app-release.apk
+        retention-days: 30
+
+    - name: Get Artifact URLs
+      if: inputs.pr_number != ''
+      id: artifacts
+      shell: bash
+      run: |
+        RUN_ID=${{ inputs.run_id }}
+        REPO=${{ inputs.repository }}
+        
+        WORKFLOW_URL="https://github.com/$REPO/actions/runs/$RUN_ID"
+        
+        APK_URL="${{ steps.upload-apk.outputs.artifact-url }}"
+        
+        echo "WORKFLOW_URL=$WORKFLOW_URL" >> $GITHUB_OUTPUT
+        echo "APK_URL=$APK_URL" >> $GITHUB_OUTPUT
+
+    - name: Create PR comment
+      if: inputs.pr_number != '' && inputs.github_token != ''
+      uses: peter-evans/create-or-update-comment@v4
+      with:
+        token: ${{ inputs.github_token }}
+        issue-number: ${{ inputs.pr_number }}
+        body: |
+          ## Build Status
+          
+          Build successful. APK to test: **[Download Android APK](${{ steps.artifacts.outputs.APK_URL }})**
+          
+          ---
+          
+          [View workflow run](${{ steps.artifacts.outputs.WORKFLOW_URL }})
+
+    - name: Build status comment on failure
+      if: failure() && inputs.pr_number != '' && inputs.github_token != ''
+      uses: peter-evans/create-or-update-comment@v4
+      with:
+        token: ${{ inputs.github_token }}
+        issue-number: ${{ inputs.pr_number }}
+        body: |
+          ## Build Status
+          
+          Build failed. Please check the [workflow logs](${{ inputs.github_server_url }}/${{ inputs.repository }}/actions/runs/${{ inputs.run_id }}) for details.
