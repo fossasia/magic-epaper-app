@@ -33,18 +33,6 @@ inputs:
     description: "Repository name"
     required: false
     default: ''
-  pr_head_sha:
-    description: "PR head commit SHA"
-    required: false
-    default: ''
-  pr_head_ref:
-    description: "PR head branch name"
-    required: false
-    default: ''
-  github_server_url:
-    description: "GitHub server URL"
-    required: false
-    default: ''
   github_token:
     description: "GitHub token for API access"
     required: false
@@ -79,8 +67,16 @@ runs:
         flutter build apk --build-name $VERSION_NAME --build-number $VERSION_CODE
         flutter build appbundle --build-name $VERSION_NAME --build-number $VERSION_CODE
         
+        if [ ! -f build/app/outputs/flutter-apk/app-debug.apk ]; then
+          echo "Debug APK build failed"
+          exit 1
+        fi
         if [ ! -f build/app/outputs/flutter-apk/app-release.apk ]; then
           echo "Release APK build failed"
+          exit 1
+        fi
+        if [ ! -f build/app/outputs/bundle/release/app-release.aab ]; then
+          echo "App Bundle build failed"
           exit 1
         fi
 
@@ -133,4 +129,4 @@ runs:
         body: |
           ## Build Status
           
-          Build failed. Please check the [workflow logs](${{ inputs.github_server_url }}/${{ inputs.repository }}/actions/runs/${{ inputs.run_id }}) for details.
+          Build failed. Please check the [workflow logs](https://github.com/${{ inputs.repository }}/actions/runs/${{ inputs.run_id }}) for details.
