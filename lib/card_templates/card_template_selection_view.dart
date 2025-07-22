@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/card_templates/employee_id_form.dart';
-import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
+import 'package:magic_epaper_app/card_templates/price_tag_form.dart';
 
 class CardTemplateSelectionView extends StatelessWidget {
   final int width;
@@ -20,24 +20,23 @@ class CardTemplateSelectionView extends StatelessWidget {
           ListTile(
             title: const Text('Employee ID Card'),
             onTap: () async {
-              // Navigate to the form and await the list of layers.
-              final layers = await Navigator.of(context).push<List<LayerSpec>>(
+              await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) =>
                       EmployeeIdForm(width: width, height: height),
                 ),
               );
-
-              // If layers are returned, pop the selection view and pass them back.
-              if (layers != null && context.mounted) {
-                Navigator.of(context).pop(layers);
-              }
             },
           ),
           ListTile(
             title: const Text('Shop Price Tag'),
-            onTap: () {
-              // TODO: Navigate to Shop Price Tag form
+            onTap: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) =>
+                      PriceTagForm(width: width, height: height),
+                ),
+              );
             },
           ),
           ListTile(

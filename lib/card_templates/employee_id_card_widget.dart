@@ -65,13 +65,7 @@ class EmployeeIdCardWidget extends StatelessWidget {
                     const TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
                 textAlign: TextAlign.center,
               ),
-            if (data.name.isNotEmpty)
-              Text(
-                'Name: ${data.name}',
-                style:
-                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
-                textAlign: TextAlign.center,
-              ),
+
             // Position
             if (data.position.isNotEmpty)
               Text(

@@ -14,6 +14,8 @@ import 'package:magic_epaper_app/pro_image_editor/features/bottom_bar.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/text_bottom_bar.dart';
 import 'package:magic_epaper_app/provider/color_palette_provider.dart';
 import 'package:magic_epaper_app/provider/getitlocator.dart';
+import 'package:magic_epaper_app/util/orientation_util.dart';
+import 'package:magic_epaper_app/util/template_util.dart';
 import 'package:pro_image_editor/core/models/layers/layer_interaction.dart';
 import 'package:pro_image_editor/designs/whatsapp/whatsapp_paint_colorpicker.dart';
 import 'package:pro_image_editor/designs/whatsapp/whatsapp_text_colorpicker.dart';
@@ -28,21 +30,6 @@ import 'reorder_layer_example.dart';
 
 final bool _useMaterialDesign =
     platformDesignMode == ImageEditorDesignMode.material;
-
-/// Data class for specifying a widget and its properties for layer addition.
-class LayerSpec {
-  final Widget widget;
-  final Offset offset;
-  final double scale;
-  final double rotation;
-
-  const LayerSpec({
-    required this.widget,
-    this.offset = Offset.zero,
-    this.scale = 1.0,
-    this.rotation = 0.0,
-  });
-}
 
 /// The example for movableBackground
 class MovableBackgroundImageExample extends StatefulWidget {
@@ -81,6 +68,7 @@ class _MovableBackgroundImageExampleState
   @override
   void initState() {
     super.initState();
+    setPortraitOrientation();
     preCacheImage(assetPath: ImageAssets.whiteBoard);
     preCacheImage(assetPath: ImageAssets.redBoard);
     preCacheImage(assetPath: ImageAssets.blackBoard);
@@ -93,26 +81,52 @@ class _MovableBackgroundImageExampleState
     super.dispose();
   }
 
-  /// Add multiple widgets as separate layers after editor is ready, with custom offset, scale and rotation
+  /// Add multiple layers as separate layers after editor is ready, with custom offset, scale and rotation
   void addInitialLayers(List<LayerSpec> layers) {
     final editor = editorKey.currentState;
     if (editor == null) return;
     for (final layer in layers) {
-      editor.addLayer(
-        WidgetLayer(
-          interaction: LayerInteraction(
-            enableEdit: true,
-            enableMove: true,
-            enableRotate: true,
-            enableScale: true,
-            enableSelection: true,
+      if (layer.text != null) {
+        // Add as TextLayer
+        editor.addLayer(
+          TextLayer(
+            textStyle: layer.textStyle,
+            align: layer.textAlign ?? TextAlign.left,
+            offset: layer.offset,
+            scale: layer.scale,
+            rotation: layer.rotation,
+            color: layer.textColor ?? Colors.black,
+            background: layer.backgroundColor ?? Colors.white,
+            colorMode: LayerBackgroundMode.backgroundAndColor,
+            text: layer.text!,
+            interaction: LayerInteraction(
+              enableEdit: true,
+              enableMove: true,
+              enableRotate: true,
+              enableScale: true,
+              enableSelection: true,
+            ),
           ),
-          offset: layer.offset,
-          scale: layer.scale,
-          rotation: layer.rotation,
-          widget: layer.widget,
-        ),
-      );
+          blockSelectLayer: true,
+        );
+      } else if (layer.widget != null) {
+        // Add as WidgetLayer
+        editor.addLayer(
+          WidgetLayer(
+            interaction: LayerInteraction(
+              enableEdit: true,
+              enableMove: true,
+              enableRotate: true,
+              enableScale: true,
+              enableSelection: true,
+            ),
+            offset: layer.offset,
+            scale: layer.scale,
+            rotation: layer.rotation,
+            widget: layer.widget!,
+          ),
+        );
+      }
     }
   }
 
@@ -444,7 +458,26 @@ class _MovableBackgroundImageExampleState
                     }
                     //code testing
                     //editorKey.currentState!.openTextEditor(initialText: "Hello World");
-                    //editorKey.currentState!.addLayer(TextLayer(text: 'Hello World',interaction: LayerInteraction(enableEdit: true, enableMove: true, enableRotate: true, enableScale: true, enableSelection: true,)),blockSelectLayer: true,);
+                    // editorKey.currentState!.addLayer(
+                    //   TextLayer(
+                    //     align: TextAlign.left,
+                    //     offset: const Offset(0, -100),
+                    //     /// Add below
+                    //     color: Colors.black,
+                    //     background: Colors.white,
+                    //     colorMode: LayerBackgroundMode.backgroundAndColor,
+
+                    //     text: 'Hello World',
+                    //     interaction: LayerInteraction(
+                    //       enableEdit: true,
+                    //       enableMove: true,
+                    //       enableRotate: true,
+                    //       enableScale: true,
+                    //       enableSelection: true,
+                    //     ),
+                    //   ),
+                    //   blockSelectLayer: true,
+                    // );
                   },
                 ),
               ),

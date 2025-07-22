@@ -1,10 +1,13 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:magic_epaper_app/card_templates/employee_id_card_widget.dart';
 import 'package:magic_epaper_app/card_templates/employee_id_model.dart';
+import 'package:magic_epaper_app/constants/color_constants.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:magic_epaper_app/util/template_util.dart';
 
 class EmployeeIdForm extends StatefulWidget {
   final int width;
@@ -92,27 +95,14 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
     }
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       // Create a list of LayerSpec objects for each component of the card.
       final List<LayerSpec> layers = [];
 
-      // Company Name Layer (top)
-      if (_employeeData.companyName.isNotEmpty) {
-        layers.add(LayerSpec(
-          widget: Text(
-            _employeeData.companyName,
-            style: const TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-          offset: const Offset(0, -210),
-          scale: 10,
-        ));
-      }
-
       // Profile Image Layer
       if (_profileImage != null) {
-        layers.add(LayerSpec(
+        layers.add(LayerSpec.widget(
           widget: ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
             child: Image.file(_profileImage!,
@@ -124,62 +114,64 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
       }
 
       if (_employeeData.companyName.isNotEmpty) {
-        layers.add(LayerSpec(
-          widget: Text(
-            _employeeData.companyName,
-            style: const TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+        layers.add(LayerSpec.text(
+          textStyle: const TextStyle(
+            fontSize: 50,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
           ),
+          text: _employeeData.companyName,
+          textColor: Colors.black,
+          backgroundColor: Colors.white,
+          textAlign: TextAlign.center,
           offset: const Offset(0, -80),
-          scale: 10,
+          scale: 1,
         ));
       }
 
       // Text Layers
-      layers.add(LayerSpec(
-        widget: Text(
-          'Name: ${_employeeData.name}',
-          style: const TextStyle(
-              fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
+      layers.add(LayerSpec.text(
+        text: 'Name: ${_employeeData.name}',
+        textColor: Colors.black,
+        backgroundColor: Colors.white,
+        textAlign: TextAlign.left,
         offset: const Offset(0, -30),
-        scale: 10,
+        scale: 1,
       ));
 
-      layers.add(LayerSpec(
-        widget: Text(
-          'Position: ${_employeeData.position}',
-          style: const TextStyle(
-              fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
+      layers.add(LayerSpec.text(
+        text: 'Position: ${_employeeData.position}',
+        textColor: Colors.black,
+        backgroundColor: Colors.white,
+        textAlign: TextAlign.left,
         offset: const Offset(0, 0),
-        scale: 10,
+        scale: 1,
       ));
 
-      layers.add(LayerSpec(
-        widget: Text(
-          'Division: ${_employeeData.division}',
-          style: const TextStyle(
-              fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
+      layers.add(LayerSpec.text(
+        text: 'Division: ${_employeeData.division}',
+        textColor: Colors.black,
+        backgroundColor: Colors.white,
+        textAlign: TextAlign.left,
         offset: const Offset(0, 35),
-        scale: 12,
+        scale: 1,
       ));
 
-      layers.add(LayerSpec(
-        widget: Text(
-          'ID: ${_employeeData.idNumber}',
-          style: const TextStyle(
-              fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
+      layers.add(LayerSpec.text(
+        text: 'ID: ${_employeeData.idNumber}',
+        textColor: Colors.black,
+        backgroundColor: Colors.white,
+        textAlign: TextAlign.left,
         offset: const Offset(0, 70),
-        scale: 5,
+        scale: 1,
       ));
 
       // QR Code Layer (bottom, only if qrData is not empty)
       if (_employeeData.qrData.isNotEmpty) {
-        layers.add(LayerSpec(
+        layers.add(LayerSpec.widget(
           widget: BarcodeWidget(
+            padding: const EdgeInsets.all(10),
+            backgroundColor: colorWhite,
             barcode: Barcode.qrCode(),
             data: _employeeData.qrData,
             width: 60,
@@ -190,8 +182,22 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         ));
       }
 
-      // Pop the navigation stack and return the list of layers.
-      Navigator.of(context).pop(layers);
+      // Navigate directly to the editor with the layers
+      final result = await Navigator.of(context).push<Uint8List>(
+        MaterialPageRoute(
+          builder: (context) => MovableBackgroundImageExample(
+            width: widget.width,
+            height: widget.height,
+            initialLayers: layers,
+          ),
+        ),
+      );
+
+      if (result != null) {
+        Navigator.of(context)
+          ..pop()
+          ..pop(result);
+      }
     }
   }
 

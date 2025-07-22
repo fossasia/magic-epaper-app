@@ -383,9 +383,8 @@ class BottomActionMenu extends StatelessWidget {
                 icon: Icons.dashboard_customize_outlined,
                 label: 'Templates',
                 onTap: () async {
-                  // Navigate to the template selection screen and await a list of layers.
-                  final layers =
-                      await Navigator.of(context).push<List<LayerSpec>>(
+                  // Navigate directly to the template selection screen
+                  final result = await Navigator.of(context).push<Uint8List>(
                     MaterialPageRoute(
                       builder: (context) => CardTemplateSelectionView(
                         width: epd.width,
@@ -394,29 +393,14 @@ class BottomActionMenu extends StatelessWidget {
                     ),
                   );
 
-                  // If layers are returned, open the editor with them.
-                  if (layers != null && layers.isNotEmpty) {
-                    final canvasBytes =
-                        await Navigator.of(context).push<Uint8List>(
-                      MaterialPageRoute(
-                        builder: (context) => MovableBackgroundImageExample(
-                          width: epd.width,
-                          height: epd.height,
-                          initialLayers: layers,
-                        ),
-                      ),
+                  if (result != null) {
+                    await imgLoader.updateImage(
+                      bytes: result,
+                      width: epd.width,
+                      height: epd.height,
                     );
-
-                    // If the editor returns a rendered image, update the main view.
-                    if (canvasBytes != null) {
-                      await imgLoader.updateImage(
-                        bytes: canvasBytes,
-                        width: epd.width,
-                        height: epd.height,
-                      );
-                      await imgLoader.saveFinalizedImageBytes(canvasBytes);
-                      onSourceChanged?.call('editor');
-                    }
+                    await imgLoader.saveFinalizedImageBytes(result);
+                    onSourceChanged?.call('template');
                   }
                 },
               ),
