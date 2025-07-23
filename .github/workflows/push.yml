@@ -135,14 +135,14 @@ jobs:
 
           ls
 
-          echo "Pushing to apk branch"
+          echo "Pushing to app branch"
 
           git checkout --orphan temporary
           git add --all .
           git commit -am "[Auto] Update APK/AAB's from $branch ($(date +%Y-%m-%d.%H:%M:%S))"
-          git branch -D apk
-          git branch -m apk
-          git push --force origin apk
+          git branch -D app
+          git branch -m app
+          git push --force origin app
 
       - name: Push app in open testing track
         if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
