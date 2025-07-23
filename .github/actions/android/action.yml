@@ -80,11 +80,11 @@ runs:
           exit 1
         fi
 
-    - name: Store APK file
+    - name: Store APK files
       uses: actions/upload-artifact@v4
       id: upload-apk
       with:
-        name: magic-epaper-apk-pr-${{ inputs.pr_number || 'build' }}
+        name: apk-files-pr-${{ inputs.pr_number }}
         path: |
           build/app/outputs/flutter-apk/app-debug.apk
           build/app/outputs/flutter-apk/app-release.apk
@@ -105,28 +105,39 @@ runs:
         echo "WORKFLOW_URL=$WORKFLOW_URL" >> $GITHUB_OUTPUT
         echo "APK_URL=$APK_URL" >> $GITHUB_OUTPUT
 
-    - name: Create PR comment
-      if: inputs.pr_number != '' && inputs.github_token != ''
-      uses: peter-evans/create-or-update-comment@v4
+    - name: Build success comment
+      if: success() && inputs.pr_number != '' && inputs.github_token != ''
+      uses: actions/github-script@v7
       with:
-        token: ${{ inputs.github_token }}
-        issue-number: ${{ inputs.pr_number }}
-        body: |
-          ## Build Status
+        github-token: ${{ inputs.github_token }}
+        script: |
+          const issue_number = parseInt('${{ inputs.pr_number }}');
+          const owner = context.repo.owner;
+          const repo = context.repo.repo;
+          const apk_url = '${{ steps.artifacts.outputs.APK_URL }}';
+          const workflow_url = '${{ steps.artifacts.outputs.WORKFLOW_URL }}';
           
-          Build successful. APK to test: **[Download Android APK](${{ steps.artifacts.outputs.APK_URL }})**
-          
-          ---
-          
-          [View workflow run](${{ steps.artifacts.outputs.WORKFLOW_URL }})
+          await github.rest.issues.createComment({
+            owner,
+            repo,
+            issue_number,
+            body: `Build successful. APKs to test: **[Download Android APK](${apk_url})** [View workflow run](${workflow_url})`
+          });
 
-    - name: Build status comment on failure
+    - name: Build failed comment
       if: failure() && inputs.pr_number != '' && inputs.github_token != ''
-      uses: peter-evans/create-or-update-comment@v4
+      uses: actions/github-script@v7
       with:
-        token: ${{ inputs.github_token }}
-        issue-number: ${{ inputs.pr_number }}
-        body: |
-          ## Build Status
-          
-          Build failed. Please check the [workflow logs](https://github.com/${{ inputs.repository }}/actions/runs/${{ inputs.run_id }}) for details.
+        github-token: ${{ inputs.github_token }}
+        script: |
+          const issue_number = parseInt('${{ inputs.pr_number }}');
+          const owner = context.repo.owner;
+          const repo = context.repo.repo;
+          const workflow_url = '${{ steps.artifacts.outputs.WORKFLOW_URL }}';
+
+          await github.rest.issues.createComment({
+            owner,
+            repo,
+            issue_number,
+            body: `Build workflow failed. Please check the [logs](${workflow_url}) for more information.`
+          });
