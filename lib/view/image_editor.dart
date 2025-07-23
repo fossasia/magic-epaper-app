@@ -136,7 +136,6 @@ class _ImageEditorState extends State<ImageEditor> {
     });
   }
 
-
   Future<void> _exportXbmFiles() async {
     if (_rawImages.isEmpty) return;
     final now = DateTime.now();
@@ -201,7 +200,6 @@ class _ImageEditorState extends State<ImageEditor> {
 
   Future<void> _showTransferProgress(img.Image finalImg,
       {Waveform? waveform}) async {
-
     await TransferProgressDialog.show(
       context: context,
       finalImg: finalImg,
@@ -254,53 +252,54 @@ class _ImageEditorState extends State<ImageEditor> {
         ),
         actions: [
           if (_rawImages.isNotEmpty) ...[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white, width: 1.2),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String?>(
-                    value: _selectedWaveformName,
-                    hint: const Text(
-                      "Full Refresh",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                    isDense: true,
-                    dropdownColor: colorAccent,
-                    style: const TextStyle(color: Colors.white, fontSize: 14),
+            if (!widget.isExportOnly)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white, width: 1.2),
                     borderRadius: BorderRadius.circular(8),
-                    icon: const SizedBox.shrink(),
-                    items: dropdownItems,
-                    onChanged: (String? newName) {
-                      setState(() {
-                        _selectedWaveformName = newName;
-                        if (newName == null) {
-                          _selectedWaveform = null; // Full Refresh
-                        } else {
-                          _selectedWaveform = widget.epd.controller.waveforms
-                              .firstWhere((w) => w.name == newName);
-                        }
-                      });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          duration: Durations.medium3,
-                          content: Text(
-                            _selectedWaveform == null
-                                ? "Full Refresh Selected"
-                                : "${_selectedWaveform!.name} Selected",
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String?>(
+                      value: _selectedWaveformName,
+                      hint: const Text(
+                        "Full Refresh",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                      isDense: true,
+                      dropdownColor: colorAccent,
+                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                      borderRadius: BorderRadius.circular(8),
+                      icon: const SizedBox.shrink(),
+                      items: dropdownItems,
+                      onChanged: (String? newName) {
+                        setState(() {
+                          _selectedWaveformName = newName;
+                          if (newName == null) {
+                            _selectedWaveform = null; // Full Refresh
+                          } else {
+                            _selectedWaveform = widget.epd.controller.waveforms
+                                .firstWhere((w) => w.name == newName);
+                          }
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            duration: Durations.medium3,
+                            content: Text(
+                              _selectedWaveform == null
+                                  ? "Full Refresh Selected"
+                                  : "${_selectedWaveform!.name} Selected",
+                            ),
+                            backgroundColor: colorPrimary,
                           ),
-                          backgroundColor: colorPrimary,
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
             Padding(
               padding: const EdgeInsets.only(right: 12.0),
               child: TextButton(
