@@ -4,7 +4,6 @@ import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/card_templates/price_tag_model.dart';
 
-/// Small preview widget for a shopping price tag.
 class PriceTagCardWidget extends StatelessWidget {
   final PriceTagModel data;
 
@@ -12,10 +11,9 @@ class PriceTagCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Horizontal layout for the price tag preview
     return Center(
       child: Container(
-        width: 296, // Horizontal aspect ratio
+        width: 296,
         height: 144,
         decoration: BoxDecoration(
           color: Colors.white,

@@ -383,7 +383,6 @@ class BottomActionMenu extends StatelessWidget {
                 icon: Icons.dashboard_customize_outlined,
                 label: 'Templates',
                 onTap: () async {
-                  // Navigate directly to the template selection screen
                   final result = await Navigator.of(context).push<Uint8List>(
                     MaterialPageRoute(
                       builder: (context) => CardTemplateSelectionView(

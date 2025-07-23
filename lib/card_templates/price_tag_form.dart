@@ -10,7 +10,6 @@ import 'package:magic_epaper_app/card_templates/price_tag_card_widget.dart';
 import 'package:magic_epaper_app/card_templates/price_tag_model.dart';
 import 'package:magic_epaper_app/util/template_util.dart';
 
-/// Form screen for creating a shopping price tag template.
 class PriceTagForm extends StatefulWidget {
   final int width;
   final int height;
@@ -25,8 +24,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
   final _formKey = GlobalKey<FormState>();
   final _productNameController = TextEditingController();
   final _priceController = TextEditingController();
-  final _currencyController = TextEditingController(
-      text: ''); // default rupee sign (₹) maybe not displayed; user can edit
+  final _currencyController = TextEditingController();
   final _quantityController = TextEditingController();
   final _barcodeController = TextEditingController();
 
@@ -153,7 +151,6 @@ class _PriceTagFormState extends State<PriceTagForm> {
       ));
     }
 
-    // Barcode layer at bottom
     if (_data.barcodeData.isNotEmpty) {
       layers.add(LayerSpec.widget(
         widget: BarcodeWidget(
@@ -170,7 +167,6 @@ class _PriceTagFormState extends State<PriceTagForm> {
       ));
     }
 
-    // Navigate to editor
     final Uint8List? bytes = await Navigator.of(context).push<Uint8List>(
       MaterialPageRoute(
         builder: (context) => MovableBackgroundImageExample(
@@ -182,7 +178,6 @@ class _PriceTagFormState extends State<PriceTagForm> {
     );
 
     if (bytes != null) {
-      // Pop twice to return bytes to the ImageEditor
       Navigator.of(context)
         ..pop()
         ..pop(bytes);

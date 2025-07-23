@@ -39,12 +39,12 @@ class CardTemplateSelectionView extends StatelessWidget {
               );
             },
           ),
-          ListTile(
-            title: const Text('Entry Pass Tag'),
-            onTap: () {
-              // TODO: Navigate to Entry Pass Tag form
-            },
-          ),
+          // TODO: Navigate to Entry Pass Tag form
+          // ListTile(
+          //   title: const Text('Entry Pass Tag'),
+          //   onTap: () {
+          //   },
+          // ),
         ],
       ),
     );

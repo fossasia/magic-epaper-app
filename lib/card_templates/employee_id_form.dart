@@ -97,10 +97,8 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      // Create a list of LayerSpec objects for each component of the card.
       final List<LayerSpec> layers = [];
 
-      // Profile Image Layer
       if (_profileImage != null) {
         layers.add(LayerSpec.widget(
           widget: ClipRRect(
@@ -129,7 +127,6 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         ));
       }
 
-      // Text Layers
       layers.add(LayerSpec.text(
         text: 'Name: ${_employeeData.name}',
         textColor: Colors.black,
@@ -166,7 +163,6 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         scale: 1,
       ));
 
-      // QR Code Layer (bottom, only if qrData is not empty)
       if (_employeeData.qrData.isNotEmpty) {
         layers.add(LayerSpec.widget(
           widget: BarcodeWidget(
@@ -182,7 +178,6 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         ));
       }
 
-      // Navigate directly to the editor with the layers
       final result = await Navigator.of(context).push<Uint8List>(
         MaterialPageRoute(
           builder: (context) => MovableBackgroundImageExample(
