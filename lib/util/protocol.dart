@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image/image.dart' as img;
+import 'package:magic_epaper_app/util/epd/driver/waveform.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:magic_epaper_app/util/magic_epaper_firmware.dart';
@@ -107,6 +108,7 @@ class Protocol {
     img.Image image, {
     ProgressCallback? onProgress,
     TagDetectedCallback? onTagDetected,
+    Waveform? waveform,
   }) async {
     var availability = await FlutterNfcKit.nfcAvailability;
     switch (availability) {
@@ -144,7 +146,7 @@ class Protocol {
     await Future.delayed(
         const Duration(seconds: 2)); // waiting for the power supply stable
 
-    await epd.controller.init(this);
+    await epd.controller.init(this, waveform: waveform);
 
     onProgress?.call(0.2, "Processing image data...");
 
