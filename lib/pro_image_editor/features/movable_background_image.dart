@@ -260,7 +260,7 @@ class _MovableBackgroundImageExampleState
         offset: Offset.zero,
         scale: _initScale,
         widget: Image.asset(
-          'assets/canvas/${_currentCanvasColor}.png',
+          'assets/canvas/$_currentCanvasColor.png',
           width: _canvasWidth,
           height: _canvasHeight,
           fit: BoxFit.cover,
@@ -515,6 +515,7 @@ class _MovableBackgroundImageExampleState
                               ? _editorSize.height
                               : _editorSize.width) /
                           _initScale,
+                  // ignore: deprecated_member_use
                   buildStickers: (setLayer, scrollController) {
                     // Optionally your code to pick layers
                     return const SizedBox();
