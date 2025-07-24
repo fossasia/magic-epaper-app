@@ -11,9 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Common Workflow
         uses: ./.github/actions/common
+      - name: Save PR number
+        run: |
+          mkdir -p ./pr
+          echo ${{ github.event.number }} > ./pr/NR
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr
+          path: pr/
 
   android:
     name: Android Flutter Build
@@ -21,14 +28,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Android Workflow
         uses: ./.github/actions/android
-        with:
-          pr_number: ${{ github.event.pull_request.number }}
-          run_id: ${{ github.run_id }}
-          repository: ${{ github.repository }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
 
   ios:
     name: iOS Flutter Build
@@ -36,6 +37,5 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: iOS Workflow
         uses: ./.github/actions/ios
