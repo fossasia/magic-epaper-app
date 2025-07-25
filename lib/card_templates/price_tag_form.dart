@@ -154,6 +154,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
     if (_data.barcodeData.isNotEmpty) {
       layers.add(LayerSpec.widget(
         widget: BarcodeWidget(
+          style: const TextStyle(color: Colors.black),
           padding: const EdgeInsets.all(10),
           backgroundColor: colorWhite,
           barcode: Barcode.code128(),

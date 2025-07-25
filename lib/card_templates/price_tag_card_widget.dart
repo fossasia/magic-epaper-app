@@ -91,6 +91,7 @@ class PriceTagCardWidget extends StatelessWidget {
                             barcode: Barcode.code128(),
                             data: data.barcodeData,
                             drawText: false,
+                            style: const TextStyle(color: Colors.black),
                           )
                         : Container(),
                   ),
