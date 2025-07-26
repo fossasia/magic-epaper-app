@@ -7,6 +7,7 @@ import 'package:magic_epaper_app/util/epd/driver/waveform.dart';
 import 'package:magic_epaper_app/util/image_editor_utils.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
 import 'package:magic_epaper_app/view/widget/transfer_progress_dialog.dart';
+import 'package:magic_epaper_app/view/barcode_scanner_screen.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
@@ -433,6 +434,29 @@ class BottomActionMenu extends StatelessWidget {
                 label: 'Library',
                 onTap: () async {
                   await imageSaveHandler?.navigateToImageLibrary();
+                },
+              ),
+              _buildActionButton(
+                context: context,
+                icon: Icons.qr_code_scanner,
+                label: 'Barcode',
+                onTap: () async {
+                  final result = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => BarcodeScannerScreen(
+                        width: epd.width,
+                        height: epd.height,
+                      ),
+                    ),
+                  );
+
+                  if (result is Uint8List) {
+                    await imgLoader.updateImage(
+                      bytes: result,
+                      width: epd.width,
+                      height: epd.height,
+                    );
+                  }
                 },
               ),
             ],
