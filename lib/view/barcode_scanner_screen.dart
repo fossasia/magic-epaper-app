@@ -142,6 +142,46 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
     }
   }
 
+  Widget _buildFormatSelector() {
+    // Create a list of formats, excluding 'unknown'
+    final availableFormats = scanner.BarcodeFormat.values
+        .where((format) => format != scanner.BarcodeFormat.unknown)
+        .toList();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Format: ${_barcodeFormat?.name ?? 'N/A'}',
+              style:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: DropdownButton<scanner.BarcodeFormat>(
+              value: _barcodeFormat,
+              isExpanded: true,
+              items: availableFormats
+                  .map((format) => DropdownMenuItem(
+                        value: format,
+                        child: Text(format.name),
+                      ))
+                  .toList(),
+              onChanged: (newFormat) {
+                if (newFormat != null) {
+                  setState(() {
+                    _barcodeFormat = newFormat;
+                  });
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildBarcodePreview() {
     if (_barcodeData.isEmpty) {
       return Container(
@@ -281,6 +321,9 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
             ),
             
             const SizedBox(height: 20),
+
+            if (_barcodeData.isNotEmpty)
+              _buildFormatSelector(),
             
             RepaintBoundary(
               key: _barcodeKey,
