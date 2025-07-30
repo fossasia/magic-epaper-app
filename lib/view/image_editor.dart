@@ -456,6 +456,7 @@ class BottomActionMenu extends StatelessWidget {
                       width: epd.width,
                       height: epd.height,
                     );
+                    await imgLoader.saveFinalizedImageBytes(result);
                   }
                 },
               ),
