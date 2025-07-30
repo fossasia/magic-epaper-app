@@ -56,5 +56,9 @@ abstract class Epd {
     }
     return retList;
   }
+
+  img.Image extractColorPlaneAsImage(Color color, img.Image orgImage) {
+    return ImageProcessing.extract(color, orgImage);
+  }
   // TODO: howToAdjust ???
 }
