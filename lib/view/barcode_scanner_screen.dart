@@ -114,25 +114,24 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
   }
 
   Future<void> _generateBarcodeImage() async {
-      RenderRepaintBoundary boundary = _barcodeKey.currentContext!
-          .findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
+    RenderRepaintBoundary boundary =
+        _barcodeKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+    ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    Uint8List pngBytes = byteData!.buffer.asUint8List();
 
-      img.Image? barcodeImage = img.decodeImage(pngBytes);
-      if (barcodeImage == null) return;
+    img.Image? barcodeImage = img.decodeImage(pngBytes);
+    if (barcodeImage == null) return;
 
-      img.Image resizedImage;
-      if (barcodeImage.width > widget.width) {
-        resizedImage = img.copyRotate(barcodeImage, angle: 270);
-      } else {
-        resizedImage = img.copyResize(barcodeImage,
-            width: widget.width, height: widget.height);
-      }
-      final resultBytes = Uint8List.fromList(img.encodePng(resizedImage));
-      Navigator.of(context).pop(resultBytes);
+    img.Image resizedImage;
+    if (barcodeImage.width > widget.width) {
+      resizedImage = img.copyRotate(barcodeImage, angle: 270);
+    } else {
+      resizedImage = img.copyResize(barcodeImage,
+          width: widget.width, height: widget.height);
+    }
+    final resultBytes = Uint8List.fromList(img.encodePng(resizedImage));
+    Navigator.of(context).pop(resultBytes);
   }
 
   Widget _buildFormatSelector() {
@@ -306,7 +305,6 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 20),
-
             TextField(
               controller: _textController,
               decoration: const InputDecoration(
@@ -316,9 +314,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                 prefixIcon: Icon(Icons.qr_code),
               ),
             ),
-
             const SizedBox(height: 20),
-
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
@@ -332,18 +328,13 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                 ),
               ),
             ),
-
             const SizedBox(height: 40),
-
             if (_barcodeData.isNotEmpty) _buildFormatSelector(),
-
             RepaintBoundary(
               key: _barcodeKey,
               child: Center(child: _buildBarcodePreview()),
             ),
-
             const SizedBox(height: 20),
-
             if (_barcodeData.isNotEmpty && !_hasError)
               SizedBox(
                 width: double.infinity,
