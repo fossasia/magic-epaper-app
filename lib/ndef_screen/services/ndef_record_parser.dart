@@ -1,8 +1,22 @@
 import 'package:magic_epaper_app/constants/string_constants.dart';
+import 'package:magic_epaper_app/ndef_screen/models/v_card_data.dart';
 import 'package:ndef/ndef.dart' as ndef;
 import 'dart:typed_data';
 
 class NDEFRecordFactory {
+  static ndef.NDEFRecord createVCardRecord(VCardData vCardData) {
+    String vCardString = vCardData.toVCardString();
+
+    if (vCardString.trim().isEmpty) {
+      throw ArgumentError('VCard data cannot be empty');
+    }
+
+    return ndef.MimeRecord(
+      decodedType: 'text/vcard',
+      payload: Uint8List.fromList(vCardString.codeUnits),
+    );
+  }
+
   static ndef.NDEFRecord createTextRecord(String text,
       {String language = StringConstants.defaultLanguage}) {
     if (text.trim().isEmpty) {
@@ -85,10 +99,17 @@ class NDEFRecordParser {
   static String getRecordInfo(ndef.NDEFRecord record) {
     try {
       if (record is ndef.TextRecord) {
+        if (record.text!.startsWith('BEGIN:VCARD')) {
+          return 'vCard: ${_extractVCardName(record.text!)}';
+        }
         return '${StringConstants.textPrefix}${record.text}${StringConstants.textSuffix}${record.language}${StringConstants.closingParenthesis}';
       } else if (record is ndef.UriRecord) {
         return '${StringConstants.uriPrefix}${record.content}';
       } else if (record is ndef.MimeRecord) {
+        if (record.decodedType == 'text/vcard') {
+          String vCardContent = String.fromCharCodes(record.payload!);
+          return 'vCard: ${_extractVCardName(vCardContent)}';
+        }
         return '${StringConstants.mimePrefix}${record.decodedType}';
       } else if (record is ndef.AbsoluteUriRecord) {
         return '${StringConstants.absoluteUriPrefix}${record.decodedType}';
@@ -97,6 +118,28 @@ class NDEFRecordParser {
       }
     } catch (e) {
       return '${StringConstants.errorDecodingRecord}$e';
+    }
+  }
+
+  static String _extractVCardName(String vCardContent) {
+    try {
+      RegExp fnRegex = RegExp(r'FN[^:]*:(.+)', caseSensitive: false);
+      Match? match = fnRegex.firstMatch(vCardContent);
+      if (match != null) {
+        return match.group(1)?.trim() ?? 'Contact';
+      }
+
+      RegExp nRegex = RegExp(r'N[^:]*:([^;]*);([^;]*)', caseSensitive: false);
+      Match? nMatch = nRegex.firstMatch(vCardContent);
+      if (nMatch != null) {
+        String lastName = nMatch.group(1)?.trim() ?? '';
+        String firstName = nMatch.group(2)?.trim() ?? '';
+        return '$firstName $lastName'.trim();
+      }
+
+      return 'Contact';
+    } catch (e) {
+      return 'Contact';
     }
   }
 
