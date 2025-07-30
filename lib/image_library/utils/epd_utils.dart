@@ -1,10 +1,11 @@
+import 'package:magic_epaper_app/util/epd/gdeq031t10.dart';
 import 'package:magic_epaper_app/util/epd/gdey037z03.dart';
 import 'package:magic_epaper_app/util/epd/gdey037z03bw.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
 
 class EpdUtils {
   static Epd getEpdFromMetadata(Map<String, dynamic>? metadata) {
-    final List<Epd> displays = [Gdey037z03(), Gdey037z03BW()];
+    final List<Epd> displays = [Gdey037z03(), Gdey037z03BW(), GDEQ031T10()];
 
     if (metadata == null || !metadata.containsKey('epdModel')) {
       return displays[0];
@@ -17,6 +18,8 @@ class EpdUtils {
         return Gdey037z03();
       case 'GDEY037T03':
         return Gdey037z03BW();
+      case 'GDEQ031T10':
+        return GDEQ031T10();
       default:
         return displays[0];
     }

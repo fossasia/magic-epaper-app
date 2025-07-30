@@ -3,6 +3,7 @@ import 'package:magic_epaper_app/constants/color_constants.dart';
 import 'package:magic_epaper_app/constants/string_constants.dart';
 import 'package:magic_epaper_app/provider/getitlocator.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
+import 'package:magic_epaper_app/util/epd/gdeq031t10.dart';
 import 'package:magic_epaper_app/util/epd/gdey037z03.dart';
 import 'package:magic_epaper_app/util/epd/gdey037z03bw.dart';
 import 'package:magic_epaper_app/view/image_editor.dart';
@@ -19,7 +20,7 @@ class DisplaySelectionScreen extends StatefulWidget {
 }
 
 class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
-  final List<Epd> displays = [Gdey037z03(), Gdey037z03BW()];
+  final List<Epd> displays = [Gdey037z03(), Gdey037z03BW(), GDEQ031T10()];
   int selectedIndex = -1;
 
   @override
