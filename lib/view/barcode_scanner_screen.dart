@@ -25,7 +25,8 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
   final GlobalKey _barcodeKey = GlobalKey();
   final TextEditingController _textController = TextEditingController();
   String _barcodeData = '';
-  scanner.BarcodeFormat? _barcodeFormat;
+  bool _hasError = false;
+  Barcode _selectedBarcode = Barcode.qrCode();
   bool _showScanner = false;
   scanner.MobileScannerController? _scannerController;
 
@@ -35,6 +36,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
     _textController.addListener(() {
       setState(() {
         _barcodeData = _textController.text;
+        _hasError = false;
       });
     });
   }
@@ -50,14 +52,14 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
     if (mounted && barcodes.barcodes.isNotEmpty) {
       final barcode = barcodes.barcodes.first;
       final value = barcode.displayValue ?? barcode.rawValue ?? '';
-      
+
       setState(() {
         _textController.text = value;
         _barcodeData = value;
-        _barcodeFormat = barcode.format;
+        _selectedBarcode = _getBarcodeType(barcode.format);
         _showScanner = false;
       });
-      
+
       _scannerController?.dispose();
       _scannerController = null;
     }
@@ -107,71 +109,85 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
       case scanner.BarcodeFormat.itf:
         return Barcode.itf();
       default:
-        return Barcode.code128(); // Default fallback
+        return Barcode.code128();
     }
   }
 
   Future<void> _generateBarcodeImage() async {
-    try {
-      RenderRepaintBoundary boundary = _barcodeKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      RenderRepaintBoundary boundary = _barcodeKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
 
       img.Image? barcodeImage = img.decodeImage(pngBytes);
       if (barcodeImage == null) return;
 
-      // Resize and rotate to fit the display
       img.Image resizedImage;
       if (barcodeImage.width > widget.width) {
-        // If barcode is wider than the screen, rotate it
         resizedImage = img.copyRotate(barcodeImage, angle: 270);
-        //resizedImage = img.copyResize(resizedImage, width: widget.width, height: widget.height);
       } else {
-        resizedImage = img.copyResize(barcodeImage, width: widget.width, height: widget.height);
+        resizedImage = img.copyResize(barcodeImage,
+            width: widget.width, height: widget.height);
       }
-
-      // Convert back to bytes and return
       final resultBytes = Uint8List.fromList(img.encodePng(resizedImage));
       Navigator.of(context).pop(resultBytes);
-
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error generating barcode image: $e')),
-      );
-    }
   }
 
   Widget _buildFormatSelector() {
-    // Create a list of formats, excluding 'unknown'
-    final availableFormats = scanner.BarcodeFormat.values
-        .where((format) => format != scanner.BarcodeFormat.unknown)
-        .toList();
+    final Map<String, Barcode> availableFormats = {
+      'QR Code': Barcode.qrCode(),
+      'Data Matrix': Barcode.dataMatrix(),
+      'Aztec': Barcode.aztec(),
+      'PDF417': Barcode.pdf417(),
+      'Code 128': Barcode.code128(),
+      'Code 93': Barcode.code93(),
+      'Code 39': Barcode.code39(),
+      'Codabar': Barcode.codabar(),
+      'EAN-13': Barcode.ean13(),
+      'EAN-8': Barcode.ean8(),
+      'EAN-5': Barcode.ean5(),
+      'EAN-2': Barcode.ean2(),
+      'GS1 128': Barcode.gs128(),
+      'ISBN': Barcode.isbn(),
+      'ITF': Barcode.itf(),
+      'ITF-16': Barcode.itf16(),
+      'ITF-14': Barcode.itf14(),
+      'RM4SCC': Barcode.rm4scc(),
+      'Telepen': Barcode.telepen(),
+      'UPC-A': Barcode.upcA(),
+      'UPC-E': Barcode.upcE(),
+    };
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Format: ${_barcodeFormat?.name ?? 'N/A'}',
+          Text('Format: ${_selectedBarcode.name}',
               style:
                   const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           SizedBox(
             width: double.infinity,
-            child: DropdownButton<scanner.BarcodeFormat>(
-              value: _barcodeFormat,
+            child: DropdownButton<String>(
+              value: _selectedBarcode.name,
               isExpanded: true,
-              items: availableFormats
-                  .map((format) => DropdownMenuItem(
-                        value: format,
-                        child: Text(format.name),
+              items: availableFormats.entries
+                  .map((entry) => DropdownMenuItem(
+                        value: entry.value.name,
+                        child: Text(entry.key),
                       ))
                   .toList(),
-              onChanged: (newFormat) {
-                if (newFormat != null) {
+              onChanged: (newBarcodeName) {
+                if (newBarcodeName != null) {
                   setState(() {
-                    _barcodeFormat = newFormat;
+                    _selectedBarcode = availableFormats.values.firstWhere(
+                      (barcode) => barcode.name == newBarcodeName,
+                      orElse: () => Barcode.qrCode(),
+                    );
+                    _hasError = false;
                   });
                 }
               },
@@ -201,33 +217,35 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
       );
     }
 
-    try {
-      return BarcodeWidget(
-        style: const TextStyle(color: Colors.black),
-        padding: const EdgeInsets.all(10),
-        backgroundColor: colorWhite,
-        barcode: _getBarcodeType(_barcodeFormat),
-        data: _barcodeData,
-        width: 240,
-        height: 120,
-      );
-    } catch (e) {
-      return Container(
-        width: 240,
-        height: 120,
-        decoration: BoxDecoration(
-          color: Colors.red[100],
-          border: Border.all(color: Colors.red),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: const Center(
-          child: Text(
-            'Invalid barcode data',
-            style: TextStyle(color: Colors.red),
+    return BarcodeWidget(
+      errorBuilder: (context, error) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          setState(() {
+            _hasError = true;
+          });
+        });
+        return Container(
+          width: 240,
+          height: 120,
+          decoration: BoxDecoration(
+            color: Colors.red[100],
+            border: Border.all(color: colorPrimary),
+            borderRadius: BorderRadius.circular(8),
           ),
-        ),
-      );
-    }
+          child: Center(
+            child: Text(
+              error.toString(),
+              style: const TextStyle(color: colorPrimary),
+            ),
+          ),
+        );
+      },
+      style: const TextStyle(color: colorBlack),
+      padding: const EdgeInsets.all(10),
+      backgroundColor: colorWhite,
+      barcode: _selectedBarcode,
+      data: _barcodeData,
+    );
   }
 
   Widget _buildScannerView() {
@@ -240,7 +258,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
           onPressed: _stopScanning,
         ),
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: colorBlack,
       body: Stack(
         children: [
           scanner.MobileScanner(
@@ -256,7 +274,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
               child: const Center(
                 child: Text(
                   'Point camera at barcode to scan',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                  style: TextStyle(color: colorWhite, fontSize: 16),
                 ),
               ),
             ),
@@ -275,16 +293,20 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Barcode Generator'),
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
         backgroundColor: colorAccent,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 20),
-            
-            // Text field for barcode data
+
             TextField(
               controller: _textController,
               decoration: const InputDecoration(
@@ -294,10 +316,9 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                 prefixIcon: Icon(Icons.qr_code),
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
-            // Scan button
+
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
@@ -306,41 +327,31 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                 label: const Text('Scan Barcode'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colorAccent,
-                  foregroundColor: Colors.white,
+                  foregroundColor: colorWhite,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
               ),
             ),
-            
-            const SizedBox(height: 40),
-            
-            // Barcode preview
-            const Text(
-              'Barcode Preview:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            
-            const SizedBox(height: 20),
 
-            if (_barcodeData.isNotEmpty)
-              _buildFormatSelector(),
-            
+            const SizedBox(height: 40),
+
+            if (_barcodeData.isNotEmpty) _buildFormatSelector(),
+
             RepaintBoundary(
               key: _barcodeKey,
               child: Center(child: _buildBarcodePreview()),
             ),
-            
-            const Spacer(),
-            
-            // Save button (if needed for future functionality)
-            if (_barcodeData.isNotEmpty)
+
+            const SizedBox(height: 20),
+
+            if (_barcodeData.isNotEmpty && !_hasError)
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _generateBarcodeImage,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
+                    foregroundColor: colorWhite,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
                   child: const Text('Generate Image'),
