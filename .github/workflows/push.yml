@@ -67,21 +67,6 @@ jobs:
           git branch -m version
           git push --force origin version
 
-  unsigned:
-    name: Unsigned Android Build
-    needs: common
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Main
-        uses: actions/checkout@v4
-
-      - name: Unsigned APK Workflow
-        uses: ./.github/actions/android/unsigned
-        with:
-          VERSION_NAME: ${{ needs.common.outputs.VERSION_NAME }}
-          VERSION_CODE: ${{ needs.common.outputs.VERSION_CODE }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   android:
     name: Android Flutter Build
     needs: common
@@ -124,8 +109,8 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git clone --branch=apk https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} apk
-          cd apk
+          git clone --branch=app https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} app
+          cd app
           
           branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
 
@@ -150,14 +135,14 @@ jobs:
 
           ls
 
-          echo "Pushing to apk branch"
+          echo "Pushing to app branch"
 
           git checkout --orphan temporary
           git add --all .
           git commit -am "[Auto] Update APK/AAB's from $branch ($(date +%Y-%m-%d.%H:%M:%S))"
-          git branch -D apk
-          git branch -m apk
-          git push --force origin apk
+          git branch -D app
+          git branch -m app
+          git push --force origin app
 
       - name: Push app in open testing track
         if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
@@ -211,3 +196,25 @@ jobs:
           if [[ $? -ne 0 ]]; then
               exit 1
           fi
+
+  update-release:
+    name: Update Draft Release
+    needs: [common, android, ios]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download repository
+        uses: actions/checkout@v4
+
+      - name: Run Release Drafter
+        id: run-release-drafter
+        uses: release-drafter/release-drafter@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          version: ${{ needs.common.outputs.VERSION_NAME }}
+
+      - name: Create and Upload Assets
+        run: |
+          echo "${{ needs.common.outputs.VERSION_CODE }}" > ./versionCode.txt
+          git clone --branch=app https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} app
+          gh release upload ${{ steps.run-release-drafter.outputs.tag_name }} app/magic-epaper-development.apk ./versionCode.txt --clobber
