@@ -21,14 +21,13 @@ class _WaveShareNfcScreenState extends State<WaveShareNfcScreen> {
   String _status = 'Pick an image to start';
 
   final Map<String, Map<String, int>> screenSizes = {
-    "2.13\"": {"width": 250, "height": 122, "enum": 0},
-    "2.9\"": {"width": 296, "height": 128, "enum": 1},
-    "4.2\"": {"width": 400, "height": 300, "enum": 2},
-    "7.5\"": {"width": 800, "height": 480, "enum": 3},
-    "2.7\"": {"width": 264, "height": 176, "enum": 5},
-    "2.9\" V2": {"width": 296, "height": 128, "enum": 6},
-    "4.2\" V2": {"width": 400, "height": 300, "enum": 9},
-    "7.5\" V2": {"width": 880, "height": 528, "enum": 4},
+    "2.13\"": {"width": 250, "height": 122, "enum": 1},
+    "2.9\"": {"width": 296, "height": 128, "enum": 2},
+    "4.2\"": {"width": 400, "height": 300, "enum": 3},
+    "7.5\"": {"width": 800, "height": 480, "enum": 4},
+    "7.5\" HD": {"width": 880, "height": 528, "enum": 5},
+    "2.7\"": {"width": 264, "height": 176, "enum": 6},
+    "2.9\" B": {"width": 296, "height": 128, "enum": 7},
   };
 
   String _selectedScreenSize = "2.9\"";
