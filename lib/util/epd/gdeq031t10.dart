@@ -26,11 +26,11 @@ class GDEQ031T10 extends Epd {
   get controller => Uc8253() as Driver;
 
   GDEQ031T10() {
-    processingMethods.add(ImageProcessing.bwrFloydSteinbergDither);
-    processingMethods.add(ImageProcessing.bwrFalseFloydSteinbergDither);
-    processingMethods.add(ImageProcessing.bwrStuckiDither);
-    processingMethods.add(ImageProcessing.bwrTriColorAtkinsonDither);
-    processingMethods.add(ImageProcessing.bwrHalftone);
-    processingMethods.add(ImageProcessing.bwrThreshold);
+    processingMethods.add(ImageProcessing.bwFloydSteinbergDither);
+    processingMethods.add(ImageProcessing.bwFalseFloydSteinbergDither);
+    processingMethods.add(ImageProcessing.bwStuckiDither);
+    processingMethods.add(ImageProcessing.bwAtkinsonDither);
+    processingMethods.add(ImageProcessing.bwHalftoneDither);
+    processingMethods.add(ImageProcessing.bwThreshold);
   }
 }
