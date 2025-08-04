@@ -24,7 +24,8 @@ class DisplaySelectionScreen extends StatefulWidget {
 class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   final List<Epd> displays = [
     Gdey037z03(),
-    Gdey037z03BW(), GDEQ031T10(),
+    Gdey037z03BW(),
+    GDEQ031T10(),
     ConfigurableEpd(
       width: 400,
       height: 300,
