@@ -1,4 +1,3 @@
-// lib/model/display_device.dart
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';

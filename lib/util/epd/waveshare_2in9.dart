@@ -1,6 +1,5 @@
-// lib/waveshare/model/waveshare_2in9.dart
 import 'package:magic_epaper_app/constants/asset_paths.dart';
-import 'package:magic_epaper_app/util/epd/waveshare_nfc_display.dart'; // Assuming you have an image for it
+import 'package:magic_epaper_app/util/epd/waveshare_nfc_display.dart';
 
 class Waveshare2in9 extends WaveshareNfcDisplay {
   Waveshare2in9() : super(ePaperSizeEnum: 2);
