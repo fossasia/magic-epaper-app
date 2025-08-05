@@ -4,33 +4,37 @@ import 'package:magic_epaper_app/util/epd/driver/uc8253.dart';
 import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
 import 'driver/driver.dart';
 import 'epd.dart';
+import 'package:image/image.dart' as img;
 
 class Gdey037z03 extends Epd {
   @override
-  get width => 240; // pixels
+  int get width => 240; // pixels
 
   @override
-  get height => 416; // pixels
+  int get height => 416; // pixels
 
   @override
   String get name => 'E-Paper 3.7"';
+
   @override
   String get modelId => 'GDEY037Z03';
+
   @override
   String get imgPath => ImageAssets.epaper37Bwr;
 
   @override
-  get colors => [Colors.white, Colors.black, Colors.red];
+  List<Color> get colors => [Colors.white, Colors.black, Colors.red];
 
   @override
-  get controller => Uc8253() as Driver;
+  Driver get controller => Uc8253();
 
-  Gdey037z03() {
-    processingMethods.add(ImageProcessing.bwrFloydSteinbergDither);
-    processingMethods.add(ImageProcessing.bwrFalseFloydSteinbergDither);
-    processingMethods.add(ImageProcessing.bwrStuckiDither);
-    processingMethods.add(ImageProcessing.bwrTriColorAtkinsonDither);
-    processingMethods.add(ImageProcessing.bwrHalftone);
-    processingMethods.add(ImageProcessing.bwrThreshold);
-  }
+  @override
+  List<img.Image Function(img.Image)> get processingMethods => [
+        ImageProcessing.bwrFloydSteinbergDither,
+        ImageProcessing.bwrFalseFloydSteinbergDither,
+        ImageProcessing.bwrStuckiDither,
+        ImageProcessing.bwrTriColorAtkinsonDither,
+        ImageProcessing.bwrHalftone,
+        ImageProcessing.bwrThreshold,
+      ];
 }

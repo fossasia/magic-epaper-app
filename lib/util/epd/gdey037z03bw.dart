@@ -4,6 +4,7 @@ import 'package:magic_epaper_app/util/epd/driver/uc8253.dart';
 import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
 import 'driver/driver.dart';
 import 'epd.dart';
+import 'package:image/image.dart' as img;
 
 class Gdey037z03BW extends Epd {
   @override
@@ -25,12 +26,13 @@ class Gdey037z03BW extends Epd {
   @override
   get controller => Uc8253() as Driver;
 
-  Gdey037z03BW() {
-    processingMethods.add(ImageProcessing.bwFloydSteinbergDither);
-    processingMethods.add(ImageProcessing.bwFalseFloydSteinbergDither);
-    processingMethods.add(ImageProcessing.bwStuckiDither);
-    processingMethods.add(ImageProcessing.bwAtkinsonDither);
-    processingMethods.add(ImageProcessing.bwHalftoneDither);
-    processingMethods.add(ImageProcessing.bwThreshold);
-  }
+  @override
+  List<img.Image Function(img.Image)> get processingMethods => [
+        ImageProcessing.bwFloydSteinbergDither,
+        ImageProcessing.bwFalseFloydSteinbergDither,
+        ImageProcessing.bwStuckiDither,
+        ImageProcessing.bwAtkinsonDither,
+        ImageProcessing.bwHalftoneDither,
+        ImageProcessing.bwThreshold,
+      ];
 }
