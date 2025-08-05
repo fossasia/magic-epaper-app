@@ -7,7 +7,6 @@ import 'package:magic_epaper_app/util/epd/configurable_editor.dart';
 import 'package:magic_epaper_app/view/widget/color_dot.dart';
 
 class DisplayCard extends StatelessWidget {
-  // 1. Changed from Epd to DisplayDevice
   final DisplayDevice display;
   final bool isSelected;
   final VoidCallback onTap;
@@ -21,17 +20,14 @@ class DisplayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 2. Add logic to safely get the driver name or a default value
     final String driverText;
-    final currentDisplay =
-        display; // Use a local variable for easier type promotion
+    final currentDisplay = display;
 
     if (currentDisplay is ConfigurableEpd) {
       driverText = 'NA';
     } else if (currentDisplay is Epd) {
       driverText = currentDisplay.driverName;
     } else {
-      // For devices like Waveshare that aren't Epd
       driverText = 'Waveshare NFC';
     }
 
@@ -39,7 +35,7 @@ class DisplayCard extends StatelessWidget {
       onTap: onTap,
       highlightColor: Colors.redAccent,
       borderRadius: BorderRadius.circular(12),
-      splashColor: Colors.redAccent.withAlpha(51), // withValues is deprecated
+      splashColor: Colors.redAccent.withAlpha(51),
       child: Card(
         color: Colors.white,
         elevation: isSelected ? 4 : 1,
@@ -114,7 +110,6 @@ class DisplayCard extends StatelessWidget {
                   _buildSpecRow('Model:', display.modelId),
                   _buildSpecRow(
                       'Resolution:', '${display.width} × ${display.height}'),
-                  // 3. Use the new driverText variable
                   _buildSpecRow('Driver:', driverText),
                 ],
               ),
