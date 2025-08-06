@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:magic_epaper_app/constants/string_constants.dart';
+import 'package:magic_epaper_app/ndef_screen/app_launcher_card.dart';
+import 'package:magic_epaper_app/ndef_screen/app_nfc/app_data_model.dart';
 import 'package:magic_epaper_app/ndef_screen/controller/nfc_controller.dart';
 import 'package:magic_epaper_app/ndef_screen/widgets/nfc_status_card.dart';
 import 'package:magic_epaper_app/ndef_screen/widgets/nfc_write_card.dart';
@@ -20,6 +22,7 @@ class _NDEFScreenState extends State<NDEFScreen> {
   String _urlValue = '';
   String _wifiSSIDValue = '';
   String _wifiPasswordValue = '';
+  AppData? _selectedApp;
 
   @override
   void initState() {
@@ -52,6 +55,24 @@ class _NDEFScreenState extends State<NDEFScreen> {
         duration: const Duration(seconds: 3),
       ),
     );
+  }
+
+  void _onAppSelected(AppData? app) {
+    setState(() {
+      _selectedApp = app;
+    });
+  }
+
+  Future<void> _writeAppLauncher() async {
+    if (_selectedApp != null) {
+      await _nfcController.writeAppLauncherRecord(_selectedApp!.packageName);
+      _handleWriteResult();
+      if (_nfcController.result.contains(StringConstants.successfully)) {
+        setState(() {
+          _selectedApp = null;
+        });
+      }
+    }
   }
 
   @override
@@ -153,6 +174,13 @@ class _NDEFScreenState extends State<NDEFScreen> {
                       _urlValue, _wifiSSIDValue, _wifiPasswordValue);
                   _handleWriteResult();
                 },
+              ),
+              const SizedBox(height: 16),
+              AppLauncherCard(
+                selectedApp: _selectedApp,
+                onAppSelected: _onAppSelected,
+                isWriting: _nfcController.isWriting,
+                onWriteAppLauncher: _writeAppLauncher,
               ),
             ] else ...[
               Card(

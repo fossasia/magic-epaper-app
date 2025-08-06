@@ -193,4 +193,16 @@ class StringConstants {
   static const String confirm = 'Confirm';
   static const String error = 'Error';
   static const String successfully = 'successfully';
+  static const String selectApplication = 'Select Application';
+  static const String writeAppLauncher = 'Write App Launcher';
+  static const String noAppsFound = 'No apps found';
+  static const String searchApps = 'Search apps...';
+  static const String errorCreatingAppRecord =
+      'Error creating app launch record: ';
+  static const String appCannotBeEmpty = 'App cannot be empty';
+  static const String writeAppLauncherData = 'Write App Launcher Data';
+  static const String customPackageName = 'Custom Package Name';
+  static const String enterPackageName =
+      'Enter package name (e.g., com.example.app)';
+  static const String invalidPackageName = 'Invalid package name format';
 }
