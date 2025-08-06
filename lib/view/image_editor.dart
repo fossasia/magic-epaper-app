@@ -11,8 +11,6 @@ import 'package:magic_epaper_app/util/epd/driver/waveform.dart';
 import 'package:magic_epaper_app/util/image_editor_utils.dart';
 import 'package:magic_epaper_app/util/xbm_encoder.dart';
 import 'package:magic_epaper_app/view/widget/image_list.dart';
-
-import 'package:magic_epaper_app/view/widget/transfer_progress_dialog.dart';
 import 'package:magic_epaper_app/view/barcode_scanner_screen.dart';
 
 import 'package:pro_image_editor/pro_image_editor.dart';
