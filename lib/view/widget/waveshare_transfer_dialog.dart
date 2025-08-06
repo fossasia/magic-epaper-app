@@ -4,7 +4,6 @@ import 'package:image/image.dart' as img;
 import 'package:magic_epaper_app/constants/color_constants.dart';
 import 'package:magic_epaper_app/waveshare/services/waveshare_nfc_services.dart';
 
-// Enum to manage the visual states of the dialog
 enum _TransferState { processing, readyToFlash, flashing, complete, error }
 
 class WaveshareTransferDialog extends StatefulWidget {
@@ -17,7 +16,6 @@ class WaveshareTransferDialog extends StatefulWidget {
     required this.ePaperSizeEnum,
   });
 
-  // Static method to easily show the dialog
   static Future<void> show(
       BuildContext context, img.Image image, int ePaperSizeEnum) {
     return showDialog(
@@ -66,19 +64,15 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
   }
 
   Future<void> _processImage() async {
-    // Start in processing state
     setState(() {
       _currentState = _TransferState.processing;
     });
 
-    // Simulate a small delay to ensure the UI updates
     await Future.delayed(const Duration(milliseconds: 200));
 
-    // Perform the image processing
     final rotatedImage = img.copyRotate(widget.image, angle: 90);
     _processedImageBytes = Uint8List.fromList(img.encodePng(rotatedImage));
 
-    // Move to the ready state
     setState(() {
       _currentState = _TransferState.readyToFlash;
     });
