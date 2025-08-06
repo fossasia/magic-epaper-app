@@ -4,6 +4,7 @@ import 'package:magic_epaper_app/constants/string_constants.dart';
 import 'package:magic_epaper_app/provider/getitlocator.dart';
 import 'package:magic_epaper_app/util/epd/configurable_editor.dart';
 import 'package:magic_epaper_app/util/epd/epd.dart';
+import 'package:magic_epaper_app/util/epd/gdeq031t10.dart';
 import 'package:magic_epaper_app/util/epd/gdey037z03.dart';
 import 'package:magic_epaper_app/util/epd/gdey037z03bw.dart';
 import 'package:magic_epaper_app/view/image_editor.dart';
@@ -24,6 +25,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   final List<Epd> displays = [
     Gdey037z03(),
     Gdey037z03BW(),
+    GDEQ031T10(),
     ConfigurableEpd(
       width: 400,
       height: 300,
