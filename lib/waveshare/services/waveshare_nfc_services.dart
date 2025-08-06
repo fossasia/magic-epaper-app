@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'dart:typed_data';
 
 class WaveShareNfcServices {
   static const platform = MethodChannel('org.fossasia.magic_epaper_app/nfc');
@@ -11,8 +10,8 @@ class WaveShareNfcServices {
         'ePaperSize': ePaperSize,
       });
       return result;
-    } on PlatformException catch (e) {
-      return "Failed to flash image: '${e.message}'.";
+    } on PlatformException {
+      rethrow;
     }
   }
 }
