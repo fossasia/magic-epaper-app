@@ -13,5 +13,5 @@ class Waveshare2in9 extends WaveshareNfcDisplay {
   @override
   int get height => 296;
   @override
-  String get imgPath => ImageAssets.epaper37Bw;
+  String get imgPath => ImageAssets.waveshare2_9;
 }
