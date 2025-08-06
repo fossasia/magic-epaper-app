@@ -1,4 +1,6 @@
 import 'package:flutter/services.dart';
+import 'dart:typed_data';
+
 
 class WaveShareNfcServices {
   static const platform = MethodChannel('org.fossasia.magic_epaper_app/nfc');
