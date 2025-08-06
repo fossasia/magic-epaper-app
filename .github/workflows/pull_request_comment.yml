@@ -1,0 +1,149 @@
+name: Comment
+
+on:
+  workflow_run:
+    workflows: [ Magic Epaper PR CI ]
+    types:
+      - completed
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    if: >
+      github.event.workflow_run.event == 'pull_request'
+    steps:
+      - name: Download artifacts
+        id: download-artifacts
+        uses: actions/github-script@v7
+        with:
+          script: |
+            var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: ${{github.event.workflow_run.id }},
+            });
+
+            var pr = artifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "pr"
+            })[0];
+            var download = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: pr.id,
+               archive_format: 'zip',
+            });
+            var fs = require('fs');
+            fs.writeFileSync('${{github.workspace}}/pr.zip', Buffer.from(download.data));
+
+      - name: Unzip Artifacts
+        shell: bash
+        run: |
+          unzip pr.zip
+        
+      - name: Fetch PR Number
+        id: fetch-pr-number
+        uses: actions/github-script@v7
+        with:
+          script: |
+            var fs = require('fs')
+            var issue_number = Number(fs.readFileSync('./NR'));
+            core.setOutput("pr_number", issue_number);
+
+      - name: Build success
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            var issue_number = ${{ steps.fetch-pr-number.outputs.pr_number }};
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner,
+               repo,
+               run_id: ${{github.event.workflow_run.id }},
+            });
+            var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "apk-files"
+            })[0];
+            const artifact_url = `https://github.com/${owner}/${repo}/actions/runs/${{ github.event.workflow_run.id }}/artifacts/${matchArtifact.id}`;
+            
+            const comments = await github.rest.issues.listComments({
+              owner,
+              repo,
+              issue_number
+            });
+
+            let comment_id;
+            for (const comment of comments.data) {
+              if (comment.user.login === 'github-actions[bot]') {
+                comment_id = comment.id;
+                break;
+              }
+            }
+            
+            var statusText = `Build successful. APKs to test: ${artifact_url}.`;
+
+            const body = `
+            ## Build Status
+            ${statusText}
+            `;
+            
+            if (comment_id) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body
+              });
+            }
+
+      - name: Build failed
+        if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            var issue_number = ${{ steps.fetch-pr-number.outputs.pr_number }};
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const comments = await github.rest.issues.listComments({
+              owner,
+              repo,
+              issue_number
+            });
+
+            let comment_id;
+            for (const comment of comments.data) {
+              if (comment.user.login === 'github-actions[bot]') {
+                comment_id = comment.id;
+                break;
+              }
+            }
+
+            const body = `
+            ## Build Status
+            _Build workflow failed. Please check the logs for more information._
+            `;
+            
+            if (comment_id) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body
+              });
+            }

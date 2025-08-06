@@ -8,8 +8,9 @@ import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:vibration/vibration.dart';
 
 import '../../features/preview/preview_img.dart';
-import '../constants/example_constants.dart';
 export '../../shared/widgets/prepare_image_widget.dart';
+
+const kImageEditorExampleIsDesktopBreakPoint = 900;
 
 /// A mixin that provides helper methods and state management for image editing
 /// using the [ProImageEditor]. It is intended to be used in a [StatefulWidget].
@@ -152,11 +153,11 @@ mixin ExampleHelperState<T extends StatefulWidget> on State<T> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       precacheImage(
-              assetPath != null
-                  ? AssetImage(assetPath)
-                  : NetworkImage(networkUrl!) as ImageProvider,
-              context)
-          .whenComplete(() {
+        assetPath != null
+            ? AssetImage(assetPath)
+            : NetworkImage(networkUrl!) as ImageProvider,
+        context,
+      ).whenComplete(() {
         if (!mounted) return;
         isPreCached = true;
         setState(() {});
@@ -185,8 +186,9 @@ mixin ExampleHelperState<T extends StatefulWidget> on State<T> {
       /// This will set `deviceCanCustomVibrate` anyway to true so it's
       /// impossible to fake it.
       Vibration.vibrate();
-      Future.delayed(const Duration(milliseconds: 3))
-          .whenComplete(Vibration.cancel);
+      Future.delayed(
+        const Duration(milliseconds: 3),
+      ).whenComplete(Vibration.cancel);
     }
   }
 }
