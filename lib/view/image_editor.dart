@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
 import 'package:magic_epaper_app/image_library/services/image_save_handler.dart';
 import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
+import 'package:magic_epaper_app/card_templates/card_template_selection_view.dart';
 import 'package:magic_epaper_app/util/color_util.dart';
 import 'package:magic_epaper_app/util/epd/driver/waveform.dart';
 import 'package:magic_epaper_app/util/image_editor_utils.dart';
@@ -398,7 +399,7 @@ class BottomActionMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 75,
+      height: 80,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -511,8 +512,7 @@ class BottomActionMenu extends StatelessWidget {
                 onTap: () async {
                   await imageSaveHandler?.navigateToImageLibrary();
                 },
-              ),
-              _buildActionButton(
+              ),_buildActionButton(
                 context: context,
                 icon: Icons.qr_code_scanner,
                 label: 'Barcode',
@@ -533,6 +533,36 @@ class BottomActionMenu extends StatelessWidget {
                       height: epd.height,
                     );
                     await imgLoader.saveFinalizedImageBytes(result);
+                  }
+                },
+              ),
+              _buildActionButton(
+                context: context,
+                icon: Icons.dashboard_customize_outlined,
+                label: 'Templates',
+                onTap: () async {
+                  final result = await Navigator.of(context).push<Uint8List>(
+                    MaterialPageRoute(
+                      builder: (context) => CardTemplateSelectionView(
+                        width: epd.width,
+                        height: epd.height,
+                      ),
+                    ),
+                  );
+
+
+
+                  if (result != null) {
+
+                    await imgLoader.updateImage(
+                      bytes: result,
+                      width: epd.width,
+                      height: epd.height,
+                    );
+                    await imgLoader.saveFinalizedImageBytes(result);
+
+                    onSourceChanged?.call('template');
+
                   }
                 },
               ),
