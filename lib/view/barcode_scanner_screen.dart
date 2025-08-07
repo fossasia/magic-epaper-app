@@ -41,11 +41,49 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
     });
   }
 
-  @override
-  void dispose() {
-    _textController.dispose();
-    _scannerController?.dispose();
-    super.dispose();
+  final Map<String, String> barcodeFormatToSupportedChars = {
+    'Aztec': 'All',
+    'CODABAR': '0-9 \$ - . / : +',
+    'CODE 128': 'All',
+    'CODE 39': '0-9 A-Z - . \$ / + % , ',
+    'CODE 93': '0-9 A-Z - . \$ / + % , ',
+    'Data Matrix': 'All',
+    'EAN 13': '0-9',
+    'EAN 2': '0-9',
+    'EAN 5': '0-9',
+    'EAN 8': '0-9',
+    'GS1 128': 'All',
+    'ISBN': '0-9',
+    'ITF': '0-9',
+    'ITF 14': '0-9',
+    'ITF 16': '0-9',
+    'PDF417': 'All',
+    'QR Code': 'All',
+    'RM4SCC': '0-9 A-Z',
+    'Telepen': 'All',
+    'UPC A': '0-9',
+    'UPC E': '0-9',
+  };
+
+  String? _validateBarcodeData(String data, Barcode barcode) {
+    if (data.isEmpty) {
+      return null;
+    }
+    final allowedChars = barcode.charSet.toSet();
+    for (final rune in data.runes) {
+      if (!allowedChars.contains(rune)) {
+        final char = String.fromCharCode(rune);
+        final rules = barcodeFormatToSupportedChars[_selectedBarcode.name];
+        return "Invalid character '$char' \nSupported characters are ${rules ?? 'Please check the barcode rules.'}";
+      }
+    }
+    if (data.length < barcode.minLength) {
+      return 'Data is too short. Minimum length for ${barcode.name} is ${barcode.minLength}.';
+    }
+    if (barcode.maxLength < 10000 && data.length > barcode.maxLength) {
+      return 'Data is too long. Maximum length for ${barcode.name} is ${barcode.maxLength}.';
+    }
+    return null;
   }
 
   void _handleBarcode(scanner.BarcodeCapture barcodes) {
@@ -63,6 +101,15 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
       _scannerController?.dispose();
       _scannerController = null;
     }
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+
+    _scannerController?.dispose();
+
+    super.dispose();
   }
 
   void _startScanning() {
@@ -159,41 +206,34 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
       'UPC-E': Barcode.upcE(),
     };
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Format: ${_selectedBarcode.name}',
-              style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          SizedBox(
-            width: double.infinity,
-            child: DropdownButton<String>(
-              value: _selectedBarcode.name,
-              isExpanded: true,
-              items: availableFormats.entries
-                  .map((entry) => DropdownMenuItem(
-                        value: entry.value.name,
-                        child: Text(entry.key),
-                      ))
-                  .toList(),
-              onChanged: (newBarcodeName) {
-                if (newBarcodeName != null) {
-                  setState(() {
-                    _selectedBarcode = availableFormats.values.firstWhere(
-                      (barcode) => barcode.name == newBarcodeName,
-                      orElse: () => Barcode.qrCode(),
-                    );
-                    _hasError = false;
-                  });
-                }
-              },
-            ),
-          ),
-        ],
+    return DropdownButtonFormField<String>(
+      value: _selectedBarcode.name,
+      decoration: const InputDecoration(
+        labelText: 'Barcode Format',
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red, width: 2),
+        ),
       ),
+      items: availableFormats.entries
+          .map((entry) => DropdownMenuItem(
+                value: entry.value.name,
+                child: Text(entry.key),
+              ))
+          .toList(),
+      onChanged: (newBarcodeName) {
+        if (newBarcodeName != null) {
+          setState(() {
+            _selectedBarcode = availableFormats.values.firstWhere(
+              (barcode) => barcode.name == newBarcodeName,
+              orElse: () => Barcode.qrCode(),
+            );
+            _hasError = false;
+          });
+        }
+      },
     );
   }
 
@@ -223,18 +263,55 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
             _hasError = true;
           });
         });
+
+        final validationError =
+            _validateBarcodeData(_barcodeData, _selectedBarcode);
+        if (validationError != null) {
+          error = validationError;
+        }
+
         return Container(
-          width: 240,
-          height: 120,
+          width: double.infinity,
+          height: 250,
           decoration: BoxDecoration(
-            color: Colors.red[100],
-            border: Border.all(color: colorPrimary),
-            borderRadius: BorderRadius.circular(8),
+            color: Colors.red[50],
+            border: Border.all(color: Colors.red[400]!, width: 2),
+            borderRadius: BorderRadius.circular(12),
           ),
-          child: Center(
-            child: Text(
-              error.toString(),
-              style: const TextStyle(color: colorPrimary),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  color: Colors.red[600],
+                  size: 45,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Invalid Barcode',
+                  style: TextStyle(
+                    color: Colors.red[700],
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Text(
+                      error.toString(),
+                      style: TextStyle(
+                        color: Colors.red[600],
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         );
@@ -305,14 +382,35 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 20),
-            TextField(
-              controller: _textController,
-              decoration: const InputDecoration(
-                labelText: 'Barcode Data',
-                hintText: 'Enter barcode data or scan',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.qr_code),
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: _textController,
+                  decoration: const InputDecoration(
+                    labelText: 'Barcode Data',
+                    hintText: 'Enter barcode data or scan',
+                    prefixIcon: Icon(Icons.qr_code_2_rounded),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red, width: 2),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, left: 4.0),
+                  child: Text(
+                    'Characters: ${_barcodeData.length}',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             SizedBox(
