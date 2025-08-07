@@ -512,7 +512,8 @@ class BottomActionMenu extends StatelessWidget {
                 onTap: () async {
                   await imageSaveHandler?.navigateToImageLibrary();
                 },
-              ),_buildActionButton(
+              ),
+              _buildActionButton(
                 context: context,
                 icon: Icons.qr_code_scanner,
                 label: 'Barcode',
@@ -550,10 +551,7 @@ class BottomActionMenu extends StatelessWidget {
                     ),
                   );
 
-
-
                   if (result != null) {
-
                     await imgLoader.updateImage(
                       bytes: result,
                       width: epd.width,
@@ -562,7 +560,6 @@ class BottomActionMenu extends StatelessWidget {
                     await imgLoader.saveFinalizedImageBytes(result);
 
                     onSourceChanged?.call('template');
-
                   }
                 },
               ),
