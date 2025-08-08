@@ -1,9 +1,9 @@
 import 'package:image/image.dart' as img;
-import 'package:magic_epaper_app/util/epd/epd.dart';
+import 'package:magic_epaper_app/util/epd/display_device.dart';
 
 List<img.Image> processImages({
   required img.Image originalImage,
-  required Epd epd,
+  required DisplayDevice epd,
 }) {
   final List<img.Image> processedImgs = [];
 

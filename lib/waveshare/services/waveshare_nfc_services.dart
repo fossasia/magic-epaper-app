@@ -11,8 +11,8 @@ class WaveShareNfcServices {
         'ePaperSize': ePaperSize,
       });
       return result;
-    } on PlatformException catch (e) {
-      return "Failed to flash image: '${e.message}'.";
+    } on PlatformException {
+      rethrow;
     }
   }
 }
