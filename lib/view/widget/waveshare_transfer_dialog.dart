@@ -1,5 +1,6 @@
-import 'dart:typed_data';
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
 import 'package:magic_epaper_app/constants/color_constants.dart';
 import 'package:magic_epaper_app/waveshare/services/waveshare_nfc_services.dart';
@@ -37,6 +38,11 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
   String? _message;
   Uint8List? _processedImageBytes;
 
+  double _progress = 0.0;
+  StreamSubscription? _progressSubscription;
+  static const _progressChannel =
+      EventChannel('org.fossasia.magic_epaper_app/nfc_progress');
+
   late final AnimationController _pulseController;
   late final Animation<double> _pulseAnimation;
 
@@ -60,6 +66,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
   @override
   void dispose() {
     _pulseController.dispose();
+    _progressSubscription?.cancel();
     super.dispose();
   }
 
@@ -67,12 +74,9 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
     setState(() {
       _currentState = _TransferState.processing;
     });
-
     await Future.delayed(const Duration(milliseconds: 200));
-
     final rotatedImage = img.copyRotate(widget.image, angle: 90);
     _processedImageBytes = Uint8List.fromList(img.encodePng(rotatedImage));
-
     setState(() {
       _currentState = _TransferState.readyToFlash;
     });
@@ -85,6 +89,15 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
       _currentState = _TransferState.flashing;
     });
 
+    _progressSubscription =
+        _progressChannel.receiveBroadcastStream().listen((progress) {
+      if (progress is int && mounted) {
+        setState(() {
+          _progress = progress / 100.0;
+        });
+      }
+    });
+
     final services = WaveShareNfcServices();
     try {
       final result = await services.flashImage(
@@ -93,11 +106,13 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
         _message = result ?? 'Transfer complete!';
         _currentState = _TransferState.complete;
       });
-    } catch (e) {
+    } on PlatformException catch (e) {
       setState(() {
-        _message = "Transfer failed: ${e.toString()}";
+        _message = "Transfer failed: ${e.message}";
         _currentState = _TransferState.error;
       });
+    } finally {
+      _progressSubscription?.cancel();
     }
   }
 
@@ -166,12 +181,14 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
             title: "Flashing...",
             child: Column(
               children: [
-                AnimatedBuilder(
-                  animation: _pulseAnimation,
-                  builder: (context, child) => Transform.scale(
-                      scale: _pulseAnimation.value, child: child),
-                  child: const Icon(Icons.nfc, size: 60, color: colorPrimary),
+                LinearProgressIndicator(
+                  value: _progress,
+                  minHeight: 10,
+                  backgroundColor: Colors.grey.shade300,
+                  color: colorPrimary,
                 ),
+                const SizedBox(height: 12),
+                Text("${(_progress * 100).toInt()}%"),
                 const SizedBox(height: 20),
                 const Text(
                   "Keep your phone still.",
