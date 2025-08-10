@@ -1,4 +1,4 @@
-package org.fossasia.magic_epaper_app
+package org.fossasia.magicepaperapp
 
 import android.content.Intent
 import android.graphics.Bitmap
