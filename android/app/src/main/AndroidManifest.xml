@@ -8,7 +8,7 @@
     <uses-feature android:name="android.hardware.nfc" android:required="true" />
     
     <application
-        android:label="magic_epaper_app"
+        android:label="Magic ePaper"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true">

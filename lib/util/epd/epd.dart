@@ -2,7 +2,7 @@ import 'dart:typed_data';
 import 'package:image/image.dart' as img;
 import 'package:flutter/material.dart';
 import 'driver/driver.dart';
-import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
+import 'package:magicepaperapp/util/image_processing/image_processing.dart';
 
 abstract class Epd {
   int get width;

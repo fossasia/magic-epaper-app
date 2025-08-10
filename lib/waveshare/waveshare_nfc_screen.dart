@@ -3,9 +3,9 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
-import 'package:magic_epaper_app/constants/string_constants.dart';
-import 'package:magic_epaper_app/view/widget/common_scaffold_widget.dart';
-import 'package:magic_epaper_app/waveshare/services/waveshare_nfc_services.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/waveshare/services/waveshare_nfc_services.dart';
 
 class WaveShareNfcScreen extends StatefulWidget {
   const WaveShareNfcScreen({super.key});

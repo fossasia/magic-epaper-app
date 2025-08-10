@@ -1,6 +1,6 @@
-import 'package:magic_epaper_app/util/epd/gdey037z03.dart';
-import 'package:magic_epaper_app/util/epd/gdey037z03bw.dart';
-import 'package:magic_epaper_app/util/epd/epd.dart';
+import 'package:magicepaperapp/util/epd/gdey037z03.dart';
+import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
+import 'package:magicepaperapp/util/epd/epd.dart';
 
 class EpdUtils {
   static Epd getEpdFromMetadata(Map<String, dynamic>? metadata) {

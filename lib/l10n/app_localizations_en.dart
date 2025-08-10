@@ -9,5 +9,5 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'magic_epaper_app_2';
+  String get appTitle => 'magicepaperapp_2';
 }

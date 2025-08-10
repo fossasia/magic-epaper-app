@@ -1,7 +1,7 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/provider/color_palette_provider.dart';
-import 'package:magic_epaper_app/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/color_palette_provider.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 
 /// A stateful widget that provides a color picker inspired by WhatsApp.
 ///

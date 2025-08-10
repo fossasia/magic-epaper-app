@@ -1,6 +1,6 @@
 {
-    "name": "magic_epaper_app",
-    "short_name": "magic_epaper_app",
+    "name": "magicepaperapp",
+    "short_name": "magicepaperapp",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

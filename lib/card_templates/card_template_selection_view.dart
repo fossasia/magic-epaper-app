@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/card_templates/employee_id_form.dart';
-import 'package:magic_epaper_app/card_templates/price_tag_form.dart';
+import 'package:magicepaperapp/card_templates/employee_id_form.dart';
+import 'package:magicepaperapp/card_templates/price_tag_form.dart';
 
 class CardTemplateSelectionView extends StatelessWidget {
   final int width;

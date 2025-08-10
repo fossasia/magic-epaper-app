@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magic_epaper_app/constants/string_constants.dart';
-import 'package:magic_epaper_app/ndef_screen/models/v_card_data.dart';
-import 'package:magic_epaper_app/ndef_screen/services/ndef_record_parser.dart';
-import 'package:magic_epaper_app/ndef_screen/services/nfc_availability_service.dart';
-import 'package:magic_epaper_app/ndef_screen/services/nfc_operations_service.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
+import 'package:magicepaperapp/ndef_screen/services/ndef_record_parser.dart';
+import 'package:magicepaperapp/ndef_screen/services/nfc_availability_service.dart';
+import 'package:magicepaperapp/ndef_screen/services/nfc_operations_service.dart';
 import 'package:ndef/ndef.dart' as ndef;
 
 class NFCController extends ChangeNotifier {

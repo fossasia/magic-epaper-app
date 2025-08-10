@@ -1,9 +1,9 @@
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magic_epaper_app/constants/string_constants.dart';
-import 'package:magic_epaper_app/ndef_screen/models/nfc_operation_result.dart';
-import 'package:magic_epaper_app/ndef_screen/models/nfc_tag_info.dart';
-import 'package:magic_epaper_app/ndef_screen/services/ndef_record_parser.dart';
-import 'package:magic_epaper_app/ndef_screen/services/nfc_session_manager.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/ndef_screen/models/nfc_operation_result.dart';
+import 'package:magicepaperapp/ndef_screen/models/nfc_tag_info.dart';
+import 'package:magicepaperapp/ndef_screen/services/ndef_record_parser.dart';
+import 'package:magicepaperapp/ndef_screen/services/nfc_session_manager.dart';
 import 'package:ndef/ndef.dart' as ndef;
 
 class NFCOperationsService {
