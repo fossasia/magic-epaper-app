@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/ndef_screen/models/v_card_data.dart';
-import 'package:magic_epaper_app/ndef_screen/widgets/v_card_form.dart';
+import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
+import 'package:magicepaperapp/ndef_screen/widgets/v_card_form.dart';
 
 class NFCVCardWriteCard extends StatefulWidget {
   final bool isWriting;

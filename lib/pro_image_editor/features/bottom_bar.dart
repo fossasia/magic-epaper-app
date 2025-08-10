@@ -1,6 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/pro_image_editor/features/color_picker.dart';
+import 'package:magicepaperapp/pro_image_editor/features/color_picker.dart';
 import 'package:pro_image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
 import 'package:pro_image_editor/core/ui/pro_image_editor_icons.dart';
 

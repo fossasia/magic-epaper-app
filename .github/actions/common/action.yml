@@ -12,6 +12,10 @@ runs:
     - name: Fetch Flutter Dependencies
       shell: bash
       run: flutter pub get
+      
+    - name: Format l10n files
+      shell: bash
+      run: dart format lib/l10n/
 
     - name: Validate Code Format
       shell: bash

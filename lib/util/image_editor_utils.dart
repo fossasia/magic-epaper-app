@@ -1,5 +1,5 @@
 import 'package:image/image.dart' as img;
-import 'package:magic_epaper_app/util/epd/epd.dart';
+import 'package:magicepaperapp/util/epd/epd.dart';
 
 List<img.Image> processImages({
   required img.Image originalImage,

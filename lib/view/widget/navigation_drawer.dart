@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
-import 'package:magic_epaper_app/constants/string_constants.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
 //import 'package:share_plus/share_plus.dart';
-import 'package:magic_epaper_app/util/url_util.dart';
+import 'package:magicepaperapp/util/url_util.dart';
 
 class AppDrawer extends StatefulWidget {
   final int selectedIndex;

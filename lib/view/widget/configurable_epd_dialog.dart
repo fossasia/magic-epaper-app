@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/util/color_util.dart';
+import 'package:magicepaperapp/util/color_util.dart';
 
 class CustomEpdConfig {
   final int width;

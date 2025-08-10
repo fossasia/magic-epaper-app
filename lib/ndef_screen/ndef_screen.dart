@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magic_epaper_app/constants/string_constants.dart';
-import 'package:magic_epaper_app/ndef_screen/controller/nfc_controller.dart';
-import 'package:magic_epaper_app/ndef_screen/models/v_card_data.dart';
-import 'package:magic_epaper_app/ndef_screen/nfc_vcard_write_card.dart';
-import 'package:magic_epaper_app/ndef_screen/widgets/nfc_status_card.dart';
-import 'package:magic_epaper_app/ndef_screen/widgets/nfc_write_card.dart';
-import 'package:magic_epaper_app/ndef_screen/widgets/nfc_read_card.dart';
-import 'package:magic_epaper_app/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/ndef_screen/controller/nfc_controller.dart';
+import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
+import 'package:magicepaperapp/ndef_screen/nfc_vcard_write_card.dart';
+import 'package:magicepaperapp/ndef_screen/widgets/nfc_status_card.dart';
+import 'package:magicepaperapp/ndef_screen/widgets/nfc_write_card.dart';
+import 'package:magicepaperapp/ndef_screen/widgets/nfc_read_card.dart';
+import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 class NDEFScreen extends StatefulWidget {
   const NDEFScreen({super.key});

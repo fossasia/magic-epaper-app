@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/image_library/model/saved_image_model.dart';
+import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
 
 class DeleteConfirmationDialog extends StatelessWidget {
   final SavedImage image;

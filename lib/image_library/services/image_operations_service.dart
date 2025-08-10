@@ -1,14 +1,14 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/image_library/services/image_filter_helper.dart';
-import 'package:magic_epaper_app/image_library/model/image_properties.dart';
-import 'package:magic_epaper_app/image_library/model/saved_image_model.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
-import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
-import 'package:magic_epaper_app/image_library/utils/epd_utils.dart';
-import 'package:magic_epaper_app/util/epd/epd.dart';
-import 'package:magic_epaper_app/util/protocol.dart';
+import 'package:magicepaperapp/image_library/services/image_filter_helper.dart';
+import 'package:magicepaperapp/image_library/model/image_properties.dart';
+import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
+import 'package:magicepaperapp/image_library/utils/epd_utils.dart';
+import 'package:magicepaperapp/util/epd/epd.dart';
+import 'package:magicepaperapp/util/protocol.dart';
 import 'package:image/image.dart' as img;
 import 'dart:typed_data';
 
