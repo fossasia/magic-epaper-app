@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:mobile_scanner/mobile_scanner.dart' as scanner;
 import 'package:barcode_widget/barcode_widget.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:image/image.dart' as img;
 
 class BarcodeScannerScreen extends StatefulWidget {
