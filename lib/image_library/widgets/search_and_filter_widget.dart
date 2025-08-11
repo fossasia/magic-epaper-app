@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
-import 'package:magic_epaper_app/image_library/widgets/filter_chip_widget.dart';
-import 'package:magic_epaper_app/image_library/widgets/search_field_widget.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
+import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
+import 'package:magicepaperapp/image_library/widgets/filter_chip_widget.dart';
+import 'package:magicepaperapp/image_library/widgets/search_field_widget.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
 
 class SearchAndFilterWidget extends StatelessWidget {
   final TextEditingController searchController;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/constants/asset_paths.dart';
-import 'package:magic_epaper_app/util/epd/driver/driver.dart';
-import 'package:magic_epaper_app/util/epd/driver/uc8253.dart';
-import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
+import 'package:magicepaperapp/constants/asset_paths.dart';
+import 'package:magicepaperapp/util/epd/driver/driver.dart';
+import 'package:magicepaperapp/util/epd/driver/uc8253.dart';
+import 'package:magicepaperapp/util/image_processing/image_processing.dart';
 import 'package:image/image.dart' as img;
 import 'epd.dart';
 

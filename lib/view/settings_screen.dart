@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 //import 'package:flutter/services.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
-import 'package:magic_epaper_app/util/orientation_util.dart';
-import 'package:magic_epaper_app/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/util/orientation_util.dart';
+import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 //TODO add Language Support and Dark mode support here
 class SettingsScreen extends StatefulWidget {

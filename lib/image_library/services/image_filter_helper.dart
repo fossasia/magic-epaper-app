@@ -1,4 +1,4 @@
-import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
+import 'package:magicepaperapp/util/image_processing/image_processing.dart';
 
 class ImageFilterHelper {
   static const Map<Function, String> filterMap = {

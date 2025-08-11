@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/image_library/model/image_properties.dart';
-import 'package:magic_epaper_app/image_library/model/saved_image_model.dart';
-import 'package:magic_epaper_app/image_library/services/image_operations_service.dart';
-import 'package:magic_epaper_app/image_library/utils/date_utils.dart' as dt;
-import 'package:magic_epaper_app/image_library/utils/filter_utils.dart';
-import 'package:magic_epaper_app/image_library/utils/source_utils.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
+import 'package:magicepaperapp/image_library/model/image_properties.dart';
+import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
+import 'package:magicepaperapp/image_library/services/image_operations_service.dart';
+import 'package:magicepaperapp/image_library/utils/date_utils.dart' as dt;
+import 'package:magicepaperapp/image_library/utils/filter_utils.dart';
+import 'package:magicepaperapp/image_library/utils/source_utils.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
 
 class ImagePropertiesDialog extends StatefulWidget {
   final SavedImage image;

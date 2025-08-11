@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/image_library/model/saved_image_model.dart';
-import 'package:magic_epaper_app/image_library/utils/source_utils.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
+import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
+import 'package:magicepaperapp/image_library/utils/source_utils.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
 
 class ImageOverlayWidget extends StatelessWidget {
   final SavedImage image;

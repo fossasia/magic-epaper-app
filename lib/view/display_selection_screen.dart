@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
-import 'package:magic_epaper_app/constants/string_constants.dart';
-import 'package:magic_epaper_app/provider/getitlocator.dart';
-import 'package:magic_epaper_app/util/epd/configurable_editor.dart';
-import 'package:magic_epaper_app/util/epd/epd.dart';
-import 'package:magic_epaper_app/util/epd/gdey037z03.dart';
-import 'package:magic_epaper_app/util/epd/gdey037z03bw.dart';
-import 'package:magic_epaper_app/view/image_editor.dart';
-import 'package:magic_epaper_app/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/util/epd/configurable_editor.dart';
+import 'package:magicepaperapp/util/epd/epd.dart';
+import 'package:magicepaperapp/util/epd/gdey037z03.dart';
+import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
+import 'package:magicepaperapp/view/image_editor.dart';
+import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:magic_epaper_app/provider/color_palette_provider.dart';
-import 'package:magic_epaper_app/view/widget/display_card.dart';
-import 'package:magic_epaper_app/view/widget/configurable_epd_dialog.dart';
+import 'package:magicepaperapp/provider/color_palette_provider.dart';
+import 'package:magicepaperapp/view/widget/display_card.dart';
+import 'package:magicepaperapp/view/widget/configurable_epd_dialog.dart';
 
 class DisplaySelectionScreen extends StatefulWidget {
   const DisplaySelectionScreen({super.key});

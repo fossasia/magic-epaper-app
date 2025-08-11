@@ -1,5 +1,5 @@
-import 'package:magic_epaper_app/constants/string_constants.dart';
-import 'package:magic_epaper_app/ndef_screen/models/v_card_data.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
 import 'package:ndef/ndef.dart' as ndef;
 import 'dart:typed_data';
 

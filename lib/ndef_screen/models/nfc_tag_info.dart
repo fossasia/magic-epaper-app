@@ -1,4 +1,4 @@
-import 'package:magic_epaper_app/constants/string_constants.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
 
 class NFCTagInfo {
   final String? type;

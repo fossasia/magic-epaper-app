@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/card_templates/price_tag_model.dart';
+import 'package:magicepaperapp/card_templates/price_tag_model.dart';
 
 class PriceTagCardWidget extends StatelessWidget {
   final PriceTagModel data;

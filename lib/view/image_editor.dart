@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'dart:io';
-import 'package:magic_epaper_app/view/widget/transfer_progress_dialog.dart';
+import 'package:magicepaperapp/view/widget/transfer_progress_dialog.dart';
 
 import 'package:flutter/material.dart';
 import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
@@ -18,11 +18,11 @@ import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
 
-import 'package:magic_epaper_app/provider/image_loader.dart';
-import 'package:magic_epaper_app/util/epd/epd.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
-import 'package:magic_epaper_app/constants/string_constants.dart';
-import 'package:magic_epaper_app/util/protocol.dart';
+import 'package:magicepaperapp/provider/image_loader.dart';
+import 'package:magicepaperapp/util/epd/epd.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/util/protocol.dart';
 
 class ImageEditor extends StatefulWidget {
   final Epd epd;

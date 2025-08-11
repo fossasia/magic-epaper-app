@@ -1,4 +1,4 @@
-package org.fossasia.magic_epaper_app
+package org.fossasia.magicepaperapp
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -17,8 +17,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainActivity : FlutterActivity() {
-    private val SETTINGS_CHANNEL = "org.fossasia.magic_epaper_app/settings"
-    private val NFC_CHANNEL = "org.fossasia.magic_epaper_app/nfc"
+    private val SETTINGS_CHANNEL = "org.fossasia.magicepaperapp/settings"
+    private val NFC_CHANNEL = "org.fossasia.magicepaperapp/nfc"
     private var nfcAdapter: NfcAdapter? = null
     private lateinit var waveShareHandler: WaveShareHandler
 

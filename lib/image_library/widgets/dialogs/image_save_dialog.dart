@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
 
 class ImageSaveDialog extends StatelessWidget {
   final Uint8List imageData;

@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "org.fossasia" "\0"
-            VALUE "FileDescription", "magic_epaper_app" "\0"
+            VALUE "FileDescription", "magicepaperapp" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "magic_epaper_app" "\0"
+            VALUE "InternalName", "magicepaperapp" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 org.fossasia. All rights reserved." "\0"
-            VALUE "OriginalFilename", "magic_epaper_app.exe" "\0"
-            VALUE "ProductName", "magic_epaper_app" "\0"
+            VALUE "OriginalFilename", "magicepaperapp.exe" "\0"
+            VALUE "ProductName", "magicepaperapp" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
