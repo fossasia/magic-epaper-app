@@ -1,10 +1,10 @@
 import 'package:image/image.dart' as img;
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
-import 'package:magic_epaper_app/util/epd/display_device.dart';
-import 'package:magic_epaper_app/util/epd/driver/waveform.dart';
-import 'package:magic_epaper_app/util/protocol.dart';
-import 'package:magic_epaper_app/view/widget/transfer_progress_dialog.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/util/epd/driver/waveform.dart';
+import 'package:magicepaperapp/util/protocol.dart';
+import 'package:magicepaperapp/view/widget/transfer_progress_dialog.dart';
 import 'driver/driver.dart';
 
 abstract class Epd extends DisplayDevice {
