@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
-import 'package:magic_epaper_app/constants/color_constants.dart';
-import 'package:magic_epaper_app/waveshare/services/waveshare_nfc_services.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/waveshare/services/waveshare_nfc_services.dart';
 
 enum _TransferState { processing, readyToFlash, flashing, complete, error }
 

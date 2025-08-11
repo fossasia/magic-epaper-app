@@ -4,11 +4,11 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:barcode_widget/barcode_widget.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
-import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
-import 'package:magic_epaper_app/card_templates/price_tag_card_widget.dart';
-import 'package:magic_epaper_app/card_templates/price_tag_model.dart';
-import 'package:magic_epaper_app/util/template_util.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
+import 'package:magicepaperapp/card_templates/price_tag_card_widget.dart';
+import 'package:magicepaperapp/card_templates/price_tag_model.dart';
+import 'package:magicepaperapp/util/template_util.dart';
 
 class PriceTagForm extends StatefulWidget {
   final int width;

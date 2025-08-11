@@ -1,10 +1,10 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/constants/asset_paths.dart';
-import 'package:magic_epaper_app/image_library/services/image_filter_helper.dart';
-import 'package:magic_epaper_app/util/epd/display_device.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
-import 'package:magic_epaper_app/util/epd/configurable_editor.dart';
+import 'package:magicepaperapp/constants/asset_paths.dart';
+import 'package:magicepaperapp/image_library/services/image_filter_helper.dart';
+import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/util/epd/configurable_editor.dart';
 
 class ImageList extends StatelessWidget {
   final List<Uint8List> processedPngs;

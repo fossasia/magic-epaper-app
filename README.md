@@ -1,4 +1,4 @@
-# magic_epaper_app
+# magicepaperapp
 
 A new Flutter project.
 

@@ -1,25 +1,25 @@
 import 'dart:typed_data';
 import 'dart:io';
-import 'package:magic_epaper_app/util/epd/display_device.dart';
 
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
-import 'package:magic_epaper_app/image_library/services/image_save_handler.dart';
-import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
-import 'package:magic_epaper_app/card_templates/card_template_selection_view.dart';
-import 'package:magic_epaper_app/util/color_util.dart';
-import 'package:magic_epaper_app/util/epd/driver/waveform.dart';
-import 'package:magic_epaper_app/util/image_editor_utils.dart';
-import 'package:magic_epaper_app/util/xbm_encoder.dart';
-import 'package:magic_epaper_app/view/widget/image_list.dart';
+import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
+import 'package:magicepaperapp/image_library/services/image_save_handler.dart';
+import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
+import 'package:magicepaperapp/card_templates/card_template_selection_view.dart';
+import 'package:magicepaperapp/util/color_util.dart';
+import 'package:magicepaperapp/util/epd/driver/waveform.dart';
+import 'package:magicepaperapp/util/image_editor_utils.dart';
+import 'package:magicepaperapp/util/xbm_encoder.dart';
+import 'package:magicepaperapp/view/widget/image_list.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
+import 'package:magicepaperapp/util/epd/display_device.dart';
 
-import 'package:magic_epaper_app/provider/image_loader.dart';
-import 'package:magic_epaper_app/util/epd/epd.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
-import 'package:magic_epaper_app/constants/string_constants.dart';
+import 'package:magicepaperapp/provider/image_loader.dart';
+import 'package:magicepaperapp/util/epd/epd.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
 
 class ImageEditor extends StatefulWidget {
   final DisplayDevice device;

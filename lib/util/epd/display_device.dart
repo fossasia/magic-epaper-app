@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
-import 'package:magic_epaper_app/util/epd/driver/waveform.dart';
-import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
+import 'package:magicepaperapp/util/epd/driver/waveform.dart';
+import 'package:magicepaperapp/util/image_processing/image_processing.dart';
 
 typedef TransferProgressCallback = void Function(
     double progress, String status);
