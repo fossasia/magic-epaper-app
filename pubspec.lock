@@ -713,10 +713,10 @@ packages:
     dependency: "direct main"
     description:
       name: pro_image_editor
-      sha256: d8c7f3ab27a95e227e7d0cef9f96ae59e1b2d4c1b410f589b516f8e6c488f710
+      sha256: "8d7372bf96f3e54409b71b11e933e01da3636ec73ec1fc7220db1700026bcc96"
       url: "https://pub.dev"
     source: hosted
-    version: "9.13.0"
+    version: "11.2.0"
   provider:
     dependency: "direct main"
     description:
