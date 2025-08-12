@@ -1,7 +1,5 @@
-
 import 'package:flutter/material.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
-
 
 const kImageEditorExampleIsDesktopBreakPoint = 900;
 
@@ -20,7 +18,8 @@ mixin ExampleHelperState<T extends StatefulWidget> on State<T> {
   /// Determines if the current layout should use desktop mode based on the
   /// screen width.
   bool isDesktopMode(BuildContext context) =>
-      MediaQuery.sizeOf(context).width >= kImageEditorExampleIsDesktopBreakPoint;
+      MediaQuery.sizeOf(context).width >=
+      kImageEditorExampleIsDesktopBreakPoint;
 
   /// Preloads an image into memory to improve performance.
   void preCacheImage({
