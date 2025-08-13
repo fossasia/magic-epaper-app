@@ -41,7 +41,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
   double _progress = 0.0;
   StreamSubscription? _progressSubscription;
   static const _progressChannel =
-      EventChannel('org.fossasia.magic_epaper_app/nfc_progress');
+      EventChannel('org.fossasia.magicepaperapp/nfc_progress');
 
   late final AnimationController _pulseController;
   late final Animation<double> _pulseAnimation;
