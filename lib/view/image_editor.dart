@@ -12,6 +12,8 @@ import 'package:magicepaperapp/util/epd/driver/waveform.dart';
 import 'package:magicepaperapp/util/image_editor_utils.dart';
 import 'package:magicepaperapp/util/xbm_encoder.dart';
 import 'package:magicepaperapp/view/widget/image_list.dart';
+import 'package:magicepaperapp/view/barcode_scanner_screen.dart';
+
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
@@ -513,6 +515,30 @@ class BottomActionMenu extends StatelessWidget {
               ),
               _buildActionButton(
                 context: context,
+                icon: Icons.qr_code_scanner,
+                label: 'Barcode',
+                onTap: () async {
+                  final result = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => BarcodeScannerScreen(
+                        width: epd.width,
+                        height: epd.height,
+                      ),
+                    ),
+                  );
+
+                  if (result is Uint8List) {
+                    await imgLoader.updateImage(
+                      bytes: result,
+                      width: epd.width,
+                      height: epd.height,
+                    );
+                    await imgLoader.saveFinalizedImageBytes(result);
+                  }
+                },
+              ),
+              _buildActionButton(
+                context: context,
                 icon: Icons.dashboard_customize_outlined,
                 label: 'Templates',
                 onTap: () async {
@@ -532,6 +558,7 @@ class BottomActionMenu extends StatelessWidget {
                       height: epd.height,
                     );
                     await imgLoader.saveFinalizedImageBytes(result);
+
                     onSourceChanged?.call('template');
                   }
                 },

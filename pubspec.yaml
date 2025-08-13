@@ -39,12 +39,13 @@ dependencies:
   file_picker: ^10.1.2
   flutter_colorpicker: ^1.1.0
   mime: ^2.0.0
+  mobile_scanner: ^7.0.1
+  barcode_widget: ^2.0.4
   intl: ^0.20.2
   path_provider: ^2.0.15
   get_it: ^8.0.3
   path: ^1.9.1
   permission_handler: ^11.0.1
-  barcode_widget: ^2.0.4
   ndef: ^0.3.1
 
 dev_dependencies:
