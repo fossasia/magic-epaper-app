@@ -1,4 +1,3 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/pro_image_editor/features/color_picker.dart';
 import 'package:pro_image_editor/core/models/editor_configs/pro_image_editor_configs.dart';

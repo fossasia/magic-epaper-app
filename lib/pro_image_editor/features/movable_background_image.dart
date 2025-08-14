@@ -1,4 +1,3 @@
-// Dart imports:
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui;
@@ -408,12 +407,11 @@ class _MovableBackgroundImageExampleState
               snapshot.data!,
               key: editorKey,
               callbacks: ProImageEditorCallbacks(
-                onImageEditingStarted: onImageEditingStarted,
                 onImageEditingComplete: (Uint8List bytes) async {
                   Navigator.pop(context, bytes);
                 },
                 mainEditorCallbacks: MainEditorCallbacks(
-                  helperLines: HelperLinesCallbacks(onLineHit: vibrateLineHit),
+                  helperLines: const HelperLinesCallbacks(),
                   onAfterViewInit: () {
                     editorKey.currentState!.addLayer(
                       WidgetLayer(
