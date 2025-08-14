@@ -1,0 +1,26 @@
+name-template: Release v$RESOLVED_VERSION 🌈
+tag-template: v$RESOLVED_VERSION
+categories:
+  - title: 🚀 Features
+    label:
+      - feature
+      - feat
+      - Enhancement
+  - title: 🐛 Bug Fixes
+    label: fix
+exclude-contributors:
+  - 'dependabot'
+  - 'dependabot[bot]'
+exclude-labels:
+  - 'Dependencies'
+  - 'Chore'
+change-template: '- $TITLE (#$NUMBER) - @$AUTHOR'
+template: |-
+  ## Changes
+
+  $CHANGES
+
+  ## Contributors
+
+  Thanks a lot to our contributors for making this release possible:
+  $CONTRIBUTORS

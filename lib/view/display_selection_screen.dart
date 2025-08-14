@@ -3,9 +3,10 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/string_constants.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/epd/configurable_editor.dart';
-import 'package:magicepaperapp/util/epd/epd.dart';
+import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
+import 'package:magicepaperapp/util/epd/waveshare_2in9.dart';
 import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'package:provider/provider.dart';
@@ -21,9 +22,10 @@ class DisplaySelectionScreen extends StatefulWidget {
 }
 
 class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
-  final List<Epd> displays = [
+  final List<DisplayDevice> displays = [
     Gdey037z03(),
     Gdey037z03BW(),
+    Waveshare2in9(),
     ConfigurableEpd(
       width: 400,
       height: 300,
@@ -141,8 +143,8 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ImageEditor(
-                      epd: displays[selectedIndex],
                       isExportOnly: displays[selectedIndex] is ConfigurableEpd,
+                      device: displays[selectedIndex],
                     ),
                   ),
                 );
