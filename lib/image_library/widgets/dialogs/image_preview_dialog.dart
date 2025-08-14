@@ -6,12 +6,12 @@ import 'package:magicepaperapp/image_library/utils/filter_utils.dart';
 import 'package:magicepaperapp/image_library/utils/source_utils.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_properties_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_rename_dialog.dart';
-import 'package:magicepaperapp/util/epd/epd.dart';
+import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 
 class ImagePreviewDialog extends StatelessWidget {
   final SavedImage image;
-  final Epd epd;
+  final DisplayDevice epd;
   final VoidCallback onDelete;
   final Function(String) onRename;
   final VoidCallback onTransfer;
