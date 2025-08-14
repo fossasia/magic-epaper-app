@@ -161,6 +161,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1.6.0
+        with:
+          xcode-version: latest-stable
+
       - name: Prepare Build Keys
         if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
         env:
