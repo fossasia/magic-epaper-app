@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
-import 'package:magic_epaper_app/util/color_util.dart';
-import 'package:magic_epaper_app/util/epd/epd.dart';
-import 'package:magic_epaper_app/util/epd/configurable_editor.dart';
-import 'package:magic_epaper_app/view/widget/color_dot.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/util/color_util.dart';
+import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/util/epd/epd.dart';
+import 'package:magicepaperapp/util/epd/configurable_editor.dart';
+import 'package:magicepaperapp/view/widget/color_dot.dart';
 
 class DisplayCard extends StatelessWidget {
-  final Epd display;
+  final DisplayDevice display;
   final bool isSelected;
   final VoidCallback onTap;
 
@@ -19,12 +20,22 @@ class DisplayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isConfigurable = display is ConfigurableEpd;
+    final String driverText;
+    final currentDisplay = display;
+
+    if (currentDisplay is ConfigurableEpd) {
+      driverText = 'NA';
+    } else if (currentDisplay is Epd) {
+      driverText = currentDisplay.driverName;
+    } else {
+      driverText = 'Waveshare NFC';
+    }
+
     return InkWell(
       onTap: onTap,
       highlightColor: Colors.redAccent,
       borderRadius: BorderRadius.circular(12),
-      splashColor: Colors.redAccent.withValues(alpha: 0.2),
+      splashColor: Colors.redAccent.withAlpha(51),
       child: Card(
         color: Colors.white,
         elevation: isSelected ? 4 : 1,
@@ -32,7 +43,7 @@ class DisplayCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           side: BorderSide(
             color: isSelected ? colorPrimary : Colors.grey.shade300,
-            width: isSelected ? 2 : 1,
+            width: isSelected ? 2.0 : 1.0,
           ),
         ),
         child: Column(
@@ -46,7 +57,7 @@ class DisplayCard extends StatelessWidget {
                 ),
                 child: Container(
                   width: double.infinity,
-                  color: const Color.fromARGB(255, 255, 255, 255),
+                  color: Colors.white,
                   child: Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Image.asset(
@@ -99,8 +110,7 @@ class DisplayCard extends StatelessWidget {
                   _buildSpecRow('Model:', display.modelId),
                   _buildSpecRow(
                       'Resolution:', '${display.width} × ${display.height}'),
-                  _buildSpecRow(
-                      'Driver:', isConfigurable ? 'NA' : display.driverName),
+                  _buildSpecRow('Driver:', driverText),
                 ],
               ),
             ),

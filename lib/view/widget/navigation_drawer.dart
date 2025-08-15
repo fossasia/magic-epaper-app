@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
-import 'package:magic_epaper_app/constants/string_constants.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
 //import 'package:share_plus/share_plus.dart';
-import 'package:magic_epaper_app/util/url_util.dart';
+import 'package:magicepaperapp/util/url_util.dart';
 
 class AppDrawer extends StatefulWidget {
   final int selectedIndex;
@@ -60,18 +60,24 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
           _buildListTile(
             index: 1,
+            icon: Icons.waves,
+            title: "WaveShare",
+            routeName: '/waveShareNfcScreen',
+          ),
+          _buildListTile(
+            index: 2,
             icon: Icons.nfc,
             title: StringConstants.ndefScreen,
             routeName: '/ndefScreen',
           ),
           _buildListTile(
-            index: 2,
+            index: 3,
             icon: Icons.settings,
             title: StringConstants.settings,
             routeName: '/settings',
           ),
           _buildListTile(
-            index: 3,
+            index: 4,
             icon: Icons.people,
             title: StringConstants.aboutUs,
             routeName: '/aboutUs',
@@ -89,7 +95,7 @@ class _AppDrawerState extends State<AppDrawer> {
             ),
           ),
           _buildListTile(
-            index: 3,
+            index: 5,
             icon: Icons.shopping_cart,
             title: StringConstants.buyBadge,
             routeName: '/buyBadge',
@@ -114,7 +120,7 @@ class _AppDrawerState extends State<AppDrawer> {
           //       : 'https://play.google.com/store/apps/details?id=org.fossasia.badgemagic',
           // ),
           _buildListTile(
-            index: 4,
+            index: 6,
             icon: Icons.bug_report,
             title: StringConstants.feedbackBugReports,
             routeName: '/feedback',

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magic_epaper_app/constants/string_constants.dart';
-import 'package:magic_epaper_app/ndef_screen/services/nfc_availability_service.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/ndef_screen/services/nfc_availability_service.dart';
 
 class NFCStatusCard extends StatelessWidget {
   final NFCAvailability availability;

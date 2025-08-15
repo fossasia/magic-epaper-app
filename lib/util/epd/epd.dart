@@ -1,64 +1,31 @@
-import 'dart:typed_data';
 import 'package:image/image.dart' as img;
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/util/epd/driver/waveform.dart';
+import 'package:magicepaperapp/util/protocol.dart';
+import 'package:magicepaperapp/view/widget/transfer_progress_dialog.dart';
 import 'driver/driver.dart';
-import 'package:magic_epaper_app/util/image_processing/image_processing.dart';
 
-abstract class Epd {
-  int get width;
-  int get height;
-  final processingMethods = <img.Image Function(img.Image)>[];
-  String get name;
-  String get modelId;
-  String get imgPath;
-  List<Color> get colors;
+abstract class Epd extends DisplayDevice {
   Driver get controller;
   String get driverName => controller.driverName;
 
-  Uint8List _extractEpaperColorFrame(Color color, img.Image orgImage) {
-    final image = ImageProcessing.extract(color, orgImage);
-    final red = (color.r * 255).toInt();
-    final green = (color.g * 255).toInt();
-    final blue = (color.b * 255).toInt();
-    final colorPixel = img.ColorRgb8(red, green, blue);
-    List<int> bytes = List.empty(growable: true);
-    int j = 0;
-    int byte = 0;
-
-    for (final pixel in image) {
-      var bin = pixel.rNormalized -
-          colorPixel.rNormalized +
-          pixel.gNormalized -
-          colorPixel.gNormalized +
-          pixel.bNormalized -
-          colorPixel.bNormalized;
-
-      if (bin > 0.5) {
-        byte |= 0x80 >> j;
-      }
-
-      j++;
-      if (j >= 8) {
-        bytes.add(byte);
-        byte = 0;
-        j = 0;
-      }
-    }
-
-    return Uint8List.fromList(bytes);
+  @override
+  Future<void> transfer(BuildContext context, img.Image image,
+      {Waveform? waveform}) async {
+    await TransferProgressDialog.show(
+      context: context,
+      finalImg: image,
+      transferFunction: (img, onProgress, onTagDetected) async {
+        return await Protocol(epd: this).writeImages(
+          img,
+          onProgress: onProgress,
+          onTagDetected: onTagDetected,
+          waveform: waveform,
+        );
+      },
+      colorAccent: colorAccent,
+    );
   }
-
-  List<Uint8List> extractEpaperColorFrames(img.Image orgImage) {
-    final retList = <Uint8List>[];
-    for (final c in colors) {
-      if (c == Colors.white) continue; // skip white
-      retList.add(_extractEpaperColorFrame(c, orgImage));
-    }
-    return retList;
-  }
-
-  img.Image extractColorPlaneAsImage(Color color, img.Image orgImage) {
-    return ImageProcessing.extract(color, orgImage);
-  }
-  // TODO: howToAdjust ???
 }

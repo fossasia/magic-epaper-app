@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/constants/string_constants.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
 
 class NFCWriteCard extends StatefulWidget {
   final bool isWriting;

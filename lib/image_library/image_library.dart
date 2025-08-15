@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/image_library/model/saved_image_model.dart';
-import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
-import 'package:magic_epaper_app/image_library/services/image_operations_service.dart';
-import 'package:magic_epaper_app/image_library/widgets/app_bar_widget.dart';
-import 'package:magic_epaper_app/image_library/widgets/dialogs/batch_delete_confirmation_dialog.dart';
-import 'package:magic_epaper_app/image_library/widgets/dialogs/delete_confirmation_dialog.dart';
-import 'package:magic_epaper_app/image_library/widgets/empty_state_widget.dart';
-import 'package:magic_epaper_app/image_library/widgets/image_grid_widget.dart';
-import 'package:magic_epaper_app/image_library/widgets/dialogs/image_preview_dialog.dart';
-import 'package:magic_epaper_app/image_library/widgets/search_and_filter_widget.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
+import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
+import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
+import 'package:magicepaperapp/image_library/services/image_operations_service.dart';
+import 'package:magicepaperapp/image_library/widgets/app_bar_widget.dart';
+import 'package:magicepaperapp/image_library/widgets/dialogs/batch_delete_confirmation_dialog.dart';
+import 'package:magicepaperapp/image_library/widgets/dialogs/delete_confirmation_dialog.dart';
+import 'package:magicepaperapp/image_library/widgets/empty_state_widget.dart';
+import 'package:magicepaperapp/image_library/widgets/image_grid_widget.dart';
+import 'package:magicepaperapp/image_library/widgets/dialogs/image_preview_dialog.dart';
+import 'package:magicepaperapp/image_library/widgets/search_and_filter_widget.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:provider/provider.dart';
 
 class ImageLibraryScreen extends StatefulWidget {

@@ -1,4 +1,4 @@
-import 'package:magic_epaper_app/ndef_screen/models/nfc_tag_info.dart';
+import 'package:magicepaperapp/ndef_screen/models/nfc_tag_info.dart';
 
 enum NFCOperationType { read, write, clear, verify }
 

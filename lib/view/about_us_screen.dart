@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:magic_epaper_app/constants/asset_paths.dart';
-import 'package:magic_epaper_app/constants/string_constants.dart';
-import 'package:magic_epaper_app/util/orientation_util.dart';
-import 'package:magic_epaper_app/util/url_util.dart';
-import 'package:magic_epaper_app/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/constants/asset_paths.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/util/orientation_util.dart';
+import 'package:magicepaperapp/util/url_util.dart';
+import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 class AboutUsScreen extends StatefulWidget {
   const AboutUsScreen({super.key});

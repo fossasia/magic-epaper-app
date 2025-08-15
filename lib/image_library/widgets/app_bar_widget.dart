@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
 
 class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isDeleteMode;

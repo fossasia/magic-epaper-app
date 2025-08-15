@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magic_epaper_app/constants/string_constants.dart';
-import 'package:magic_epaper_app/ndef_screen/services/ndef_record_parser.dart';
-import 'package:magic_epaper_app/ndef_screen/services/nfc_availability_service.dart';
-import 'package:magic_epaper_app/ndef_screen/services/nfc_operations_service.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
+import 'package:magicepaperapp/ndef_screen/services/ndef_record_parser.dart';
+import 'package:magicepaperapp/ndef_screen/services/nfc_availability_service.dart';
+import 'package:magicepaperapp/ndef_screen/services/nfc_operations_service.dart';
 import 'package:ndef/ndef.dart' as ndef;
 
 class NFCController extends ChangeNotifier {
@@ -72,12 +73,15 @@ class NFCController extends ChangeNotifier {
     }
   }
 
-  Future<void> writeMultipleRecords(
-      String text, String url, String wifiSSID, String wifiPassword) async {
+  Future<void> writeMultipleRecords(String text, String url, String wifiSSID,
+      String wifiPassword, VCardData? vCardData) async {
     if (_availability != NFCAvailability.available) return;
 
     List<ndef.NDEFRecord> records = [];
     try {
+      if (vCardData != null) {
+        records.add(NDEFRecordFactory.createVCardRecord(vCardData));
+      }
       if (text.trim().isNotEmpty) {
         records.add(NDEFRecordFactory.createTextRecord(text));
       }
@@ -119,6 +123,19 @@ class NFCController extends ChangeNotifier {
     _setResult(StringConstants.scanningTagForVerification);
     final result = await NFCOperationsService.verifyTag();
     _setResult(result.message);
+  }
+
+  Future<void> writeVCardRecord(VCardData vCardData) async {
+    if (_availability != NFCAvailability.available) {
+      return;
+    }
+
+    try {
+      final record = NDEFRecordFactory.createVCardRecord(vCardData);
+      await _performWrite([record]);
+    } catch (e) {
+      _setResult('Error creating vCard record: $e');
+    }
   }
 
   void clearResult() {
