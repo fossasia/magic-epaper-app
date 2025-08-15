@@ -4,6 +4,7 @@ import 'package:magicepaperapp/constants/string_constants.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/epd/configurable_editor.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/util/epd/gdeq031t10.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
 import 'package:magicepaperapp/util/epd/waveshare_2in9.dart';
@@ -26,6 +27,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
     Gdey037z03(),
     Gdey037z03BW(),
     Waveshare2in9(),
+    GDEQ031T10(),
     ConfigurableEpd(
       width: 400,
       height: 300,
