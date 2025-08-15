@@ -1,4 +1,4 @@
-import 'package:magic_epaper_app/util/epd/gdeq031t10.dart';
+import 'package:magicepaperapp/util/epd/gdeq031t10.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
 import 'package:magicepaperapp/util/epd/epd.dart';
