@@ -71,6 +71,10 @@ class _MovableBackgroundImageExampleState
     preCacheImage(assetPath: ImageAssets.whiteBoard);
     preCacheImage(assetPath: ImageAssets.redBoard);
     preCacheImage(assetPath: ImageAssets.blackBoard);
+    preCacheImage(assetPath: ImageAssets.greenBoard);
+    preCacheImage(assetPath: ImageAssets.blueBoard);
+    preCacheImage(assetPath: ImageAssets.orangeBoard);
+    preCacheImage(assetPath: ImageAssets.yellowBoard);
     _bottomBarScrollCtrl = ScrollController();
   }
 
@@ -285,6 +289,18 @@ class _MovableBackgroundImageExampleState
       return 'red';
     } else if (color == Colors.black) {
       return 'black';
+    }
+    else if (color == Colors.green) {
+      return 'green';
+    }
+    else if (color == Colors.blue) {
+      return 'blue';
+    }
+    else if (color == Colors.yellow) {
+      return 'yellow';
+    }
+    else if (color == Colors.orange) {
+      return 'orange';
     }
 
     return 'white';

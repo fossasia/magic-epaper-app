@@ -223,3 +223,27 @@ jobs:
           echo "${{ needs.common.outputs.VERSION_CODE }}" > ./versionCode.txt
           git clone --branch=app https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} app
           gh release upload ${{ steps.run-release-drafter.outputs.tag_name }} app/magic-epaper-development.apk ./versionCode.txt --clobber
+
+  screenshots-android:
+    name: Screenshots (Android)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Android Screenshot Workflow
+        uses: ./.github/actions/screenshot-android
+        with:
+          ANDROID_EMULATOR_API: ${{ env.ANDROID_EMULATOR_API }}
+          ANDROID_EMULATOR_ARCH: ${{ env.ANDROID_EMULATOR_ARCH }}
+
+  screenshots-ios:
+    name: Screenshots (iOS)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: iOS Screenshot Workflow
+        uses: ./.github/actions/screenshot-ios
+        with:
+          IPHONE_DEVICE_MODEL: ${{ env.IPHONE_DEVICE_MODEL }}
+          IPAD_DEVICE_MODEL: ${{ env.IPAD_DEVICE_MODEL }}

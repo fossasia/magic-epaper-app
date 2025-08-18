@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/image_library/services/image_save_handler.dart';
 import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
@@ -48,20 +49,39 @@ class _ImageEditorState extends State<ImageEditor> {
   ImageSaveHandler? _imageSaveHandler;
 
   @override
-  void initState() {
-    super.initState();
-    _selectedWaveform = null;
-    _selectedWaveformName = null;
-    Future.microtask(() {
-      final imgLoader = context.read<ImageLoader>();
-      if (imgLoader.image == null) {
-        imgLoader.loadFinalizedImage(
-          width: widget.device.width,
-          height: widget.device.height,
-        );
-      }
-    });
+void initState() {
+  super.initState();
+  _selectedWaveform = null;
+  _selectedWaveformName = null;
+  
+  Future.microtask(() {
+    loadInitialImage();
+  });
+}
+
+Future<void> loadInitialImage() async {
+  final imgLoader = context.read<ImageLoader>();
+  if (imgLoader.image == null) {
+    await imgLoader.loadFinalizedImage(
+      width: widget.device.width,
+      height: widget.device.height,
+    );
   }
+  if (imgLoader.image == null) {
+    loadDefaultImage(imgLoader);
+  }
+}
+
+Future<void> loadDefaultImage(ImageLoader imgLoader) async {
+  const assetPath = 'assets/images/FOSSASIA.png';
+  final byteData = await rootBundle.load(assetPath);
+  final pngBytes = byteData.buffer.asUint8List();
+  await imgLoader.updateImage(
+    bytes: pngBytes,
+    width: widget.device.width,
+    height: widget.device.height,
+  );
+}
 
   @override
   void didChangeDependencies() {
