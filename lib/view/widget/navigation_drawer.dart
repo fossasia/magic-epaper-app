@@ -60,24 +60,18 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
           _buildListTile(
             index: 1,
-            icon: Icons.waves,
-            title: "WaveShare",
-            routeName: '/waveShareNfcScreen',
-          ),
-          _buildListTile(
-            index: 2,
             icon: Icons.nfc,
             title: StringConstants.ndefScreen,
             routeName: '/ndefScreen',
           ),
           _buildListTile(
-            index: 3,
+            index: 2,
             icon: Icons.settings,
             title: StringConstants.settings,
             routeName: '/settings',
           ),
           _buildListTile(
-            index: 4,
+            index: 3,
             icon: Icons.people,
             title: StringConstants.aboutUs,
             routeName: '/aboutUs',

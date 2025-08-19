@@ -13,6 +13,7 @@ import 'package:magicepaperapp/util/image_editor_utils.dart';
 import 'package:magicepaperapp/util/xbm_encoder.dart';
 import 'package:magicepaperapp/view/widget/image_list.dart';
 import 'package:magicepaperapp/view/barcode_scanner_screen.dart';
+import 'package:magicepaperapp/util/orientation_util.dart';
 
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:provider/provider.dart';
@@ -50,6 +51,7 @@ class _ImageEditorState extends State<ImageEditor> {
 
   @override
   void initState() {
+    setPortraitOrientation();
     super.initState();
     _selectedWaveform = null;
     _selectedWaveformName = null;
