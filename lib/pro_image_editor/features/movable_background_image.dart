@@ -289,17 +289,13 @@ class _MovableBackgroundImageExampleState
       return 'red';
     } else if (color == Colors.black) {
       return 'black';
-    }
-    else if (color == Colors.green) {
+    } else if (color == Colors.green) {
       return 'green';
-    }
-    else if (color == Colors.blue) {
+    } else if (color == Colors.blue) {
       return 'blue';
-    }
-    else if (color == Colors.yellow) {
+    } else if (color == Colors.yellow) {
       return 'yellow';
-    }
-    else if (color == Colors.orange) {
+    } else if (color == Colors.orange) {
       return 'orange';
     }
 

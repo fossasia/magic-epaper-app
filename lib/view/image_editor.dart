@@ -49,39 +49,39 @@ class _ImageEditorState extends State<ImageEditor> {
   ImageSaveHandler? _imageSaveHandler;
 
   @override
-void initState() {
-  super.initState();
-  _selectedWaveform = null;
-  _selectedWaveformName = null;
-  
-  Future.microtask(() {
-    loadInitialImage();
-  });
-}
+  void initState() {
+    super.initState();
+    _selectedWaveform = null;
+    _selectedWaveformName = null;
 
-Future<void> loadInitialImage() async {
-  final imgLoader = context.read<ImageLoader>();
-  if (imgLoader.image == null) {
-    await imgLoader.loadFinalizedImage(
+    Future.microtask(() {
+      loadInitialImage();
+    });
+  }
+
+  Future<void> loadInitialImage() async {
+    final imgLoader = context.read<ImageLoader>();
+    if (imgLoader.image == null) {
+      await imgLoader.loadFinalizedImage(
+        width: widget.device.width,
+        height: widget.device.height,
+      );
+    }
+    if (imgLoader.image == null) {
+      loadDefaultImage(imgLoader);
+    }
+  }
+
+  Future<void> loadDefaultImage(ImageLoader imgLoader) async {
+    const assetPath = 'assets/images/FOSSASIA.png';
+    final byteData = await rootBundle.load(assetPath);
+    final pngBytes = byteData.buffer.asUint8List();
+    await imgLoader.updateImage(
+      bytes: pngBytes,
       width: widget.device.width,
       height: widget.device.height,
     );
   }
-  if (imgLoader.image == null) {
-    loadDefaultImage(imgLoader);
-  }
-}
-
-Future<void> loadDefaultImage(ImageLoader imgLoader) async {
-  const assetPath = 'assets/images/FOSSASIA.png';
-  final byteData = await rootBundle.load(assetPath);
-  final pngBytes = byteData.buffer.asUint8List();
-  await imgLoader.updateImage(
-    bytes: pngBytes,
-    width: widget.device.width,
-    height: widget.device.height,
-  );
-}
 
   @override
   void didChangeDependencies() {
@@ -517,14 +517,6 @@ class BottomActionMenu extends StatelessWidget {
               ),
               _buildActionButton(
                 context: context,
-                icon: Icons.photo_library_outlined,
-                label: 'Library',
-                onTap: () async {
-                  await imageSaveHandler?.navigateToImageLibrary();
-                },
-              ),
-              _buildActionButton(
-                context: context,
                 icon: Icons.qr_code_scanner,
                 label: 'Barcode',
                 onTap: () async {
@@ -545,6 +537,14 @@ class BottomActionMenu extends StatelessWidget {
                     );
                     await imgLoader.saveFinalizedImageBytes(result);
                   }
+                },
+              ),
+              _buildActionButton(
+                context: context,
+                icon: Icons.photo_library_outlined,
+                label: 'Library',
+                onTap: () async {
+                  await imageSaveHandler?.navigateToImageLibrary();
                 },
               ),
               _buildActionButton(
