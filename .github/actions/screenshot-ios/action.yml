@@ -17,7 +17,6 @@ runs:
       uses: subosito/flutter-action@v2
       with:
         cache: true
-        flutter-version-file: pubspec.yaml
 
     - name: Update Podfile
       shell: bash
@@ -27,26 +26,40 @@ runs:
         pod install --repo-update
 
     - name: Create iPhone Simulator
+      id: iphone-sim
       uses: futureware-tech/simulator-action@v4
       with:
         model: ${{ inputs.IPHONE_DEVICE_MODEL }}
         wait_for_boot: true
-
-    - name: Create iPad Simulator
-      uses: futureware-tech/simulator-action@v4
-      with:
-        model: ${{ inputs.IPAD_DEVICE_MODEL }}
-        wait_for_boot: true
+        shutdown_after_job: false
 
     - name: Capture iPhone Screenshots
       shell: bash
       run: |
         DEVICE_NAME="${{ inputs.IPHONE_DEVICE_MODEL }}" flutter drive --driver=test_integration/test_driver.dart --target=test_integration/screenshots.dart -d "${{ inputs.IPHONE_DEVICE_MODEL }}"
 
+    - name: Shutdown iPhone Simulator
+      shell: bash
+      run: |
+        xcrun simctl shutdown "${{ steps.iphone-sim.outputs.udid }}"
+
+    - name: Create iPad Simulator
+      id: ipad-sim
+      uses: futureware-tech/simulator-action@v4
+      with:
+        model: ${{ inputs.IPAD_DEVICE_MODEL }}
+        wait_for_boot: true
+        shutdown_after_job: false
+
     - name: Capture iPad Screenshots
       shell: bash
       run: |
         DEVICE_NAME="${{ inputs.IPAD_DEVICE_MODEL }}" flutter drive --driver=test_integration/test_driver.dart --target=test_integration/screenshots.dart -d "${{ inputs.IPAD_DEVICE_MODEL }}"
+
+    - name: Shutdown iPad Simulator
+      shell: bash
+      run: |
+        xcrun simctl shutdown "${{ steps.ipad-sim.outputs.udid }}"
 
     - name: Update Fastlane Metadata
       if: ${{ github.event_name == 'push' }}
