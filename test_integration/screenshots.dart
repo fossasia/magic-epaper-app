@@ -26,6 +26,17 @@ void main() {
       }
       await binding.takeScreenshot('2_sidebar');
 
+      final selectNdef = find.byIcon(Icons.nfc);
+      if (sideBar.evaluate().isNotEmpty) {
+        await tester.tap(selectNdef);
+        await tester.pumpAndSettle();
+      }
+
+      await binding.takeScreenshot('3_ndef_screen');
+      if (sideBar.evaluate().isNotEmpty) {
+        await tester.tap(sideBar);
+        await tester.pumpAndSettle();
+      }
       final selectDisplay = find.byIcon(Icons.edit);
       if (sideBar.evaluate().isNotEmpty) {
         await tester.tap(selectDisplay);
@@ -50,13 +61,13 @@ void main() {
         await tester.pumpAndSettle();
       }
       await tester.pump(const Duration(seconds: 1));
-      await binding.takeScreenshot('3_filter_selection');
+      await binding.takeScreenshot('4_filter_selection');
 
       final openEditorButton = find.byKey(const Key('openEditorButton'));
       await tester.tap(openEditorButton);
       await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 1));
-      await binding.takeScreenshot('4_open_editor');
+      await binding.takeScreenshot('5_open_editor');
 
       final NavigatorState navigator = tester.state(find.byType(Navigator));
       navigator.pop();
@@ -66,7 +77,7 @@ void main() {
       await tester.tap(adjustButton);
       await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 2));
-      await binding.takeScreenshot('5_adjust_image');
+      await binding.takeScreenshot('6_adjust_image');
 
       navigator.pop();
       await tester.pumpAndSettle();
@@ -81,12 +92,12 @@ void main() {
       await tester.enterText(inputField, 'fossasia');
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
-      await binding.takeScreenshot('6_barcode_screen');
+      await binding.takeScreenshot('7_barcode_screen');
       await tester.pumpAndSettle();
       final generateImage = find.text('Generate Image');
       await tester.tap(generateImage);
       await tester.pumpAndSettle(const Duration(seconds: 2));
-      await binding.takeScreenshot('7_generated_Barcode');
+      await binding.takeScreenshot('8_generated_Barcode');
     });
   });
 }
