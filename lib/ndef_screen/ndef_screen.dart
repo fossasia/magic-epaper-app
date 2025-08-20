@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magic_epaper_app/constants/string_constants.dart';
-import 'package:magic_epaper_app/ndef_screen/app_launcher_card.dart';
-import 'package:magic_epaper_app/ndef_screen/app_nfc/app_data_model.dart';
-import 'package:magic_epaper_app/ndef_screen/controller/nfc_controller.dart';
-import 'package:magic_epaper_app/ndef_screen/widgets/nfc_status_card.dart';
-import 'package:magic_epaper_app/ndef_screen/widgets/nfc_write_card.dart';
-import 'package:magic_epaper_app/ndef_screen/widgets/nfc_read_card.dart';
-import 'package:magic_epaper_app/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/ndef_screen/app_launcher_card.dart';
+import 'package:magicepaperapp/ndef_screen/app_nfc/app_data_model.dart';
+import 'package:magicepaperapp/ndef_screen/controller/nfc_controller.dart';
+import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
+import 'package:magicepaperapp/ndef_screen/nfc_vcard_write_card.dart';
+import 'package:magicepaperapp/ndef_screen/widgets/nfc_status_card.dart';
+import 'package:magicepaperapp/ndef_screen/widgets/nfc_write_card.dart';
+import 'package:magicepaperapp/ndef_screen/widgets/nfc_read_card.dart';
+import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 class NDEFScreen extends StatefulWidget {
   const NDEFScreen({super.key});
@@ -22,6 +24,7 @@ class _NDEFScreenState extends State<NDEFScreen> {
   String _urlValue = '';
   String _wifiSSIDValue = '';
   String _wifiPasswordValue = '';
+  VCardData? _vCardData;
   AppData? _selectedApp;
 
   @override
@@ -30,6 +33,19 @@ class _NDEFScreenState extends State<NDEFScreen> {
     _nfcController = NFCController();
     _nfcController.addListener(_onNFCStateChanged);
     _checkNFCAvailability();
+    _vCardData = VCardData(
+      firstName: '',
+      lastName: '',
+      organization: '',
+      title: '',
+      mobileNumber: '',
+      emailAddress: '',
+      street: '',
+      city: '',
+      zipCode: '',
+      country: '',
+      website: '',
+    );
   }
 
   @override
@@ -144,6 +160,19 @@ class _NDEFScreenState extends State<NDEFScreen> {
             ),
             const SizedBox(height: 16),
             if (_nfcController.availability == NFCAvailability.available) ...[
+              NFCVCardWriteCard(
+                isWriting: _nfcController.isWriting,
+                vCardData: _vCardData,
+                onVCardChanged: (vCardData) =>
+                    setState(() => _vCardData = vCardData),
+                onWriteVCard: () async {
+                  if (_vCardData != null) {
+                    await _nfcController.writeVCardRecord(_vCardData!);
+                    _handleWriteResult();
+                  }
+                },
+              ),
+              const SizedBox(height: 16),
               NFCWriteCard(
                 isWriting: _nfcController.isWriting,
                 textValue: _textValue,
@@ -170,8 +199,13 @@ class _NDEFScreenState extends State<NDEFScreen> {
                   _handleWriteResult();
                 },
                 onWriteMultiple: () async {
-                  await _nfcController.writeMultipleRecords(_textValue,
-                      _urlValue, _wifiSSIDValue, _wifiPasswordValue);
+                  await _nfcController.writeMultipleRecords(
+                    _textValue,
+                    _urlValue,
+                    _wifiSSIDValue,
+                    _wifiPasswordValue,
+                    _vCardData,
+                  );
                   _handleWriteResult();
                 },
               ),
@@ -223,6 +257,19 @@ class _NDEFScreenState extends State<NDEFScreen> {
         _urlValue = '';
         _wifiSSIDValue = '';
         _wifiPasswordValue = '';
+        _vCardData = VCardData(
+          firstName: '',
+          lastName: '',
+          organization: '',
+          title: '',
+          mobileNumber: '',
+          emailAddress: '',
+          street: '',
+          city: '',
+          zipCode: '',
+          country: '',
+          website: '',
+        );
       });
     }
   }

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
-import 'package:magic_epaper_app/constants/string_constants.dart';
-import 'package:magic_epaper_app/provider/getitlocator.dart';
-import 'package:magic_epaper_app/util/epd/epd.dart';
-import 'package:magic_epaper_app/util/epd/gdey037z03.dart';
-import 'package:magic_epaper_app/util/epd/gdey037z03bw.dart';
-import 'package:magic_epaper_app/view/image_editor.dart';
-import 'package:magic_epaper_app/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/util/epd/configurable_editor.dart';
+import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/util/epd/gdey037z03.dart';
+import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
+import 'package:magicepaperapp/util/epd/waveshare_2in9.dart';
+import 'package:magicepaperapp/view/image_editor.dart';
+import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:magic_epaper_app/provider/color_palette_provider.dart';
-import 'package:magic_epaper_app/view/widget/display_card.dart';
+import 'package:magicepaperapp/provider/color_palette_provider.dart';
+import 'package:magicepaperapp/view/widget/display_card.dart';
+import 'package:magicepaperapp/view/widget/configurable_epd_dialog.dart';
 
 class DisplaySelectionScreen extends StatefulWidget {
   const DisplaySelectionScreen({super.key});
@@ -19,8 +22,41 @@ class DisplaySelectionScreen extends StatefulWidget {
 }
 
 class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
-  final List<Epd> displays = [Gdey037z03(), Gdey037z03BW()];
+  final List<DisplayDevice> displays = [
+    Gdey037z03(),
+    Gdey037z03BW(),
+    Waveshare2in9(),
+    ConfigurableEpd(
+      width: 400,
+      height: 300,
+      colors: [Colors.white, Colors.black, Colors.red],
+    ),
+  ];
   int selectedIndex = -1;
+
+  void _showConfigurableDialog() async {
+    final configurable = displays.last as ConfigurableEpd;
+    final result = await showDialog<CustomEpdConfig>(
+      context: context,
+      builder: (context) => ConfigurableEpdDialog(
+        initialWidth: configurable.width,
+        initialHeight: configurable.height,
+        initialColors: List<Color>.from(configurable.colors),
+      ),
+    );
+
+    if (result != null) {
+      setState(() {
+        displays[displays.length - 1] = ConfigurableEpd(
+          width: result.width,
+          height: result.height,
+          colors: result.colors,
+          modelId: result.presetName,
+        );
+        selectedIndex = displays.length - 1;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +82,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                 SizedBox(height: 8),
                 Text(
                   StringConstants.selectDisplayType,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ],
             ),
@@ -69,11 +102,19 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                         crossAxisSpacing: 8,
                       ),
                       itemCount: displays.length,
-                      itemBuilder: (context, index) => DisplayCard(
-                        display: displays[index],
-                        isSelected: selectedIndex == index,
-                        onTap: () => setState(() => selectedIndex = index),
-                      ),
+                      itemBuilder: (context, index) {
+                        return DisplayCard(
+                          display: displays[index],
+                          isSelected: selectedIndex == index,
+                          onTap: () {
+                            if (index == displays.length - 1) {
+                              _showConfigurableDialog();
+                            } else {
+                              setState(() => selectedIndex = index);
+                            }
+                          },
+                        );
+                      },
                     ),
                   ),
                   _buildContinueButton(context),
@@ -102,7 +143,8 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ImageEditor(
-                      epd: displays[selectedIndex],
+                      isExportOnly: displays[selectedIndex] is ConfigurableEpd,
+                      device: displays[selectedIndex],
                     ),
                   ),
                 );
@@ -117,10 +159,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
         ),
         child: const Text(
           StringConstants.continueButton,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );

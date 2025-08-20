@@ -1,25 +1,33 @@
 import 'dart:typed_data';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
-import 'package:magic_epaper_app/image_library/services/image_save_handler.dart';
-import 'package:magic_epaper_app/pro_image_editor/features/movable_background_image.dart';
-import 'package:magic_epaper_app/util/epd/driver/waveform.dart';
-import 'package:magic_epaper_app/util/image_editor_utils.dart';
-import 'package:magic_epaper_app/view/widget/image_list.dart';
-import 'package:magic_epaper_app/view/widget/transfer_progress_dialog.dart';
+import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
+import 'package:magicepaperapp/image_library/services/image_save_handler.dart';
+import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
+import 'package:magicepaperapp/card_templates/card_template_selection_view.dart';
+import 'package:magicepaperapp/util/color_util.dart';
+import 'package:magicepaperapp/util/epd/driver/waveform.dart';
+import 'package:magicepaperapp/util/image_editor_utils.dart';
+import 'package:magicepaperapp/util/xbm_encoder.dart';
+import 'package:magicepaperapp/view/widget/image_list.dart';
+import 'package:magicepaperapp/view/barcode_scanner_screen.dart';
+
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
+import 'package:magicepaperapp/util/epd/display_device.dart';
 
-import 'package:magic_epaper_app/provider/image_loader.dart';
-import 'package:magic_epaper_app/util/epd/epd.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
-import 'package:magic_epaper_app/constants/string_constants.dart';
-import 'package:magic_epaper_app/util/protocol.dart';
+import 'package:magicepaperapp/provider/image_loader.dart';
+import 'package:magicepaperapp/util/epd/epd.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
 
 class ImageEditor extends StatefulWidget {
-  final Epd epd;
-  const ImageEditor({super.key, required this.epd});
+  final DisplayDevice device;
+  final bool isExportOnly;
+  const ImageEditor(
+      {super.key, required this.device, this.isExportOnly = false});
 
   @override
   State<ImageEditor> createState() => _ImageEditorState();
@@ -48,8 +56,8 @@ class _ImageEditorState extends State<ImageEditor> {
       final imgLoader = context.read<ImageLoader>();
       if (imgLoader.image == null) {
         imgLoader.loadFinalizedImage(
-          width: widget.epd.width,
-          height: widget.epd.height,
+          width: widget.device.width,
+          height: widget.device.height,
         );
       }
     });
@@ -74,8 +82,8 @@ class _ImageEditorState extends State<ImageEditor> {
       flipHorizontal: flipHorizontal,
       flipVertical: flipVertical,
       currentImageSource: _currentImageSource,
-      processingMethods: widget.epd.processingMethods,
-      modelId: widget.epd.modelId,
+      processingMethods: widget.device.processingMethods,
+      modelId: widget.device.modelId,
     );
   }
 
@@ -116,10 +124,7 @@ class _ImageEditorState extends State<ImageEditor> {
       return;
     }
 
-    _rawImages = processImages(
-      originalImage: sourceImage,
-      epd: widget.epd,
-    );
+    _rawImages = processImages(originalImage: sourceImage, epd: widget.device);
 
     _rotatedImages =
         _rawImages.map((rawImg) => img.copyRotate(rawImg, angle: 90)).toList();
@@ -134,20 +139,65 @@ class _ImageEditorState extends State<ImageEditor> {
     });
   }
 
-  Future<void> _showTransferProgress(img.Image finalImg,
-      {Waveform? waveform}) async {
-    await TransferProgressDialog.show(
-      context: context,
-      finalImg: finalImg,
-      transferFunction: (image, onProgress, onTagDetected) async {
-        return await Protocol(epd: widget.epd).writeImages(
-          image,
-          onProgress: onProgress,
-          onTagDetected: onTagDetected,
-          waveform: waveform,
+  Future<void> _exportXbmFiles() async {
+    if (_rawImages.isEmpty) return;
+    final now = DateTime.now();
+    final timestamp =
+        "${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}_${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}-${now.second.toString().padLeft(2, '0')}";
+
+    final magicEpaperDir = Directory('/storage/emulated/0/MagicEpaper');
+    if (!await magicEpaperDir.exists()) {
+      await magicEpaperDir.create(recursive: true);
+    }
+
+    final xbmDir = Directory('${magicEpaperDir.path}/XBM');
+    if (!await xbmDir.exists()) {
+      await xbmDir.create(recursive: true);
+    }
+
+    img.Image baseImage = _rawImages[_selectedFilterIndex];
+
+    if (flipHorizontal) {
+      baseImage = img.flipHorizontal(baseImage);
+    }
+    if (flipVertical) {
+      baseImage = img.flipVertical(baseImage);
+    }
+
+    final nonWhiteColors = widget.device.colors.where((c) => c != Colors.white);
+
+    int exportedCount = 0;
+    try {
+      for (final color in nonWhiteColors) {
+        final colorName = ColorUtils.getColorFileName(color);
+        final variableName = 'image_$colorName';
+
+        final colorPlaneImage = widget.device.extractColorPlaneAsImage(
+          color,
+          baseImage,
         );
-      },
-      colorAccent: colorAccent,
+
+        final xbmContent = XbmEncoder.encode(colorPlaneImage, variableName);
+
+        final file = File('${xbmDir.path}/${variableName}_$timestamp.xbm');
+        await file.writeAsString(xbmContent);
+        exportedCount++;
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Export failed: $e'),
+        ),
+      );
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 2),
+        content:
+            Text('Exported $exportedCount XBM file(s) to MagicEpaper/XBM/'),
+      ),
     );
   }
 
@@ -155,22 +205,6 @@ class _ImageEditorState extends State<ImageEditor> {
   Widget build(BuildContext context) {
     var imgLoader = context.watch<ImageLoader>();
     _updateProcessedImages(imgLoader.image);
-
-    final List<DropdownMenuItem<String?>> dropdownItems = [
-      const DropdownMenuItem<String?>(
-        value: null,
-        child: Text("Full Refresh"),
-      ),
-      ...widget.epd.controller.waveforms.map((waveform) {
-        return DropdownMenuItem<String?>(
-          value: waveform.name,
-          child: Text(
-            waveform.name,
-            overflow: TextOverflow.ellipsis,
-          ),
-        );
-      }),
-    ];
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -188,67 +222,94 @@ class _ImageEditorState extends State<ImageEditor> {
         ),
         actions: [
           if (_rawImages.isNotEmpty) ...[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white, width: 1.2),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String?>(
-                    value: _selectedWaveformName,
-                    hint: const Text(
-                      "Full Refresh",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+            if (widget.device is Epd && !widget.isExportOnly)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Builder(builder: (context) {
+                  final epd = widget.device as Epd;
+                  final List<DropdownMenuItem<String?>> dropdownItems = [
+                    const DropdownMenuItem<String?>(
+                      value: null,
+                      child: Text("Full Refresh"),
                     ),
-                    isDense: true,
-                    dropdownColor: colorAccent,
-                    style: const TextStyle(color: Colors.white, fontSize: 14),
-                    borderRadius: BorderRadius.circular(8),
-                    icon: const SizedBox.shrink(),
-                    items: dropdownItems,
-                    onChanged: (String? newName) {
-                      setState(() {
-                        _selectedWaveformName = newName;
-                        if (newName == null) {
-                          _selectedWaveform = null; // Full Refresh
-                        } else {
-                          _selectedWaveform = widget.epd.controller.waveforms
-                              .firstWhere((w) => w.name == newName);
-                        }
-                      });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          duration: Durations.medium3,
-                          content: Text(
-                            _selectedWaveform == null
-                                ? "Full Refresh Selected"
-                                : "${_selectedWaveform!.name} Selected",
-                          ),
-                          backgroundColor: colorPrimary,
+                    ...epd.controller.waveforms.map((waveform) {
+                      return DropdownMenuItem<String?>(
+                        value: waveform.name,
+                        child: Text(
+                          waveform.name,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       );
-                    },
-                  ),
-                ),
+                    }),
+                  ];
+
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white, width: 1.2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String?>(
+                        value: _selectedWaveformName,
+                        hint: const Text(
+                          "Full Refresh",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                        isDense: true,
+                        dropdownColor: colorAccent,
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 14),
+                        borderRadius: BorderRadius.circular(8),
+                        icon: const SizedBox.shrink(),
+                        items: dropdownItems,
+                        onChanged: (String? newName) {
+                          setState(() {
+                            _selectedWaveformName = newName;
+                            if (newName == null) {
+                              _selectedWaveform = null;
+                            } else {
+                              _selectedWaveform = epd.controller.waveforms
+                                  .firstWhere((w) => w.name == newName);
+                            }
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              duration: Durations.medium3,
+                              content: Text(
+                                _selectedWaveform == null
+                                    ? "Full Refresh Selected"
+                                    : "${_selectedWaveform!.name} Selected",
+                              ),
+                              backgroundColor: colorPrimary,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                }),
               ),
-            ),
             Padding(
               padding: const EdgeInsets.only(right: 12.0),
               child: TextButton(
-                onPressed: () async {
-                  img.Image finalImg = _rawImages[_selectedFilterIndex];
-                  if (flipHorizontal) {
-                    finalImg = img.flipHorizontal(finalImg);
-                  }
-                  if (flipVertical) {
-                    finalImg = img.flipVertical(finalImg);
-                  }
-                  await _showTransferProgress(finalImg,
-                      waveform: _selectedWaveform);
-                },
+                onPressed: widget.isExportOnly
+                    ? _exportXbmFiles
+                    : () async {
+                        img.Image finalImg = _rawImages[_selectedFilterIndex];
+
+                        if (flipHorizontal) {
+                          finalImg = img.flipHorizontal(finalImg);
+                        }
+                        if (flipVertical) {
+                          finalImg = img.flipVertical(finalImg);
+                        }
+                        await widget.device.transfer(
+                          context,
+                          finalImg,
+                          waveform: _selectedWaveform,
+                        );
+                      },
                 style: TextButton.styleFrom(
                   backgroundColor: colorAccent,
                   foregroundColor: Colors.white,
@@ -257,7 +318,9 @@ class _ImageEditorState extends State<ImageEditor> {
                     side: const BorderSide(color: Colors.white, width: 1),
                   ),
                 ),
-                child: const Text(StringConstants.transferButtonLabel),
+                child: widget.isExportOnly
+                    ? const Text('Export XBM')
+                    : const Text(StringConstants.transferButtonLabel),
               ),
             ),
           ],
@@ -265,11 +328,11 @@ class _ImageEditorState extends State<ImageEditor> {
       ),
       body: imgLoader.isLoading
           ? const Center(
-              child: Text('Loading...',
-                  style: TextStyle(
-                    color: colorBlack,
-                    fontSize: 14,
-                  )))
+              child: Text(
+                'Loading...',
+                style: TextStyle(color: colorBlack, fontSize: 14),
+              ),
+            )
           : SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -277,9 +340,9 @@ class _ImageEditorState extends State<ImageEditor> {
                     ? ImageList(
                         key: ValueKey(_processedSourceImage),
                         processedPngs: _processedPngs,
-                        epd: widget.epd,
-                        width: widget.epd.width,
-                        height: widget.epd.height,
+                        epd: widget.device,
+                        width: widget.device.width,
+                        height: widget.device.height,
                         selectedIndex: _selectedFilterIndex,
                         flipHorizontal: flipHorizontal,
                         flipVertical: flipVertical,
@@ -297,7 +360,7 @@ class _ImageEditorState extends State<ImageEditor> {
               ),
             ),
       bottomNavigationBar: BottomActionMenu(
-          epd: widget.epd,
+          epd: widget.device,
           imgLoader: imgLoader,
           imageSaveHandler: _imageSaveHandler,
           onSourceChanged: (String source) {
@@ -310,7 +373,7 @@ class _ImageEditorState extends State<ImageEditor> {
 }
 
 class BottomActionMenu extends StatelessWidget {
-  final Epd epd;
+  final DisplayDevice epd;
   final ImageLoader imgLoader;
   final ImageSaveHandler? imageSaveHandler;
   final Function(String)? onSourceChanged;
@@ -326,7 +389,7 @@ class BottomActionMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 75,
+      height: 80,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -350,10 +413,13 @@ class BottomActionMenu extends StatelessWidget {
                 label: StringConstants.importImageButtonLabel,
                 onTap: () async {
                   final success = await imgLoader.pickImage(
-                      width: epd.width, height: epd.height);
+                    width: epd.width,
+                    height: epd.height,
+                  );
                   if (success && imgLoader.image != null) {
-                    final bytes =
-                        Uint8List.fromList(img.encodePng(imgLoader.image!));
+                    final bytes = Uint8List.fromList(
+                      img.encodePng(imgLoader.image!),
+                    );
                     await imgLoader.saveFinalizedImageBytes(bytes);
                   }
                   onSourceChanged?.call('imported');
@@ -390,25 +456,27 @@ class BottomActionMenu extends StatelessWidget {
                 label: StringConstants.adjustButtonLabel,
                 onTap: () async {
                   if (imgLoader.image != null) {
-                    final canvasBytes = await Navigator.of(context)
-                        .push<Uint8List>(MaterialPageRoute(
-                      builder: (context) => ProImageEditor.memory(
-                        img.encodeJpg(imgLoader.image!),
-                        callbacks: ProImageEditorCallbacks(
-                          onImageEditingComplete: (Uint8List bytes) async {
-                            Navigator.pop(context, bytes);
-                          },
-                        ),
-                        configs: const ProImageEditorConfigs(
-                          paintEditor: PaintEditorConfigs(enabled: false),
-                          textEditor: TextEditorConfigs(enabled: false),
-                          cropRotateEditor: CropRotateEditorConfigs(
-                            enabled: false,
+                    final canvasBytes =
+                        await Navigator.of(context).push<Uint8List>(
+                      MaterialPageRoute(
+                        builder: (context) => ProImageEditor.memory(
+                          img.encodeJpg(imgLoader.image!),
+                          callbacks: ProImageEditorCallbacks(
+                            onImageEditingComplete: (Uint8List bytes) async {
+                              Navigator.pop(context, bytes);
+                            },
                           ),
-                          emojiEditor: EmojiEditorConfigs(enabled: false),
+                          configs: const ProImageEditorConfigs(
+                            paintEditor: PaintEditorConfigs(enabled: false),
+                            textEditor: TextEditorConfigs(enabled: false),
+                            cropRotateEditor: CropRotateEditorConfigs(
+                              enabled: false,
+                            ),
+                            emojiEditor: EmojiEditorConfigs(enabled: false),
+                          ),
                         ),
                       ),
-                    ));
+                    );
                     if (canvasBytes != null) {
                       imgLoader.updateImage(
                         bytes: canvasBytes,
@@ -419,10 +487,10 @@ class BottomActionMenu extends StatelessWidget {
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          duration: Durations.medium4,
-                          content:
-                              Text(StringConstants.noImageSelectedFeedback),
-                          backgroundColor: colorPrimary),
+                        duration: Durations.medium4,
+                        content: Text(StringConstants.noImageSelectedFeedback),
+                        backgroundColor: colorPrimary,
+                      ),
                     );
                   }
                 },
@@ -433,6 +501,56 @@ class BottomActionMenu extends StatelessWidget {
                 label: 'Library',
                 onTap: () async {
                   await imageSaveHandler?.navigateToImageLibrary();
+                },
+              ),
+              _buildActionButton(
+                context: context,
+                icon: Icons.qr_code_scanner,
+                label: 'Barcode',
+                onTap: () async {
+                  final result = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => BarcodeScannerScreen(
+                        width: epd.width,
+                        height: epd.height,
+                      ),
+                    ),
+                  );
+
+                  if (result is Uint8List) {
+                    await imgLoader.updateImage(
+                      bytes: result,
+                      width: epd.width,
+                      height: epd.height,
+                    );
+                    await imgLoader.saveFinalizedImageBytes(result);
+                  }
+                },
+              ),
+              _buildActionButton(
+                context: context,
+                icon: Icons.dashboard_customize_outlined,
+                label: 'Templates',
+                onTap: () async {
+                  final result = await Navigator.of(context).push<Uint8List>(
+                    MaterialPageRoute(
+                      builder: (context) => CardTemplateSelectionView(
+                        width: epd.width,
+                        height: epd.height,
+                      ),
+                    ),
+                  );
+
+                  if (result != null) {
+                    await imgLoader.updateImage(
+                      bytes: result,
+                      width: epd.width,
+                      height: epd.height,
+                    );
+                    await imgLoader.saveFinalizedImageBytes(result);
+
+                    onSourceChanged?.call('template');
+                  }
                 },
               ),
             ],
@@ -460,8 +578,10 @@ class BottomActionMenu extends StatelessWidget {
             children: [
               Icon(icon, color: colorAccent, size: 26),
               const SizedBox(height: 4),
-              Text(label,
-                  style: const TextStyle(color: colorBlack, fontSize: 12)),
+              Text(
+                label,
+                style: const TextStyle(color: colorBlack, fontSize: 12),
+              ),
             ],
           ),
         ),

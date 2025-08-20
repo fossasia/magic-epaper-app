@@ -1,13 +1,13 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
-import 'package:magic_epaper_app/constants/color_constants.dart';
-import 'package:magic_epaper_app/image_library/image_library.dart';
-import 'package:magic_epaper_app/image_library/widgets/dialogs/storage_permisson_dialog.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/image_library/image_library.dart';
+import 'package:magicepaperapp/image_library/widgets/dialogs/storage_permisson_dialog.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
-import 'package:magic_epaper_app/image_library/services/image_operations_service.dart';
-import 'package:magic_epaper_app/image_library/widgets/dialogs/image_save_dialog.dart';
+import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
+import 'package:magicepaperapp/image_library/services/image_operations_service.dart';
+import 'package:magicepaperapp/image_library/widgets/dialogs/image_save_dialog.dart';
 
 class ImageSaveHandler {
   final BuildContext context;

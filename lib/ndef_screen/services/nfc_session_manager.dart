@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magic_epaper_app/constants/string_constants.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
 
 class NFCSessionManager {
   static Future<void> finishSession({String? iosMessage}) async {

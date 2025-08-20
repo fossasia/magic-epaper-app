@@ -1,14 +1,13 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/image_library/services/image_filter_helper.dart';
-import 'package:magic_epaper_app/image_library/model/image_properties.dart';
-import 'package:magic_epaper_app/image_library/model/saved_image_model.dart';
-import 'package:magic_epaper_app/constants/color_constants.dart';
-import 'package:magic_epaper_app/image_library/provider/image_library_provider.dart';
-import 'package:magic_epaper_app/image_library/utils/epd_utils.dart';
-import 'package:magic_epaper_app/util/epd/epd.dart';
-import 'package:magic_epaper_app/util/protocol.dart';
+import 'package:magicepaperapp/image_library/services/image_filter_helper.dart';
+import 'package:magicepaperapp/image_library/model/image_properties.dart';
+import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
+import 'package:magicepaperapp/image_library/utils/epd_utils.dart';
+import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:image/image.dart' as img;
 import 'dart:typed_data';
 
@@ -17,7 +16,7 @@ class ImageOperationsService {
 
   ImageOperationsService(this.context);
 
-  Epd getEpdFromImage(SavedImage image) {
+  DisplayDevice getEpdFromImage(SavedImage image) {
     return EpdUtils.getEpdFromMetadata(image.metadata);
   }
 
@@ -117,7 +116,10 @@ class ImageOperationsService {
       final decodedImage = img.decodeImage(imageData);
       if (decodedImage != null) {
         final rotatedImage = img.copyRotate(decodedImage, angle: -90);
-        Protocol(epd: imageEpd).writeImages(rotatedImage);
+        imageEpd.transfer(
+          context,
+          rotatedImage,
+        );
       } else {
         _showErrorSnackBar('Failed to decode image "${image.name}"');
       }
@@ -296,7 +298,7 @@ class ImageOperationsService {
 
   void _showSaveLoadingSnackBar() {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         content: Row(
           children: [
             SizedBox(
@@ -307,12 +309,12 @@ class ImageOperationsService {
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             ),
-            const SizedBox(width: 12),
-            const Text('Saving image...'),
+            SizedBox(width: 12),
+            Text('Saving image...'),
           ],
         ),
         backgroundColor: colorAccent,
-        duration: const Duration(seconds: 2),
+        duration: Duration(seconds: 2),
       ),
     );
   }
@@ -320,15 +322,15 @@ class ImageOperationsService {
   void _showSaveSuccessSnackBar() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Row(
+        content: const Row(
           children: [
-            const Icon(
+            Icon(
               Icons.check_circle,
               color: Colors.white,
               size: 20,
             ),
-            const SizedBox(width: 12),
-            const Text('Image saved to library!'),
+            SizedBox(width: 12),
+            Text('Image saved to library!'),
           ],
         ),
         backgroundColor: Colors.green,
