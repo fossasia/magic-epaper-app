@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:installed_apps/app_info.dart';
-import 'package:magic_epaper_app/ndef_screen/app_nfc/app_data_model.dart';
+import 'package:magicepaperapp/ndef_screen/app_nfc/app_data_model.dart';
 
 class AppLauncherService {
   static List<AppData> _cachedApps = [];

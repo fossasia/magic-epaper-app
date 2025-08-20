@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:magic_epaper_app/constants/string_constants.dart';
-import 'package:magic_epaper_app/ndef_screen/app_nfc/app_data_model.dart';
-import 'package:magic_epaper_app/ndef_screen/app_nfc/app_selection_service.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/ndef_screen/app_nfc/app_data_model.dart';
+import 'package:magicepaperapp/ndef_screen/app_nfc/app_selection_service.dart';
 
 class AppLauncherCard extends StatefulWidget {
   final AppData? selectedApp;
