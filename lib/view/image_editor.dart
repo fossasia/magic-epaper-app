@@ -448,6 +448,7 @@ class BottomActionMenu extends StatelessWidget {
                 },
               ),
               _buildActionButton(
+                key: const Key('openEditorButton'),
                 context: context,
                 icon: Icons.edit_outlined,
                 label: StringConstants.openEditor,
@@ -473,6 +474,7 @@ class BottomActionMenu extends StatelessWidget {
                 },
               ),
               _buildActionButton(
+                key: const Key('adjustButton'),
                 context: context,
                 icon: Icons.tune_rounded,
                 label: StringConstants.adjustButtonLabel,
@@ -518,6 +520,7 @@ class BottomActionMenu extends StatelessWidget {
                 },
               ),
               _buildActionButton(
+                key: const Key('barcodeButton'),
                 context: context,
                 icon: Icons.qr_code_scanner,
                 label: 'Barcode',
@@ -587,10 +590,12 @@ class BottomActionMenu extends StatelessWidget {
     required IconData icon,
     required String label,
     required VoidCallback onTap,
+    Key? key,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: InkWell(
+        key: key,
         onTap: onTap,
         borderRadius: BorderRadius.circular(24),
         child: Padding(

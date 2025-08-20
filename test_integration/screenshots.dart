@@ -52,7 +52,7 @@ void main() {
       await tester.pump(const Duration(seconds: 1));
       await binding.takeScreenshot('3_filter_selection');
 
-      final openEditorButton = find.text('Open Editor');
+      final openEditorButton = find.byKey(const Key('openEditorButton'));
       await tester.tap(openEditorButton);
       await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 1));
@@ -62,7 +62,7 @@ void main() {
       navigator.pop();
       await tester.pumpAndSettle();
 
-      final adjustButton = find.text('Adjust');
+      final adjustButton = find.byKey(const Key('adjustButton'));
       await tester.tap(adjustButton);
       await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 2));
@@ -71,7 +71,7 @@ void main() {
       navigator.pop();
       await tester.pumpAndSettle();
 
-      final barcodeButton = find.text('Barcode');
+      final barcodeButton = find.byKey(const Key('barcodeButton'));
       await tester.tap(barcodeButton);
       await tester.pumpAndSettle();
 
