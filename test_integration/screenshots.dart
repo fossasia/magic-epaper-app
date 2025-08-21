@@ -16,7 +16,7 @@ void main() {
   group('Magic ePaper App - Screenshots', () {
     testWidgets('Capture Screenshots', (tester) async {
       app.main();
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(const Duration(seconds: 5));
       await binding.takeScreenshot('1_display_selection');
 
       final sideBar = find.byIcon(Icons.menu);
@@ -43,9 +43,9 @@ void main() {
         await tester.pumpAndSettle();
       }
 
-      final waveshare = find.text('Waveshare NFC');
-      if (waveshare.evaluate().isNotEmpty) {
-        await tester.tap(waveshare);
+      final GDEY037T03 = find.byKey(const Key('GDEY037T03'));
+      if (GDEY037T03.evaluate().isNotEmpty) {
+        await tester.tap(GDEY037T03);
         await tester.pumpAndSettle();
       }
       final continueButton = find.text('Continue');
