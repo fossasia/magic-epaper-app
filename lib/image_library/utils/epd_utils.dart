@@ -1,4 +1,5 @@
 import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/util/epd/gdeq031t10.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
 import 'package:magicepaperapp/util/epd/waveshare_2in9.dart';
@@ -18,6 +19,8 @@ class EpdUtils {
         return Gdey037z03BW();
       case 'waveshare-2.9':
         return Waveshare2in9();
+      case 'GDEQ031T10':
+        return GDEQ031T10();
       default:
         return Gdey037z03();
     }
