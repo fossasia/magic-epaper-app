@@ -36,7 +36,7 @@ runs:
     - name: Capture iPhone Screenshots
       shell: bash
       run: |
-        DEVICE_NAME="${{ inputs.IPHONE_DEVICE_MODEL }}" flutter drive --driver=test_integration/test_driver.dart --target=test_integration/screenshots.dart -d "${{ inputs.IPHONE_DEVICE_MODEL }}"
+        DEVICE_NAME="${{ inputs.IPHONE_DEVICE_MODEL }}" flutter drive --driver=test_integration/test_driver.dart --target=test_integration/screenshots.dart -d "${{ steps.iphone_sim.outputs.udid }}"
 
     - name: Shutdown iPhone Simulator
       shell: bash
