@@ -17,6 +17,8 @@ void main() {
     testWidgets('Capture Screenshots', (tester) async {
       app.main();
 
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+
       final sideBar = find.byIcon(Icons.menu);
       if (sideBar.evaluate().isNotEmpty) {
         await tester.tap(sideBar);
