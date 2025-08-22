@@ -1,12 +1,10 @@
-name: Magic Epaper Push CI
+name: Push
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "flutter" ]
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   ANDROID_EMULATOR_API: 34
   ANDROID_EMULATOR_ARCH: x86_64
   IPHONE_DEVICE_MODEL: iPhone 16 Pro Max
@@ -20,8 +18,7 @@ jobs:
       VERSION_NAME: ${{ steps.flutter-version.outputs.VERSION_NAME }}
       VERSION_CODE: ${{ steps.flutter-version.outputs.VERSION_CODE }}
     steps:
-      - name: Checkout main
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Common Workflow
         uses: ./.github/actions/common
@@ -32,37 +29,29 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          # Get commit message
-          commit_message=$(git log -1 --pretty=format:"%s")
-
           git clone --branch=version https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} version
           cd version
 
           # Read and increment version name
           IFS='.' read -r major minor patch < versionName.txt
-
-          if [[ "$commit_message" =~ ^feat: ]]; then
-            next_minor=$((minor + 1))
-            next_patch=0
-          else
-            next_minor=$((minor))
-            next_patch=$((patch + 1))
-          fi
-          next_version_name="$major.$next_minor.$next_patch"
-          echo "VERSION_NAME=$next_version_name" >> $GITHUB_OUTPUT
-          echo "$next_version_name" > versionName.txt
+          current_patch_version_name="$major.$minor.$patch"
+          echo "VERSION_NAME=$current_patch_version_name" >> $GITHUB_OUTPUT
+          
+          next_patch=$((patch + 1))
+          next_patch_version_name="$major.$minor.$next_patch"
+          echo "$next_patch_version_name" > versionName.txt
 
           # Read and increment version code
           read -r version_code < versionCode.txt
+          echo "VERSION_CODE=$version_code" >> $GITHUB_OUTPUT
           
           new_version_code=$((version_code + 1))
-          echo "VERSION_CODE=$new_version_code" >> $GITHUB_OUTPUT
           echo "$new_version_code" > versionCode.txt
 
           # Force push to version branch
           git checkout --orphan temporary
           git add --all .
-          git commit -am "[Auto] Update versionName: $next_version_name & versionCode: $new_version_code ($(date +%Y-%m-%d.%H:%M:%S))"
+          git commit -am "[Auto] Update versionName: $next_patch_version_name & versionCode: $new_version_code ($(date +%Y-%m-%d.%H:%M:%S))"
           git branch -D version
           git branch -m version
           git push --force origin version
@@ -81,7 +70,7 @@ jobs:
           ENCRYPTED_F10B5E0E5262_KEY: ${{ secrets.ENCRYPTED_F10B5E0E5262_KEY }}
         run: |
           bash scripts/prep-android-key.sh
-  
+
       - name: Android Workflow
         uses: ./.github/actions/android
         with:
@@ -96,7 +85,7 @@ jobs:
         with:
           name: APK Generated
           path: build/app/outputs/flutter-apk
-  
+
       - name: Upload AAB Release
         uses: actions/upload-artifact@v4
         with:
@@ -109,8 +98,8 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git clone --branch=app https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} app
-          cd app
+          git clone --branch=apk https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} apk
+          cd apk
           
           branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
 
@@ -122,8 +111,8 @@ jobs:
 
           echo "Copying new build files"
 
-          find ../build/app/outputs/flutter-apk -type f \( -name '*release.apk' -o -name '*.aab' \) -exec cp -v {} . \;
-          find ../build/app/outputs/bundle -type f \( -name '*release.apk' -o -name '*.aab' \) -exec cp -v {} . \;
+          find ../build/app/outputs/flutter-apk -type f \( -name '*release.apk' -o -name '*release.aab' \) -exec cp -v {} . \;
+          find ../build/app/outputs/bundle -type f \( -name '*release.apk' -o -name '*release.aab' \) -exec cp -v {} . \;
 
           ls
 
@@ -135,21 +124,20 @@ jobs:
 
           ls
 
-          echo "Pushing to app branch"
+          echo "Pushing to apk branch"
 
           git checkout --orphan temporary
           git add --all .
           git commit -am "[Auto] Update APK/AAB's from $branch ($(date +%Y-%m-%d.%H:%M:%S))"
-          git branch -D app
-          git branch -m app
-          git push --force origin app
+          git branch -D apk
+          git branch -m apk
+          git push --force origin apk
 
       - name: Push app in open testing track
         if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
         run: |
-          cd ./android
           git clone --branch=fastlane-android --depth=1 https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} fastlane
-          fastlane uploadToOpenTesting
+          fastlane uploadToClosedTesting
           if [[ $? -ne 0 ]]; then
               exit 1
           fi
@@ -159,14 +147,14 @@ jobs:
     needs: common
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
           xcode-version: latest-stable
+          
+      - uses: actions/checkout@v4
 
-      - name: Prepare Build Keys
+      - name: Update app in Closed Testing track
         if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
         env:
           ENCRYPTED_IOS_IV: ${{ secrets.ENCRYPTED_IOS_IV }}
@@ -185,14 +173,14 @@ jobs:
           fastlane setupCertificates
           if [[ $? -ne 0 ]]; then
               exit 1
-          fi
-    
+          fi    
+
       - name: iOS Workflow
         uses: ./.github/actions/ios
         with:
           VERSION_NAME: ${{needs.common.outputs.VERSION_NAME}}
           VERSION_CODE: ${{needs.common.outputs.VERSION_CODE}}
-      
+
       - name: Push app to testflight
         if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
         run: |
@@ -200,55 +188,50 @@ jobs:
           fastlane uploadToBeta
           if [[ $? -ne 0 ]]; then
               exit 1
-          fi
+          fi        
 
   update-release:
     name: Update Draft Release
-    needs: [common, android, ios]
+    needs: [ common, android, ios ]
     runs-on: ubuntu-latest
     steps:
-      - name: Download repository
-        uses: actions/checkout@v4
-
       - name: Run Release Drafter
-        id: run-release-drafter
         uses: release-drafter/release-drafter@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           version: ${{ needs.common.outputs.VERSION_NAME }}
 
-      - name: Create and Upload Assets
-        run: |
-          echo "${{ needs.common.outputs.VERSION_CODE }}" > ./versionCode.txt
-          git clone --branch=app https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} app
-          gh release upload ${{ steps.run-release-drafter.outputs.tag_name }} app/magic-epaper-development.apk ./versionCode.txt --clobber
-
-  screenshots-android:
-    name: Screenshots (Android)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Android Screenshot Workflow
-        uses: ./.github/actions/screenshot-android
-        with:
-          ANDROID_EMULATOR_API: ${{ env.ANDROID_EMULATOR_API }}
-          ANDROID_EMULATOR_ARCH: ${{ env.ANDROID_EMULATOR_ARCH }}
-
-  screenshots-ios:
-    name: Screenshots (iOS)
+  screenshots-iphone:
+    name: Screenshots (iPhone)
     runs-on: macos-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
           xcode-version: latest-stable
 
-      - name: iOS Screenshot Workflow
-        uses: ./.github/actions/screenshot-ios
+      - uses: actions/checkout@v4
+
+      - name: iPhone Screenshot Workflow
+        uses: ./.github/actions/screenshot-iphone
         with:
           IPHONE_DEVICE_MODEL: ${{ env.IPHONE_DEVICE_MODEL }}
+  
+  screenshots-ipad:
+    name: Screenshots (iPad)
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1.6.0
+        with:
+          xcode-version: latest-stable
+
+      - uses: actions/checkout@v4
+
+      - name: iPad Screenshot Workflow
+        uses: ./.github/actions/screenshot-ipad
+        with:
           IPAD_DEVICE_MODEL: ${{ env.IPAD_DEVICE_MODEL }}
