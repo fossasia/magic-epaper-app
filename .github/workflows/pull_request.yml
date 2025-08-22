@@ -9,7 +9,7 @@ env:
   ANDROID_EMULATOR_API: 34
   ANDROID_EMULATOR_ARCH: x86_64
   IPHONE_DEVICE_MODEL: iPhone 16 Pro Max
-  IPAD_DEVICE_MODEL: iPad (10th generation)
+  IPAD_DEVICE_MODEL: iPad Pro 13-inch (M4)
 
 jobs:
   common:
