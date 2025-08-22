@@ -1,15 +1,14 @@
-name: Magic Epaper PR CI
+name: Build
 
 on:
   pull_request:
-    branches:
-      - main
-      
+    branches: ["flutter"]
+
 env:
   ANDROID_EMULATOR_API: 34
   ANDROID_EMULATOR_ARCH: x86_64
-  IPHONE_DEVICE_MODEL: iPhone 16 Pro Max
-  IPAD_DEVICE_MODEL: iPad Pro 13-inch (M4)
+  IPHONE_DEVICE_MODEL: iPhone 16
+  IPAD_DEVICE_MODEL: iPad (10th generation)
 
 jobs:
   common:
@@ -17,12 +16,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Common Workflow
         uses: ./.github/actions/common
+
       - name: Save PR number
         run: |
           mkdir -p ./pr
           echo ${{ github.event.number }} > ./pr/NR
+
       - uses: actions/upload-artifact@v4
         with:
           name: pr
@@ -34,6 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Android Workflow
         uses: ./.github/actions/android
 
@@ -42,13 +45,13 @@ jobs:
     needs: common
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
           xcode-version: latest-stable
           
+      - uses: actions/checkout@v4
+
       - name: iOS Workflow
         uses: ./.github/actions/ios
 
@@ -80,4 +83,3 @@ jobs:
         with:
           IPHONE_DEVICE_MODEL: ${{ env.IPHONE_DEVICE_MODEL }}
           IPAD_DEVICE_MODEL: ${{ env.IPAD_DEVICE_MODEL }}
-      
