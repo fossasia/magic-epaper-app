@@ -16,13 +16,6 @@ void main() {
   group('Magic ePaper App - Screenshots', () {
     testWidgets('Capture Screenshots', (tester) async {
       app.main();
-      final GDEY037T03 = find.byKey(const Key('GDEY037T03'));
-      if (GDEY037T03.evaluate().isNotEmpty) {
-        await tester.tap(GDEY037T03);
-        await tester.pumpAndSettle();
-      }
-      await tester.pumpAndSettle(const Duration(seconds: 5));
-      await binding.takeScreenshot('1_display_selection');
 
       final sideBar = find.byIcon(Icons.menu);
       if (sideBar.evaluate().isNotEmpty) {
@@ -47,7 +40,10 @@ void main() {
         await tester.tap(selectDisplay);
         await tester.pumpAndSettle();
       }
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+      await binding.takeScreenshot('1_display_selection');
 
+      final GDEY037T03 = find.byKey(const Key('GDEY037T03'));
       if (GDEY037T03.evaluate().isNotEmpty) {
         await tester.tap(GDEY037T03);
         await tester.pumpAndSettle();
