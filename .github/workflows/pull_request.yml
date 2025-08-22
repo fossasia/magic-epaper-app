@@ -8,7 +8,7 @@ on:
 env:
   ANDROID_EMULATOR_API: 34
   ANDROID_EMULATOR_ARCH: x86_64
-  IPHONE_DEVICE_MODEL: iPhone 16
+  IPHONE_DEVICE_MODEL: iPhone 16 Pro Max
   IPAD_DEVICE_MODEL: iPad (10th generation)
 
 jobs:
