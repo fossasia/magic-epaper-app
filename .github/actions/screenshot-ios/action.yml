@@ -54,7 +54,7 @@ runs:
     - name: Capture iPad Screenshots
       shell: bash
       run: |
-        DEVICE_NAME="${{ inputs.IPAD_DEVICE_MODEL }}" flutter drive --driver=test_integration/test_driver.dart --target=test_integration/screenshots.dart -d "${{ inputs.IPAD_DEVICE_MODEL }}"
+        DEVICE_NAME="${{ inputs.IPAD_DEVICE_MODEL }}" flutter drive --driver=test_integration/test_driver.dart --target=test_integration/screenshots.dart -d "${{ steps.ipad_sim.outputs.udid }}"
 
     - name: Shutdown iPad Simulator
       shell: bash
