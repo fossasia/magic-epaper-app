@@ -75,9 +75,6 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - name: List available simulators
-        run: xcrun simctl list devices
-
       - name: iOS Screenshot Workflow
         uses: ./.github/actions/screenshot-ios
         with:
