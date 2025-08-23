@@ -6,6 +6,7 @@ on:
       - main
 
 env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   ANDROID_EMULATOR_API: 34
   ANDROID_EMULATOR_ARCH: x86_64
   IPHONE_DEVICE_MODEL: iPhone 16 Pro Max
@@ -19,7 +20,8 @@ jobs:
       VERSION_NAME: ${{ steps.flutter-version.outputs.VERSION_NAME }}
       VERSION_CODE: ${{ steps.flutter-version.outputs.VERSION_CODE }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout main
+        uses: actions/checkout@v4
 
       - name: Common Workflow
         uses: ./.github/actions/common
@@ -220,7 +222,7 @@ jobs:
         run: |
           echo "${{ needs.common.outputs.VERSION_CODE }}" > ./versionCode.txt
           git clone --branch=app https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} app
-          gh release upload ${{ steps.run-release-drafter.outputs.tag_name }} app/magic-epaper-development.apk ./versionCode.txt --clobber
+          gh release upload ${{ steps.run-release-drafter.outputs.tag_name }} app/magic-epaper-main-release.apk ./versionCode.txt --clobber
 
   screenshots-iphone:
     name: Screenshots (iPhone)
