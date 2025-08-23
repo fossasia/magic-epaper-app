@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   ANDROID_EMULATOR_API: 34
   ANDROID_EMULATOR_ARCH: x86_64
