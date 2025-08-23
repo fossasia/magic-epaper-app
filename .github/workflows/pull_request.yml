@@ -1,8 +1,9 @@
-name: Build
+name: Magic Epaper PR CI
 
 on:
   pull_request:
-    branches: ["flutter"]
+    branches:
+      - main
 
 env:
   ANDROID_EMULATOR_API: 34
