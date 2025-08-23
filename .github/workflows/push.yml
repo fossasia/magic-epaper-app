@@ -30,29 +30,37 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
+          # Get commit message
+          commit_message=$(git log -1 --pretty=format:"%s")
+
           git clone --branch=version https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} version
           cd version
 
           # Read and increment version name
           IFS='.' read -r major minor patch < versionName.txt
-          current_patch_version_name="$major.$minor.$patch"
-          echo "VERSION_NAME=$current_patch_version_name" >> $GITHUB_OUTPUT
-          
-          next_patch=$((patch + 1))
-          next_patch_version_name="$major.$minor.$next_patch"
-          echo "$next_patch_version_name" > versionName.txt
+
+          if [[ "$commit_message" =~ ^feat: ]]; then
+            next_minor=$((minor + 1))
+            next_patch=0
+          else
+            next_minor=$((minor))
+            next_patch=$((patch + 1))
+          fi
+          next_version_name="$major.$next_minor.$next_patch"
+          echo "VERSION_NAME=$next_version_name" >> $GITHUB_OUTPUT
+          echo "$next_version_name" > versionName.txt
 
           # Read and increment version code
           read -r version_code < versionCode.txt
-          echo "VERSION_CODE=$version_code" >> $GITHUB_OUTPUT
           
           new_version_code=$((version_code + 1))
+          echo "VERSION_CODE=$new_version_code" >> $GITHUB_OUTPUT
           echo "$new_version_code" > versionCode.txt
 
           # Force push to version branch
           git checkout --orphan temporary
           git add --all .
-          git commit -am "[Auto] Update versionName: $next_patch_version_name & versionCode: $new_version_code ($(date +%Y-%m-%d.%H:%M:%S))"
+          git commit -am "[Auto] Update versionName: $next_version_name & versionCode: $new_version_code ($(date +%Y-%m-%d.%H:%M:%S))"
           git branch -D version
           git branch -m version
           git push --force origin version
@@ -137,8 +145,9 @@ jobs:
       - name: Push app in open testing track
         if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
         run: |
+          cd ./android
           git clone --branch=fastlane-android --depth=1 https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} fastlane
-          fastlane uploadToClosedTesting
+          fastlane uploadToOpenTesting
           if [[ $? -ne 0 ]]; then
               exit 1
           fi
@@ -155,7 +164,7 @@ jobs:
           
       - uses: actions/checkout@v4
 
-      - name: Update app in Closed Testing track
+      - name: Prepare Build Keys
         if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
         env:
           ENCRYPTED_IOS_IV: ${{ secrets.ENCRYPTED_IOS_IV }}
@@ -193,15 +202,25 @@ jobs:
 
   update-release:
     name: Update Draft Release
-    needs: [ common, android, ios ]
+    needs: [common, android, ios]
     runs-on: ubuntu-latest
     steps:
+      - name: Download repository
+        uses: actions/checkout@v4
+
       - name: Run Release Drafter
+        id: run-release-drafter
         uses: release-drafter/release-drafter@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           version: ${{ needs.common.outputs.VERSION_NAME }}
+
+      - name: Create and Upload Assets
+        run: |
+          echo "${{ needs.common.outputs.VERSION_CODE }}" > ./versionCode.txt
+          git clone --branch=app https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} app
+          gh release upload ${{ steps.run-release-drafter.outputs.tag_name }} app/magic-epaper-development.apk ./versionCode.txt --clobber
 
   screenshots-iphone:
     name: Screenshots (iPhone)
