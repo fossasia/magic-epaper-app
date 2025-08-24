@@ -4,7 +4,6 @@ import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/provider/image_loader.dart';
 import 'package:magicepaperapp/view/about_us_screen.dart';
 import 'package:magicepaperapp/view/settings_screen.dart';
-import 'package:magicepaperapp/waveshare/waveshare_nfc_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:magicepaperapp/ndef_screen/ndef_screen.dart';
 import 'package:magicepaperapp/view/display_selection_screen.dart';
@@ -30,7 +29,6 @@ class MyApp extends StatelessWidget {
         '/aboutUs': (context) => const AboutUsScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/ndefScreen': (context) => const NDEFScreen(),
-        '/waveShareNfcScreen': (context) => const WaveShareNfcScreen(),
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,

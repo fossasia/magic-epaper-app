@@ -29,6 +29,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
     Waveshare2in9(),
     GDEQ031T10(),
     ConfigurableEpd(
+      modelId: 'NA',
       width: 400,
       height: 300,
       colors: [Colors.white, Colors.black, Colors.red],
@@ -105,7 +106,9 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                       ),
                       itemCount: displays.length,
                       itemBuilder: (context, index) {
+                        print('Display: ${displays[index].modelId}');
                         return DisplayCard(
+                          key: Key(displays[index].modelId),
                           display: displays[index],
                           isSelected: selectedIndex == index,
                           onTap: () {

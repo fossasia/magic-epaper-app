@@ -81,7 +81,7 @@ jobs:
           ENCRYPTED_F10B5E0E5262_KEY: ${{ secrets.ENCRYPTED_F10B5E0E5262_KEY }}
         run: |
           bash scripts/prep-android-key.sh
-  
+
       - name: Android Workflow
         uses: ./.github/actions/android
         with:
@@ -96,7 +96,7 @@ jobs:
         with:
           name: APK Generated
           path: build/app/outputs/flutter-apk
-  
+
       - name: Upload AAB Release
         uses: actions/upload-artifact@v4
         with:
@@ -122,8 +122,8 @@ jobs:
 
           echo "Copying new build files"
 
-          find ../build/app/outputs/flutter-apk -type f \( -name '*release.apk' -o -name '*.aab' \) -exec cp -v {} . \;
-          find ../build/app/outputs/bundle -type f \( -name '*release.apk' -o -name '*.aab' \) -exec cp -v {} . \;
+          find ../build/app/outputs/flutter-apk -type f \( -name '*release.apk' -o -name '*release.aab' \) -exec cp -v {} . \;
+          find ../build/app/outputs/bundle -type f \( -name '*release.apk' -o -name '*release.aab' \) -exec cp -v {} . \;
 
           ls
 
@@ -159,12 +159,12 @@ jobs:
     needs: common
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
           xcode-version: latest-stable
+          
+      - uses: actions/checkout@v4
 
       - name: Prepare Build Keys
         if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
@@ -185,14 +185,14 @@ jobs:
           fastlane setupCertificates
           if [[ $? -ne 0 ]]; then
               exit 1
-          fi
-    
+          fi    
+
       - name: iOS Workflow
         uses: ./.github/actions/ios
         with:
           VERSION_NAME: ${{needs.common.outputs.VERSION_NAME}}
           VERSION_CODE: ${{needs.common.outputs.VERSION_CODE}}
-      
+
       - name: Push app to testflight
         if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
         run: |
@@ -200,7 +200,7 @@ jobs:
           fastlane uploadToBeta
           if [[ $? -ne 0 ]]; then
               exit 1
-          fi
+          fi        
 
   update-release:
     name: Update Draft Release
@@ -222,4 +222,38 @@ jobs:
         run: |
           echo "${{ needs.common.outputs.VERSION_CODE }}" > ./versionCode.txt
           git clone --branch=app https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} app
-          gh release upload ${{ steps.run-release-drafter.outputs.tag_name }} app/magic-epaper-development.apk ./versionCode.txt --clobber
+          gh release upload ${{ steps.run-release-drafter.outputs.tag_name }} app/magic-epaper-main-release.apk ./versionCode.txt --clobber
+
+  screenshots-iphone:
+    name: Screenshots (iPhone)
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1.6.0
+        with:
+          xcode-version: latest-stable
+
+      - uses: actions/checkout@v4
+
+      - name: iPhone Screenshot Workflow
+        uses: ./.github/actions/screenshot-iphone
+        with:
+          IPHONE_DEVICE_MODEL: ${{ env.IPHONE_DEVICE_MODEL }}
+  
+  screenshots-ipad:
+    name: Screenshots (iPad)
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1.6.0
+        with:
+          xcode-version: latest-stable
+
+      - uses: actions/checkout@v4
+
+      - name: iPad Screenshot Workflow
+        uses: ./.github/actions/screenshot-ipad
+        with:
+          IPAD_DEVICE_MODEL: ${{ env.IPAD_DEVICE_MODEL }}
