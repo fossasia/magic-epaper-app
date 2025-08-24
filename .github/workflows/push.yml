@@ -224,6 +224,19 @@ jobs:
           git clone --branch=app https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} app
           gh release upload ${{ steps.run-release-drafter.outputs.tag_name }} app/magic-epaper-main-release.apk ./versionCode.txt --clobber
 
+  screenshots-android:
+    name: Screenshots (Android)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Android Screenshot Workflow
+        uses: ./.github/actions/screenshot-android
+        with:
+          ANDROID_EMULATOR_API: ${{ env.ANDROID_EMULATOR_API }}
+          ANDROID_EMULATOR_ARCH: ${{ env.ANDROID_EMULATOR_ARCH }}
+
   screenshots-iphone:
     name: Screenshots (iPhone)
     runs-on: macos-latest

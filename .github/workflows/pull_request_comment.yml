@@ -2,7 +2,7 @@ name: Comment
 
 on:
   workflow_run:
-    workflows: [ Build ]
+    workflows: [ Magic Epaper PR CI ]
     types:
       - completed
 
