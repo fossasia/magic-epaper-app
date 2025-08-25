@@ -48,9 +48,9 @@ class CardTemplateSelectionView extends StatelessWidget {
           child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 0.8,
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 16,
+              childAspectRatio: 0.6,
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
             ),
             itemCount: _getTemplates().length,
             itemBuilder: (context, index) {
@@ -114,105 +114,133 @@ class CardTemplateSelectionView extends StatelessWidget {
   }
 
   Widget _buildTemplateCard(BuildContext context, TemplateItem template) {
-    return InkWell(
-      onTap: template.isEnabled ? () => template.onTap(context) : null,
-      highlightColor:
-          template.isEnabled ? colorAccent.withValues(alpha: 0.1) : null,
-      borderRadius: BorderRadius.circular(12),
-      splashColor:
-          template.isEnabled ? colorAccent.withValues(alpha: 0.2) : null,
-      child: Card(
-        color: Colors.white,
-        elevation: template.isEnabled ? 2 : 1,
-        shape: RoundedRectangleBorder(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final availableHeight = constraints.maxHeight;
+        final isCompactHeight = availableHeight < 220;
+
+        return InkWell(
+          onTap: template.isEnabled ? () => template.onTap(context) : null,
+          highlightColor:
+              template.isEnabled ? colorAccent.withValues(alpha: 0.1) : null,
           borderRadius: BorderRadius.circular(12),
-          side: BorderSide(
-            color: template.isEnabled
-                ? Colors.grey.shade300
-                : Colors.grey.shade200,
-            width: 1,
-          ),
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color: template.isEnabled ? Colors.white : Colors.grey.shade50,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    color: template.isEnabled
-                        ? template.color.withValues(alpha: 0.1)
-                        : Colors.grey.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(32),
-                  ),
-                  child: Icon(
-                    template.icon,
-                    size: 32,
-                    color: template.isEnabled ? template.color : Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  template.title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color:
-                        template.isEnabled ? colorBlack : Colors.grey.shade600,
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  template.description,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: template.isEnabled
-                        ? Colors.grey.shade600
-                        : Colors.grey.shade500,
-                    height: 1.3,
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                if (!template.isEnabled) ...[
-                  const SizedBox(height: 12),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.orange.withValues(alpha: 0.3),
-                        width: 1,
+          splashColor:
+              template.isEnabled ? colorAccent.withValues(alpha: 0.2) : null,
+          child: Card(
+            color: Colors.white,
+            elevation: template.isEnabled ? 2 : 1,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+              side: BorderSide(
+                color: template.isEnabled
+                    ? Colors.grey.shade300
+                    : Colors.grey.shade200,
+                width: 1,
+              ),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: template.isEnabled ? Colors.white : Colors.grey.shade50,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    flex: isCompactHeight ? 2 : 3,
+                    child: Center(
+                      child: Container(
+                        width: 64,
+                        height: 64,
+                        decoration: BoxDecoration(
+                          color: template.isEnabled
+                              ? template.color.withValues(alpha: 0.1)
+                              : Colors.grey.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(32),
+                        ),
+                        child: Icon(
+                          template.icon,
+                          size: 32,
+                          color:
+                              template.isEnabled ? template.color : Colors.grey,
+                        ),
                       ),
                     ),
-                    child: const Text(
-                      StringConstants.comingSoon,
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.orange,
-                      ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          height: 40,
+                          // color: Colors.red,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                template.title,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: template.isEnabled
+                                      ? colorBlack
+                                      : Colors.grey.shade600,
+                                ),
+                                textAlign: TextAlign.center,
+                                maxLines: isCompactHeight ? 2 : 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          template.description,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: template.isEnabled
+                                ? Colors.grey.shade600
+                                : Colors.grey.shade500,
+                            height: 1.3,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: isCompactHeight ? 2 : 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        if (!template.isEnabled) ...[
+                          SizedBox(height: 8),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.orange.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Colors.orange.withValues(alpha: 0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: Text(
+                              StringConstants.comingSoon,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.orange,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
                 ],
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
