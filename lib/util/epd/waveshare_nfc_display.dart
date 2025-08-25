@@ -11,7 +11,7 @@ abstract class WaveshareNfcDisplay extends DisplayDevice {
   WaveshareNfcDisplay({required this.ePaperSizeEnum});
 
   @override
-  List<Color> get colors => [Colors.black, Colors.white];
+  List<Color> get colors => [Colors.white, Colors.black];
 
   @override
   List<img.Image Function(img.Image)> get processingMethods => [

@@ -411,7 +411,7 @@ class BottomActionMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
+      height: 75,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -423,163 +423,160 @@ class BottomActionMenu extends StatelessWidget {
           ),
         ],
       ),
-      child: Center(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            children: [
-              _buildActionButton(
-                context: context,
-                icon: Icons.add_photo_alternate_outlined,
-                label: StringConstants.importImageButtonLabel,
-                onTap: () async {
-                  final success = await imgLoader.pickImage(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildActionButton(
+              context: context,
+              icon: Icons.add_photo_alternate_outlined,
+              label: "Import",
+              onTap: () async {
+                final success = await imgLoader.pickImage(
+                  width: epd.width,
+                  height: epd.height,
+                );
+                if (success && imgLoader.image != null) {
+                  final bytes = Uint8List.fromList(
+                    img.encodePng(imgLoader.image!),
+                  );
+                  await imgLoader.saveFinalizedImageBytes(bytes);
+                }
+                onSourceChanged?.call('imported');
+              },
+            ),
+            _buildActionButton(
+              key: const Key('openEditorButton'),
+              context: context,
+              icon: Icons.edit_outlined,
+              label: "Editor",
+              onTap: () async {
+                final canvasBytes = await Navigator.of(context).push<Uint8List>(
+                  MaterialPageRoute(
+                    builder: (context) => MovableBackgroundImageExample(
+                      width: epd.width,
+                      height: epd.height,
+                    ),
+                  ),
+                );
+                if (canvasBytes != null) {
+                  await imgLoader.updateImage(
+                    bytes: canvasBytes,
                     width: epd.width,
                     height: epd.height,
                   );
-                  if (success && imgLoader.image != null) {
-                    final bytes = Uint8List.fromList(
-                      img.encodePng(imgLoader.image!),
-                    );
-                    await imgLoader.saveFinalizedImageBytes(bytes);
-                  }
-                  onSourceChanged?.call('imported');
-                },
-              ),
-              _buildActionButton(
-                key: const Key('openEditorButton'),
-                context: context,
-                icon: Icons.edit_outlined,
-                label: StringConstants.openEditor,
-                onTap: () async {
+                  await imgLoader.saveFinalizedImageBytes(canvasBytes);
+                  onSourceChanged?.call('editor');
+                }
+              },
+            ),
+            _buildActionButton(
+              key: const Key('adjustButton'),
+              context: context,
+              icon: Icons.tune_rounded,
+              label: "Adjust",
+              onTap: () async {
+                if (imgLoader.image != null) {
                   final canvasBytes =
                       await Navigator.of(context).push<Uint8List>(
                     MaterialPageRoute(
-                      builder: (context) => MovableBackgroundImageExample(
-                        width: epd.width,
-                        height: epd.height,
+                      builder: (context) => ProImageEditor.memory(
+                        img.encodeJpg(imgLoader.image!),
+                        callbacks: ProImageEditorCallbacks(
+                          onImageEditingComplete: (Uint8List bytes) async {
+                            Navigator.pop(context, bytes);
+                          },
+                        ),
+                        configs: const ProImageEditorConfigs(
+                          paintEditor: PaintEditorConfigs(enabled: false),
+                          textEditor: TextEditorConfigs(enabled: false),
+                          cropRotateEditor: CropRotateEditorConfigs(
+                            enabled: false,
+                          ),
+                          emojiEditor: EmojiEditorConfigs(enabled: false),
+                        ),
                       ),
                     ),
                   );
                   if (canvasBytes != null) {
-                    await imgLoader.updateImage(
+                    imgLoader.updateImage(
                       bytes: canvasBytes,
                       width: epd.width,
                       height: epd.height,
                     );
-                    await imgLoader.saveFinalizedImageBytes(canvasBytes);
-                    onSourceChanged?.call('editor');
                   }
-                },
-              ),
-              _buildActionButton(
-                key: const Key('adjustButton'),
-                context: context,
-                icon: Icons.tune_rounded,
-                label: StringConstants.adjustButtonLabel,
-                onTap: () async {
-                  if (imgLoader.image != null) {
-                    final canvasBytes =
-                        await Navigator.of(context).push<Uint8List>(
-                      MaterialPageRoute(
-                        builder: (context) => ProImageEditor.memory(
-                          img.encodeJpg(imgLoader.image!),
-                          callbacks: ProImageEditorCallbacks(
-                            onImageEditingComplete: (Uint8List bytes) async {
-                              Navigator.pop(context, bytes);
-                            },
-                          ),
-                          configs: const ProImageEditorConfigs(
-                            paintEditor: PaintEditorConfigs(enabled: false),
-                            textEditor: TextEditorConfigs(enabled: false),
-                            cropRotateEditor: CropRotateEditorConfigs(
-                              enabled: false,
-                            ),
-                            emojiEditor: EmojiEditorConfigs(enabled: false),
-                          ),
-                        ),
-                      ),
-                    );
-                    if (canvasBytes != null) {
-                      imgLoader.updateImage(
-                        bytes: canvasBytes,
-                        width: epd.width,
-                        height: epd.height,
-                      );
-                    }
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        duration: Durations.medium4,
-                        content: Text(StringConstants.noImageSelectedFeedback),
-                        backgroundColor: colorPrimary,
-                      ),
-                    );
-                  }
-                },
-              ),
-              _buildActionButton(
-                key: const Key('barcodeButton'),
-                context: context,
-                icon: Icons.qr_code_scanner,
-                label: 'Barcode',
-                onTap: () async {
-                  final result = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => BarcodeScannerScreen(
-                        width: epd.width,
-                        height: epd.height,
-                      ),
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      duration: Durations.medium4,
+                      content: Text(StringConstants.noImageSelectedFeedback),
+                      backgroundColor: colorPrimary,
                     ),
                   );
-
-                  if (result is Uint8List) {
-                    await imgLoader.updateImage(
-                      bytes: result,
+                }
+              },
+            ),
+            _buildActionButton(
+              key: const Key('barcodeButton'),
+              context: context,
+              icon: Icons.qr_code_scanner,
+              label: 'QR Code',
+              onTap: () async {
+                final result = await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => BarcodeScannerScreen(
                       width: epd.width,
                       height: epd.height,
-                    );
-                    await imgLoader.saveFinalizedImageBytes(result);
-                  }
-                },
-              ),
-              _buildActionButton(
-                context: context,
-                icon: Icons.photo_library_outlined,
-                label: 'Library',
-                onTap: () async {
-                  await imageSaveHandler?.navigateToImageLibrary();
-                },
-              ),
-              _buildActionButton(
-                context: context,
-                icon: Icons.dashboard_customize_outlined,
-                label: 'Templates',
-                onTap: () async {
-                  final result = await Navigator.of(context).push<Uint8List>(
-                    MaterialPageRoute(
-                      builder: (context) => CardTemplateSelectionView(
-                        width: epd.width,
-                        height: epd.height,
-                      ),
                     ),
-                  );
+                  ),
+                );
 
-                  if (result != null) {
-                    await imgLoader.updateImage(
-                      bytes: result,
+                if (result is Uint8List) {
+                  await imgLoader.updateImage(
+                    bytes: result,
+                    width: epd.width,
+                    height: epd.height,
+                  );
+                  await imgLoader.saveFinalizedImageBytes(result);
+                }
+              },
+            ),
+            _buildActionButton(
+              context: context,
+              icon: Icons.photo_library_outlined,
+              label: 'Library',
+              onTap: () async {
+                await imageSaveHandler?.navigateToImageLibrary();
+              },
+            ),
+            _buildActionButton(
+              context: context,
+              icon: Icons.dashboard_customize_outlined,
+              label: 'Templates',
+              onTap: () async {
+                final result = await Navigator.of(context).push<Uint8List>(
+                  MaterialPageRoute(
+                    builder: (context) => CardTemplateSelectionView(
                       width: epd.width,
                       height: epd.height,
-                    );
-                    await imgLoader.saveFinalizedImageBytes(result);
+                    ),
+                  ),
+                );
 
-                    onSourceChanged?.call('template');
-                  }
-                },
-              ),
-            ],
-          ),
+                if (result != null) {
+                  await imgLoader.updateImage(
+                    bytes: result,
+                    width: epd.width,
+                    height: epd.height,
+                  );
+                  await imgLoader.saveFinalizedImageBytes(result);
+
+                  onSourceChanged?.call('template');
+                }
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -592,22 +589,29 @@ class BottomActionMenu extends StatelessWidget {
     required VoidCallback onTap,
     Key? key,
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+    return Expanded(
       child: InkWell(
         key: key,
         onTap: onTap,
-        borderRadius: BorderRadius.circular(24),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, color: colorAccent, size: 26),
-              const SizedBox(height: 4),
+              Icon(icon, color: colorAccent, size: 22),
+              const SizedBox(height: 2),
               Text(
                 label,
-                style: const TextStyle(color: colorBlack, fontSize: 12),
+                style: const TextStyle(
+                  color: colorBlack,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
