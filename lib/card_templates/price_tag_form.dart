@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
 import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
 import 'package:magicepaperapp/card_templates/price_tag_card_widget.dart';
 import 'package:magicepaperapp/card_templates/price_tag_model.dart';
 import 'package:magicepaperapp/util/template_util.dart';
+import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 class PriceTagForm extends StatefulWidget {
   final int width;
@@ -30,6 +32,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
 
   File? _productImage;
   final ImagePicker _picker = ImagePicker();
+  bool _isGenerating = false;
 
   late PriceTagModel _data;
 
@@ -93,168 +96,539 @@ class _PriceTagFormState extends State<PriceTagForm> {
   void _submitForm() async {
     if (_formKey.currentState?.validate() != true) return;
 
-    final List<LayerSpec> layers = [];
+    setState(() {
+      _isGenerating = true;
+    });
 
-    // Product image layer
-    if (_productImage != null) {
-      layers.add(LayerSpec.widget(
-        widget: ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
-          child: Image.file(_productImage!,
-              width: 200, height: 160, fit: BoxFit.cover),
+    try {
+      final List<LayerSpec> layers = [];
+
+      if (_productImage != null) {
+        layers.add(LayerSpec.widget(
+          widget: ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Image.file(_productImage!,
+                width: 200, height: 160, fit: BoxFit.cover),
+          ),
+          offset: const Offset(-90, 160),
+          scale: 10,
+          rotation: -1.57,
+        ));
+      }
+
+      if (_data.productName.isNotEmpty) {
+        layers.add(LayerSpec.text(
+          text: _data.productName,
+          textStyle: const TextStyle(fontSize: 45, fontWeight: FontWeight.bold),
+          backgroundColor: Colors.white,
+          textColor: Colors.black,
+          textAlign: TextAlign.center,
+          offset: const Offset(-100, -100),
+          scale: 2,
+          rotation: -1.57,
+        ));
+      }
+
+      if (_data.price.isNotEmpty || _data.currency.isNotEmpty) {
+        layers.add(LayerSpec.text(
+          text: '${_data.currency} ${_data.price}',
+          textStyle: const TextStyle(fontWeight: FontWeight.bold),
+          backgroundColor: Colors.white,
+          textColor: Colors.red,
+          textAlign: TextAlign.center,
+          offset: const Offset(80, -140),
+          scale: 4,
+          rotation: -1.57,
+        ));
+      }
+
+      if (_data.quantity.isNotEmpty) {
+        layers.add(LayerSpec.text(
+          text: _data.quantity,
+          textStyle: const TextStyle(fontSize: 40),
+          backgroundColor: Colors.white,
+          textColor: Colors.black,
+          textAlign: TextAlign.center,
+          offset: const Offset(-50, -120),
+          scale: 1,
+          rotation: -1.57,
+        ));
+      }
+
+      if (_data.barcodeData.isNotEmpty) {
+        layers.add(LayerSpec.widget(
+          widget: BarcodeWidget(
+            style: const TextStyle(color: Colors.black),
+            padding: const EdgeInsets.all(10),
+            backgroundColor: colorWhite,
+            barcode: Barcode.code128(),
+            data: _data.barcodeData,
+            width: 240,
+            height: 120,
+          ),
+          offset: const Offset(90, 120),
+          scale: 15,
+          rotation: -1.57,
+        ));
+      }
+
+      final Uint8List? bytes = await Navigator.of(context).push<Uint8List>(
+        MaterialPageRoute(
+          builder: (context) => MovableBackgroundImageExample(
+            width: widget.width,
+            height: widget.height,
+            initialLayers: layers,
+          ),
         ),
-        offset: const Offset(-90, 160),
-        scale: 10,
-        rotation: -1.57,
-      ));
-    }
+      );
 
-    // Product name (max 2 lines) - at center
-    if (_data.productName.isNotEmpty) {
-      layers.add(LayerSpec.text(
-        text: _data.productName,
-        textStyle: const TextStyle(fontSize: 45, fontWeight: FontWeight.bold),
-        backgroundColor: Colors.white,
-        textColor: Colors.black,
-        textAlign: TextAlign.center,
-        offset: const Offset(-100, -100),
-        scale: 2,
-        rotation: -1.57,
-      ));
-    }
-
-    // Price line
-    if (_data.price.isNotEmpty || _data.currency.isNotEmpty) {
-      layers.add(LayerSpec.text(
-        text: '${_data.currency} ${_data.price}',
-        textStyle: const TextStyle(fontWeight: FontWeight.bold),
-        backgroundColor: Colors.white,
-        textColor: Colors.red,
-        textAlign: TextAlign.center,
-        offset: const Offset(80, -140),
-        scale: 4,
-        rotation: -1.57,
-      ));
-    }
-
-    // Quantity
-    if (_data.quantity.isNotEmpty) {
-      layers.add(LayerSpec.text(
-        text: _data.quantity,
-        textStyle: const TextStyle(fontSize: 40),
-        backgroundColor: Colors.white,
-        textColor: Colors.black,
-        textAlign: TextAlign.center,
-        offset: const Offset(-50, -120),
-        scale: 1,
-        rotation: -1.57,
-      ));
-    }
-
-    if (_data.barcodeData.isNotEmpty) {
-      layers.add(LayerSpec.widget(
-        widget: BarcodeWidget(
-          style: const TextStyle(color: Colors.black),
-          padding: const EdgeInsets.all(10),
-          backgroundColor: colorWhite,
-          barcode: Barcode.code128(),
-          data: _data.barcodeData,
-          width: 240,
-          height: 120,
-        ),
-        offset: const Offset(90, 120),
-        scale: 15,
-        rotation: -1.57,
-      ));
-    }
-
-    final Uint8List? bytes = await Navigator.of(context).push<Uint8List>(
-      MaterialPageRoute(
-        builder: (context) => MovableBackgroundImageExample(
-          width: widget.width,
-          height: widget.height,
-          initialLayers: layers,
-        ),
-      ),
-    );
-
-    if (bytes != null) {
-      Navigator.of(context)
-        ..pop()
-        ..pop(bytes);
+      if (bytes != null) {
+        Navigator.of(context)
+          ..pop()
+          ..pop(bytes);
+      }
+    } finally {
+      setState(() {
+        _isGenerating = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Price Tag Details')),
-      body: SingleChildScrollView(
+    return CommonScaffold(
+      index: -1,
+      toolbarHeight: 85,
+      titleWidget: const Padding(
+        padding: EdgeInsets.fromLTRB(5, 16, 16, 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              StringConstants.priceTagGenerator,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              StringConstants.priceTagDescription,
+              style: TextStyle(fontSize: 16, color: Colors.white),
+            ),
+          ],
+        ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16.0, 14, 16.0, 16.0),
+          child: Column(
+            children: [
+              PriceTagCardWidget(data: _data),
+              const SizedBox(height: 20),
+              const Divider(height: 1, color: Colors.grey),
+              const SizedBox(height: 20),
+              Card(
+                color: Colors.white,
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: BorderSide(color: Colors.grey.shade300, width: 1),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          children: [
+                            Icon(Icons.local_offer_outlined,
+                                color: colorAccent, size: 20),
+                            SizedBox(width: 8),
+                            Text(
+                              StringConstants.productDetails,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: colorBlack,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        _buildProductImageSection(),
+                        const SizedBox(height: 20),
+                        _buildTextFormField(
+                          controller: _productNameController,
+                          label: StringConstants.productName,
+                          hint: StringConstants.productNameHint,
+                          icon: Icons.inventory_2_outlined,
+                          validator: (value) => value?.isEmpty ?? true
+                              ? StringConstants.pleaseEnterProductName
+                              : null,
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: _buildTextFormField(
+                                controller: _currencyController,
+                                label: StringConstants.currency,
+                                hint: StringConstants.currencyHint,
+                                icon: Icons.currency_exchange_outlined,
+                                validator: (value) => value?.isEmpty ?? true
+                                    ? StringConstants.required
+                                    : null,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              flex: 2,
+                              child: _buildTextFormField(
+                                controller: _priceController,
+                                label: StringConstants.price,
+                                hint: StringConstants.priceHint,
+                                icon: Icons.attach_money_outlined,
+                                keyboardType: TextInputType.number,
+                                validator: (value) => value?.isEmpty ?? true
+                                    ? StringConstants.pleaseEnterPrice
+                                    : null,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        _buildTextFormField(
+                          controller: _quantityController,
+                          label: StringConstants.quantitySize,
+                          hint: StringConstants.quantitySizeHint,
+                          icon: Icons.straighten_outlined,
+                          validator: (value) => value?.isEmpty ?? true
+                              ? StringConstants.pleaseEnterQuantitySize
+                              : null,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildTextFormField(
+                          controller: _barcodeController,
+                          label: StringConstants.barcodeData,
+                          hint: StringConstants.barcodeDataHint,
+                          icon: Icons.qr_code_scanner_outlined,
+                          validator: (value) => value?.isEmpty ?? true
+                              ? StringConstants.pleaseEnterBarcodeData
+                              : null,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: _isGenerating ? null : _submitForm,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        colorPrimary.withAlpha(_isGenerating ? 125 : 255),
+                    foregroundColor:
+                        Colors.white.withAlpha(_isGenerating ? 178 : 255),
+                    elevation: _isGenerating ? 0 : 2,
+                    shadowColor: colorPrimary.withOpacity(0.3),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: _isGenerating
+                      ? const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                            Text(
+                              StringConstants.generatingPriceTag,
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        )
+                      : const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.local_offer, size: 18),
+                            SizedBox(width: 8),
+                            Text(
+                              StringConstants.generatePriceTag,
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextFormField({
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+    required IconData icon,
+    String? Function(String?)? validator,
+    TextInputType? keyboardType,
+    int maxLines = 1,
+  }) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: colorPrimary,
+          selectionColor: colorPrimary.withOpacity(0.2),
+          selectionHandleColor: colorPrimary,
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          focusColor: colorPrimary,
+          hoverColor: colorPrimary.withOpacity(0.1),
+        ),
+      ),
+      child: TextFormField(
+        controller: controller,
+        validator: validator,
+        keyboardType: keyboardType,
+        maxLines: maxLines,
+        style: const TextStyle(
+          fontSize: 16,
+          color: colorBlack,
+          fontWeight: FontWeight.w500,
+        ),
+        cursorColor: colorPrimary,
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          prefixIcon: Icon(icon, color: colorAccent, size: 20),
+          labelStyle: TextStyle(
+            color: colorBlack.withOpacity(0.7),
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+          hintStyle: TextStyle(
+            color: Colors.grey.shade500,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
+          floatingLabelStyle: const TextStyle(
+            color: colorPrimary,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: colorPrimary, width: 2),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.red, width: 1.5),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.red, width: 2),
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          filled: true,
+          fillColor: Colors.grey.shade50,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProductImageSection() {
+    return Card(
+      color: Colors.grey.shade50,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: Colors.grey.shade300, width: 1),
+      ),
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            PriceTagCardWidget(data: _data),
-            const SizedBox(height: 20),
-            const Divider(),
-            const SizedBox(height: 20),
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: _productNameController,
-                    decoration:
-                        const InputDecoration(labelText: 'Product Name'),
-                    validator: (val) =>
-                        val!.isEmpty ? 'Enter product name' : null,
+            Row(
+              children: [
+                const Icon(Icons.image_outlined, color: colorAccent, size: 18),
+                const SizedBox(width: 8),
+                const Text(
+                  StringConstants.productImageIn,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: colorBlack,
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: TextFormField(
-                          controller: _currencyController,
-                          decoration:
-                              const InputDecoration(labelText: 'Currency'),
-                          validator: (val) => val!.isEmpty ? 'Currency' : null,
+                ),
+                const Spacer(),
+                if (_productImage != null)
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: colorPrimary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Text(
+                      StringConstants.selected,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colorPrimary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            InkWell(
+              onTap: _pickProductImage,
+              borderRadius: BorderRadius.circular(8),
+              splashColor: colorAccent.withOpacity(0.1),
+              highlightColor: colorAccent.withOpacity(0.05),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: _productImage != null
+                        ? colorPrimary
+                        : Colors.grey.shade300,
+                    width: _productImage != null ? 2 : 1,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: _productImage != null
+                              ? colorPrimary.withOpacity(0.3)
+                              : Colors.grey.shade300,
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        flex: 2,
-                        child: TextFormField(
-                          controller: _priceController,
-                          decoration: const InputDecoration(labelText: 'Price'),
-                          keyboardType: TextInputType.number,
-                          validator: (val) => val!.isEmpty ? 'Price' : null,
-                        ),
+                      child: _productImage != null
+                          ? Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(7),
+                                  child: Image.file(
+                                    _productImage!,
+                                    fit: BoxFit.cover,
+                                    width: 60,
+                                    height: 60,
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 2,
+                                  right: 2,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: colorPrimary,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    padding: const EdgeInsets.all(2),
+                                    child: const Icon(
+                                      Icons.check,
+                                      size: 12,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Icon(
+                              Icons.add_photo_alternate,
+                              size: 28,
+                              color: Colors.grey.shade400,
+                            ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _productImage != null
+                                ? StringConstants.productImageSelected
+                                : StringConstants.selectProductImage,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: _productImage != null
+                                  ? colorPrimary
+                                  : colorBlack,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _productImage != null
+                                ? StringConstants.tapToChangeImage
+                                : StringConstants.chooseImageFromGallery,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  TextFormField(
-                    controller: _quantityController,
-                    decoration: const InputDecoration(
-                        labelText: 'Quantity (e.g. 750 ml)'),
-                    validator: (val) => val!.isEmpty ? 'Quantity' : null,
-                  ),
-                  const SizedBox(height: 12),
-                  OutlinedButton.icon(
-                    onPressed: _pickProductImage,
-                    icon: const Icon(Icons.photo_library),
-                    label: const Text('Select Product Image'),
-                  ),
-                  TextFormField(
-                    controller: _barcodeController,
-                    decoration:
-                        const InputDecoration(labelText: 'Barcode Data'),
-                    validator: (val) => val!.isEmpty ? 'Barcode data' : null,
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _submitForm,
-                    child: const Text('Generate Price Tag'),
-                  ),
-                ],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: _productImage != null
+                            ? colorPrimary.withOpacity(0.1)
+                            : Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Icon(
+                        _productImage != null
+                            ? Icons.edit
+                            : Icons.photo_library,
+                        color: _productImage != null
+                            ? colorPrimary
+                            : Colors.grey.shade400,
+                        size: 16,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
