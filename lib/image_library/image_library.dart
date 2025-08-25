@@ -23,7 +23,7 @@ class ImageLibraryScreen extends StatefulWidget {
 class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
   final TextEditingController _searchController = TextEditingController();
   bool _isDeleteMode = false;
-  Set<String> _selectedImages = <String>{};
+  final Set<String> _selectedImages = <String>{};
   late ImageOperationsService _operationsService;
 
   @override
@@ -127,7 +127,6 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
   void _showClearAllDialog() {
     final provider = context.read<ImageLibraryProvider>();
     final totalImages = provider.savedImages.length;
-
 
     showDialog(
       context: context,
