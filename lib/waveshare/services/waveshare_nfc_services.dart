@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'dart:typed_data';
 
 class WaveShareNfcServices {
   static const platform = MethodChannel('org.fossasia.magicepaperapp/nfc');
@@ -13,6 +12,14 @@ class WaveShareNfcServices {
       return result;
     } on PlatformException {
       rethrow;
+    }
+  }
+
+  Future<void> disableNfcReaderMode() async {
+    try {
+      await platform.invokeMethod('disableNfcReaderMode');
+    } on PlatformException {
+      /// Ignoring exception
     }
   }
 }

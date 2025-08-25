@@ -38,7 +38,7 @@ class WaveShareHandler(private val activity: Activity) {
             var success = false
             var isFlashing = true
 
-            // Start a separate thread to report progress
+            // separate thread to report progress
             thread {
                 while (isFlashing) {
                     try {
@@ -51,7 +51,7 @@ class WaveShareHandler(private val activity: Activity) {
             }
 
             try {
-                nfcTag.timeout = 2000 // Increased timeout for better stability
+                nfcTag.timeout = 2000
 
                 val connectionSuccessInt = this.mInstance.a(nfcTag)
 
@@ -66,18 +66,21 @@ class WaveShareHandler(private val activity: Activity) {
                     }
                 }
             } catch (e: IOException) {
+                // This will catch the "Tag was lost" exception
                 failMsg = "A communication error occurred: ${e.message}"
                 Log.e("WaveShareHandler", "IO Exception", e)
             } finally {
                 isFlashing = false // Stop the progress reporting thread
                 onProgress(100) // Ensure the progress bar completes
 
-                if (nfcTag.isConnected) {
-                    try {
+                // Wrap the cleanup logic in its own try-catch block
+                // This prevents the SecurityException from crashing the app when checking a stale tag.
+                try {
+                    if (nfcTag.isConnected) {
                         nfcTag.close()
-                    } catch (e: IOException) {
-                        Log.e("WaveShareHandler", "Error closing tag connection", e)
                     }
+                } catch (e: Exception) {
+                    Log.e("WaveShareHandler", "Error closing tag connection", e)
                 }
 
                 onComplete(object : FlashResult {

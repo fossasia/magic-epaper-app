@@ -160,8 +160,8 @@ jobs:
               <tr>
                 <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-5_adjust_image.png?raw=true" width="1080"/></td>
                 <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-6_barcode_screen.png?raw=true" width="1080"/></td>
-                <td colspan="2">
-                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-7_generated_Barcode.png?raw=true" width="2146"/>
+                <td>
+                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-7_generated_Barcode.png?raw=true" width="1080"/>
                 </td>
               </tr>
             </table>
@@ -181,8 +181,8 @@ jobs:
               <tr>
                 <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-5_adjust_image.png?raw=true" width="1080"/></td>
                 <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-6_barcode_screen.png?raw=true" width="1080"/></td>
-                <td colspan="2">
-                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-7_generated_Barcode.png?raw=true" width="2146"/></td>
+                <td>
+                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-7_generated_Barcode.png?raw=true" width="1080"/></td>
               </tr>
             </table>
             </details>
@@ -201,8 +201,8 @@ jobs:
               <tr>
                 <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-5_adjust_image.png?raw=true" width="1080"/></td>
                 <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-6_barcode_screen.png?raw=true" width="1080"/></td>
-                <td colspan="2">
-                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-7_generated_Barcode.png?raw=true" width="2146"/></td>
+                <td>
+                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-7_generated_Barcode.png?raw=true" width="1080"/></td>
               </tr>
             </table>
             </details>

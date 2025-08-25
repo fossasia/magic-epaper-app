@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.atomic.AtomicBoolean
 
 class MainActivity : FlutterActivity() {
     private val SETTINGS_CHANNEL = "org.fossasia.magicepaperapp/settings"
@@ -26,17 +27,34 @@ class MainActivity : FlutterActivity() {
     private lateinit var waveShareHandler: WaveShareHandler
     private var progressEventSink: EventChannel.EventSink? = null
 
-    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        super.configureFlutterEngine(flutterEngine)
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         waveShareHandler = WaveShareHandler(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        nfcAdapter?.enableReaderMode(
+            this,
+            { tag: Tag? -> /* Do nothing, just intercept the event to silence it */ },
+            NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK,
+            null
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        nfcAdapter?.disableReaderMode(this)
+    }
+
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SETTINGS_CHANNEL).setMethodCallHandler {
             call, result ->
             if (call.method == "openNFCSettings") {
                 val intent = Intent(Settings.ACTION_NFC_SETTINGS)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
                 result.success(null)
             } else {
@@ -45,94 +63,122 @@ class MainActivity : FlutterActivity() {
         }
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, NFC_CHANNEL).setMethodCallHandler { call, result ->
-            if (call.method == "flashImage") {
-                val arguments = call.arguments as Map<String, Any>
-                val imageBytes = arguments["imageBytes"] as ByteArray
-                val ePaperSize = arguments["ePaperSize"] as Int
+            when (call.method) {
+                "flashImage" -> {
+                    val arguments = call.arguments as Map<String, Any>
+                    val imageBytes = arguments["imageBytes"] as ByteArray
+                    val ePaperSize = arguments["ePaperSize"] as Int
 
-                if (nfcAdapter == null) {
-                    result.error("NFC_UNAVAILABLE", "NFC is not available on this device.", null)
-                    return@setMethodCallHandler
+                    if (nfcAdapter == null || !nfcAdapter!!.isEnabled) {
+                        result.error("NFC_ERROR", "NFC is not available or not enabled.", null)
+                        return@setMethodCallHandler
+                    }
+
+                    val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                    GlobalScope.launch {
+                        flashImageToTag(bitmap, ePaperSize, result)
+                    }
                 }
-
-                if (!nfcAdapter!!.isEnabled) {
-                    result.error("NFC_DISABLED", "NFC is disabled.", null)
-                    return@setMethodCallHandler
+                
+                "disableNfcReaderMode" -> {
+                    // First, disable whatever reader mode is currently active
+                    nfcAdapter?.disableReaderMode(this@MainActivity)
+                    
+                    // Re-enable the silent, reader mode.
+                    // Prevents the OS from reading the tag.
+                    nfcAdapter?.enableReaderMode(
+                        this@MainActivity,
+                        { tag: Tag? -> /* Do nothing */ },
+                        NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK,
+                        null
+                    )
+                    
+                    result.success(null)
                 }
-
-                val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-
-                GlobalScope.launch {
-                    flashImageToTag(bitmap, ePaperSize, result)
+                else -> {
+                    result.notImplemented()
                 }
-            } else {
-                result.notImplemented()
             }
         }
 
+        // Handler for reporting progress back to Flutter
         EventChannel(flutterEngine.dartExecutor.binaryMessenger, NFC_PROGRESS_CHANNEL).setStreamHandler(
             object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                     progressEventSink = events
                 }
-
                 override fun onCancel(arguments: Any?) {
                     progressEventSink = null
                 }
             }
         )
-
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SETTINGS_CHANNEL).setMethodCallHandler {
-            call, result ->
-            if (call.method == "openNFCSettings") {
-                val intent = Intent(Settings.ACTION_NFC_SETTINGS)
-                startActivity(intent)
-                result.success(null)
-            } else {
-                result.notImplemented()
-            }
-        }
     }
 
     private suspend fun flashImageToTag(bitmap: Bitmap, ePaperSize: Int, channelResult: MethodChannel.Result) {
-    withContext(Dispatchers.IO) {
-        try {
-            nfcAdapter?.enableReaderMode(this@MainActivity, { tag ->
-                val nfcA = NfcA.get(tag)
-                if (nfcA != null) {
-                    waveShareHandler.sendBitmap(
-                        nfcTag = nfcA,
-                        ePaperSize = ePaperSize,
-                        bitmap = bitmap,
-                        onProgress = { progress ->
-                            runOnUiThread {
-                                progressEventSink?.success(progress)
-                            }
-                        },
-                        onComplete = { flashResult ->
-                            runOnUiThread {
-                                if (flashResult.success) {
-                                    channelResult.success("Image flashed successfully!")
-                                } else {
-                                    channelResult.error("FLASH_FAILED", flashResult.errMessage, null)
+        // Create a thread-safe flag to ensure we only send a result ONCE
+        val resultSent = AtomicBoolean(false)
+
+        withContext(Dispatchers.IO) {
+            try {
+                nfcAdapter?.enableReaderMode(this@MainActivity, { tag ->
+                    val nfcA = NfcA.get(tag)
+                    if (nfcA != null) {
+                        waveShareHandler.sendBitmap(
+                            nfcTag = nfcA,
+                            ePaperSize = ePaperSize,
+                            bitmap = bitmap,
+                            onProgress = { progress ->
+                                runOnUiThread { progressEventSink?.success(progress) }
+                            },
+                            onComplete = { flashResult ->
+                                runOnUiThread {
+                                    // Atomically check and set the flag. This block will only run once.
+                                    if (resultSent.compareAndSet(false, true)) {
+                                        if (flashResult.success) {
+                                            channelResult.success("Image flashed successfully!")
+                                        } else {
+                                            nfcAdapter?.disableReaderMode(this@MainActivity)
+                                            nfcAdapter?.enableReaderMode(
+                                                this@MainActivity,
+                                                { t: Tag? -> /* Do nothing */ },
+                                                NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK,
+                                                null
+                                            )
+                                            channelResult.error("FLASH_FAILED", flashResult.errMessage, null)
+                                        }
+                                    }
                                 }
                             }
-                            nfcAdapter?.disableReaderMode(this@MainActivity)
+                        )
+                    } else {
+                        runOnUiThread {
+                            if (resultSent.compareAndSet(false, true)) {
+                                nfcAdapter?.disableReaderMode(this@MainActivity)
+                                nfcAdapter?.enableReaderMode(
+                                    this@MainActivity,
+                                    { t: Tag? -> /* Do nothing */ },
+                                    NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK,
+                                    null
+                                )
+                                channelResult.error("TAG_NOT_SUPPORTED", "NFC tag type not supported.", null)
+                            }
                         }
-                    )
-                } else {
-                    runOnUiThread {
-                        channelResult.error("TAG_NOT_SUPPORTED", "NFC tag type not supported.", null)
                     }
-                    nfcAdapter?.disableReaderMode(this@MainActivity)
+                }, NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK, null)
+            } catch (e: Exception) {
+                runOnUiThread {
+                    if (resultSent.compareAndSet(false, true)) {
+                        nfcAdapter?.disableReaderMode(this@MainActivity)
+                        nfcAdapter?.enableReaderMode(
+                            this@MainActivity,
+                            { t: Tag? -> /* Do nothing */ },
+                            NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK,
+                            null
+                        )
+                        channelResult.error("NFC_ERROR", e.message, null)
+                    }
                 }
-            }, NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK, null)
-        } catch (e: Exception) {
-            runOnUiThread {
-                channelResult.error("NFC_ERROR", e.message, null)
             }
         }
     }
-}
-
 }
