@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCWriteCard extends StatefulWidget {
   final bool isWriting;
@@ -48,17 +51,17 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              StringConstants.writeNdefRecords,
+              appLocalizations.writeNdefRecords,
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 16),
-            _buildSectionHeader(StringConstants.textRecord, Icons.text_fields),
+            _buildSectionHeader(appLocalizations.textRecord, Icons.text_fields),
             TextField(
               onChanged: widget.onTextChanged,
-              decoration: const InputDecoration(
-                hintText: StringConstants.enterTextToWriteToNfcTag,
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.text_format),
+              decoration: InputDecoration(
+                hintText: appLocalizations.enterTextToWriteToNfcTag,
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.text_format),
               ),
               maxLines: 2,
             ),
@@ -76,8 +79,8 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                         child: CircularProgressIndicator(strokeWidth: 2))
                     : const Icon(Icons.edit),
                 label: Text(widget.isWriting
-                    ? StringConstants.writing
-                    : StringConstants.writeText),
+                    ? appLocalizations.writing
+                    : appLocalizations.writeText),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   foregroundColor: Colors.white,
@@ -86,13 +89,13 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
             ),
             const SizedBox(height: 16),
             const Divider(),
-            _buildSectionHeader(StringConstants.urlRecord, Icons.link),
+            _buildSectionHeader(appLocalizations.urlRecord, Icons.link),
             TextField(
               onChanged: widget.onUrlChanged,
-              decoration: const InputDecoration(
-                hintText: StringConstants.enterUrl,
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.link),
+              decoration: InputDecoration(
+                hintText: appLocalizations.enterUrl,
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.link),
               ),
             ),
             const SizedBox(height: 8),
@@ -109,8 +112,8 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                         child: CircularProgressIndicator(strokeWidth: 2))
                     : const Icon(Icons.link),
                 label: Text(widget.isWriting
-                    ? StringConstants.writing
-                    : StringConstants.writeUrl),
+                    ? appLocalizations.writing
+                    : appLocalizations.writeUrl),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.purple,
                   foregroundColor: Colors.white,
@@ -119,22 +122,22 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
             ),
             const SizedBox(height: 16),
             const Divider(),
-            _buildSectionHeader(StringConstants.wifiRecord, Icons.wifi),
+            _buildSectionHeader(appLocalizations.wifiRecord, Icons.wifi),
             TextField(
               onChanged: widget.onWifiSSIDChanged,
-              decoration: const InputDecoration(
-                hintText: StringConstants.wifiNetworkNameSsid,
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.wifi),
+              decoration: InputDecoration(
+                hintText: appLocalizations.wifiNetworkNameSsid,
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.wifi),
               ),
             ),
             const SizedBox(height: 8),
             TextField(
               onChanged: widget.onWifiPasswordChanged,
-              decoration: const InputDecoration(
-                hintText: StringConstants.wifiPassword,
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.lock),
+              decoration: InputDecoration(
+                hintText: appLocalizations.wifiPassword,
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.lock),
               ),
               obscureText: true,
             ),
@@ -153,8 +156,8 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                         child: CircularProgressIndicator(strokeWidth: 2))
                     : const Icon(Icons.wifi),
                 label: Text(widget.isWriting
-                    ? StringConstants.writing
-                    : StringConstants.writeWifi),
+                    ? appLocalizations.writing
+                    : appLocalizations.writeWifi),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal,
                   foregroundColor: Colors.white,
@@ -163,9 +166,9 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
             ),
             const SizedBox(height: 16),
             const Divider(),
-            _buildSectionHeader(StringConstants.writeAllRecords, Icons.layers),
+            _buildSectionHeader(appLocalizations.writeAllRecords, Icons.layers),
             Text(
-              StringConstants.writeAllNonEmptyFieldsDescription,
+              appLocalizations.writeAllNonEmptyFieldsDescription,
               style: TextStyle(fontSize: 12, color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
@@ -180,8 +183,8 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                         child: CircularProgressIndicator(strokeWidth: 2))
                     : const Icon(Icons.layers),
                 label: Text(widget.isWriting
-                    ? StringConstants.writing
-                    : StringConstants.writeMultipleRecords),
+                    ? appLocalizations.writing
+                    : appLocalizations.writeMultipleRecords),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.indigo,
                   foregroundColor: Colors.white,

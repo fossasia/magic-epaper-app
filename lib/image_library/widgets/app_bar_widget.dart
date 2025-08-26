@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isDeleteMode;
@@ -24,7 +28,7 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: colorAccent,
       elevation: 0,
       title: Text(
-        isDeleteMode ? 'Select Images to Delete' : 'Image Library',
+        isDeleteMode ? appLocalizations.selectImagesToDelete : appLocalizations.imageLibrary,
         style:
             const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       ),
@@ -43,7 +47,7 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
                     side: const BorderSide(color: Colors.white, width: 1),
                   ),
                 ),
-                child: Text('Delete ($selectedCount)'),
+                child: Text('${appLocalizations.delete} ($selectedCount)'),
               ),
             ),
           IconButton(
@@ -54,7 +58,7 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: onEnterDeleteMode,
-            tooltip: 'Delete Mode',
+            tooltip: appLocalizations.deleteMode,
           ),
         ],
       ],

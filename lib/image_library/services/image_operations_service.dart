@@ -10,6 +10,10 @@ import 'package:magicepaperapp/image_library/utils/epd_utils.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:image/image.dart' as img;
 import 'dart:typed_data';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class ImageOperationsService {
   final BuildContext context;
@@ -28,11 +32,11 @@ class ImageOperationsService {
     if (newName.trim().isEmpty) return;
 
     try {
-      _showLoadingSnackBar('Renaming image...');
+      _showLoadingSnackBar(appLocalizations.renamingImage);
       await provider.renameImage(image.id, newName.trim());
-      _showSuccessSnackBar('Image renamed to "${newName.trim()}"');
+      _showSuccessSnackBar('${appLocalizations.imageRenamedTo}${newName.trim()}"');
     } catch (e) {
-      _showErrorSnackBar('Failed to rename image: ${e.toString()}');
+      _showErrorSnackBar('${appLocalizations.failedToRenameImage}${e.toString()}');
     }
   }
 
@@ -40,11 +44,11 @@ class ImageOperationsService {
       SavedImage image, ImageLibraryProvider provider) async {
     try {
       Navigator.pop(context);
-      _showLoadingSnackBar('Deleting image...');
+      _showLoadingSnackBar(appLocalizations.deletingImage);
       await provider.deleteImage(image.id);
-      _showDeleteSuccessSnackBar('Image "${image.name}" deleted');
+      _showDeleteSuccessSnackBar('${appLocalizations.imageDeleted}${image.name}${appLocalizations.deleted}');
     } catch (e) {
-      _showErrorSnackBar('Failed to delete image: ${e.toString()}');
+      _showErrorSnackBar('${appLocalizations.failedToDeleteImage}${e.toString()}');
     }
   }
 
@@ -64,7 +68,7 @@ class ImageOperationsService {
 
       _showBatchDeleteSuccessSnackBar(count);
     } catch (e) {
-      _showErrorSnackBar('Failed to delete images: ${e.toString()}');
+      _showErrorSnackBar('${appLocalizations.failedToDeleteImages}${e.toString()}');
     }
   }
 
@@ -110,7 +114,7 @@ class ImageOperationsService {
       final imageEpd = getEpdFromImage(image);
       final imageData = await image.getImageData();
       if (imageData == null) {
-        _showErrorSnackBar('Failed to load image data for "${image.name}"');
+        _showErrorSnackBar('${appLocalizations.failedToLoadImageData}${image.name}"');
         return;
       }
       final decodedImage = img.decodeImage(imageData);
@@ -121,10 +125,10 @@ class ImageOperationsService {
           rotatedImage,
         );
       } else {
-        _showErrorSnackBar('Failed to decode image "${image.name}"');
+        _showErrorSnackBar('${appLocalizations.failedToDecodeImage}${image.name}"');
       }
     } catch (e) {
-      _showErrorSnackBar('Failed to transfer "${image.name}": ${e.toString()}');
+      _showErrorSnackBar('${appLocalizations.failedToTransfer}${image.name}": ${e.toString()}');
     }
   }
 
@@ -247,7 +251,7 @@ class ImageOperationsService {
               ),
             ),
             const SizedBox(width: 12),
-            Text('Deleting $count image${count > 1 ? 's' : ''}...'),
+            Text('${appLocalizations.deletingImages}$count${appLocalizations.images}'),
           ],
         ),
         backgroundColor: Colors.amber,
@@ -266,8 +270,8 @@ class ImageOperationsService {
             Expanded(
               child: Text(
                 count > 1
-                    ? '$count images deleted successfully'
-                    : 'Image deleted successfully',
+                    ? '$count${appLocalizations.imagesDeletedSuccessfully}'
+                    : appLocalizations.imageDeletedSuccessfully,
               ),
             ),
           ],
@@ -298,10 +302,10 @@ class ImageOperationsService {
 
   void _showSaveLoadingSnackBar() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+      SnackBar(
         content: Row(
           children: [
-            SizedBox(
+            const SizedBox(
               width: 20,
               height: 20,
               child: CircularProgressIndicator(
@@ -309,12 +313,12 @@ class ImageOperationsService {
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             ),
-            SizedBox(width: 12),
-            Text('Saving image...'),
+            const SizedBox(width: 12),
+            Text(appLocalizations.savingImage),
           ],
         ),
         backgroundColor: colorAccent,
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
@@ -322,15 +326,15 @@ class ImageOperationsService {
   void _showSaveSuccessSnackBar() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Row(
+        content: Row(
           children: [
-            Icon(
+            const Icon(
               Icons.check_circle,
               color: Colors.white,
               size: 20,
             ),
-            SizedBox(width: 12),
-            Text('Image saved to library!'),
+            const SizedBox(width: 12),
+            Text(appLocalizations.imageSavedToLibrary),
           ],
         ),
         backgroundColor: Colors.green,
@@ -353,7 +357,7 @@ class ImageOperationsService {
               size: 20,
             ),
             const SizedBox(width: 12),
-            Expanded(child: Text('Failed to save image: $error')),
+            Expanded(child: Text('${appLocalizations.failedToSaveImage}$error')),
           ],
         ),
         backgroundColor: Colors.red,

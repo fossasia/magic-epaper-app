@@ -1,6 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class DeleteConfirmationDialog extends StatelessWidget {
   final SavedImage image;
@@ -61,22 +65,22 @@ class DeleteConfirmationDialog extends StatelessWidget {
           child: const Icon(Icons.delete_outline, color: Colors.red, size: 24),
         ),
         const SizedBox(width: 16),
-        const Expanded(
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Delete Image',
-                style: TextStyle(
+                appLocalizations.deleteImage,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
-                'This action cannot be undone',
-                style: TextStyle(
+                appLocalizations.thisActionCannotBeUndone,
+                style: const TextStyle(
                   fontSize: 14,
                   color: Colors.red,
                   fontWeight: FontWeight.w500,
@@ -133,7 +137,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                'Filter: ${image.metadata!['filter']}',
+                '${appLocalizations.filterLabel} ${image.metadata!['filter']}',
                 style: const TextStyle(
                   fontSize: 12,
                   color: Colors.grey,
@@ -161,7 +165,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Are you sure you want to delete this image? This action cannot be undone.',
+              appLocalizations.areYouSureDeleteImage,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.amber.shade800,
@@ -187,9 +191,9 @@ class DeleteConfirmationDialog extends StatelessWidget {
               side: BorderSide(color: Colors.grey.shade300),
               foregroundColor: Colors.grey.shade700,
             ),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            child: Text(
+              appLocalizations.cancel,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
           ),
         ),
@@ -205,14 +209,14 @@ class DeleteConfirmationDialog extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12)),
               elevation: 0,
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.delete_forever, size: 20),
-                SizedBox(width: 8),
+                const Icon(Icons.delete_forever, size: 20),
+                const SizedBox(width: 8),
                 Text(
-                  'Delete',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  appLocalizations.delete,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ],
             ),

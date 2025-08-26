@@ -11,6 +11,10 @@ import 'package:magicepaperapp/util/epd/epd.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:magicepaperapp/util/magic_epaper_firmware.dart';
 import 'package:magicepaperapp/util/nfc_settings_launcher.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 typedef ProgressCallback = void Function(double progress, String status);
 typedef TagDetectedCallback = void Function();
@@ -62,14 +66,14 @@ class Protocol {
           return; // Exit successfully if message is gathered
         }
       } catch (e) {
-        throw Exception("Error checking message: $e");
+        throw Exception("${appLocalizations.errorCheckingMessage}$e");
       }
       attempt--;
       await _sleep(); // Wait before the next attempt
     }
 
     // If the loop completes without returning, it means the attempts timed out
-    throw Exception("Timeout waiting for I2C message");
+    throw Exception(appLocalizations.timeoutWaitingForI2cMessage);
   }
 
   Future<void> writeFrame(Uint8List id, Uint8List frame, int cmd,
@@ -81,16 +85,16 @@ class Protocol {
     for (int i = 0; i < chunks.length; i++) {
       Uint8List chunk = chunks[i];
       debugPrint(
-          "Writing chunk ${i + 1}/${chunks.length} len ${chunk.lengthInBytes}: ${chunk.map((e) => e.toRadixString(16)).toList()}");
+          "${appLocalizations.writingChunk}${i + 1}/${chunks.length} len ${chunk.lengthInBytes}: ${chunk.map((e) => e.toRadixString(16)).toList()}");
 
       await writeMsg(chunk);
       await wait4msgGathered();
       if (onProgress != null) {
         final progress = (i + 1) / chunks.length;
-        onProgress(progress, "Writing chunk ${i + 1}/${chunks.length}");
+        onProgress(progress, "${appLocalizations.writingChunk}${i + 1}/${chunks.length}");
       }
     }
-    debugPrint("Transferred successfully.");
+    debugPrint(appLocalizations.transferredSuccessfully);
   }
 
   List<Uint8List> _split({required Uint8List data, int chunkSize = 220}) {
@@ -115,7 +119,7 @@ class Protocol {
       case NFCAvailability.available:
         break;
       case NFCAvailability.disabled:
-        Fluttertoast.showToast(msg: "NFC is disabled. Please enable it.");
+        Fluttertoast.showToast(msg: appLocalizations.nfcIsDisabledPleaseEnableIt);
         if (Platform.isAndroid) {
           await NFCSettingsLauncher.openNFCSettings();
         } else if (Platform.isIOS) {
@@ -123,32 +127,32 @@ class Protocol {
         }
         return;
       case NFCAvailability.not_supported:
-        Fluttertoast.showToast(msg: "This device does not support NFC.");
+        Fluttertoast.showToast(msg: appLocalizations.thisDeviceDoesNotSupportNfc);
         return;
     }
 
-    onProgress?.call(0.0, "Waiting for NFC tag...");
+    onProgress?.call(0.0, appLocalizations.waitingForNfcTag);
     Fluttertoast.showToast(
-        msg: "Bring your phone near to the Magic Epaper Hardware");
-    debugPrint("Bring your phone near to the Magic Epaper Hardware");
+        msg: appLocalizations.bringPhoneNearMagicEpaperHardware);
+    debugPrint(appLocalizations.bringPhoneNearMagicEpaperHardware);
     final tag = await FlutterNfcKit.poll(timeout: timeout);
-    debugPrint("Got a tag!");
+    debugPrint(appLocalizations.gotTag);
     onTagDetected?.call();
-    onProgress?.call(0.1, "Tag detected! Initializing...");
+    onProgress?.call(0.1, appLocalizations.tagDetectedInitializing);
 
     tagId = Uint8List.fromList(hex.decode(tag.id));
     if (tag.type != NFCTagType.iso15693) {
-      throw "Not a Magic Epaper Hardware";
+      throw appLocalizations.notMagicEpaperHardware;
     }
 
-    onProgress?.call(0.15, "Enabling energy harvesting...");
+    onProgress?.call(0.15, appLocalizations.enablingEnergyHarvesting);
     await enableEnergyHarvesting();
     await Future.delayed(
         const Duration(seconds: 2)); // waiting for the power supply stable
 
     await epd.controller.init(this, waveform: waveform);
 
-    onProgress?.call(0.2, "Processing image data...");
+    onProgress?.call(0.2, appLocalizations.processingImageData);
 
     final epdColors = epd.extractEpaperColorFrames(image);
     final transmissionLines = epd.controller.transmissionLines.iterator;
@@ -164,13 +168,13 @@ class Protocol {
         final totalProgress =
             frameStartProgress + (chunkProgress * frameProgressStep);
         onProgress?.call(totalProgress,
-            "Frame ${frameIndex + 1}/${epdColors.length}: $chunkStatus");
+            "${appLocalizations.frame}${frameIndex + 1}/${epdColors.length}: $chunkStatus");
       });
       frameIndex++;
     }
-    onProgress?.call(0.95, "Refreshing display...");
+    onProgress?.call(0.95, appLocalizations.refreshingDisplay);
     await writeMsg(Uint8List.fromList([fw.epdCmd, epd.controller.refresh]));
-    onProgress?.call(1.0, "Transfer complete!");
+    onProgress?.call(1.0, appLocalizations.transferComplete);
     await FlutterNfcKit.finish();
   }
 }

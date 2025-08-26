@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/ndef_screen/services/nfc_availability_service.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCStatusCard extends StatelessWidget {
   final NFCAvailability availability;
@@ -26,13 +29,13 @@ class NFCStatusCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  StringConstants.nfcStatus,
+                  appLocalizations.nfcStatus,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 IconButton(
                   icon: const Icon(Icons.refresh),
                   onPressed: onRefresh,
-                  tooltip: StringConstants.refreshNfcStatus,
+                  tooltip: appLocalizations.refreshNfcStatus,
                 ),
               ],
             ),

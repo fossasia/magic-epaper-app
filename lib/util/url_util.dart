@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 Future<void> openUrl(BuildContext context, String url) async {
   try {
@@ -8,13 +12,13 @@ Future<void> openUrl(BuildContext context, String url) async {
       await launchUrl(uri);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not open the link.')),
+        SnackBar(content: Text(appLocalizations.couldNotOpenLink)),
       );
     }
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content: Text('An error occurred while opening the link.')),
+      SnackBar(
+          content: Text(appLocalizations.errorOccurredWhileOpeningLink)),
     );
   }
 }

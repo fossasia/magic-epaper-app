@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/epd/driver/driver.dart';
 import 'package:magicepaperapp/util/epd/driver/uc8253.dart';
 import 'package:magicepaperapp/util/image_processing/image_processing.dart';
 import 'package:image/image.dart' as img;
 import 'epd.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 /// Represents a named image filter for use in e-paper image processing.
 ///
@@ -102,26 +106,26 @@ class ConfigurableEpd extends Epd {
       namedProcessingMethods.add(
         NamedImageFilter(
           ImageProcessing.bwFloydSteinbergDither,
-          'Floyd-Steinberg',
+          appLocalizations.floydSteinberg,
         ),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
           ImageProcessing.bwFalseFloydSteinbergDither,
-          'False Floyd-Steinberg',
+          appLocalizations.falseFloydSteinberg,
         ),
       );
       namedProcessingMethods.add(
-        NamedImageFilter(ImageProcessing.bwStuckiDither, 'Stucki'),
+        NamedImageFilter(ImageProcessing.bwStuckiDither, appLocalizations.stucki),
       );
       namedProcessingMethods.add(
-        NamedImageFilter(ImageProcessing.bwAtkinsonDither, 'Atkinson'),
+        NamedImageFilter(ImageProcessing.bwAtkinsonDither, appLocalizations.atkinson),
       );
       namedProcessingMethods.add(
-        NamedImageFilter(ImageProcessing.bwHalftoneDither, 'Halftone'),
+        NamedImageFilter(ImageProcessing.bwHalftoneDither, appLocalizations.halftone),
       );
       namedProcessingMethods.add(
-        NamedImageFilter(ImageProcessing.bwThreshold, 'Threshold'),
+        NamedImageFilter(ImageProcessing.bwThreshold, appLocalizations.threshold),
       );
     } else {
       final dynamicPalette = _createDynamicPalette();
@@ -131,7 +135,7 @@ class ConfigurableEpd extends Epd {
             orgImg,
             dynamicPalette,
           ),
-          'Floyd-Steinberg',
+          appLocalizations.floydSteinberg,
         ),
       );
       namedProcessingMethods.add(
@@ -140,35 +144,35 @@ class ConfigurableEpd extends Epd {
             orgImg,
             dynamicPalette,
           ),
-          'False Floyd-Steinberg',
+          appLocalizations.falseFloydSteinberg,
         ),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
           (img.Image orgImg) =>
               ImageProcessing.customStuckiDither(orgImg, dynamicPalette),
-          'Stucki',
+          appLocalizations.stucki,
         ),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
           (img.Image orgImg) =>
               ImageProcessing.customAtkinsonDither(orgImg, dynamicPalette),
-          'Atkinson',
+          appLocalizations.atkinson,
         ),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
           (img.Image orgImg) =>
               ImageProcessing.customHalftoneDither(orgImg, dynamicPalette),
-          'Halftone',
+          appLocalizations.halftone,
         ),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
           (img.Image orgImg) =>
               ImageProcessing.customThreshold(orgImg, dynamicPalette),
-          'Threshold',
+          appLocalizations.threshold,
         ),
       );
     }

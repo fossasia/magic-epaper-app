@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class VCardFormWidget extends StatefulWidget {
   final VCardData? initialData;
@@ -112,10 +115,10 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
               Expanded(
                 child: TextFormField(
                   controller: _firstNameController,
-                  decoration: const InputDecoration(
-                    labelText: 'First Name',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.person),
+                  decoration: InputDecoration(
+                    labelText: appLocalizations.firstName,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.person),
                   ),
                 ),
               ),
@@ -123,9 +126,9 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
               Expanded(
                 child: TextFormField(
                   controller: _lastNameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Last Name',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: appLocalizations.lastName,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
               ),
@@ -137,10 +140,10 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
               Expanded(
                 child: TextFormField(
                   controller: _organizationController,
-                  decoration: const InputDecoration(
-                    labelText: 'Organization',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.business),
+                  decoration: InputDecoration(
+                    labelText: appLocalizations.organization,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.business),
                   ),
                 ),
               ),
@@ -148,9 +151,9 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
               Expanded(
                 child: TextFormField(
                   controller: _titleController,
-                  decoration: const InputDecoration(
-                    labelText: 'Title',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: appLocalizations.title,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
               ),
@@ -159,30 +162,30 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
           const SizedBox(height: 12),
           TextFormField(
             controller: _mobileNumberController,
-            decoration: const InputDecoration(
-              labelText: 'Mobile Number',
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.phone),
+            decoration: InputDecoration(
+              labelText: appLocalizations.mobileNumber,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.phone),
             ),
             keyboardType: TextInputType.phone,
           ),
           const SizedBox(height: 12),
           TextFormField(
             controller: _emailController,
-            decoration: const InputDecoration(
-              labelText: 'Email Address',
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.email),
+            decoration: InputDecoration(
+              labelText: appLocalizations.emailAddress,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.email),
             ),
             keyboardType: TextInputType.emailAddress,
           ),
           const SizedBox(height: 12),
           TextFormField(
             controller: _streetController,
-            decoration: const InputDecoration(
-              labelText: 'Street Address',
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.home),
+            decoration: InputDecoration(
+              labelText: appLocalizations.streetAddress,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.home),
             ),
           ),
           const SizedBox(height: 12),
@@ -192,9 +195,9 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
                 flex: 2,
                 child: TextFormField(
                   controller: _cityController,
-                  decoration: const InputDecoration(
-                    labelText: 'City',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: appLocalizations.city,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
               ),
@@ -202,9 +205,9 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
               Expanded(
                 child: TextFormField(
                   controller: _zipCodeController,
-                  decoration: const InputDecoration(
-                    labelText: 'Zip Code',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: appLocalizations.zipCode,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
               ),
@@ -216,9 +219,9 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
               Expanded(
                 child: TextFormField(
                   controller: _countryController,
-                  decoration: const InputDecoration(
-                    labelText: 'Country',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: appLocalizations.country,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
               ),
@@ -226,10 +229,10 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
               Expanded(
                 child: TextFormField(
                   controller: _websiteController,
-                  decoration: const InputDecoration(
-                    labelText: 'Website',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.web),
+                  decoration: InputDecoration(
+                    labelText: appLocalizations.website,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.web),
                   ),
                   keyboardType: TextInputType.url,
                 ),

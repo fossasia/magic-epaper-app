@@ -23,7 +23,10 @@ import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/provider/image_loader.dart';
 import 'package:magicepaperapp/util/epd/epd.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class ImageEditor extends StatefulWidget {
   final DisplayDevice device;
@@ -208,7 +211,7 @@ class _ImageEditorState extends State<ImageEditor> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Export failed: $e'),
+          content: Text('${appLocalizations.exportFailed}: $e'),
         ),
       );
       return;
@@ -218,7 +221,7 @@ class _ImageEditorState extends State<ImageEditor> {
       SnackBar(
         duration: const Duration(seconds: 2),
         content:
-            Text('Exported $exportedCount XBM file(s) to MagicEpaper/XBM/'),
+            Text('${appLocalizations.exportedXbmFiles}'),
       ),
     );
   }
@@ -237,9 +240,9 @@ class _ImageEditorState extends State<ImageEditor> {
         titleSpacing: 0.0,
         backgroundColor: colorAccent,
         elevation: 0,
-        title: const Text(
-          StringConstants.filterScreenTitle,
-          style: TextStyle(
+        title: Text(
+          appLocalizations.filterScreenTitle,
+          style: const TextStyle(
               color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13.8),
         ),
         actions: [
@@ -250,9 +253,9 @@ class _ImageEditorState extends State<ImageEditor> {
                 child: Builder(builder: (context) {
                   final epd = widget.device as Epd;
                   final List<DropdownMenuItem<String?>> dropdownItems = [
-                    const DropdownMenuItem<String?>(
+                    DropdownMenuItem<String?>(
                       value: null,
-                      child: Text("Full Refresh"),
+                      child: Text(appLocalizations.fullRefresh),
                     ),
                     ...epd.controller.waveforms.map((waveform) {
                       return DropdownMenuItem<String?>(
@@ -274,9 +277,9 @@ class _ImageEditorState extends State<ImageEditor> {
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String?>(
                         value: _selectedWaveformName,
-                        hint: const Text(
-                          "Full Refresh",
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        hint: Text(
+                          appLocalizations.fullRefresh,
+                          style: const TextStyle(color: Colors.white, fontSize: 16),
                         ),
                         isDense: true,
                         dropdownColor: colorAccent,
@@ -300,8 +303,8 @@ class _ImageEditorState extends State<ImageEditor> {
                               duration: Durations.medium3,
                               content: Text(
                                 _selectedWaveform == null
-                                    ? "Full Refresh Selected"
-                                    : "${_selectedWaveform!.name} Selected",
+                                    ? appLocalizations.fullRefreshSelected
+                                    : "${appLocalizations.waveformSelected} ${_selectedWaveform!.name}",
                               ),
                               backgroundColor: colorPrimary,
                             ),
@@ -341,18 +344,18 @@ class _ImageEditorState extends State<ImageEditor> {
                   ),
                 ),
                 child: widget.isExportOnly
-                    ? const Text('Export XBM')
-                    : const Text(StringConstants.transferButtonLabel),
+                    ? Text(appLocalizations.exportXbm)
+                    : Text(appLocalizations.transferButtonLabel),
               ),
             ),
           ],
         ],
       ),
       body: imgLoader.isLoading
-          ? const Center(
+          ? Center(
               child: Text(
-                'Loading...',
-                style: TextStyle(color: colorBlack, fontSize: 14),
+                appLocalizations.loading,
+                style: const TextStyle(color: colorBlack, fontSize: 14),
               ),
             )
           : SafeArea(
@@ -373,10 +376,10 @@ class _ImageEditorState extends State<ImageEditor> {
                         onFlipVertical: toggleFlipVertical,
                         onSave: _saveCurrentImage,
                       )
-                    : const Center(
+                    : Center(
                         child: Text(
-                          "Import an image to begin",
-                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                          appLocalizations.importStartingImageFeedback,
+                          style: const TextStyle(color: Colors.grey, fontSize: 16),
                         ),
                       ),
               ),
@@ -432,7 +435,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.add_photo_alternate_outlined,
-                label: StringConstants.importImageButtonLabel,
+                label: appLocalizations.importImageButtonLabel,
                 onTap: () async {
                   final success = await imgLoader.pickImage(
                     width: epd.width,
@@ -451,7 +454,7 @@ class BottomActionMenu extends StatelessWidget {
                 key: const Key('openEditorButton'),
                 context: context,
                 icon: Icons.edit_outlined,
-                label: StringConstants.openEditor,
+                label: appLocalizations.openEditor,
                 onTap: () async {
                   final canvasBytes =
                       await Navigator.of(context).push<Uint8List>(
@@ -477,7 +480,7 @@ class BottomActionMenu extends StatelessWidget {
                 key: const Key('adjustButton'),
                 context: context,
                 icon: Icons.tune_rounded,
-                label: StringConstants.adjustButtonLabel,
+                label: appLocalizations.adjustButtonLabel,
                 onTap: () async {
                   if (imgLoader.image != null) {
                     final canvasBytes =
@@ -510,9 +513,9 @@ class BottomActionMenu extends StatelessWidget {
                     }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
+                      SnackBar(
                         duration: Durations.medium4,
-                        content: Text(StringConstants.noImageSelectedFeedback),
+                        content: Text(appLocalizations.noImageSelectedFeedback),
                         backgroundColor: colorPrimary,
                       ),
                     );
@@ -523,7 +526,7 @@ class BottomActionMenu extends StatelessWidget {
                 key: const Key('barcodeButton'),
                 context: context,
                 icon: Icons.qr_code_scanner,
-                label: 'Barcode',
+                label: appLocalizations.barcode,
                 onTap: () async {
                   final result = await Navigator.of(context).push(
                     MaterialPageRoute(
@@ -547,7 +550,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.photo_library_outlined,
-                label: 'Library',
+                label: appLocalizations.library,
                 onTap: () async {
                   await imageSaveHandler?.navigateToImageLibrary();
                 },
@@ -555,7 +558,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.dashboard_customize_outlined,
-                label: 'Templates',
+                label: appLocalizations.templates,
                 onTap: () async {
                   final result = await Navigator.of(context).push<Uint8List>(
                     MaterialPageRoute(

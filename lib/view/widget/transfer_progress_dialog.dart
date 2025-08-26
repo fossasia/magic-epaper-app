@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class TransferProgressDialog extends StatefulWidget {
   final img.Image finalImg;
@@ -131,12 +135,12 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
     String errorString = error.toString().toLowerCase();
     if (errorString.contains('platformexception(408') &&
         errorString.contains('polling tag timeout')) {
-      return "Device connection timed out. Please try bringing your phone closer to the device and try again.";
+      return appLocalizations.deviceConnectionTimeout;
     }
     if (errorString.contains('platformexception(500') &&
         errorString.contains('communication error') &&
         errorString.contains('tag was lost')) {
-      return "Connection was lost during transfer. Please keep your phone close to the device and try again.";
+      return appLocalizations.connectionLostDuringTransfer;
     }
     return error.toString();
   }
@@ -214,7 +218,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
         ),
         const SizedBox(height: 24),
         Text(
-          "Please bring your phone close to the Magic E-Paper device",
+          appLocalizations.pleaseBringPhoneClose,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 16,
@@ -317,7 +321,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
         ),
         const SizedBox(height: 16),
         Text(
-          "Transfer Complete!",
+          appLocalizations.transferComplete,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -368,7 +372,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
         ),
         const SizedBox(height: 24),
         Text(
-          "Keep your phone close!",
+          appLocalizations.keepPhoneClose,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 18,
@@ -378,7 +382,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
         ),
         const SizedBox(height: 12),
         Text(
-          "The display is refreshing. Please keep your phone near the device until the image appears completely.",
+          appLocalizations.displayRefreshingMessage,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 14,
@@ -408,7 +412,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
           ),
           const SizedBox(height: 12),
           Text(
-            "Transfer Failed",
+            appLocalizations.transferFailed,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -481,12 +485,12 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                       duration: const Duration(milliseconds: 300),
                       child: Text(
                         !tagDetected
-                            ? "Searching for Device"
+                            ? appLocalizations.searchingForDevice
                             : showRefreshingMessage
-                                ? "Display Refreshing"
+                                ? appLocalizations.displayRefreshing
                                 : transferComplete
-                                    ? "Transfer Complete"
-                                    : "Writing to E-Paper",
+                                    ? appLocalizations.transferComplete
+                                    : appLocalizations.writingToEpaper,
                         key: ValueKey(!tagDetected
                             ? 'search'
                             : showRefreshingMessage
@@ -534,7 +538,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                       elevation: 2,
                     ),
                     child: Text(
-                      showRefreshingMessage ? "Done" : "Close",
+                      showRefreshingMessage ? appLocalizations.done : appLocalizations.close,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,

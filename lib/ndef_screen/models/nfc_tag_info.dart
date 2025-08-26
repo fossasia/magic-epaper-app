@@ -1,4 +1,7 @@
-import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCTagInfo {
   final String? type;
@@ -15,9 +18,9 @@ class NFCTagInfo {
 
   @override
   String toString() {
-    return '${StringConstants.tagType}${type ?? StringConstants.unknown}\n'
-        '${StringConstants.tagId}${id ?? StringConstants.unknown}\n'
-        '${StringConstants.ndefAvailable}${ndefAvailable ?? false}\n'
-        '${StringConstants.ndefWritable}${ndefWritable ?? false}';
+    return '${appLocalizations.tagType}${type ?? appLocalizations.unknown}\n'
+        '${appLocalizations.tagId}${id ?? appLocalizations.unknown}\n'
+        '${appLocalizations.ndefAvailable}${ndefAvailable ?? false}\n'
+        '${appLocalizations.ndefWritable}${ndefWritable ?? false}';
   }
 }

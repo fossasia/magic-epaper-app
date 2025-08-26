@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 //import 'package:share_plus/share_plus.dart';
 import 'package:magicepaperapp/util/url_util.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class AppDrawer extends StatefulWidget {
   final int selectedIndex;
@@ -35,16 +38,16 @@ class _AppDrawerState extends State<AppDrawer> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          const AspectRatio(
+          AspectRatio(
             aspectRatio: 16 / 9,
             child: DrawerHeader(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.red,
               ),
               child: Center(
                 child: Text(
-                  StringConstants.appName,
-                  style: TextStyle(
+                  appLocalizations.appName,
+                  style: const TextStyle(
                       color: drawerHeaderTitle,
                       fontSize: 25,
                       fontWeight: FontWeight.bold),
@@ -55,33 +58,33 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTile(
             index: 0,
             icon: Icons.edit,
-            title: StringConstants.selectDisplay,
+            title: appLocalizations.selectDisplay,
             routeName: '/',
           ),
           _buildListTile(
             index: 1,
             icon: Icons.nfc,
-            title: StringConstants.ndefScreen,
+            title: appLocalizations.ndefScreen,
             routeName: '/ndefScreen',
           ),
           _buildListTile(
             index: 2,
             icon: Icons.settings,
-            title: StringConstants.settings,
+            title: appLocalizations.settings,
             routeName: '/settings',
           ),
           _buildListTile(
             index: 3,
             icon: Icons.people,
-            title: StringConstants.aboutUs,
+            title: appLocalizations.aboutUs,
             routeName: '/aboutUs',
           ),
           const Divider(),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
             child: Text(
-              StringConstants.other,
-              style: TextStyle(
+              appLocalizations.other,
+              style: const TextStyle(
                 color: Colors.black54,
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
@@ -91,7 +94,7 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTile(
             index: 5,
             icon: Icons.shopping_cart,
-            title: StringConstants.buyBadge,
+            title: appLocalizations.buyBadge,
             routeName: '/buyBadge',
             externalLink: 'https://fossasia.com/',
           ),
@@ -116,7 +119,7 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTile(
             index: 6,
             icon: Icons.bug_report,
-            title: StringConstants.feedbackBugReports,
+            title: appLocalizations.feedbackBugReports,
             routeName: '/feedback',
             externalLink: 'https://github.com/fossasia/magic-epaper-app/issues',
           ),

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
 import 'package:magicepaperapp/ndef_screen/services/ndef_record_parser.dart';
 import 'package:magicepaperapp/ndef_screen/services/nfc_availability_service.dart';
 import 'package:magicepaperapp/ndef_screen/services/nfc_operations_service.dart';
 import 'package:ndef/ndef.dart' as ndef;
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCController extends ChangeNotifier {
   NFCAvailability _availability = NFCAvailability.not_supported;
@@ -30,7 +33,7 @@ class NFCController extends ChangeNotifier {
     if (_availability != NFCAvailability.available) return;
 
     _setReading(true);
-    _setResult(StringConstants.scanningForNfcTag);
+    _setResult(appLocalizations.scanningForNfcTag);
 
     final result = await NFCOperationsService.readNDEF();
     _setResult(result.message);
@@ -45,7 +48,7 @@ class NFCController extends ChangeNotifier {
       final record = NDEFRecordFactory.createTextRecord(text);
       await _performWrite([record]);
     } catch (e) {
-      _setResult('${StringConstants.errorCreatingTextRecord}$e');
+      _setResult('${appLocalizations.errorCreatingTextRecord}$e');
     }
   }
 
@@ -57,7 +60,7 @@ class NFCController extends ChangeNotifier {
       final record = NDEFRecordFactory.createUrlRecord(url);
       await _performWrite([record]);
     } catch (e) {
-      _setResult('${StringConstants.errorCreatingUrlRecord}$e');
+      _setResult('${appLocalizations.errorCreatingUrlRecord}$e');
     }
   }
 
@@ -69,7 +72,7 @@ class NFCController extends ChangeNotifier {
       final record = NDEFRecordFactory.createWifiRecord(ssid, password);
       await _performWrite([record]);
     } catch (e) {
-      _setResult('${StringConstants.errorCreatingWifiRecord}$e');
+      _setResult('${appLocalizations.errorCreatingWifiRecord}$e');
     }
   }
 
@@ -92,18 +95,18 @@ class NFCController extends ChangeNotifier {
         records.add(NDEFRecordFactory.createWifiRecord(wifiSSID, wifiPassword));
       }
       if (records.isEmpty) {
-        _setResult(StringConstants.pleaseEnterAtLeastOneRecord);
+        _setResult(appLocalizations.pleaseEnterAtLeastOneRecord);
         return;
       }
       await _performWrite(records);
     } catch (e) {
-      _setResult('${StringConstants.errorCreatingMultipleRecords}$e');
+      _setResult('${appLocalizations.errorCreatingMultipleRecords}$e');
     }
   }
 
   Future<void> _performWrite(List<ndef.NDEFRecord> records) async {
     _setWriting(true);
-    _setResult(StringConstants.scanningForNfcTagToWrite);
+    _setResult(appLocalizations.scanningForNfcTagToWrite);
     final result = await NFCOperationsService.writeNDEF(records);
     _setResult(result.message);
     _setWriting(false);
@@ -112,7 +115,7 @@ class NFCController extends ChangeNotifier {
   Future<void> clearNDEF() async {
     if (_availability != NFCAvailability.available) return;
     _setClearing(true);
-    _setResult(StringConstants.scanningForNfcTagToClear);
+    _setResult(appLocalizations.scanningForNfcTagToClear);
     final result = await NFCOperationsService.clearNDEF();
     _setResult(result.message);
     _setClearing(false);
@@ -120,7 +123,7 @@ class NFCController extends ChangeNotifier {
 
   Future<void> verifyWrite() async {
     if (_availability != NFCAvailability.available) return;
-    _setResult(StringConstants.scanningTagForVerification);
+    _setResult(appLocalizations.scanningTagForVerification);
     final result = await NFCOperationsService.verifyTag();
     _setResult(result.message);
   }
@@ -134,7 +137,7 @@ class NFCController extends ChangeNotifier {
       final record = NDEFRecordFactory.createVCardRecord(vCardData);
       await _performWrite([record]);
     } catch (e) {
-      _setResult('Error creating vCard record: $e');
+      _setResult('${appLocalizations.errorCreatingVCardRecord}$e');
     }
   }
 

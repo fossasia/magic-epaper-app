@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/ndef_screen/controller/nfc_controller.dart';
 import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
 import 'package:magicepaperapp/ndef_screen/nfc_vcard_write_card.dart';
@@ -8,6 +9,8 @@ import 'package:magicepaperapp/ndef_screen/widgets/nfc_status_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_write_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_read_card.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NDEFScreen extends StatefulWidget {
   const NDEFScreen({super.key});
@@ -73,7 +76,7 @@ class _NDEFScreenState extends State<NDEFScreen> {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      title: StringConstants.appName,
+      title: appLocalizations.appName,
       index: 1,
       actions: [
         IconButton(
@@ -84,10 +87,10 @@ class _NDEFScreenState extends State<NDEFScreen> {
           onPressed: _nfcController.result.isNotEmpty
               ? () {
                   _nfcController.clearResult();
-                  _showSnackBar('Results cleared');
+                  _showSnackBar(appLocalizations.resultsCleared);
                 }
               : null,
-          tooltip: 'Clear Results',
+          tooltip: appLocalizations.clearResults,
         ),
       ],
       body: SingleChildScrollView(
@@ -105,34 +108,34 @@ class _NDEFScreenState extends State<NDEFScreen> {
               result: _nfcController.result,
               onRead: () async {
                 await _nfcController.readNDEF();
-                if (_nfcController.result.contains(StringConstants.error)) {
-                  _showSnackBar(StringConstants.readOperationFailed,
+                if (_nfcController.result.contains(appLocalizations.error)) {
+                  _showSnackBar(appLocalizations.readOperationFailed,
                       isError: true);
                 } else {
-                  _showSnackBar(StringConstants.tagReadSuccessfully);
+                  _showSnackBar(appLocalizations.tagReadSuccessfully);
                 }
               },
               onVerify: () async {
                 await _nfcController.verifyWrite();
-                if (_nfcController.result.contains(StringConstants.error)) {
-                  _showSnackBar(StringConstants.verificationFailed,
+                if (_nfcController.result.contains(appLocalizations.error)) {
+                  _showSnackBar(appLocalizations.verificationFailed,
                       isError: true);
                 } else {
-                  _showSnackBar(StringConstants.tagVerifiedSuccessfully);
+                  _showSnackBar(appLocalizations.tagVerifiedSuccessfully);
                 }
               },
               onClear: () async {
                 bool confirmed = await _showConfirmDialog(
-                  StringConstants.clearNfcTag,
-                  StringConstants.clearNfcTagConfirmation,
+                  appLocalizations.clearNfcTag,
+                  appLocalizations.clearNfcTagConfirmation,
                 );
                 if (confirmed) {
                   await _nfcController.clearNDEF();
-                  if (_nfcController.result.contains(StringConstants.error)) {
-                    _showSnackBar(StringConstants.clearOperationFailed,
+                  if (_nfcController.result.contains(appLocalizations.error)) {
+                    _showSnackBar(appLocalizations.clearOperationFailed,
                         isError: true);
                   } else {
-                    _showSnackBar(StringConstants.tagClearedSuccessfully);
+                    _showSnackBar(appLocalizations.tagClearedSuccessfully);
                   }
                 }
               },
@@ -198,12 +201,12 @@ class _NDEFScreenState extends State<NDEFScreen> {
                       const Icon(Icons.warning, size: 48, color: Colors.orange),
                       const SizedBox(height: 16),
                       Text(
-                        StringConstants.nfcNotAvailable,
+                        appLocalizations.nfcNotAvailable,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        StringConstants.enableNfcMessage,
+                        appLocalizations.enableNfcMessage,
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.grey[600]),
                       ),
@@ -220,10 +223,10 @@ class _NDEFScreenState extends State<NDEFScreen> {
   }
 
   void _handleWriteResult() {
-    if (_nfcController.result.contains(StringConstants.error)) {
-      _showSnackBar(StringConstants.writeOperationFailed, isError: true);
-    } else if (_nfcController.result.contains(StringConstants.successfully)) {
-      _showSnackBar(StringConstants.dataWrittenSuccessfully);
+    if (_nfcController.result.contains(appLocalizations.error)) {
+      _showSnackBar(appLocalizations.writeOperationFailed, isError: true);
+    } else if (_nfcController.result.contains(appLocalizations.successfully)) {
+      _showSnackBar(appLocalizations.dataWrittenSuccessfully);
       setState(() {
         _textValue = '';
         _urlValue = '';
@@ -256,12 +259,12 @@ class _NDEFScreenState extends State<NDEFScreen> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text(StringConstants.cancel),
+                  child: Text(appLocalizations.cancel),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   style: TextButton.styleFrom(foregroundColor: Colors.red),
-                  child: const Text(StringConstants.confirm),
+                  child: Text(appLocalizations.confirm),
                 ),
               ],
             );
