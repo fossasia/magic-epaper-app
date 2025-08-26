@@ -5,9 +5,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:magicepaperapp/card_templates/employee_id_card_widget.dart';
 import 'package:magicepaperapp/card_templates/employee_id_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
 import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:magicepaperapp/util/template_util.dart';
+import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 class EmployeeIdForm extends StatefulWidget {
   final int width;
@@ -30,6 +32,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
 
   File? _profileImage;
   final ImagePicker _picker = ImagePicker();
+  bool _isGenerating = false;
 
   late EmployeeIdModel _employeeData;
 
@@ -97,173 +100,549 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      final List<LayerSpec> layers = [];
+      setState(() {
+        _isGenerating = true;
+      });
 
-      if (_profileImage != null) {
-        layers.add(LayerSpec.widget(
-          widget: ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: Image.file(_profileImage!,
-                width: 200, height: 200, fit: BoxFit.cover),
-          ),
-          offset: const Offset(0, -205),
-          scale: 10,
-        ));
-      }
+      try {
+        final List<LayerSpec> layers = [];
 
-      if (_employeeData.companyName.isNotEmpty) {
+        if (_profileImage != null) {
+          layers.add(LayerSpec.widget(
+            widget: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.file(_profileImage!,
+                  width: 200, height: 200, fit: BoxFit.cover),
+            ),
+            offset: const Offset(0, -205),
+            scale: 10,
+          ));
+        }
+
+        if (_employeeData.companyName.isNotEmpty) {
+          layers.add(LayerSpec.text(
+            textStyle: const TextStyle(
+              fontSize: 50,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+            text: _employeeData.companyName,
+            textColor: Colors.black,
+            backgroundColor: Colors.white,
+            textAlign: TextAlign.center,
+            offset: const Offset(0, -80),
+            scale: 1,
+          ));
+        }
+
         layers.add(LayerSpec.text(
-          textStyle: const TextStyle(
-            fontSize: 50,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-          text: _employeeData.companyName,
+          text: '${StringConstants.namePrefix}${_employeeData.name}',
           textColor: Colors.black,
           backgroundColor: Colors.white,
-          textAlign: TextAlign.center,
-          offset: const Offset(0, -80),
+          textAlign: TextAlign.left,
+          offset: const Offset(0, -30),
           scale: 1,
         ));
-      }
 
-      layers.add(LayerSpec.text(
-        text: 'Name: ${_employeeData.name}',
-        textColor: Colors.black,
-        backgroundColor: Colors.white,
-        textAlign: TextAlign.left,
-        offset: const Offset(0, -30),
-        scale: 1,
-      ));
-
-      layers.add(LayerSpec.text(
-        text: 'Position: ${_employeeData.position}',
-        textColor: Colors.black,
-        backgroundColor: Colors.white,
-        textAlign: TextAlign.left,
-        offset: const Offset(0, 0),
-        scale: 1,
-      ));
-
-      layers.add(LayerSpec.text(
-        text: 'Division: ${_employeeData.division}',
-        textColor: Colors.black,
-        backgroundColor: Colors.white,
-        textAlign: TextAlign.left,
-        offset: const Offset(0, 35),
-        scale: 1,
-      ));
-
-      layers.add(LayerSpec.text(
-        text: 'ID: ${_employeeData.idNumber}',
-        textColor: Colors.black,
-        backgroundColor: Colors.white,
-        textAlign: TextAlign.left,
-        offset: const Offset(0, 70),
-        scale: 1,
-      ));
-
-      if (_employeeData.qrData.isNotEmpty) {
-        layers.add(LayerSpec.widget(
-          widget: BarcodeWidget(
-            padding: const EdgeInsets.all(10),
-            backgroundColor: colorWhite,
-            barcode: Barcode.qrCode(),
-            data: _employeeData.qrData,
-            width: 60,
-            height: 60,
-          ),
-          offset: const Offset(0, 170),
-          scale: 8,
+        layers.add(LayerSpec.text(
+          text: '${StringConstants.positionPrefix}${_employeeData.position}',
+          textColor: Colors.black,
+          backgroundColor: Colors.white,
+          textAlign: TextAlign.left,
+          offset: const Offset(0, 0),
+          scale: 1,
         ));
-      }
 
-      final result = await Navigator.of(context).push<Uint8List>(
-        MaterialPageRoute(
-          builder: (context) => MovableBackgroundImageExample(
-            width: widget.width,
-            height: widget.height,
-            initialLayers: layers,
+        layers.add(LayerSpec.text(
+          text: '${StringConstants.divisionPrefix}${_employeeData.division}',
+          textColor: Colors.black,
+          backgroundColor: Colors.white,
+          textAlign: TextAlign.left,
+          offset: const Offset(0, 35),
+          scale: 1,
+        ));
+
+        layers.add(LayerSpec.text(
+          text: '${StringConstants.idPrefix}${_employeeData.idNumber}',
+          textColor: Colors.black,
+          backgroundColor: Colors.white,
+          textAlign: TextAlign.left,
+          offset: const Offset(0, 70),
+          scale: 1,
+        ));
+
+        if (_employeeData.qrData.isNotEmpty) {
+          layers.add(LayerSpec.widget(
+            widget: BarcodeWidget(
+              padding: const EdgeInsets.all(10),
+              backgroundColor: colorWhite,
+              barcode: Barcode.qrCode(),
+              data: _employeeData.qrData,
+              width: 60,
+              height: 60,
+            ),
+            offset: const Offset(0, 170),
+            scale: 8,
+          ));
+        }
+
+        final result = await Navigator.of(context).push<Uint8List>(
+          MaterialPageRoute(
+            builder: (context) => MovableBackgroundImageExample(
+              width: widget.width,
+              height: widget.height,
+              initialLayers: layers,
+            ),
           ),
-        ),
-      );
+        );
 
-      if (result != null) {
-        Navigator.of(context)
-          ..pop()
-          ..pop(result);
+        if (result != null) {
+          Navigator.of(context)
+            ..pop()
+            ..pop(result);
+        }
+      } finally {
+        setState(() {
+          _isGenerating = false;
+        });
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Employee ID Details'),
+    return CommonScaffold(
+      index: -1,
+      toolbarHeight: 85,
+      titleWidget: const Padding(
+        padding: EdgeInsets.fromLTRB(5, 16, 16, 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              StringConstants.employeeIdCard,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              StringConstants.fillDetailsToCreateId,
+              style: TextStyle(fontSize: 16, color: Colors.white),
+            ),
+          ],
+        ),
       ),
-      body: SingleChildScrollView(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16.0, 14, 16.0, 16.0),
+          child: Column(
+            children: [
+              EmployeeIdCardWidget(data: _employeeData),
+              const SizedBox(height: 20),
+              const Divider(height: 1, color: Colors.grey),
+              const SizedBox(height: 20),
+              Card(
+                color: Colors.white,
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: BorderSide(color: Colors.grey.shade300, width: 1),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          children: [
+                            Icon(Icons.edit_outlined,
+                                color: colorAccent, size: 20),
+                            SizedBox(width: 8),
+                            Text(
+                              StringConstants.idCardDetails,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: colorBlack,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        _buildPhotoSection(),
+                        const SizedBox(height: 20),
+                        _buildTextFormField(
+                          controller: _companyNameController,
+                          label: StringConstants.companyName,
+                          hint: StringConstants.enterCompanyName,
+                          icon: Icons.business_outlined,
+                          validator: (value) => value?.isEmpty ?? true
+                              ? StringConstants.pleaseEnterCompanyName
+                              : null,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildTextFormField(
+                          controller: _nameController,
+                          label: StringConstants.name,
+                          hint: StringConstants.enterEmployeeName,
+                          icon: Icons.person_outline,
+                          validator: (value) => value?.isEmpty ?? true
+                              ? StringConstants.pleaseEnterName
+                              : null,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildTextFormField(
+                          controller: _positionController,
+                          label: StringConstants.position,
+                          hint: StringConstants.enterJobPosition,
+                          icon: Icons.work_outline,
+                          validator: (value) => value?.isEmpty ?? true
+                              ? StringConstants.pleaseEnterPosition
+                              : null,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildTextFormField(
+                          controller: _divisionController,
+                          label: StringConstants.division,
+                          hint: StringConstants.enterDepartment,
+                          icon: Icons.groups_outlined,
+                          validator: (value) => value?.isEmpty ?? true
+                              ? StringConstants.pleaseEnterDivision
+                              : null,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildTextFormField(
+                          controller: _idNumberController,
+                          label: StringConstants.idNumber,
+                          hint: StringConstants.enterUniqueId,
+                          icon: Icons.badge_outlined,
+                          validator: (value) => value?.isEmpty ?? true
+                              ? StringConstants.pleaseEnterIdNumber
+                              : null,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildTextFormField(
+                          controller: _qrDataController,
+                          label: StringConstants.qrCodeData,
+                          hint: StringConstants.enterQrCodeData,
+                          icon: Icons.qr_code_outlined,
+                          maxLines: 2,
+                          validator: (value) => value?.isEmpty ?? true
+                              ? StringConstants.pleaseEnterQrCodeData
+                              : null,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: _isGenerating ? null : _submitForm,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        colorPrimary.withAlpha(_isGenerating ? 125 : 255),
+                    foregroundColor:
+                        Colors.white.withAlpha(_isGenerating ? 178 : 255),
+                    elevation: _isGenerating ? 0 : 2,
+                    shadowColor: colorPrimary.withOpacity(0.3),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: _isGenerating
+                      ? const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                            Text(
+                              StringConstants.generatingIdCard,
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        )
+                      : const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.credit_card, size: 18),
+                            SizedBox(width: 8),
+                            Text(
+                              StringConstants.generateIdCard,
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextFormField({
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+    required IconData icon,
+    String? Function(String?)? validator,
+    int maxLines = 1,
+  }) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: colorPrimary,
+          selectionColor: colorPrimary.withOpacity(0.2),
+          selectionHandleColor: colorPrimary,
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          focusColor: colorPrimary,
+          hoverColor: colorPrimary.withOpacity(0.1),
+        ),
+      ),
+      child: TextFormField(
+        controller: controller,
+        validator: validator,
+        maxLines: maxLines,
+        style: const TextStyle(
+          fontSize: 16,
+          color: colorBlack,
+          fontWeight: FontWeight.w500,
+        ),
+        cursorColor: colorPrimary,
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          prefixIcon: Icon(icon, color: colorAccent, size: 20),
+          labelStyle: TextStyle(
+            color: colorBlack.withOpacity(0.7),
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+          hintStyle: TextStyle(
+            color: Colors.grey.shade500,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
+          floatingLabelStyle: const TextStyle(
+            color: colorPrimary,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: colorPrimary, width: 2),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.red, width: 1.5),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.red, width: 2),
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          filled: true,
+          fillColor: Colors.grey.shade50,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPhotoSection() {
+    return Card(
+      color: Colors.grey.shade50,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: Colors.grey.shade300, width: 1),
+      ),
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            EmployeeIdCardWidget(data: _employeeData),
-            const SizedBox(height: 20),
-            const Divider(),
-            const SizedBox(height: 20),
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: _companyNameController,
-                    decoration:
-                        const InputDecoration(labelText: 'Company Name'),
-                    validator: (value) =>
-                        value!.isEmpty ? 'Please enter a company name' : null,
+            Row(
+              children: [
+                const Icon(Icons.photo_camera_outlined,
+                    color: colorAccent, size: 18),
+                const SizedBox(width: 8),
+                const Text(
+                  StringConstants.profilePhoto,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: colorBlack,
                   ),
-                  TextFormField(
-                    controller: _nameController,
-                    decoration: const InputDecoration(labelText: 'Name'),
-                    validator: (value) =>
-                        value!.isEmpty ? 'Please enter a name' : null,
+                ),
+                const Spacer(),
+                if (_profileImage != null)
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: colorPrimary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Text(
+                      StringConstants.selected,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colorPrimary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
-                  TextFormField(
-                    controller: _idNumberController,
-                    decoration: const InputDecoration(labelText: 'ID Number'),
-                    validator: (value) =>
-                        value!.isEmpty ? 'Please enter an ID number' : null,
+              ],
+            ),
+            const SizedBox(height: 12),
+            InkWell(
+              onTap: _pickImage,
+              borderRadius: BorderRadius.circular(8),
+              splashColor: colorAccent.withOpacity(0.1),
+              highlightColor: colorAccent.withOpacity(0.05),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: _profileImage != null
+                        ? colorPrimary
+                        : Colors.grey.shade300,
+                    width: _profileImage != null ? 2 : 1,
                   ),
-                  TextFormField(
-                    controller: _divisionController,
-                    decoration: const InputDecoration(labelText: 'Division'),
-                    validator: (value) =>
-                        value!.isEmpty ? 'Please enter a division' : null,
-                  ),
-                  TextFormField(
-                    controller: _positionController,
-                    decoration: const InputDecoration(labelText: 'Position'),
-                    validator: (value) =>
-                        value!.isEmpty ? 'Please enter a position' : null,
-                  ),
-                  const SizedBox(height: 20),
-                  OutlinedButton.icon(
-                    onPressed: _pickImage,
-                    icon: const Icon(Icons.photo_camera),
-                    label: const Text('Select Profile Photo'),
-                  ),
-                  TextFormField(
-                    controller: _qrDataController,
-                    decoration:
-                        const InputDecoration(labelText: 'QR Code Data'),
-                    validator: (value) =>
-                        value!.isEmpty ? 'Please enter QR code data' : null,
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _submitForm,
-                    child: const Text('Generate ID Card'),
-                  ),
-                ],
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: _profileImage != null
+                              ? colorPrimary.withOpacity(0.3)
+                              : Colors.grey.shade300,
+                        ),
+                      ),
+                      child: _profileImage != null
+                          ? Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(7),
+                                  child: Image.file(
+                                    _profileImage!,
+                                    fit: BoxFit.cover,
+                                    width: 60,
+                                    height: 60,
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 2,
+                                  right: 2,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: colorPrimary,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    padding: const EdgeInsets.all(2),
+                                    child: const Icon(
+                                      Icons.check,
+                                      size: 12,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Icon(
+                              Icons.add_photo_alternate,
+                              size: 28,
+                              color: Colors.grey.shade400,
+                            ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _profileImage != null
+                                ? StringConstants.photoSelected
+                                : StringConstants.selectProfilePhoto,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: _profileImage != null
+                                  ? colorPrimary
+                                  : colorBlack,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _profileImage != null
+                                ? StringConstants.tapToChangePhoto
+                                : StringConstants.tapToSelectFromGallery,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: _profileImage != null
+                            ? colorPrimary.withOpacity(0.1)
+                            : Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Icon(
+                        _profileImage != null
+                            ? Icons.edit
+                            : Icons.arrow_forward_ios,
+                        color: _profileImage != null
+                            ? colorPrimary
+                            : Colors.grey.shade400,
+                        size: _profileImage != null ? 16 : 14,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
