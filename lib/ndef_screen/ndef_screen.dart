@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/ndef_screen/app_nfc/app_data_model.dart';
 import 'package:magicepaperapp/ndef_screen/controller/nfc_controller.dart';
 import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
 import 'package:magicepaperapp/ndef_screen/nfc_vcard_write_card.dart';
@@ -26,6 +27,7 @@ class _NDEFScreenState extends State<NDEFScreen> {
   String _wifiSSIDValue = '';
   String _wifiPasswordValue = '';
   VCardData? _vCardData;
+  AppData? _selectedApp;
 
   @override
   void initState() {
@@ -71,6 +73,24 @@ class _NDEFScreenState extends State<NDEFScreen> {
         duration: const Duration(seconds: 3),
       ),
     );
+  }
+
+  void _onAppSelected(AppData? app) {
+    setState(() {
+      _selectedApp = app;
+    });
+  }
+
+  Future<void> _writeAppLauncher() async {
+    if (_selectedApp != null) {
+      await _nfcController.writeAppLauncherRecord(_selectedApp!.packageName);
+      _handleWriteResult();
+      if (_nfcController.result.contains(StringConstants.successfully)) {
+        setState(() {
+          _selectedApp = null;
+        });
+      }
+    }
   }
 
   @override
@@ -190,6 +210,13 @@ class _NDEFScreenState extends State<NDEFScreen> {
                   );
                   _handleWriteResult();
                 },
+              ),
+              const SizedBox(height: 16),
+              AppLauncherCard(
+                selectedApp: _selectedApp,
+                onAppSelected: _onAppSelected,
+                isWriting: _nfcController.isWriting,
+                onWriteAppLauncher: _writeAppLauncher,
               ),
             ] else ...[
               Card(
