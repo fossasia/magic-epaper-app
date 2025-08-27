@@ -534,7 +534,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get barcodeData => 'Barcode Data';
 
   @override
-  String get barcodeDataHint => 'Enter barcode data or scan';
+  String get barcodeDataHint => 'Enter barcode number or SKU';
 
   @override
   String get characters => 'Characters';
@@ -993,4 +993,249 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get add => 'Add';
+
+  @override
+  String get cardTemplates => 'Card Templates';
+
+  @override
+  String get chooseTemplateSubtitle => 'Choose a template to get started';
+
+  @override
+  String get employeeIdCardTitle => 'Employee ID Card';
+
+  @override
+  String get employeeIdCardDescription =>
+      'Create professional employee identification cards';
+
+  @override
+  String get shopPriceTagTitle => 'Shop Price Tag';
+
+  @override
+  String get shopPriceTagDescription =>
+      'Design attractive price tags for your products';
+
+  @override
+  String get entryPassTagTitle => 'Entry Pass Tag';
+
+  @override
+  String get entryPassTagDescription =>
+      'Generate entry passes for events and venues';
+
+  @override
+  String get eventBadgeTitle => 'Event Badge';
+
+  @override
+  String get eventBadgeDescription =>
+      'Create personalized event badges and name tags';
+
+  @override
+  String get comingSoon => 'Coming Soon';
+
+  @override
+  String get comingSoonMessage =>
+      'This template is currently under development and will be available soon.';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get defaultCompanyName => 'Company Name';
+
+  @override
+  String get nameLabel => 'Name';
+
+  @override
+  String get positionLabel => 'Position';
+
+  @override
+  String get divisionLabel => 'Division';
+
+  @override
+  String get idLabel => 'ID';
+
+  @override
+  String get emptyFieldPlaceholder => 'Not specified';
+
+  @override
+  String get productImage => 'Product Image';
+
+  @override
+  String get productName => 'Product Name';
+
+  @override
+  String get sizeQuantity => 'Size/Quantity';
+
+  @override
+  String get defaultCurrency => '\$';
+
+  @override
+  String get defaultPrice => '0.00';
+
+  @override
+  String get price => 'Price';
+
+  @override
+  String get quantitySize => 'Quantity/Size';
+
+  @override
+  String get quantitySizeHint =>
+      'Enter size/quantity (e.g., 750ml, 2kg, Large)';
+
+  @override
+  String get namePrefix => 'Name: ';
+
+  @override
+  String get positionPrefix => 'Position: ';
+
+  @override
+  String get divisionPrefix => 'Division: ';
+
+  @override
+  String get idPrefix => 'ID: ';
+
+  @override
+  String get employeeIdCard => 'Employee ID Card';
+
+  @override
+  String get fillDetailsToCreateId =>
+      'Fill in the details below to create your employee ID card';
+
+  @override
+  String get idCardDetails => 'ID Card Details';
+
+  @override
+  String get companyName => 'Company Name';
+
+  @override
+  String get enterCompanyName => 'Enter company name';
+
+  @override
+  String get pleaseEnterCompanyName => 'Please enter company name';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get enterEmployeeName => 'Enter employee name';
+
+  @override
+  String get pleaseEnterName => 'Please enter name';
+
+  @override
+  String get position => 'Position';
+
+  @override
+  String get enterJobPosition => 'Enter job position';
+
+  @override
+  String get pleaseEnterPosition => 'Please enter position';
+
+  @override
+  String get division => 'Division';
+
+  @override
+  String get enterDepartment => 'Enter department';
+
+  @override
+  String get pleaseEnterDivision => 'Please enter division';
+
+  @override
+  String get idNumber => 'ID Number';
+
+  @override
+  String get enterUniqueId => 'Enter unique ID';
+
+  @override
+  String get pleaseEnterIdNumber => 'Please enter ID number';
+
+  @override
+  String get qrCodeData => 'QR Code Data';
+
+  @override
+  String get enterQrCodeData => 'Enter QR code data';
+
+  @override
+  String get pleaseEnterQrCodeData => 'Please enter QR code data';
+
+  @override
+  String get generatingIdCard => 'Generating ID Card...';
+
+  @override
+  String get generateIdCard => 'Generate ID Card';
+
+  @override
+  String get profilePhoto => 'Profile Photo';
+
+  @override
+  String get selected => 'Selected';
+
+  @override
+  String get photoSelected => 'Photo selected';
+
+  @override
+  String get selectProfilePhoto => 'Select Profile Photo';
+
+  @override
+  String get tapToChangePhoto => 'Tap to change photo';
+
+  @override
+  String get tapToSelectFromGallery => 'Tap to select from gallery';
+
+  @override
+  String get priceTagGenerator => 'Price Tag Generator';
+
+  @override
+  String get priceTagDescription =>
+      'Create professional price tags for your products';
+
+  @override
+  String get productDetails => 'Product Details';
+
+  @override
+  String get productNameHint => 'Enter product name (e.g., iPhone 15 Pro)';
+
+  @override
+  String get pleaseEnterProductName => 'Please enter a product name';
+
+  @override
+  String get currency => 'Currency';
+
+  @override
+  String get currencyHint => '₹';
+
+  @override
+  String get required => 'Required';
+
+  @override
+  String get priceHint => '999.99';
+
+  @override
+  String get pleaseEnterPrice => 'Please enter price';
+
+  @override
+  String get pleaseEnterQuantitySize => 'Please enter quantity or size';
+
+  @override
+  String get pleaseEnterBarcodeData => 'Please enter barcode data';
+
+  @override
+  String get generatingPriceTag => 'Generating Price Tag...';
+
+  @override
+  String get generatePriceTag => 'Generate Price Tag';
+
+  @override
+  String get productImageIn => 'Product Image';
+
+  @override
+  String get productImageSelected => 'Product Image Selected';
+
+  @override
+  String get selectProductImage => 'Select Product Image';
+
+  @override
+  String get tapToChangeImage => 'Tap to change image';
+
+  @override
+  String get chooseImageFromGallery => 'Choose image from gallery';
 }

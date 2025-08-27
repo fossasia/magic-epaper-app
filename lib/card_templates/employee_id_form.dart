@@ -5,11 +5,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:magicepaperapp/card_templates/employee_id_card_widget.dart';
 import 'package:magicepaperapp/card_templates/employee_id_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:magicepaperapp/util/template_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class EmployeeIdForm extends StatefulWidget {
   final int width;
@@ -136,7 +139,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         }
 
         layers.add(LayerSpec.text(
-          text: '${StringConstants.namePrefix}${_employeeData.name}',
+          text: '${appLocalizations.namePrefix}${_employeeData.name}',
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.left,
@@ -145,7 +148,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         ));
 
         layers.add(LayerSpec.text(
-          text: '${StringConstants.positionPrefix}${_employeeData.position}',
+          text: '${appLocalizations.positionPrefix}${_employeeData.position}',
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.left,
@@ -154,7 +157,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         ));
 
         layers.add(LayerSpec.text(
-          text: '${StringConstants.divisionPrefix}${_employeeData.division}',
+          text: '${appLocalizations.divisionPrefix}${_employeeData.division}',
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.left,
@@ -163,7 +166,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         ));
 
         layers.add(LayerSpec.text(
-          text: '${StringConstants.idPrefix}${_employeeData.idNumber}',
+          text: '${appLocalizations.idPrefix}${_employeeData.idNumber}',
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.left,
@@ -214,23 +217,23 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
     return CommonScaffold(
       index: -1,
       toolbarHeight: 85,
-      titleWidget: const Padding(
-        padding: EdgeInsets.fromLTRB(5, 16, 16, 5),
+      titleWidget: Padding(
+        padding: const EdgeInsets.fromLTRB(5, 16, 16, 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              StringConstants.employeeIdCard,
-              style: TextStyle(
+              appLocalizations.employeeIdCard,
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
-              StringConstants.fillDetailsToCreateId,
-              style: TextStyle(fontSize: 16, color: Colors.white),
+              appLocalizations.fillDetailsToCreateId,
+              style: const TextStyle(fontSize: 16, color: Colors.white),
             ),
           ],
         ),
@@ -258,14 +261,14 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Row(
+                        Row(
                           children: [
-                            Icon(Icons.edit_outlined,
+                            const Icon(Icons.edit_outlined,
                                 color: colorAccent, size: 20),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Text(
-                              StringConstants.idCardDetails,
-                              style: TextStyle(
+                              appLocalizations.idCardDetails,
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: colorBlack,
@@ -278,62 +281,62 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         const SizedBox(height: 20),
                         _buildTextFormField(
                           controller: _companyNameController,
-                          label: StringConstants.companyName,
-                          hint: StringConstants.enterCompanyName,
+                          label: appLocalizations.companyName,
+                          hint: appLocalizations.enterCompanyName,
                           icon: Icons.business_outlined,
                           validator: (value) => value?.isEmpty ?? true
-                              ? StringConstants.pleaseEnterCompanyName
+                              ? appLocalizations.pleaseEnterCompanyName
                               : null,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _nameController,
-                          label: StringConstants.name,
-                          hint: StringConstants.enterEmployeeName,
+                          label: appLocalizations.name,
+                          hint: appLocalizations.enterEmployeeName,
                           icon: Icons.person_outline,
                           validator: (value) => value?.isEmpty ?? true
-                              ? StringConstants.pleaseEnterName
+                              ? appLocalizations.pleaseEnterName
                               : null,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _positionController,
-                          label: StringConstants.position,
-                          hint: StringConstants.enterJobPosition,
+                          label: appLocalizations.position,
+                          hint: appLocalizations.enterJobPosition,
                           icon: Icons.work_outline,
                           validator: (value) => value?.isEmpty ?? true
-                              ? StringConstants.pleaseEnterPosition
+                              ? appLocalizations.pleaseEnterPosition
                               : null,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _divisionController,
-                          label: StringConstants.division,
-                          hint: StringConstants.enterDepartment,
+                          label: appLocalizations.division,
+                          hint: appLocalizations.enterDepartment,
                           icon: Icons.groups_outlined,
                           validator: (value) => value?.isEmpty ?? true
-                              ? StringConstants.pleaseEnterDivision
+                              ? appLocalizations.pleaseEnterDivision
                               : null,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _idNumberController,
-                          label: StringConstants.idNumber,
-                          hint: StringConstants.enterUniqueId,
+                          label: appLocalizations.idNumber,
+                          hint: appLocalizations.enterUniqueId,
                           icon: Icons.badge_outlined,
                           validator: (value) => value?.isEmpty ?? true
-                              ? StringConstants.pleaseEnterIdNumber
+                              ? appLocalizations.pleaseEnterIdNumber
                               : null,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _qrDataController,
-                          label: StringConstants.qrCodeData,
-                          hint: StringConstants.enterQrCodeData,
+                          label: appLocalizations.qrCodeData,
+                          hint: appLocalizations.enterQrCodeData,
                           icon: Icons.qr_code_outlined,
                           maxLines: 2,
                           validator: (value) => value?.isEmpty ?? true
-                              ? StringConstants.pleaseEnterQrCodeData
+                              ? appLocalizations.pleaseEnterQrCodeData
                               : null,
                         ),
                       ],
@@ -359,10 +362,10 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                     ),
                   ),
                   child: _isGenerating
-                      ? const Row(
+                      ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 20,
                               height: 20,
                               child: CircularProgressIndicator(
@@ -371,22 +374,22 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                                     AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             ),
-                            SizedBox(width: 12),
+                            const SizedBox(width: 12),
                             Text(
-                              StringConstants.generatingIdCard,
-                              style: TextStyle(
+                              appLocalizations.generatingIdCard,
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           ],
                         )
-                      : const Row(
+                      : Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.credit_card, size: 18),
-                            SizedBox(width: 8),
+                            const Icon(Icons.credit_card, size: 18),
+                            const SizedBox(width: 8),
                             Text(
-                              StringConstants.generateIdCard,
-                              style: TextStyle(
+                              appLocalizations.generateIdCard,
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -496,9 +499,9 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                 const Icon(Icons.photo_camera_outlined,
                     color: colorAccent, size: 18),
                 const SizedBox(width: 8),
-                const Text(
-                  StringConstants.profilePhoto,
-                  style: TextStyle(
+                Text(
+                  appLocalizations.profilePhoto,
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: colorBlack,
@@ -513,8 +516,8 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                       color: colorPrimary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Text(
-                      StringConstants.selected,
+                    child: Text(
+                      appLocalizations.selected,
                       style: TextStyle(
                         fontSize: 12,
                         color: colorPrimary,
@@ -600,8 +603,8 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         children: [
                           Text(
                             _profileImage != null
-                                ? StringConstants.photoSelected
-                                : StringConstants.selectProfilePhoto,
+                                ? appLocalizations.photoSelected
+                                : appLocalizations.selectProfilePhoto,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -613,8 +616,8 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                           const SizedBox(height: 4),
                           Text(
                             _profileImage != null
-                                ? StringConstants.tapToChangePhoto
-                                : StringConstants.tapToSelectFromGallery,
+                                ? appLocalizations.tapToChangePhoto
+                                : appLocalizations.tapToSelectFromGallery,
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey.shade600,

@@ -1155,7 +1155,7 @@ abstract class AppLocalizations {
   /// No description provided for @barcodeDataHint.
   ///
   /// In en, this message translates to:
-  /// **'Enter barcode data or scan'**
+  /// **'Enter barcode number or SKU'**
   String get barcodeDataHint;
 
   /// No description provided for @characters.
@@ -2045,6 +2045,480 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add'**
   String get add;
+
+  /// No description provided for @cardTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'Card Templates'**
+  String get cardTemplates;
+
+  /// No description provided for @chooseTemplateSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a template to get started'**
+  String get chooseTemplateSubtitle;
+
+  /// No description provided for @employeeIdCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee ID Card'**
+  String get employeeIdCardTitle;
+
+  /// No description provided for @employeeIdCardDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create professional employee identification cards'**
+  String get employeeIdCardDescription;
+
+  /// No description provided for @shopPriceTagTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop Price Tag'**
+  String get shopPriceTagTitle;
+
+  /// No description provided for @shopPriceTagDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Design attractive price tags for your products'**
+  String get shopPriceTagDescription;
+
+  /// No description provided for @entryPassTagTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Entry Pass Tag'**
+  String get entryPassTagTitle;
+
+  /// No description provided for @entryPassTagDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate entry passes for events and venues'**
+  String get entryPassTagDescription;
+
+  /// No description provided for @eventBadgeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Event Badge'**
+  String get eventBadgeTitle;
+
+  /// No description provided for @eventBadgeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create personalized event badges and name tags'**
+  String get eventBadgeDescription;
+
+  /// No description provided for @comingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming Soon'**
+  String get comingSoon;
+
+  /// No description provided for @comingSoonMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This template is currently under development and will be available soon.'**
+  String get comingSoonMessage;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @defaultCompanyName.
+  ///
+  /// In en, this message translates to:
+  /// **'Company Name'**
+  String get defaultCompanyName;
+
+  /// No description provided for @nameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get nameLabel;
+
+  /// No description provided for @positionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Position'**
+  String get positionLabel;
+
+  /// No description provided for @divisionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Division'**
+  String get divisionLabel;
+
+  /// No description provided for @idLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'ID'**
+  String get idLabel;
+
+  /// No description provided for @emptyFieldPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Not specified'**
+  String get emptyFieldPlaceholder;
+
+  /// No description provided for @productImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Image'**
+  String get productImage;
+
+  /// No description provided for @productName.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Name'**
+  String get productName;
+
+  /// No description provided for @sizeQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Size/Quantity'**
+  String get sizeQuantity;
+
+  /// No description provided for @defaultCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'\$'**
+  String get defaultCurrency;
+
+  /// No description provided for @defaultPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'0.00'**
+  String get defaultPrice;
+
+  /// No description provided for @price.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get price;
+
+  /// No description provided for @quantitySize.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity/Size'**
+  String get quantitySize;
+
+  /// No description provided for @quantitySizeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter size/quantity (e.g., 750ml, 2kg, Large)'**
+  String get quantitySizeHint;
+
+  /// No description provided for @namePrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Name: '**
+  String get namePrefix;
+
+  /// No description provided for @positionPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Position: '**
+  String get positionPrefix;
+
+  /// No description provided for @divisionPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Division: '**
+  String get divisionPrefix;
+
+  /// No description provided for @idPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'ID: '**
+  String get idPrefix;
+
+  /// No description provided for @employeeIdCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee ID Card'**
+  String get employeeIdCard;
+
+  /// No description provided for @fillDetailsToCreateId.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in the details below to create your employee ID card'**
+  String get fillDetailsToCreateId;
+
+  /// No description provided for @idCardDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'ID Card Details'**
+  String get idCardDetails;
+
+  /// No description provided for @companyName.
+  ///
+  /// In en, this message translates to:
+  /// **'Company Name'**
+  String get companyName;
+
+  /// No description provided for @enterCompanyName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter company name'**
+  String get enterCompanyName;
+
+  /// No description provided for @pleaseEnterCompanyName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter company name'**
+  String get pleaseEnterCompanyName;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @enterEmployeeName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter employee name'**
+  String get enterEmployeeName;
+
+  /// No description provided for @pleaseEnterName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter name'**
+  String get pleaseEnterName;
+
+  /// No description provided for @position.
+  ///
+  /// In en, this message translates to:
+  /// **'Position'**
+  String get position;
+
+  /// No description provided for @enterJobPosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter job position'**
+  String get enterJobPosition;
+
+  /// No description provided for @pleaseEnterPosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter position'**
+  String get pleaseEnterPosition;
+
+  /// No description provided for @division.
+  ///
+  /// In en, this message translates to:
+  /// **'Division'**
+  String get division;
+
+  /// No description provided for @enterDepartment.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter department'**
+  String get enterDepartment;
+
+  /// No description provided for @pleaseEnterDivision.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter division'**
+  String get pleaseEnterDivision;
+
+  /// No description provided for @idNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'ID Number'**
+  String get idNumber;
+
+  /// No description provided for @enterUniqueId.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter unique ID'**
+  String get enterUniqueId;
+
+  /// No description provided for @pleaseEnterIdNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter ID number'**
+  String get pleaseEnterIdNumber;
+
+  /// No description provided for @qrCodeData.
+  ///
+  /// In en, this message translates to:
+  /// **'QR Code Data'**
+  String get qrCodeData;
+
+  /// No description provided for @enterQrCodeData.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter QR code data'**
+  String get enterQrCodeData;
+
+  /// No description provided for @pleaseEnterQrCodeData.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter QR code data'**
+  String get pleaseEnterQrCodeData;
+
+  /// No description provided for @generatingIdCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating ID Card...'**
+  String get generatingIdCard;
+
+  /// No description provided for @generateIdCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate ID Card'**
+  String get generateIdCard;
+
+  /// No description provided for @profilePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Photo'**
+  String get profilePhoto;
+
+  /// No description provided for @selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected'**
+  String get selected;
+
+  /// No description provided for @photoSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo selected'**
+  String get photoSelected;
+
+  /// No description provided for @selectProfilePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Profile Photo'**
+  String get selectProfilePhoto;
+
+  /// No description provided for @tapToChangePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to change photo'**
+  String get tapToChangePhoto;
+
+  /// No description provided for @tapToSelectFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to select from gallery'**
+  String get tapToSelectFromGallery;
+
+  /// No description provided for @priceTagGenerator.
+  ///
+  /// In en, this message translates to:
+  /// **'Price Tag Generator'**
+  String get priceTagGenerator;
+
+  /// No description provided for @priceTagDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create professional price tags for your products'**
+  String get priceTagDescription;
+
+  /// No description provided for @productDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Details'**
+  String get productDetails;
+
+  /// No description provided for @productNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter product name (e.g., iPhone 15 Pro)'**
+  String get productNameHint;
+
+  /// No description provided for @pleaseEnterProductName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a product name'**
+  String get pleaseEnterProductName;
+
+  /// No description provided for @currency.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get currency;
+
+  /// No description provided for @currencyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'₹'**
+  String get currencyHint;
+
+  /// No description provided for @required.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get required;
+
+  /// No description provided for @priceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'999.99'**
+  String get priceHint;
+
+  /// No description provided for @pleaseEnterPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter price'**
+  String get pleaseEnterPrice;
+
+  /// No description provided for @pleaseEnterQuantitySize.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter quantity or size'**
+  String get pleaseEnterQuantitySize;
+
+  /// No description provided for @pleaseEnterBarcodeData.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter barcode data'**
+  String get pleaseEnterBarcodeData;
+
+  /// No description provided for @generatingPriceTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating Price Tag...'**
+  String get generatingPriceTag;
+
+  /// No description provided for @generatePriceTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate Price Tag'**
+  String get generatePriceTag;
+
+  /// No description provided for @productImageIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Image'**
+  String get productImageIn;
+
+  /// No description provided for @productImageSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Image Selected'**
+  String get productImageSelected;
+
+  /// No description provided for @selectProductImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Product Image'**
+  String get selectProductImage;
+
+  /// No description provided for @tapToChangeImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to change image'**
+  String get tapToChangeImage;
+
+  /// No description provided for @chooseImageFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose image from gallery'**
+  String get chooseImageFromGallery;
 }
 
 class _AppLocalizationsDelegate
