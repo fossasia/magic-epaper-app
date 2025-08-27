@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:installed_apps/app_info.dart';
@@ -6,17 +7,24 @@ import 'package:magicepaperapp/ndef_screen/app_nfc/app_data_model.dart';
 class AppLauncherService {
   static List<AppData> _cachedApps = [];
 
-  static Future<List<AppData>> getInstalledApps() async {
+  static Future<List<AppData>> getInstalledApps(
+      {bool includeIcons = true}) async {
     if (_cachedApps.isNotEmpty) {
       return _cachedApps;
     }
     try {
-      final List<AppInfo> apps = await InstalledApps.getInstalledApps();
+      final List<AppInfo> apps = await InstalledApps.getInstalledApps(
+        true,
+        includeIcons,
+        "",
+      );
+
       _cachedApps = apps
           .where((app) => app.packageName.isNotEmpty && app.name.isNotEmpty)
           .map((app) => AppData(
                 appName: app.name,
                 packageName: app.packageName,
+                icon: app.icon,
               ))
           .toList();
 
