@@ -4,6 +4,7 @@ import 'package:magicepaperapp/image_library/provider/image_library_provider.dar
 import 'package:magicepaperapp/image_library/services/image_operations_service.dart';
 import 'package:magicepaperapp/image_library/widgets/app_bar_widget.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/batch_delete_confirmation_dialog.dart';
+import 'package:magicepaperapp/image_library/widgets/dialogs/clear_all_confirmation_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/delete_confirmation_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/empty_state_widget.dart';
 import 'package:magicepaperapp/image_library/widgets/image_grid_widget.dart';
@@ -22,7 +23,7 @@ class ImageLibraryScreen extends StatefulWidget {
 class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
   final TextEditingController _searchController = TextEditingController();
   bool _isDeleteMode = false;
-  Set<String> _selectedImages = <String>{};
+  final Set<String> _selectedImages = <String>{};
   late ImageOperationsService _operationsService;
 
   @override
@@ -123,6 +124,20 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
     });
   }
 
+  void _showClearAllDialog() {
+    final provider = context.read<ImageLibraryProvider>();
+    final totalImages = provider.savedImages.length;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => ClearAllConfirmationDialog(
+        totalImages: totalImages,
+        onConfirm: () => _operationsService.clearAllData(provider),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,6 +148,7 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
         onDeletePressed: _showBatchDeleteDialog,
         onExitDeleteMode: _exitDeleteMode,
         onEnterDeleteMode: _enterDeleteMode,
+        onClearAllPressed: _showClearAllDialog,
       ),
       body: Consumer<ImageLibraryProvider>(
         builder: (context, provider, child) {

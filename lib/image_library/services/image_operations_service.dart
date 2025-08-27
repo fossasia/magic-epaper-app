@@ -48,6 +48,57 @@ class ImageOperationsService {
     }
   }
 
+  Future<void> clearAllData(ImageLibraryProvider provider) async {
+    try {
+      Navigator.pop(context);
+      _showClearAllLoadingSnackBar();
+      await provider.clearAllData();
+      _showClearAllSuccessSnackBar();
+    } catch (e) {
+      _showErrorSnackBar('Failed to clear all data: ${e.toString()}');
+    }
+  }
+
+  void _showClearAllSuccessSnackBar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Row(
+          children: [
+            Icon(Icons.check_circle, color: Colors.white, size: 20),
+            SizedBox(width: 12),
+            Text('All data cleared successfully!'),
+          ],
+        ),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
+
+  void _showClearAllLoadingSnackBar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Row(
+          children: [
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            ),
+            SizedBox(width: 12),
+            Text('Clearing all data...'),
+          ],
+        ),
+        backgroundColor: Colors.orange,
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
   Future<void> batchDeleteImages(
     List<SavedImage> selectedImages,
     ImageLibraryProvider provider,
