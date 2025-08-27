@@ -4,6 +4,7 @@ import 'package:magicepaperapp/constants/string_constants.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/epd/configurable_editor.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/util/epd/gdeq031t10.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
 import 'package:magicepaperapp/util/epd/waveshare_displays.dart';
@@ -25,6 +26,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   final List<DisplayDevice> displays = [
     Gdey037z03(),
     Gdey037z03BW(),
+    GDEQ031T10(),
     Waveshare2in13(),
     Waveshare2in9(),
     Waveshare2in9b(),
@@ -33,6 +35,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
     Waveshare7in5(),
     Waveshare7in5HD(),
     ConfigurableEpd(
+      modelId: 'NA',
       width: 400,
       height: 300,
       colors: [Colors.white, Colors.black, Colors.red],
@@ -109,7 +112,9 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                       ),
                       itemCount: displays.length,
                       itemBuilder: (context, index) {
+                        print('Display: ${displays[index].modelId}');
                         return DisplayCard(
+                          key: Key(displays[index].modelId),
                           display: displays[index],
                           isSelected: selectedIndex == index,
                           onTap: () {

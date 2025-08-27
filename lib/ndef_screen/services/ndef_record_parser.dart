@@ -29,6 +29,29 @@ class NDEFRecordFactory {
     );
   }
 
+  static List<ndef.NDEFRecord> createAppLauncherRecords(String packageName,
+      {String? appUri}) {
+    if (packageName.trim().isEmpty) {
+      throw ArgumentError(StringConstants.appCannotBeEmpty);
+    }
+    List<ndef.NDEFRecord> records = [];
+    if (appUri != null && appUri.trim().isNotEmpty) {
+      records.add(ndef.UriRecord.fromString(appUri.trim()));
+    }
+    records.add(_createAndroidApplicationRecord(packageName.trim()));
+    return records;
+  }
+
+  static ndef.NDEFRecord _createAndroidApplicationRecord(String packageName) {
+    List<int> packageBytes = packageName.codeUnits;
+    return ndef.NDEFRecord(
+      tnf: ndef.TypeNameFormat.nfcExternal,
+      type: Uint8List.fromList('android.com:pkg'.codeUnits),
+      id: Uint8List(0),
+      payload: Uint8List.fromList(packageBytes),
+    );
+  }
+
   static ndef.NDEFRecord createUrlRecord(String url) {
     if (url.trim().isEmpty) {
       throw ArgumentError(StringConstants.urlCannotBeEmpty);

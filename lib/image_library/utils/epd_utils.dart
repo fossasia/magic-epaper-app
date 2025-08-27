@@ -1,13 +1,13 @@
+import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/util/epd/gdeq031t10.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
-import 'package:magicepaperapp/util/epd/epd.dart';
+import 'package:magicepaperapp/util/epd/waveshare_2in9.dart';
 
 class EpdUtils {
-  static Epd getEpdFromMetadata(Map<String, dynamic>? metadata) {
-    final List<Epd> displays = [Gdey037z03(), Gdey037z03BW()];
-
+  static DisplayDevice getEpdFromMetadata(Map<String, dynamic>? metadata) {
     if (metadata == null || !metadata.containsKey('epdModel')) {
-      return displays[0];
+      return Gdey037z03();
     }
 
     final String epdModel = metadata['epdModel']?.toString() ?? '';
@@ -17,8 +17,12 @@ class EpdUtils {
         return Gdey037z03();
       case 'GDEY037T03':
         return Gdey037z03BW();
+      case 'waveshare-2.9':
+        return Waveshare2in9();
+      case 'GDEQ031T10':
+        return GDEQ031T10();
       default:
-        return displays[0];
+        return Gdey037z03();
     }
   }
 }
