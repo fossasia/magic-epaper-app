@@ -4,7 +4,6 @@ import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
 import 'package:magicepaperapp/util/epd/waveshare_displays.dart';
 import 'package:magicepaperapp/util/epd/gdeq031t10.dart';
 
-
 class EpdUtils {
   static DisplayDevice getEpdFromMetadata(Map<String, dynamic>? metadata) {
     if (metadata == null || !metadata.containsKey('epdModel')) {
