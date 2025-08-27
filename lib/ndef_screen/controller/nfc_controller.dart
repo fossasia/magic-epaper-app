@@ -73,6 +73,36 @@ class NFCController extends ChangeNotifier {
     }
   }
 
+  Future<void> writeAppLauncherRecord(String packageName,
+      {String? appUri}) async {
+    if (_availability != NFCAvailability.available ||
+        packageName.trim().isEmpty) {
+      return;
+    }
+    try {
+      final records = NDEFRecordFactory.createAppLauncherRecords(packageName,
+          appUri: appUri);
+      await _performWrite(records);
+    } catch (e) {
+      _setResult('${StringConstants.errorCreatingAppRecord}$e');
+    }
+  }
+
+  // Future<void> writeAppLauncherRecord(String packageName,
+  //     {String? appUri}) async {
+  //   if (_availability != NFCAvailability.available ||
+  //       packageName.trim().isEmpty) {
+  //     return;
+  //   }
+  //   try {
+  //     final records = NDEFRecordFactory.createAppLauncherRecords(packageName,
+  //         appUri: appUri);
+  //     await _performWrite(records);
+  //   } catch (e) {
+  //     _setResult('${StringConstants.errorCreatingAppRecord}$e');
+  //   }
+  // }
+
   Future<void> writeMultipleRecords(String text, String url, String wifiSSID,
       String wifiPassword, VCardData? vCardData) async {
     if (_availability != NFCAvailability.available) return;

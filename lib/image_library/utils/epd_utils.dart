@@ -2,6 +2,8 @@ import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
 import 'package:magicepaperapp/util/epd/waveshare_displays.dart';
+import 'package:magicepaperapp/util/epd/gdeq031t10.dart';
+
 
 class EpdUtils {
   static DisplayDevice getEpdFromMetadata(Map<String, dynamic>? metadata) {
@@ -30,6 +32,8 @@ class EpdUtils {
         return Waveshare7in5();
       case 'waveshare-7.5-hd':
         return Waveshare7in5HD();
+      case 'GDEQ031T10':
+        return GDEQ031T10();
       default:
         return Gdey037z03();
     }

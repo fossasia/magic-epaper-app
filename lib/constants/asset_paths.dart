@@ -3,8 +3,14 @@ class ImageAssets {
   static const String whiteBoard = 'assets/canvas/white.png';
   static const String redBoard = 'assets/canvas/red.png';
   static const String blackBoard = 'assets/canvas/black.png';
+  static const String greenBoard = 'assets/canvas/green.png';
+  static const String blueBoard = 'assets/canvas/blue.png';
+  static const String orangeBoard = 'assets/canvas/orange.png';
+  static const String yellowBoard = 'assets/canvas/yellow.png';
   static const String epaper37Bwr =
       'assets/images/displays/epaper_3.7_bwr.webp';
+  static const String GDEQ031T10Display =
+      'assets/images/displays/GDEQ031T10_display.png';
   static const String epaper37Bw = 'assets/images/displays/epaper_3.7_bw.webp';
   static const String customExport = 'assets/images/displays/export_image.webp';
   static const String waveshare2_9 =

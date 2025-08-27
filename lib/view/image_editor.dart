@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/image_library/services/image_save_handler.dart';
 import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
@@ -12,6 +13,7 @@ import 'package:magicepaperapp/util/image_editor_utils.dart';
 import 'package:magicepaperapp/util/xbm_encoder.dart';
 import 'package:magicepaperapp/view/widget/image_list.dart';
 import 'package:magicepaperapp/view/barcode_scanner_screen.dart';
+import 'package:magicepaperapp/util/orientation_util.dart';
 
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:provider/provider.dart';
@@ -49,18 +51,38 @@ class _ImageEditorState extends State<ImageEditor> {
 
   @override
   void initState() {
+    setPortraitOrientation();
     super.initState();
     _selectedWaveform = null;
     _selectedWaveformName = null;
+
     Future.microtask(() {
-      final imgLoader = context.read<ImageLoader>();
-      if (imgLoader.image == null) {
-        imgLoader.loadFinalizedImage(
-          width: widget.device.width,
-          height: widget.device.height,
-        );
-      }
+      loadInitialImage();
     });
+  }
+
+  Future<void> loadInitialImage() async {
+    final imgLoader = context.read<ImageLoader>();
+    if (imgLoader.image == null) {
+      await imgLoader.loadFinalizedImage(
+        width: widget.device.width,
+        height: widget.device.height,
+      );
+    }
+    if (imgLoader.image == null) {
+      loadDefaultImage(imgLoader);
+    }
+  }
+
+  Future<void> loadDefaultImage(ImageLoader imgLoader) async {
+    const assetPath = 'assets/images/FOSSASIA.png';
+    final byteData = await rootBundle.load(assetPath);
+    final pngBytes = byteData.buffer.asUint8List();
+    await imgLoader.updateImage(
+      bytes: pngBytes,
+      width: widget.device.width,
+      height: widget.device.height,
+    );
   }
 
   @override
@@ -426,6 +448,7 @@ class BottomActionMenu extends StatelessWidget {
                 },
               ),
               _buildActionButton(
+                key: const Key('openEditorButton'),
                 context: context,
                 icon: Icons.edit_outlined,
                 label: StringConstants.openEditor,
@@ -451,6 +474,7 @@ class BottomActionMenu extends StatelessWidget {
                 },
               ),
               _buildActionButton(
+                key: const Key('adjustButton'),
                 context: context,
                 icon: Icons.tune_rounded,
                 label: StringConstants.adjustButtonLabel,
@@ -496,14 +520,7 @@ class BottomActionMenu extends StatelessWidget {
                 },
               ),
               _buildActionButton(
-                context: context,
-                icon: Icons.photo_library_outlined,
-                label: 'Library',
-                onTap: () async {
-                  await imageSaveHandler?.navigateToImageLibrary();
-                },
-              ),
-              _buildActionButton(
+                key: const Key('barcodeButton'),
                 context: context,
                 icon: Icons.qr_code_scanner,
                 label: 'Barcode',
@@ -525,6 +542,14 @@ class BottomActionMenu extends StatelessWidget {
                     );
                     await imgLoader.saveFinalizedImageBytes(result);
                   }
+                },
+              ),
+              _buildActionButton(
+                context: context,
+                icon: Icons.photo_library_outlined,
+                label: 'Library',
+                onTap: () async {
+                  await imageSaveHandler?.navigateToImageLibrary();
                 },
               ),
               _buildActionButton(
@@ -565,10 +590,12 @@ class BottomActionMenu extends StatelessWidget {
     required IconData icon,
     required String label,
     required VoidCallback onTap,
+    Key? key,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: InkWell(
+        key: key,
         onTap: onTap,
         borderRadius: BorderRadius.circular(24),
         child: Padding(
