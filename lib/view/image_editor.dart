@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -191,7 +190,7 @@ class _ImageEditorState extends State<ImageEditor> {
 
     final nonWhiteColors = widget.device.colors.where((c) => c != Colors.white);
 
-    int exportedCount = 0;
+    var exportedCount = 0;
     try {
       for (final color in nonWhiteColors) {
         final colorName = ColorUtils.getColorFileName(color);
@@ -220,7 +219,9 @@ class _ImageEditorState extends State<ImageEditor> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: const Duration(seconds: 2),
-        content: Text('${appLocalizations.exportedXbmFiles}'),
+        content: Text(
+          '${appLocalizations.exported} $exportedCount ${appLocalizations.xbmFilesToMagicEpaper}',
+        ),
       ),
     );
   }
@@ -414,8 +415,13 @@ class BottomActionMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    const buttonWidth = 50.0;
+    const totalButtonWidth = 6 * buttonWidth;
+    final useTwoRows = totalButtonWidth > screenWidth - 32;
+
     return Container(
-      height: 80,
+      height: useTwoRows ? 150 : 80,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -428,162 +434,342 @@ class BottomActionMenu extends StatelessWidget {
         ],
       ),
       child: Center(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            children: [
-              _buildActionButton(
-                context: context,
-                icon: Icons.add_photo_alternate_outlined,
-                label: appLocalizations.importImageButtonLabel,
-                onTap: () async {
-                  final success = await imgLoader.pickImage(
-                    width: epd.width,
-                    height: epd.height,
-                  );
-                  if (success && imgLoader.image != null) {
-                    final bytes = Uint8List.fromList(
-                      img.encodePng(imgLoader.image!),
-                    );
-                    await imgLoader.saveFinalizedImageBytes(bytes);
-                  }
-                  onSourceChanged?.call('imported');
-                },
-              ),
-              _buildActionButton(
-                key: const Key('openEditorButton'),
-                context: context,
-                icon: Icons.edit_outlined,
-                label: appLocalizations.openEditor,
-                onTap: () async {
-                  final canvasBytes =
-                      await Navigator.of(context).push<Uint8List>(
-                    MaterialPageRoute(
-                      builder: (context) => MovableBackgroundImageExample(
-                        width: epd.width,
-                        height: epd.height,
-                      ),
-                    ),
-                  );
-                  if (canvasBytes != null) {
-                    await imgLoader.updateImage(
-                      bytes: canvasBytes,
-                      width: epd.width,
-                      height: epd.height,
-                    );
-                    await imgLoader.saveFinalizedImageBytes(canvasBytes);
-                    onSourceChanged?.call('editor');
-                  }
-                },
-              ),
-              _buildActionButton(
-                key: const Key('adjustButton'),
-                context: context,
-                icon: Icons.tune_rounded,
-                label: appLocalizations.adjustButtonLabel,
-                onTap: () async {
-                  if (imgLoader.image != null) {
-                    final canvasBytes =
-                        await Navigator.of(context).push<Uint8List>(
-                      MaterialPageRoute(
-                        builder: (context) => ProImageEditor.memory(
-                          img.encodeJpg(imgLoader.image!),
-                          callbacks: ProImageEditorCallbacks(
-                            onImageEditingComplete: (Uint8List bytes) async {
-                              Navigator.pop(context, bytes);
-                            },
-                          ),
-                          configs: const ProImageEditorConfigs(
-                            paintEditor: PaintEditorConfigs(enabled: false),
-                            textEditor: TextEditorConfigs(enabled: false),
-                            cropRotateEditor: CropRotateEditorConfigs(
-                              enabled: false,
-                            ),
-                            emojiEditor: EmojiEditorConfigs(enabled: false),
-                          ),
+          child: useTwoRows
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildActionButton(
+                          context: context,
+                          icon: Icons.add_photo_alternate_outlined,
+                          label: appLocalizations.importImageButtonLabel,
+                          onTap: () async {
+                            final success = await imgLoader.pickImage(
+                              width: epd.width,
+                              height: epd.height,
+                            );
+                            if (success && imgLoader.image != null) {
+                              final bytes = Uint8List.fromList(
+                                img.encodePng(imgLoader.image!),
+                              );
+                              await imgLoader.saveFinalizedImageBytes(bytes);
+                            }
+                            onSourceChanged?.call('imported');
+                          },
                         ),
-                      ),
-                    );
-                    if (canvasBytes != null) {
-                      imgLoader.updateImage(
-                        bytes: canvasBytes,
-                        width: epd.width,
-                        height: epd.height,
-                      );
-                    }
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        duration: Durations.medium4,
-                        content: Text(appLocalizations.noImageSelectedFeedback),
-                        backgroundColor: colorPrimary,
-                      ),
-                    );
-                  }
-                },
-              ),
-              _buildActionButton(
-                key: const Key('barcodeButton'),
-                context: context,
-                icon: Icons.qr_code_scanner,
-                label: appLocalizations.barcode,
-                onTap: () async {
-                  final result = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => BarcodeScannerScreen(
-                        width: epd.width,
-                        height: epd.height,
-                      ),
+                        _buildActionButton(
+                          key: const Key('openEditorButton'),
+                          context: context,
+                          icon: Icons.edit_outlined,
+                          label: appLocalizations.openEditor,
+                          onTap: () async {
+                            final canvasBytes =
+                                await Navigator.of(context).push<Uint8List>(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    MovableBackgroundImageExample(
+                                  width: epd.width,
+                                  height: epd.height,
+                                ),
+                              ),
+                            );
+                            if (canvasBytes != null) {
+                              await imgLoader.updateImage(
+                                bytes: canvasBytes,
+                                width: epd.width,
+                                height: epd.height,
+                              );
+                              await imgLoader
+                                  .saveFinalizedImageBytes(canvasBytes);
+                              onSourceChanged?.call('editor');
+                            }
+                          },
+                        ),
+                        _buildActionButton(
+                          key: const Key('adjustButton'),
+                          context: context,
+                          icon: Icons.tune_rounded,
+                          label: appLocalizations.adjustButtonLabel,
+                          onTap: () async {
+                            if (imgLoader.image != null) {
+                              final canvasBytes =
+                                  await Navigator.of(context).push<Uint8List>(
+                                MaterialPageRoute(
+                                  builder: (context) => ProImageEditor.memory(
+                                    img.encodeJpg(imgLoader.image!),
+                                    callbacks: ProImageEditorCallbacks(
+                                      onImageEditingComplete:
+                                          (Uint8List bytes) async {
+                                        Navigator.pop(context, bytes);
+                                      },
+                                    ),
+                                    configs: const ProImageEditorConfigs(
+                                      paintEditor:
+                                          PaintEditorConfigs(enabled: false),
+                                      textEditor:
+                                          TextEditorConfigs(enabled: false),
+                                      cropRotateEditor: CropRotateEditorConfigs(
+                                        enabled: false,
+                                      ),
+                                      emojiEditor:
+                                          EmojiEditorConfigs(enabled: false),
+                                    ),
+                                  ),
+                                ),
+                              );
+                              if (canvasBytes != null) {
+                                imgLoader.updateImage(
+                                  bytes: canvasBytes,
+                                  width: epd.width,
+                                  height: epd.height,
+                                );
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  duration: Durations.medium4,
+                                  content: Text(
+                                      appLocalizations.noImageSelectedFeedback),
+                                  backgroundColor: colorPrimary,
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ],
                     ),
-                  );
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildActionButton(
+                          key: const Key('barcodeButton'),
+                          context: context,
+                          icon: Icons.qr_code_scanner,
+                          label: appLocalizations.barcode,
+                          onTap: () async {
+                            final result = await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => BarcodeScannerScreen(
+                                  width: epd.width,
+                                  height: epd.height,
+                                ),
+                              ),
+                            );
 
-                  if (result is Uint8List) {
-                    await imgLoader.updateImage(
-                      bytes: result,
-                      width: epd.width,
-                      height: epd.height,
-                    );
-                    await imgLoader.saveFinalizedImageBytes(result);
-                  }
-                },
-              ),
-              _buildActionButton(
-                context: context,
-                icon: Icons.photo_library_outlined,
-                label: appLocalizations.library,
-                onTap: () async {
-                  await imageSaveHandler?.navigateToImageLibrary();
-                },
-              ),
-              _buildActionButton(
-                context: context,
-                icon: Icons.dashboard_customize_outlined,
-                label: appLocalizations.templates,
-                onTap: () async {
-                  final result = await Navigator.of(context).push<Uint8List>(
-                    MaterialPageRoute(
-                      builder: (context) => CardTemplateSelectionView(
-                        width: epd.width,
-                        height: epd.height,
-                      ),
+                            if (result is Uint8List) {
+                              await imgLoader.updateImage(
+                                bytes: result,
+                                width: epd.width,
+                                height: epd.height,
+                              );
+                              await imgLoader.saveFinalizedImageBytes(result);
+                            }
+                          },
+                        ),
+                        _buildActionButton(
+                          context: context,
+                          icon: Icons.photo_library_outlined,
+                          label: appLocalizations.library,
+                          onTap: () async {
+                            await imageSaveHandler?.navigateToImageLibrary();
+                          },
+                        ),
+                        _buildActionButton(
+                          context: context,
+                          icon: Icons.dashboard_customize_outlined,
+                          label: appLocalizations.templates,
+                          onTap: () async {
+                            final result =
+                                await Navigator.of(context).push<Uint8List>(
+                              MaterialPageRoute(
+                                builder: (context) => CardTemplateSelectionView(
+                                  width: epd.width,
+                                  height: epd.height,
+                                ),
+                              ),
+                            );
+
+                            if (result != null) {
+                              await imgLoader.updateImage(
+                                bytes: result,
+                                width: epd.width,
+                                height: epd.height,
+                              );
+                              await imgLoader.saveFinalizedImageBytes(result);
+
+                              onSourceChanged?.call('template');
+                            }
+                          },
+                        ),
+                      ],
                     ),
-                  );
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildActionButton(
+                      context: context,
+                      icon: Icons.add_photo_alternate_outlined,
+                      label: appLocalizations.importImageButtonLabel,
+                      onTap: () async {
+                        final success = await imgLoader.pickImage(
+                          width: epd.width,
+                          height: epd.height,
+                        );
+                        if (success && imgLoader.image != null) {
+                          final bytes = Uint8List.fromList(
+                            img.encodePng(imgLoader.image!),
+                          );
+                          await imgLoader.saveFinalizedImageBytes(bytes);
+                        }
+                        onSourceChanged?.call('imported');
+                      },
+                    ),
+                    _buildActionButton(
+                      key: const Key('openEditorButton'),
+                      context: context,
+                      icon: Icons.edit_outlined,
+                      label: appLocalizations.openEditor,
+                      onTap: () async {
+                        final canvasBytes =
+                            await Navigator.of(context).push<Uint8List>(
+                          MaterialPageRoute(
+                            builder: (context) => MovableBackgroundImageExample(
+                              width: epd.width,
+                              height: epd.height,
+                            ),
+                          ),
+                        );
+                        if (canvasBytes != null) {
+                          await imgLoader.updateImage(
+                            bytes: canvasBytes,
+                            width: epd.width,
+                            height: epd.height,
+                          );
+                          await imgLoader.saveFinalizedImageBytes(canvasBytes);
+                          onSourceChanged?.call('editor');
+                        }
+                      },
+                    ),
+                    _buildActionButton(
+                      key: const Key('adjustButton'),
+                      context: context,
+                      icon: Icons.tune_rounded,
+                      label: appLocalizations.adjustButtonLabel,
+                      onTap: () async {
+                        if (imgLoader.image != null) {
+                          final canvasBytes =
+                              await Navigator.of(context).push<Uint8List>(
+                            MaterialPageRoute(
+                              builder: (context) => ProImageEditor.memory(
+                                img.encodeJpg(imgLoader.image!),
+                                callbacks: ProImageEditorCallbacks(
+                                  onImageEditingComplete:
+                                      (Uint8List bytes) async {
+                                    Navigator.pop(context, bytes);
+                                  },
+                                ),
+                                configs: const ProImageEditorConfigs(
+                                  paintEditor:
+                                      PaintEditorConfigs(enabled: false),
+                                  textEditor: TextEditorConfigs(enabled: false),
+                                  cropRotateEditor: CropRotateEditorConfigs(
+                                    enabled: false,
+                                  ),
+                                  emojiEditor:
+                                      EmojiEditorConfigs(enabled: false),
+                                ),
+                              ),
+                            ),
+                          );
+                          if (canvasBytes != null) {
+                            imgLoader.updateImage(
+                              bytes: canvasBytes,
+                              width: epd.width,
+                              height: epd.height,
+                            );
+                          }
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              duration: Durations.medium4,
+                              content: Text(
+                                  appLocalizations.noImageSelectedFeedback),
+                              backgroundColor: colorPrimary,
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                    _buildActionButton(
+                      key: const Key('barcodeButton'),
+                      context: context,
+                      icon: Icons.qr_code_scanner,
+                      label: appLocalizations.barcode,
+                      onTap: () async {
+                        final result = await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => BarcodeScannerScreen(
+                              width: epd.width,
+                              height: epd.height,
+                            ),
+                          ),
+                        );
 
-                  if (result != null) {
-                    await imgLoader.updateImage(
-                      bytes: result,
-                      width: epd.width,
-                      height: epd.height,
-                    );
-                    await imgLoader.saveFinalizedImageBytes(result);
+                        if (result is Uint8List) {
+                          await imgLoader.updateImage(
+                            bytes: result,
+                            width: epd.width,
+                            height: epd.height,
+                          );
+                          await imgLoader.saveFinalizedImageBytes(result);
+                        }
+                      },
+                    ),
+                    _buildActionButton(
+                      context: context,
+                      icon: Icons.photo_library_outlined,
+                      label: appLocalizations.library,
+                      onTap: () async {
+                        await imageSaveHandler?.navigateToImageLibrary();
+                      },
+                    ),
+                    _buildActionButton(
+                      context: context,
+                      icon: Icons.dashboard_customize_outlined,
+                      label: appLocalizations.templates,
+                      onTap: () async {
+                        final result =
+                            await Navigator.of(context).push<Uint8List>(
+                          MaterialPageRoute(
+                            builder: (context) => CardTemplateSelectionView(
+                              width: epd.width,
+                              height: epd.height,
+                            ),
+                          ),
+                        );
 
-                    onSourceChanged?.call('template');
-                  }
-                },
-              ),
-            ],
-          ),
+                        if (result != null) {
+                          await imgLoader.updateImage(
+                            bytes: result,
+                            width: epd.width,
+                            height: epd.height,
+                          );
+                          await imgLoader.saveFinalizedImageBytes(result);
+
+                          onSourceChanged?.call('template');
+                        }
+                      },
+                    ),
+                  ],
+                ),
         ),
       ),
     );

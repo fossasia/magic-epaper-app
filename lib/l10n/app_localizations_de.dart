@@ -582,6 +582,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get exportedXbmFiles => 'Exported XBM file(s) to MagicEpaper/XBM/';
 
   @override
+  String get exported => 'Exported';
+
+  @override
+  String get xbmFilesToMagicEpaper => 'XBM file(s) to MagicEpaper/XBM/';
+
+  @override
   String get floydSteinberg => 'Classic';
 
   @override

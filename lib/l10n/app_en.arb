@@ -189,6 +189,8 @@
   "generateImage": "Generate Image",
   "exportFailed": "Export failed",
   "exportedXbmFiles": "Exported XBM file(s) to MagicEpaper/XBM/",
+  "exported": "Exported",
+  "xbmFilesToMagicEpaper": "XBM file(s) to MagicEpaper/XBM/",
   
   "floydSteinberg": "Classic",
   "stucki": "Sharp",

@@ -1248,6 +1248,18 @@ abstract class AppLocalizations {
   /// **'Exported XBM file(s) to MagicEpaper/XBM/'**
   String get exportedXbmFiles;
 
+  /// No description provided for @exported.
+  ///
+  /// In en, this message translates to:
+  /// **'Exported'**
+  String get exported;
+
+  /// No description provided for @xbmFilesToMagicEpaper.
+  ///
+  /// In en, this message translates to:
+  /// **'XBM file(s) to MagicEpaper/XBM/'**
+  String get xbmFilesToMagicEpaper;
+
   /// No description provided for @floydSteinberg.
   ///
   /// In en, this message translates to:
