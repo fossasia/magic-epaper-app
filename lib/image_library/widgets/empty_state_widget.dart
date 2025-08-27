@@ -13,7 +13,8 @@ class EmptyStateWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.photo_library_outlined, size: 64, color: Colors.grey),
+          const Icon(Icons.photo_library_outlined,
+              size: 64, color: Colors.grey),
           const SizedBox(height: 16),
           Text(
             appLocalizations.noSavedImagesYet,

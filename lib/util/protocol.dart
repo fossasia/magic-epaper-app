@@ -91,7 +91,8 @@ class Protocol {
       await wait4msgGathered();
       if (onProgress != null) {
         final progress = (i + 1) / chunks.length;
-        onProgress(progress, "${appLocalizations.writingChunk}${i + 1}/${chunks.length}");
+        onProgress(progress,
+            "${appLocalizations.writingChunk}${i + 1}/${chunks.length}");
       }
     }
     debugPrint(appLocalizations.transferredSuccessfully);
@@ -119,7 +120,8 @@ class Protocol {
       case NFCAvailability.available:
         break;
       case NFCAvailability.disabled:
-        Fluttertoast.showToast(msg: appLocalizations.nfcIsDisabledPleaseEnableIt);
+        Fluttertoast.showToast(
+            msg: appLocalizations.nfcIsDisabledPleaseEnableIt);
         if (Platform.isAndroid) {
           await NFCSettingsLauncher.openNFCSettings();
         } else if (Platform.isIOS) {
@@ -127,7 +129,8 @@ class Protocol {
         }
         return;
       case NFCAvailability.not_supported:
-        Fluttertoast.showToast(msg: appLocalizations.thisDeviceDoesNotSupportNfc);
+        Fluttertoast.showToast(
+            msg: appLocalizations.thisDeviceDoesNotSupportNfc);
         return;
     }
 

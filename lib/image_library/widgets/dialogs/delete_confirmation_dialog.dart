@@ -216,7 +216,8 @@ class DeleteConfirmationDialog extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   appLocalizations.delete,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ],
             ),

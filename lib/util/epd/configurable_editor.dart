@@ -116,16 +116,20 @@ class ConfigurableEpd extends Epd {
         ),
       );
       namedProcessingMethods.add(
-        NamedImageFilter(ImageProcessing.bwStuckiDither, appLocalizations.stucki),
+        NamedImageFilter(
+            ImageProcessing.bwStuckiDither, appLocalizations.stucki),
       );
       namedProcessingMethods.add(
-        NamedImageFilter(ImageProcessing.bwAtkinsonDither, appLocalizations.atkinson),
+        NamedImageFilter(
+            ImageProcessing.bwAtkinsonDither, appLocalizations.atkinson),
       );
       namedProcessingMethods.add(
-        NamedImageFilter(ImageProcessing.bwHalftoneDither, appLocalizations.halftone),
+        NamedImageFilter(
+            ImageProcessing.bwHalftoneDither, appLocalizations.halftone),
       );
       namedProcessingMethods.add(
-        NamedImageFilter(ImageProcessing.bwThreshold, appLocalizations.threshold),
+        NamedImageFilter(
+            ImageProcessing.bwThreshold, appLocalizations.threshold),
       );
     } else {
       final dynamicPalette = _createDynamicPalette();

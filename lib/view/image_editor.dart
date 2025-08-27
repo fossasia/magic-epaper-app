@@ -220,8 +220,7 @@ class _ImageEditorState extends State<ImageEditor> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: const Duration(seconds: 2),
-        content:
-            Text('${appLocalizations.exportedXbmFiles}'),
+        content: Text('${appLocalizations.exportedXbmFiles}'),
       ),
     );
   }
@@ -279,7 +278,8 @@ class _ImageEditorState extends State<ImageEditor> {
                         value: _selectedWaveformName,
                         hint: Text(
                           appLocalizations.fullRefresh,
-                          style: const TextStyle(color: Colors.white, fontSize: 16),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 16),
                         ),
                         isDense: true,
                         dropdownColor: colorAccent,
@@ -379,7 +379,8 @@ class _ImageEditorState extends State<ImageEditor> {
                     : Center(
                         child: Text(
                           appLocalizations.importStartingImageFeedback,
-                          style: const TextStyle(color: Colors.grey, fontSize: 16),
+                          style:
+                              const TextStyle(color: Colors.grey, fontSize: 16),
                         ),
                       ),
               ),

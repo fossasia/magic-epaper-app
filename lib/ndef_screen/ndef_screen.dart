@@ -9,6 +9,7 @@ import 'package:magicepaperapp/ndef_screen/nfc_vcard_write_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_status_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_write_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_read_card.dart';
+import 'package:magicepaperapp/ndef_screen/app_launcher_card.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
@@ -85,7 +86,7 @@ class _NDEFScreenState extends State<NDEFScreen> {
     if (_selectedApp != null) {
       await _nfcController.writeAppLauncherRecord(_selectedApp!.packageName);
       _handleWriteResult();
-      if (_nfcController.result.contains(StringConstants.successfully)) {
+      if (_nfcController.result.contains(appLocalizations.successfully)) {
         setState(() {
           _selectedApp = null;
         });

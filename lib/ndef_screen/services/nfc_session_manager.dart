@@ -32,7 +32,8 @@ class NFCSessionManager {
       timeout: timeout,
       iosMultipleTagMessage: iosMultipleTagMessage ??
           appLocalizations.multipleTagsFoundPleaseSelectOne,
-      iosAlertMessage: iosAlertMessage ?? appLocalizations.scanYourNfcTagDefault,
+      iosAlertMessage:
+          iosAlertMessage ?? appLocalizations.scanYourNfcTagDefault,
     );
   }
 }

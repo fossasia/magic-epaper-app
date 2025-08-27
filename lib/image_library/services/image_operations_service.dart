@@ -34,9 +34,11 @@ class ImageOperationsService {
     try {
       _showLoadingSnackBar(appLocalizations.renamingImage);
       await provider.renameImage(image.id, newName.trim());
-      _showSuccessSnackBar('${appLocalizations.imageRenamedTo}${newName.trim()}"');
+      _showSuccessSnackBar(
+          '${appLocalizations.imageRenamedTo}${newName.trim()}"');
     } catch (e) {
-      _showErrorSnackBar('${appLocalizations.failedToRenameImage}${e.toString()}');
+      _showErrorSnackBar(
+          '${appLocalizations.failedToRenameImage}${e.toString()}');
     }
   }
 
@@ -46,9 +48,11 @@ class ImageOperationsService {
       Navigator.pop(context);
       _showLoadingSnackBar(appLocalizations.deletingImage);
       await provider.deleteImage(image.id);
-      _showDeleteSuccessSnackBar('${appLocalizations.imageDeleted}${image.name}${appLocalizations.deleted}');
+      _showDeleteSuccessSnackBar(
+          '${appLocalizations.imageDeleted}${image.name}${appLocalizations.deleted}');
     } catch (e) {
-      _showErrorSnackBar('${appLocalizations.failedToDeleteImage}${e.toString()}');
+      _showErrorSnackBar(
+          '${appLocalizations.failedToDeleteImage}${e.toString()}');
     }
   }
 
@@ -68,7 +72,8 @@ class ImageOperationsService {
 
       _showBatchDeleteSuccessSnackBar(count);
     } catch (e) {
-      _showErrorSnackBar('${appLocalizations.failedToDeleteImages}${e.toString()}');
+      _showErrorSnackBar(
+          '${appLocalizations.failedToDeleteImages}${e.toString()}');
     }
   }
 
@@ -114,7 +119,8 @@ class ImageOperationsService {
       final imageEpd = getEpdFromImage(image);
       final imageData = await image.getImageData();
       if (imageData == null) {
-        _showErrorSnackBar('${appLocalizations.failedToLoadImageData}${image.name}"');
+        _showErrorSnackBar(
+            '${appLocalizations.failedToLoadImageData}${image.name}"');
         return;
       }
       final decodedImage = img.decodeImage(imageData);
@@ -125,10 +131,12 @@ class ImageOperationsService {
           rotatedImage,
         );
       } else {
-        _showErrorSnackBar('${appLocalizations.failedToDecodeImage}${image.name}"');
+        _showErrorSnackBar(
+            '${appLocalizations.failedToDecodeImage}${image.name}"');
       }
     } catch (e) {
-      _showErrorSnackBar('${appLocalizations.failedToTransfer}${image.name}": ${e.toString()}');
+      _showErrorSnackBar(
+          '${appLocalizations.failedToTransfer}${image.name}": ${e.toString()}');
     }
   }
 
@@ -251,7 +259,8 @@ class ImageOperationsService {
               ),
             ),
             const SizedBox(width: 12),
-            Text('${appLocalizations.deletingImages}$count${appLocalizations.images}'),
+            Text(
+                '${appLocalizations.deletingImages}$count${appLocalizations.images}'),
           ],
         ),
         backgroundColor: Colors.amber,
@@ -357,7 +366,8 @@ class ImageOperationsService {
               size: 20,
             ),
             const SizedBox(width: 12),
-            Expanded(child: Text('${appLocalizations.failedToSaveImage}$error')),
+            Expanded(
+                child: Text('${appLocalizations.failedToSaveImage}$error')),
           ],
         ),
         backgroundColor: Colors.red,

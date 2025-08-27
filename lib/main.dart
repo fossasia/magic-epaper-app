@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
     /// and localization.
     return MaterialApp(
       title: 'Magic Epaper',
+
       /// Delegates for handling localization.
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
@@ -49,8 +50,10 @@ class MyApp extends StatelessWidget {
         registerAppLocalizations(AppLocalizations.of(context)!);
         return child!;
       },
+
       /// The initial route that the app will display.
       initialRoute: '/',
+
       /// Defines the named routes for navigation within the app.
       routes: {
         '/': (context) => const DisplaySelectionScreen(),
@@ -58,6 +61,7 @@ class MyApp extends StatelessWidget {
         '/settings': (context) => const SettingsScreen(),
         '/ndefScreen': (context) => const NDEFScreen(),
       },
+
       /// Sets the theme for the application.
       theme: ThemeData(
         primarySwatch: Colors.blue,

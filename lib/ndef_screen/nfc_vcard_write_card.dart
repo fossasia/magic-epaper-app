@@ -55,8 +55,9 @@ class _NFCVCardWriteCardState extends State<NFCVCardWriteCard> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.contact_page),
-                label:
-                    Text(widget.isWriting ? appLocalizations.writingVCard : appLocalizations.writeVCard),
+                label: Text(widget.isWriting
+                    ? appLocalizations.writingVCard
+                    : appLocalizations.writeVCard),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   backgroundColor: Colors.blue,

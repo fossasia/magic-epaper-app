@@ -17,8 +17,7 @@ Future<void> openUrl(BuildContext context, String url) async {
     }
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-          content: Text(appLocalizations.errorOccurredWhileOpeningLink)),
+      SnackBar(content: Text(appLocalizations.errorOccurredWhileOpeningLink)),
     );
   }
 }

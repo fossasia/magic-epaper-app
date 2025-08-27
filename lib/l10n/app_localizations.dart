@@ -1047,7 +1047,7 @@ abstract class AppLocalizations {
   /// No description provided for @dataWrittenSuccessfully.
   ///
   /// In en, this message translates to:
-  /// **'Data written successfully to NFC tag'**
+  /// **'Data written successfully'**
   String get dataWrittenSuccessfully;
 
   /// No description provided for @nfcNotAvailable.
@@ -1059,7 +1059,7 @@ abstract class AppLocalizations {
   /// No description provided for @enableNfcMessage.
   ///
   /// In en, this message translates to:
-  /// **'Please enable NFC in your device settings to use write features.'**
+  /// **'Please enable NFC in your device settings to use this feature.'**
   String get enableNfcMessage;
 
   /// No description provided for @cancel.
@@ -1973,6 +1973,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An error occurred while opening the link.'**
   String get errorOccurredWhileOpeningLink;
+
+  /// No description provided for @errorCreatingAppRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Error creating app record: '**
+  String get errorCreatingAppRecord;
+
+  /// No description provided for @appCannotBeEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'App cannot be empty'**
+  String get appCannotBeEmpty;
+
+  /// No description provided for @invalidPackageName.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid package name'**
+  String get invalidPackageName;
+
+  /// No description provided for @writeAppLauncherData.
+  ///
+  /// In en, this message translates to:
+  /// **'Write App Launcher Data'**
+  String get writeAppLauncherData;
+
+  /// No description provided for @writeAppLauncher.
+  ///
+  /// In en, this message translates to:
+  /// **'Write App Launcher'**
+  String get writeAppLauncher;
+
+  /// No description provided for @searchApps.
+  ///
+  /// In en, this message translates to:
+  /// **'Search apps...'**
+  String get searchApps;
+
+  /// No description provided for @customPackageName.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Package Name'**
+  String get customPackageName;
+
+  /// No description provided for @enterPackageName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter package name...'**
+  String get enterPackageName;
+
+  /// No description provided for @noAppsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No apps found'**
+  String get noAppsFound;
+
+  /// No description provided for @selectApplication.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Application'**
+  String get selectApplication;
+
+  /// No description provided for @errorLoadingApps.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading apps: '**
+  String get errorLoadingApps;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
 }
 
 class _AppLocalizationsDelegate

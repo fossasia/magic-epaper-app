@@ -9,7 +9,6 @@ void setupLocator() {
       () => ColorPaletteProvider());
 }
 
-
 void registerAppLocalizations(AppLocalizations appLocalizations) {
   if (getIt.isRegistered<AppLocalizations>()) {
     getIt.unregister<AppLocalizations>();

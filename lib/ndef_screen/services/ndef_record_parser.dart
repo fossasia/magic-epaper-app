@@ -35,7 +35,7 @@ class NDEFRecordFactory {
   static List<ndef.NDEFRecord> createAppLauncherRecords(String packageName,
       {String? appUri}) {
     if (packageName.trim().isEmpty) {
-      throw ArgumentError(StringConstants.appCannotBeEmpty);
+      throw ArgumentError(appLocalizations.appCannotBeEmpty);
     }
     List<ndef.NDEFRecord> records = [];
     if (appUri != null && appUri.trim().isNotEmpty) {
@@ -199,7 +199,8 @@ class NDEFRecordParser {
           '${appLocalizations.typeLabel}${getRecordTypeString(record)}');
       buffer.writeln(
           '${appLocalizations.payloadSizeLabel}${record.payload?.length ?? 0}${appLocalizations.bytesLabel}');
-      buffer.writeln('${appLocalizations.contentLabel}${getRecordInfo(record)}');
+      buffer
+          .writeln('${appLocalizations.contentLabel}${getRecordInfo(record)}');
 
       if (record.payload != null) {
         String hexPayload = record.payload!

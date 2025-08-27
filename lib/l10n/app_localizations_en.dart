@@ -479,14 +479,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get writeOperationFailed => 'Write operation failed';
 
   @override
-  String get dataWrittenSuccessfully => 'Data written successfully to NFC tag';
+  String get dataWrittenSuccessfully => 'Data written successfully';
 
   @override
   String get nfcNotAvailable => 'NFC Not Available';
 
   @override
   String get enableNfcMessage =>
-      'Please enable NFC in your device settings to use write features.';
+      'Please enable NFC in your device settings to use this feature.';
 
   @override
   String get cancel => 'Cancel';
@@ -957,4 +957,40 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorOccurredWhileOpeningLink =>
       'An error occurred while opening the link.';
+
+  @override
+  String get errorCreatingAppRecord => 'Error creating app record: ';
+
+  @override
+  String get appCannotBeEmpty => 'App cannot be empty';
+
+  @override
+  String get invalidPackageName => 'Invalid package name';
+
+  @override
+  String get writeAppLauncherData => 'Write App Launcher Data';
+
+  @override
+  String get writeAppLauncher => 'Write App Launcher';
+
+  @override
+  String get searchApps => 'Search apps...';
+
+  @override
+  String get customPackageName => 'Custom Package Name';
+
+  @override
+  String get enterPackageName => 'Enter package name...';
+
+  @override
+  String get noAppsFound => 'No apps found';
+
+  @override
+  String get selectApplication => 'Select Application';
+
+  @override
+  String get errorLoadingApps => 'Error loading apps: ';
+
+  @override
+  String get add => 'Add';
 }

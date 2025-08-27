@@ -87,7 +87,7 @@ class NFCController extends ChangeNotifier {
           appUri: appUri);
       await _performWrite(records);
     } catch (e) {
-      _setResult('${StringConstants.errorCreatingAppRecord}$e');
+      _setResult('${appLocalizations.errorCreatingAppRecord}$e');
     }
   }
 

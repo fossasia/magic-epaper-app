@@ -538,7 +538,9 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                       elevation: 2,
                     ),
                     child: Text(
-                      showRefreshingMessage ? appLocalizations.done : appLocalizations.close,
+                      showRefreshingMessage
+                          ? appLocalizations.done
+                          : appLocalizations.close,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
