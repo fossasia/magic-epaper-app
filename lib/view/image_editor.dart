@@ -416,7 +416,8 @@ class BottomActionMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    const buttonWidth = 50.0;
+    // Calculate actual button width including padding (8px on each side + content)
+    const buttonWidth = 70.0; // Approximate width of each button with padding
     const totalButtonWidth = 6 * buttonWidth;
     final useTwoRows = totalButtonWidth > screenWidth - 32;
 
@@ -612,7 +613,7 @@ class BottomActionMenu extends StatelessWidget {
                   ],
                 )
               : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildActionButton(
                       context: context,
@@ -783,7 +784,7 @@ class BottomActionMenu extends StatelessWidget {
     Key? key,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: InkWell(
         key: key,
         onTap: onTap,
