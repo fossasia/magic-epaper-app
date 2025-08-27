@@ -62,8 +62,7 @@ class ConfigurableEpd extends Epd {
   final List<NamedImageFilter> namedProcessingMethods = [];
 
   @override
-  List<String> get displayChips =>
-      ['Good Display (FOSSASIA Hardware Required)'];
+  List<String> get displayChips => ['FOSSASIA Hardware Required'];
 
   @override
   List<img.Image Function(img.Image)> get processingMethods =>

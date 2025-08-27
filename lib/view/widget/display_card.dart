@@ -144,7 +144,7 @@ class DisplayCard extends StatelessWidget {
       child: Text(
         label,
         style: const TextStyle(
-          fontSize: 6,
+          fontSize: 7,
           fontWeight: FontWeight.w600,
           color: colorPrimary,
         ),
