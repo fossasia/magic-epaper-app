@@ -74,7 +74,7 @@ class StringConstants {
   static const String errorDecodingRecord = 'Error decoding record: ';
   static const String noNdefRecordsFound =
       'No NDEF records found on tag\nThe tag is empty.';
-  static const String recordPrefix = '📄 Record ';
+  static const String recordPrefix = 'Record ';
   static const String recordSuffix = ':';
   static const String tnfLabel = '  TNF: ';
   static const String typeLabel = '  Type: ';
@@ -107,7 +107,7 @@ class StringConstants {
   static const String content = '  Content: ';
   static const String noRecordsToWrite = 'No records to write';
   static const String ndefRecordsWrittenSuccessfully =
-      '✅ NDEF records written successfully!';
+      'NDEF records written successfully!';
   static const String recordsWritten = 'Records written: ';
   static const String writtenRecord = 'Written Record ';
   static const String tagClearedSuccessfully = '🗑️ Tag cleared successfully!';
@@ -122,8 +122,7 @@ class StringConstants {
       'All clearing methods failed: ';
   static const String verificationResults = '🔍 VERIFICATION RESULTS:';
   static const String recordsFound = 'Records Found: ';
-  static const String noNdefRecordsFoundOnTag =
-      '✅ No NDEF records found on tag';
+  static const String noNdefRecordsFoundOnTag = 'No NDEF records found on tag';
   static const String theTagIsEmptyCleared =
       'The tag is empty (cleared successfully).';
   static const String errorReadingTag = 'Error reading tag: ';
@@ -205,4 +204,97 @@ class StringConstants {
   static const String enterPackageName =
       'Enter package name (e.g., com.example.app)';
   static const String invalidPackageName = 'Invalid package name format';
+  static const String cardTemplates = 'Card Templates';
+  static const String chooseTemplateSubtitle =
+      'Choose a template to get started';
+  static const String employeeIdCardTitle = 'Employee ID Card';
+  static const String employeeIdCardDescription =
+      'Create professional employee identification cards';
+  static const String shopPriceTagTitle = 'Shop Price Tag';
+  static const String shopPriceTagDescription =
+      'Design attractive price tags for retail';
+  static const String entryPassTagTitle = 'Entry Pass Tag';
+  static const String entryPassTagDescription =
+      'Create access passes and entry permits';
+  static const String eventBadgeTitle = 'Event Badge';
+  static const String eventBadgeDescription =
+      'Design event name badges and tags';
+  static const String comingSoon = 'Coming Soon';
+  static const String comingSoonMessage =
+      'This template is currently under development and will be available in a future update.';
+  static const String ok = 'OK';
+  static const String defaultCompanyName = 'COMPANY NAME';
+  static const String nameLabel = 'Name';
+  static const String positionLabel = 'Position';
+  static const String divisionLabel = 'Division';
+  static const String idLabel = 'ID';
+  static const String emptyFieldPlaceholder = '___________';
+  static const String employeeIdCard = 'Employee ID Card';
+  static const String fillDetailsToCreateId =
+      'Fill in the details to create an ID card';
+  static const String idCardDetails = 'ID Card Details';
+  static const String profilePhoto = 'Profile Photo';
+  static const String selected = 'Selected';
+  static const String photoSelected = 'Photo Selected';
+  static const String selectProfilePhoto = 'Select Profile Photo';
+  static const String tapToChangePhoto = 'Tap to change photo';
+  static const String tapToSelectFromGallery = 'Tap to select from gallery';
+  static const String generatingIdCard = 'Generating ID Card...';
+  static const String generateIdCard = 'Generate ID Card';
+  static const String companyName = 'Company Name';
+  static const String name = 'Name';
+  static const String position = 'Position';
+  static const String division = 'Division';
+  static const String idNumber = 'ID Number';
+  static const String qrCodeData = 'QR Code Data';
+  static const String enterCompanyName = 'Enter company or organization name';
+  static const String enterEmployeeName = 'Enter employee full name';
+  static const String enterJobPosition = 'Enter job position or title';
+  static const String enterDepartment = 'Enter department or division';
+  static const String enterUniqueId = 'Enter unique employee ID';
+  static const String enterQrCodeData =
+      'Enter data for QR code (URL, ID, contact info, etc.)';
+  static const String pleaseEnterCompanyName = 'Please enter a company name';
+  static const String pleaseEnterName = 'Please enter a name';
+  static const String pleaseEnterPosition = 'Please enter a position';
+  static const String pleaseEnterDivision = 'Please enter a division';
+  static const String pleaseEnterIdNumber = 'Please enter an ID number';
+  static const String pleaseEnterQrCodeData = 'Please enter QR code data';
+  static const String namePrefix = 'Name: ';
+  static const String positionPrefix = 'Position: ';
+  static const String divisionPrefix = 'Division: ';
+  static const String idPrefix = 'ID: ';
+  static const String productImage = 'Product\nImage';
+  static const String productName = 'Product Name';
+  static const String sizeQuantity = 'Size/Quantity';
+  static const String barcode = 'Barcode';
+  static const String price = 'Price';
+  static const String defaultCurrency = '₹';
+  static const String defaultPrice = ' 0.00';
+  static const String priceTagGenerator = 'Price Tag Generator';
+  static const String priceTagDescription =
+      'Create professional price tags for your products';
+  static const String productDetails = 'Product Details';
+  static const String productImageIn = 'Product Image';
+  static const String currency = 'Currency';
+  static const String quantitySize = 'Quantity/Size';
+  static const String barcodeData = 'Barcode Data';
+  static const String productNameHint =
+      'Enter product name (e.g., iPhone 15 Pro)';
+  static const String currencyHint = '₹';
+  static const String priceHint = '999.99';
+  static const String quantitySizeHint =
+      'Enter size/quantity (e.g., 750ml, 2kg, Large)';
+  static const String barcodeDataHint = 'Enter barcode number or SKU';
+  static const String pleaseEnterProductName = 'Please enter a product name';
+  static const String required = 'Required';
+  static const String pleaseEnterPrice = 'Please enter price';
+  static const String pleaseEnterQuantitySize = 'Please enter quantity or size';
+  static const String pleaseEnterBarcodeData = 'Please enter barcode data';
+  static const String generatePriceTag = 'Generate Price Tag';
+  static const String generatingPriceTag = 'Generating Price Tag...';
+  static const String productImageSelected = 'Product Image Selected';
+  static const String selectProductImage = 'Select Product Image';
+  static const String tapToChangeImage = 'Tap to change image';
+  static const String chooseImageFromGallery = 'Choose image from gallery';
 }
