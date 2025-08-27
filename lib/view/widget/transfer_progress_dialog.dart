@@ -214,7 +214,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
         ),
         const SizedBox(height: 24),
         Text(
-          "Please bring your phone close to the Magic E-Paper device",
+          "Please bring your phone close to the Magic ePaper device",
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 16,
@@ -486,7 +486,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                                 ? "Display Refreshing"
                                 : transferComplete
                                     ? "Transfer Complete"
-                                    : "Writing to E-Paper",
+                                    : "Writing to ePaper",
                         key: ValueKey(!tagDetected
                             ? 'search'
                             : showRefreshingMessage

@@ -31,6 +31,8 @@ class DisplayCard extends StatelessWidget {
       driverText = 'Waveshare NFC';
     }
 
+    final chips = display.displayChips;
+
     return InkWell(
       onTap: onTap,
       highlightColor: Colors.redAccent,
@@ -91,6 +93,14 @@ class DisplayCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
+                  if (chips.isNotEmpty) ...[
+                    Wrap(
+                      spacing: 4,
+                      runSpacing: 4,
+                      children: chips.map((chip) => _buildChip(chip)).toList(),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
                   Row(
                     children: display.colors
                         .map((color) => ColorDot(color: color))
@@ -115,6 +125,28 @@ class DisplayCard extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChip(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: colorPrimary.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: colorPrimary.withOpacity(0.3),
+          width: 0.8,
+        ),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 7,
+          fontWeight: FontWeight.w600,
+          color: colorPrimary,
         ),
       ),
     );

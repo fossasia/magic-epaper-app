@@ -14,7 +14,7 @@ class GDEQ031T10 extends Epd {
   get height => 240;
 
   @override
-  String get name => 'E-Paper 3.1"';
+  String get name => 'Goodisplay ePaper 3.1"';
   @override
   String get modelId => 'GDEQ031T10';
   @override
@@ -25,6 +25,9 @@ class GDEQ031T10 extends Epd {
 
   @override
   get controller => Uc8253() as Driver;
+
+  @override
+  List<String> get displayChips => ['FOSSASIA Hardware Required'];
 
   @override
   List<img.Image Function(img.Image)> get processingMethods => [
