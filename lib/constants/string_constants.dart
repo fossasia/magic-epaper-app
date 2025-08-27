@@ -1,5 +1,5 @@
 class StringConstants {
-  static const String appName = 'Magic epaper';
+  static const String appName = 'Magic ePaper';
 
   static const String aboutUsDescription =
       'Magic ePaper is an app designed to control and update ePaper displays.'

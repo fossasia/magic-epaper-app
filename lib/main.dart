@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Magic Epaper',
+      title: 'Magic ePaper',
       initialRoute: '/',
       routes: {
         '/': (context) => const DisplaySelectionScreen(),
