@@ -14,11 +14,15 @@ abstract class Epd extends DisplayDevice {
   @override
   Future<void> transfer(BuildContext context, img.Image image,
       {Waveform? waveform}) async {
+    if (!context.mounted) return;
+
     await TransferProgressDialog.show(
       context: context,
       finalImg: image,
       transferFunction: (img, onProgress, onTagDetected) async {
-        return await Protocol(epd: this).writeImages(
+        if (!context.mounted) return;
+        final currentEpdDevice = this;
+        return await Protocol(epd: currentEpdDevice).writeImages(
           img,
           onProgress: onProgress,
           onTagDetected: onTagDetected,
