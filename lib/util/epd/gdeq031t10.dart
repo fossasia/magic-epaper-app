@@ -27,8 +27,7 @@ class GDEQ031T10 extends Epd {
   get controller => Uc8253() as Driver;
 
   @override
-  List<String> get displayChips =>
-      ['FOSSASIA Hardware Required'];
+  List<String> get displayChips => ['FOSSASIA Hardware Required'];
 
   @override
   List<img.Image Function(img.Image)> get processingMethods => [
