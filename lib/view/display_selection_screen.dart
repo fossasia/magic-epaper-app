@@ -80,7 +80,6 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                       ),
                       itemCount: displays.length,
                       itemBuilder: (context, index) {
-                        print('Display: ${displays[index].modelId}');
                         return DisplayCard(
                           key: Key(displays[index].modelId),
                           display: displays[index],

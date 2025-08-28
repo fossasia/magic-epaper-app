@@ -10,7 +10,7 @@ class Waveshare2in13 extends WaveshareNfcDisplay {
   @override
   String get name => 'Waveshare 2.13" NFC';
   @override
-  String get modelId => 'waveshare-2.13';
+  String get modelId => '17745';
   @override
   int get width => 122;
   @override
@@ -25,7 +25,7 @@ class Waveshare2in9 extends WaveshareNfcDisplay {
   @override
   String get name => 'Waveshare 2.9" NFC';
   @override
-  String get modelId => 'waveshare-2.9';
+  String get modelId => '17746';
   @override
   int get width => 128;
   @override
@@ -40,7 +40,7 @@ class Waveshare4in2 extends WaveshareNfcDisplay {
   @override
   String get name => 'Waveshare 4.2" NFC';
   @override
-  String get modelId => 'waveshare-4.2';
+  String get modelId => '17341';
   @override
   int get width => 300;
   @override
@@ -55,7 +55,7 @@ class Waveshare7in5 extends WaveshareNfcDisplay {
   @override
   String get name => 'Waveshare 7.5" NFC';
   @override
-  String get modelId => 'waveshare-7.5';
+  String get modelId => '17675';
   @override
   int get width => 480;
   @override
@@ -70,7 +70,7 @@ class Waveshare7in5HD extends WaveshareNfcDisplay {
   @override
   String get name => 'Waveshare 7.5" HD NFC';
   @override
-  String get modelId => 'waveshare-7.5-hd';
+  String get modelId => '18082';
   @override
   int get width => 528;
   @override
@@ -85,7 +85,7 @@ class Waveshare2in7 extends WaveshareNfcDisplay {
   @override
   String get name => 'Waveshare 2.7" NFC';
   @override
-  String get modelId => 'waveshare-2.7';
+  String get modelId => '18136';
   @override
   int get width => 176;
   @override
@@ -100,7 +100,7 @@ class Waveshare2in9b extends WaveshareNfcDisplay {
   @override
   String get name => 'Waveshare 2.9" B NFC';
   @override
-  String get modelId => 'waveshare-2.9b';
+  String get modelId => '13339';
   @override
   int get width => 128;
   @override
