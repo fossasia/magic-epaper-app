@@ -5,11 +5,11 @@ import 'package:magicepaperapp/ndef_screen/app_launcher_card.dart';
 import 'package:magicepaperapp/ndef_screen/app_nfc/app_data_model.dart';
 import 'package:magicepaperapp/ndef_screen/controller/nfc_controller.dart';
 import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
-import 'package:magicepaperapp/ndef_screen/nfc_vcard_write_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_status_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_write_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_read_card.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+import 'dart:async';
 
 class NDEFScreen extends StatefulWidget {
   const NDEFScreen({super.key});
@@ -18,7 +18,7 @@ class NDEFScreen extends StatefulWidget {
   State<NDEFScreen> createState() => _NDEFScreenState();
 }
 
-class _NDEFScreenState extends State<NDEFScreen> {
+class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
   late NFCController _nfcController;
   String _textValue = '';
   String _urlValue = '';
@@ -26,13 +26,19 @@ class _NDEFScreenState extends State<NDEFScreen> {
   String _wifiPasswordValue = '';
   VCardData? _vCardData;
   AppData? _selectedApp;
+  Timer? _nfcAvailabilityTimer;
 
   @override
   void initState() {
     super.initState();
     _nfcController = NFCController();
     _nfcController.addListener(_onNFCStateChanged);
+
+    WidgetsBinding.instance.addObserver(this);
+
     _checkNFCAvailability();
+    _startNFCAvailabilityListener();
+
     _vCardData = VCardData(
       firstName: '',
       lastName: '',
@@ -52,11 +58,81 @@ class _NDEFScreenState extends State<NDEFScreen> {
   void dispose() {
     _nfcController.removeListener(_onNFCStateChanged);
     _nfcController.dispose();
+    _stopNFCAvailabilityListener();
+
+    WidgetsBinding.instance.removeObserver(this);
+
     super.dispose();
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.resumed) {
+      _checkNFCAvailability();
+      _startNFCAvailabilityListener();
+    } else if (state == AppLifecycleState.paused) {
+      _stopNFCAvailabilityListener();
+    }
+  }
+
+  void _startNFCAvailabilityListener() {
+    _stopNFCAvailabilityListener();
+
+    _nfcAvailabilityTimer = Timer.periodic(
+      const Duration(seconds: 2),
+      (timer) async {
+        await _checkNFCAvailabilityWithChangeDetection();
+      },
+    );
+  }
+
+  void _stopNFCAvailabilityListener() {
+    _nfcAvailabilityTimer?.cancel();
+    _nfcAvailabilityTimer = null;
+  }
+
+  Future<void> _checkNFCAvailabilityWithChangeDetection() async {
+    try {
+      NFCAvailability previousAvailability = _nfcController.availability;
+      await _nfcController.checkNFCAvailability();
+
+      if (previousAvailability != _nfcController.availability) {
+        _showNFCStatusChangeMessage(
+            previousAvailability, _nfcController.availability);
+      }
+    } catch (e) {
+      debugPrint('Error checking NFC availability: $e');
+    }
+  }
+
+  void _showNFCStatusChangeMessage(NFCAvailability from, NFCAvailability to) {
+    String message;
+    bool isError = false;
+
+    switch (to) {
+      case NFCAvailability.available:
+        message = 'NFC is now enabled and ready to use!';
+        break;
+      case NFCAvailability.disabled:
+        message =
+            'NFC has been disabled. Please enable it to continue using NFC features.';
+        isError = true;
+        break;
+      case NFCAvailability.not_supported:
+        message = 'NFC is not supported on this device.';
+        isError = true;
+        break;
+    }
+
+    _showSnackBar(message, isError: isError);
+  }
+
   void _onNFCStateChanged() {
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> _checkNFCAvailability() async {
@@ -64,11 +140,14 @@ class _NDEFScreenState extends State<NDEFScreen> {
   }
 
   void _showSnackBar(String message, {bool isError = false}) {
+    if (!mounted) return;
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
         backgroundColor: isError ? Colors.red : Colors.green,
         duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }
@@ -112,7 +191,6 @@ class _NDEFScreenState extends State<NDEFScreen> {
         ),
       ],
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             NFCStatusCard(
@@ -120,55 +198,42 @@ class _NDEFScreenState extends State<NDEFScreen> {
               onRefresh: _checkNFCAvailability,
             ),
             const SizedBox(height: 16),
-            NFCReadCard(
-              isReading: _nfcController.isReading,
-              isClearing: _nfcController.isClearing,
-              result: _nfcController.result,
-              onRead: () async {
-                await _nfcController.readNDEF();
-                if (_nfcController.result.contains(StringConstants.error)) {
-                  _showSnackBar(StringConstants.readOperationFailed,
-                      isError: true);
-                } else {
-                  _showSnackBar(StringConstants.tagReadSuccessfully);
-                }
-              },
-              onVerify: () async {
-                await _nfcController.verifyWrite();
-                if (_nfcController.result.contains(StringConstants.error)) {
-                  _showSnackBar(StringConstants.verificationFailed,
-                      isError: true);
-                } else {
-                  _showSnackBar(StringConstants.tagVerifiedSuccessfully);
-                }
-              },
-              onClear: () async {
-                bool confirmed = await _showConfirmDialog(
-                  StringConstants.clearNfcTag,
-                  StringConstants.clearNfcTagConfirmation,
-                );
-                if (confirmed) {
-                  await _nfcController.clearNDEF();
+            if (_nfcController.availability == NFCAvailability.available) ...[
+              NFCReadCard(
+                isReading: _nfcController.isReading,
+                isClearing: _nfcController.isClearing,
+                result: _nfcController.result,
+                onRead: () async {
+                  await _nfcController.readNDEF();
                   if (_nfcController.result.contains(StringConstants.error)) {
-                    _showSnackBar(StringConstants.clearOperationFailed,
+                    _showSnackBar(StringConstants.readOperationFailed,
                         isError: true);
                   } else {
-                    _showSnackBar(StringConstants.tagClearedSuccessfully);
+                    _showSnackBar(StringConstants.tagReadSuccessfully);
                   }
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            if (_nfcController.availability == NFCAvailability.available) ...[
-              NFCVCardWriteCard(
-                isWriting: _nfcController.isWriting,
-                vCardData: _vCardData,
-                onVCardChanged: (vCardData) =>
-                    setState(() => _vCardData = vCardData),
-                onWriteVCard: () async {
-                  if (_vCardData != null) {
-                    await _nfcController.writeVCardRecord(_vCardData!);
-                    _handleWriteResult();
+                },
+                onVerify: () async {
+                  await _nfcController.verifyWrite();
+                  if (_nfcController.result.contains(StringConstants.error)) {
+                    _showSnackBar(StringConstants.verificationFailed,
+                        isError: true);
+                  } else {
+                    _showSnackBar(StringConstants.tagVerifiedSuccessfully);
+                  }
+                },
+                onClear: () async {
+                  bool confirmed = await _showConfirmDialog(
+                    StringConstants.clearNfcTag,
+                    StringConstants.clearNfcTagConfirmation,
+                  );
+                  if (confirmed) {
+                    await _nfcController.clearNDEF();
+                    if (_nfcController.result.contains(StringConstants.error)) {
+                      _showSnackBar(StringConstants.clearOperationFailed,
+                          isError: true);
+                    } else {
+                      _showSnackBar(StringConstants.tagClearedSuccessfully);
+                    }
                   }
                 },
               ),
@@ -179,12 +244,15 @@ class _NDEFScreenState extends State<NDEFScreen> {
                 urlValue: _urlValue,
                 wifiSSIDValue: _wifiSSIDValue,
                 wifiPasswordValue: _wifiPasswordValue,
+                vCardData: _vCardData,
                 onTextChanged: (value) => setState(() => _textValue = value),
                 onUrlChanged: (value) => setState(() => _urlValue = value),
                 onWifiSSIDChanged: (value) =>
                     setState(() => _wifiSSIDValue = value),
                 onWifiPasswordChanged: (value) =>
                     setState(() => _wifiPasswordValue = value),
+                onVCardChanged: (vCardData) =>
+                    setState(() => _vCardData = vCardData),
                 onWriteText: () async {
                   await _nfcController.writeTextRecord(_textValue);
                   _handleWriteResult();
@@ -198,6 +266,12 @@ class _NDEFScreenState extends State<NDEFScreen> {
                       _wifiSSIDValue, _wifiPasswordValue);
                   _handleWriteResult();
                 },
+                onWriteVCard: () async {
+                  if (_vCardData != null) {
+                    await _nfcController.writeVCardRecord(_vCardData!);
+                    _handleWriteResult();
+                  }
+                },
                 onWriteMultiple: () async {
                   await _nfcController.writeMultipleRecords(
                     _textValue,
@@ -209,31 +283,63 @@ class _NDEFScreenState extends State<NDEFScreen> {
                   _handleWriteResult();
                 },
               ),
-              const SizedBox(height: 16),
               AppLauncherCard(
                 selectedApp: _selectedApp,
                 onAppSelected: _onAppSelected,
                 isWriting: _nfcController.isWriting,
                 onWriteAppLauncher: _writeAppLauncher,
               ),
+              const SizedBox(height: 16),
             ] else ...[
-              Card(
-                elevation: 4,
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      spreadRadius: 0,
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(24.0),
                   child: Column(
                     children: [
-                      const Icon(Icons.warning, size: 48, color: Colors.orange),
-                      const SizedBox(height: 16),
-                      Text(
-                        StringConstants.nfcNotAvailable,
-                        style: Theme.of(context).textTheme.headlineSmall,
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: const Icon(
+                          Icons.warning_outlined,
+                          size: 48,
+                          color: Colors.orange,
+                        ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 24),
+                      const Text(
+                        StringConstants.nfcNotAvailable,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 12),
                       Text(
                         StringConstants.enableNfcMessage,
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey[600]),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey[600],
+                          height: 1.4,
+                        ),
                       ),
                     ],
                   ),
