@@ -231,7 +231,8 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                   );
                   if (confirmed) {
                     await _nfcController.clearNDEF();
-                    if (_nfcController.result.contains(appLocalizations.error)) {
+                    if (_nfcController.result
+                        .contains(appLocalizations.error)) {
                       _showSnackBar(appLocalizations.clearOperationFailed,
                           isError: true);
                     } else {
@@ -325,9 +326,9 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      const Text(
+                      Text(
                         appLocalizations.nfcNotAvailable,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,

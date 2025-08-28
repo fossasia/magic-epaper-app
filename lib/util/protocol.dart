@@ -147,7 +147,6 @@ class Protocol {
     tagId = Uint8List.fromList(hex.decode(tag.id));
     if (tag.type != NFCTagType.iso15693) {
       throw appLocalizations.notMagicEpaperHardware;
-
     }
 
     onProgress?.call(0.15, appLocalizations.enablingEnergyHarvesting);

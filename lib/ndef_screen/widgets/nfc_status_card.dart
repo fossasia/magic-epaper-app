@@ -5,7 +5,6 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
 
 import 'package:magicepaperapp/ndef_screen/services/nfc_availability_service.dart';
 
@@ -45,13 +44,14 @@ class NFCStatusCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Row(
+                Row(
                   children: [
-                    Icon(Icons.nfc_outlined, color: colorAccent, size: 22),
-                    SizedBox(width: 8),
+                    const Icon(Icons.nfc_outlined,
+                        color: colorAccent, size: 22),
+                    const SizedBox(width: 8),
                     Text(
                       appLocalizations.nfcStatus,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: colorBlack,

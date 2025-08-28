@@ -415,15 +415,8 @@ class BottomActionMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    // Calculate actual button width including padding (8px on each side + content)
-    const buttonWidth = 70.0; // Approximate width of each button with padding
-    const totalButtonWidth = 6 * buttonWidth;
-    final useTwoRows = totalButtonWidth > screenWidth - 32;
-
     return Container(
       height: 75,
-
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -462,7 +455,7 @@ class BottomActionMenu extends StatelessWidget {
               key: const Key('openEditorButton'),
               context: context,
               icon: Icons.edit_outlined,
-              label: "Editor",
+              label: appLocalizations.editor,
               onTap: () async {
                 final canvasBytes = await Navigator.of(context).push<Uint8List>(
                   MaterialPageRoute(
@@ -487,7 +480,7 @@ class BottomActionMenu extends StatelessWidget {
               key: const Key('adjustButton'),
               context: context,
               icon: Icons.tune_rounded,
-              label: "Adjust",
+              label: appLocalizations.adjustButtonLabel,
               onTap: () async {
                 if (imgLoader.image != null) {
                   final canvasBytes =
@@ -520,9 +513,9 @@ class BottomActionMenu extends StatelessWidget {
                   }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
+                    SnackBar(
                       duration: Durations.medium4,
-                      content: Text(StringConstants.noImageSelectedFeedback),
+                      content: Text(appLocalizations.noImageSelectedFeedback),
                       backgroundColor: colorPrimary,
                     ),
                   );
@@ -533,7 +526,7 @@ class BottomActionMenu extends StatelessWidget {
               key: const Key('barcodeButton'),
               context: context,
               icon: Icons.qr_code_scanner,
-              label: 'QR Code',
+              label: appLocalizations.barcode,
               onTap: () async {
                 final result = await Navigator.of(context).push(
                   MaterialPageRoute(
@@ -557,7 +550,7 @@ class BottomActionMenu extends StatelessWidget {
             _buildActionButton(
               context: context,
               icon: Icons.photo_library_outlined,
-              label: 'Library',
+              label: appLocalizations.library,
               onTap: () async {
                 await imageSaveHandler?.navigateToImageLibrary();
               },
@@ -565,7 +558,7 @@ class BottomActionMenu extends StatelessWidget {
             _buildActionButton(
               context: context,
               icon: Icons.dashboard_customize_outlined,
-              label: 'Templates',
+              label: appLocalizations.templates,
               onTap: () async {
                 final result = await Navigator.of(context).push<Uint8List>(
                   MaterialPageRoute(

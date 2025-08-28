@@ -4,7 +4,6 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
 
 import 'package:magicepaperapp/ndef_screen/app_nfc/app_data_model.dart';
 import 'package:magicepaperapp/ndef_screen/app_nfc/app_selection_service.dart';
@@ -120,20 +119,19 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Row(
+                Row(
                   children: [
-                    Icon(Icons.apps, color: colorAccent, size: 22),
-                    SizedBox(width: 8),
+                    const Icon(Icons.apps, color: colorAccent, size: 22),
+                    const SizedBox(width: 8),
                     Text(
                       appLocalizations.writeAppLauncherData,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: colorBlack,
                       ),
                     ),
                   ],
-
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -304,9 +302,9 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     appLocalizations.add,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
@@ -359,15 +357,15 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: mdGrey400.withValues(alpha: 0.2)),
         ),
-        child: const Center(
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.search_off, color: Colors.grey, size: 48),
-              SizedBox(height: 8),
+              const Icon(Icons.search_off, color: Colors.grey, size: 48),
+              const SizedBox(height: 8),
               Text(
                 appLocalizations.noAppsFound,
-                style: TextStyle(
+                style: const TextStyle(
                   color: colorBlack,
                   fontSize: 14,
                 ),
@@ -556,9 +554,9 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
       child: OutlinedButton.icon(
         onPressed: () => setState(() => _isExpanded = true),
         icon: const Icon(Icons.apps, color: colorAccent),
-        label: const Text(
+        label: Text(
           appLocalizations.selectApplication,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
             color: colorAccent,
