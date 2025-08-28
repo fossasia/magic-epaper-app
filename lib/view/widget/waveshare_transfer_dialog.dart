@@ -5,7 +5,7 @@ import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/waveshare/services/waveshare_nfc_services.dart';
 
-enum _TransferState { processing, readyToFlash, flashing, complete, error }
+enum _TransferState { processing, waitingForNfc, flashing, complete, error }
 
 class WaveshareTransferDialog extends StatefulWidget {
   final img.Image image;
@@ -50,7 +50,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
   void initState() {
     super.initState();
     _initializeAnimations();
-    _processImage();
+    _processAndInitiateFlash();
   }
 
   void _initializeAnimations() {
@@ -67,32 +67,36 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
   void dispose() {
     _pulseController.dispose();
     _progressSubscription?.cancel();
+    WaveShareNfcServices().disableNfcReaderMode();
     super.dispose();
   }
 
-  Future<void> _processImage() async {
+  Future<void> _processAndInitiateFlash() async {
     setState(() {
       _currentState = _TransferState.processing;
     });
     await Future.delayed(const Duration(milliseconds: 200));
+
     final rotatedImage = img.copyRotate(widget.image, angle: 90);
     _processedImageBytes = Uint8List.fromList(img.encodePng(rotatedImage));
+
+    _flashImage();
+
     setState(() {
-      _currentState = _TransferState.readyToFlash;
+      _currentState = _TransferState.waitingForNfc;
     });
   }
 
   Future<void> _flashImage() async {
     if (_processedImageBytes == null) return;
 
-    setState(() {
-      _currentState = _TransferState.flashing;
-    });
-
     _progressSubscription =
         _progressChannel.receiveBroadcastStream().listen((progress) {
       if (progress is int && mounted) {
         setState(() {
+          if (_currentState != _TransferState.flashing) {
+            _currentState = _TransferState.flashing;
+          }
           _progress = progress / 100.0;
         });
       }
@@ -139,20 +143,15 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
             color: Colors.blue,
             title: "Processing Image...",
             child: const CircularProgressIndicator());
-      case _TransferState.readyToFlash:
+
+      case _TransferState.waitingForNfc:
         return _buildStateColumn(
-          key: 'ready',
+          key: 'waiting',
           icon: Icons.nfc,
           color: colorPrimary,
-          title: "Ready to Flash",
+          title: "Ready to Transfer",
           child: Column(
             children: [
-              const Text(
-                "Image processed successfully.",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 24),
               AnimatedBuilder(
                 animation: _pulseAnimation,
                 builder: (context, child) =>
@@ -161,15 +160,10 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
               ),
               const SizedBox(height: 24),
               const Text(
-                "Tap below and hold your phone near the display.",
+                "Hold your phone near the display to begin.",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16),
               ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _flashImage,
-                child: const Text("Start Flashing"),
-              )
             ],
           ),
         );

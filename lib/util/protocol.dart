@@ -129,8 +129,8 @@ class Protocol {
 
     onProgress?.call(0.0, "Waiting for NFC tag...");
     Fluttertoast.showToast(
-        msg: "Bring your phone near to the Magic Epaper Hardware");
-    debugPrint("Bring your phone near to the Magic Epaper Hardware");
+        msg: "Bring your phone near to the Magic ePaper Hardware");
+    debugPrint("Bring your phone near to the Magic ePaper Hardware");
     final tag = await FlutterNfcKit.poll(timeout: timeout);
     debugPrint("Got a tag!");
     onTagDetected?.call();
@@ -138,7 +138,7 @@ class Protocol {
 
     tagId = Uint8List.fromList(hex.decode(tag.id));
     if (tag.type != NFCTagType.iso15693) {
-      throw "Not a Magic Epaper Hardware";
+      throw "Not a Magic ePaper Hardware";
     }
 
     onProgress?.call(0.15, "Enabling energy harvesting...");
