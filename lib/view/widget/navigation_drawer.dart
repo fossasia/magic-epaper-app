@@ -4,6 +4,11 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 //import 'package:share_plus/share_plus.dart';
 import 'package:magicepaperapp/util/url_util.dart';
+import 'package:magicepaperapp/view/widget/configurable_epd_dialog.dart';
+import 'package:magicepaperapp/util/epd/configurable_editor.dart';
+import 'package:magicepaperapp/view/image_editor.dart';
+import 'package:magicepaperapp/provider/color_palette_provider.dart';
+import 'package:provider/provider.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
@@ -29,6 +34,81 @@ class _AppDrawerState extends State<AppDrawer> {
     setState(() {
       currentIndex = index;
     });
+  }
+
+  void _showArduinoExportDialog() async {
+    final configurable = ConfigurableEpd(
+      modelId: 'NA',
+      width: 400,
+      height: 300,
+      colors: [Colors.white, Colors.black, Colors.red],
+    );
+    final result = await showDialog<CustomEpdConfig>(
+      context: context,
+      builder: (context) => ConfigurableEpdDialog(
+        initialWidth: configurable.width,
+        initialHeight: configurable.height,
+        initialColors: List<Color>.from(configurable.colors),
+      ),
+    );
+    if (result != null) {
+      final customEpd = ConfigurableEpd(
+        width: result.width,
+        height: result.height,
+        colors: result.colors,
+        modelId: result.presetName,
+      );
+      if (mounted) {
+        try {
+          context.read<ColorPaletteProvider>().updateColors(customEpd.colors);
+        } catch (e) {
+          debugPrint('ColorPaletteProvider not available: $e');
+        }
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ImageEditor(
+              isExportOnly: true,
+              device: customEpd,
+            ),
+          ),
+        );
+      }
+    }
+  }
+
+  void _showArduinoHelpDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.info_outline, color: Colors.blue),
+            SizedBox(width: 8),
+            Text('Arduino Export'),
+          ],
+        ),
+        content: const Text(
+          'This feature allows you to export your ePaper display designs as XMB files for use with Arduino projects.\n\n'
+          'Configure your custom ePaper display dimensions and color palette, then export your designs as XMB files that can be loaded onto Arduino-compatible ePaper displays.\n\n'
+          'Perfect for creating custom badges, signs, and displays for your Arduino projects!',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Got it'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _showArduinoExportDialog();
+            },
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -78,6 +158,15 @@ class _AppDrawerState extends State<AppDrawer> {
             icon: Icons.people,
             title: appLocalizations.aboutUs,
             routeName: '/aboutUs',
+          ),
+          _buildListTileWithTooltip(
+            index: 4,
+            icon: Icons.code,
+            title: 'Arduino Export',
+            subtitle: 'Export XMB files for Arduino',
+            routeName: '/arduinoExport',
+            isCustomAction: true,
+            showHelp: true,
           ),
           const Divider(),
           Padding(
@@ -144,6 +233,7 @@ class _AppDrawerState extends State<AppDrawer> {
     required String routeName,
     String? externalLink,
     String? shareText,
+    bool isCustomAction = false,
   }) {
     return ListTile(
       dense: true,
@@ -169,12 +259,95 @@ class _AppDrawerState extends State<AppDrawer> {
       selectedTileColor: dividerColor,
       onTap: () {
         updateSelectedIndex(index);
-        Navigator.pop(context);
-        if (externalLink != null) {
+
+        if (isCustomAction) {
+          _showArduinoExportDialog();
+        } else if (externalLink != null) {
+          Navigator.pop(context);
           openUrl(context, externalLink);
         } else if (shareText != null) {
-          //SharePlus.instance.share(ShareParams(text: shareText));
+          Navigator.pop(context);
         } else {
+          Navigator.pop(context);
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            routeName,
+            (route) => route.isFirst,
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildListTileWithTooltip({
+    required int index,
+    IconData? icon,
+    String? assetIcon,
+    required String title,
+    String? subtitle,
+    required String routeName,
+    String? externalLink,
+    String? shareText,
+    bool isCustomAction = false,
+    bool showHelp = false,
+  }) {
+    return ListTile(
+      dense: true,
+      leading: icon != null
+          ? Icon(
+              icon,
+              color: currentIndex == index ? colorAccent : colorBlack,
+            )
+          : Image.asset(
+              assetIcon!,
+              height: 18,
+              color: currentIndex == index ? colorAccent : colorBlack,
+            ),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: currentIndex == index ? colorAccent : colorBlack,
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+        ),
+      ),
+      subtitle: subtitle != null
+          ? Text(
+              subtitle,
+              style: TextStyle(
+                color: currentIndex == index
+                    ? colorAccent.withOpacity(0.7)
+                    : Colors.grey[600],
+                fontSize: 12,
+              ),
+            )
+          : null,
+      trailing: showHelp
+          ? IconButton(
+              icon: Icon(
+                Icons.help_outline,
+                size: 18,
+                color: Colors.grey[600],
+              ),
+              onPressed: _showArduinoHelpDialog,
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            )
+          : null,
+      selected: currentIndex == index,
+      selectedTileColor: dividerColor,
+      onTap: () {
+        updateSelectedIndex(index);
+
+        if (isCustomAction) {
+          _showArduinoExportDialog();
+        } else if (externalLink != null) {
+          Navigator.pop(context);
+          openUrl(context, externalLink);
+        } else if (shareText != null) {
+          Navigator.pop(context);
+        } else {
+          Navigator.pop(context);
           Navigator.pushNamedAndRemoveUntil(
             context,
             routeName,

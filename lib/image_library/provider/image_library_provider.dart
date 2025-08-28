@@ -63,6 +63,33 @@ class ImageLibraryProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> clearAllData() async {
+    try {
+      await _ensureInitialized();
+      await _initializeDirectories();
+      if (_imageDirectory != null && await _imageDirectory!.exists()) {
+        final files = await _imageDirectory!.list().toList();
+        for (final file in files) {
+          if (file is File) {
+            await file.delete();
+          }
+        }
+      }
+      if (_metadataFile != null && await _metadataFile!.exists()) {
+        await _metadataFile!.delete();
+      }
+      _savedImages.clear();
+      _searchQuery = '';
+      _selectedSource = 'all';
+
+      debugPrint('All data cleared successfully');
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error clearing all data: $e');
+      rethrow;
+    }
+  }
+
   Future<void> loadSavedImages() async {
     _isLoading = true;
     notifyListeners();

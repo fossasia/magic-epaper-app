@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
@@ -105,141 +106,213 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Row(
+          children: [
+            Icon(Icons.contact_page, color: colorAccent, size: 22),
+            SizedBox(width: 8),
+            Text(
+              'vCard Contact Information',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: colorBlack,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        _buildSectionContainer(
+          title: 'Personal Information',
+          icon: Icons.person,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: _buildTextField(
+                    controller: _firstNameController,
+                    labelText: 'First Name',
+                    prefixIcon: Icons.person_outline,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildTextField(
+                    controller: _lastNameController,
+                    labelText: 'Last Name',
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        _buildSectionContainer(
+          title: 'Work Information',
+          icon: Icons.work,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: _buildTextField(
+                    controller: _organizationController,
+                    labelText: 'Organization',
+                    prefixIcon: Icons.business,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildTextField(
+                    controller: _titleController,
+                    labelText: 'Job Title',
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        _buildSectionContainer(
+          title: 'Contact Information',
+          icon: Icons.contact_phone,
+          children: [
+            _buildTextField(
+              controller: _mobileNumberController,
+              labelText: 'Mobile Number',
+              prefixIcon: Icons.phone,
+              keyboardType: TextInputType.phone,
+            ),
+            const SizedBox(height: 12),
+            _buildTextField(
+              controller: _emailController,
+              labelText: 'Email Address',
+              prefixIcon: Icons.email,
+              keyboardType: TextInputType.emailAddress,
+            ),
+            const SizedBox(height: 12),
+            _buildTextField(
+              controller: _websiteController,
+              labelText: 'Website',
+              prefixIcon: Icons.web,
+              keyboardType: TextInputType.url,
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        _buildSectionContainer(
+          title: 'Address Information',
+          icon: Icons.location_on,
+          children: [
+            _buildTextField(
+              controller: _streetController,
+              labelText: 'Street Address',
+              prefixIcon: Icons.home,
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: _buildTextField(
+                    controller: _cityController,
+                    labelText: 'City',
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildTextField(
+                    controller: _zipCodeController,
+                    labelText: 'Zip Code',
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            _buildTextField(
+              controller: _countryController,
+              labelText: 'Country',
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSectionContainer({
+    required String title,
+    required IconData icon,
+    required List<Widget> children,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: mdGrey400.withValues(alpha: 0.2)),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Expanded(
-                child: TextFormField(
-                  controller: _firstNameController,
-                  decoration: InputDecoration(
-                    labelText: appLocalizations.firstName,
-                    border: const OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.person),
-                  ),
-                ),
-              ),
+              Icon(icon, size: 18, color: colorAccent),
               const SizedBox(width: 8),
-              Expanded(
-                child: TextFormField(
-                  controller: _lastNameController,
-                  decoration: InputDecoration(
-                    labelText: appLocalizations.lastName,
-                    border: const OutlineInputBorder(),
-                  ),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: colorBlack,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: TextFormField(
-                  controller: _organizationController,
-                  decoration: InputDecoration(
-                    labelText: appLocalizations.organization,
-                    border: const OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.business),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: TextFormField(
-                  controller: _titleController,
-                  decoration: InputDecoration(
-                    labelText: appLocalizations.title,
-                    border: const OutlineInputBorder(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          TextFormField(
-            controller: _mobileNumberController,
-            decoration: InputDecoration(
-              labelText: appLocalizations.mobileNumber,
-              border: const OutlineInputBorder(),
-              prefixIcon: const Icon(Icons.phone),
-            ),
-            keyboardType: TextInputType.phone,
-          ),
-          const SizedBox(height: 12),
-          TextFormField(
-            controller: _emailController,
-            decoration: InputDecoration(
-              labelText: appLocalizations.emailAddress,
-              border: const OutlineInputBorder(),
-              prefixIcon: const Icon(Icons.email),
-            ),
-            keyboardType: TextInputType.emailAddress,
-          ),
-          const SizedBox(height: 12),
-          TextFormField(
-            controller: _streetController,
-            decoration: InputDecoration(
-              labelText: appLocalizations.streetAddress,
-              border: const OutlineInputBorder(),
-              prefixIcon: const Icon(Icons.home),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                flex: 2,
-                child: TextFormField(
-                  controller: _cityController,
-                  decoration: InputDecoration(
-                    labelText: appLocalizations.city,
-                    border: const OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: TextFormField(
-                  controller: _zipCodeController,
-                  decoration: InputDecoration(
-                    labelText: appLocalizations.zipCode,
-                    border: const OutlineInputBorder(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: TextFormField(
-                  controller: _countryController,
-                  decoration: InputDecoration(
-                    labelText: appLocalizations.country,
-                    border: const OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: TextFormField(
-                  controller: _websiteController,
-                  decoration: InputDecoration(
-                    labelText: appLocalizations.website,
-                    border: const OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.web),
-                  ),
-                  keyboardType: TextInputType.url,
-                ),
-              ),
-            ],
-          ),
+          ...children,
         ],
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    IconData? prefixIcon,
+    TextInputType? keyboardType,
+  }) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: keyboardType,
+      style: const TextStyle(fontSize: 14),
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: TextStyle(
+          color: Colors.grey[600],
+          fontSize: 14,
+        ),
+        prefixIcon: prefixIcon != null
+            ? Icon(prefixIcon, color: colorAccent, size: 20)
+            : null,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: mdGrey400),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: mdGrey400.withValues(alpha: 0.4)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: colorAccent, width: 2),
+        ),
+        filled: true,
+        fillColor: colorWhite,
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
     );
   }

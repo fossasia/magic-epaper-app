@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
     /// The main application widget that configures the app's theme, routes,
     /// and localization.
     return MaterialApp(
-      title: 'Magic Epaper',
+      title: 'Magic ePaper',
 
       /// Delegates for handling localization.
       localizationsDelegates: AppLocalizations.localizationsDelegates,

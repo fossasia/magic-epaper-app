@@ -138,6 +138,7 @@ class Protocol {
     Fluttertoast.showToast(
         msg: appLocalizations.bringPhoneNearMagicEpaperHardware);
     debugPrint(appLocalizations.bringPhoneNearMagicEpaperHardware);
+
     final tag = await FlutterNfcKit.poll(timeout: timeout);
     debugPrint(appLocalizations.gotTag);
     onTagDetected?.call();
@@ -146,6 +147,7 @@ class Protocol {
     tagId = Uint8List.fromList(hex.decode(tag.id));
     if (tag.type != NFCTagType.iso15693) {
       throw appLocalizations.notMagicEpaperHardware;
+
     }
 
     onProgress?.call(0.15, appLocalizations.enablingEnergyHarvesting);
