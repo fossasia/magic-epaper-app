@@ -6,7 +6,7 @@ import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/util/epd/gdeq031t10.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
-import 'package:magicepaperapp/util/epd/waveshare_2in9.dart';
+import 'package:magicepaperapp/util/epd/waveshare_displays.dart';
 import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'package:provider/provider.dart';
@@ -24,8 +24,14 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   final List<DisplayDevice> displays = [
     Gdey037z03(),
     Gdey037z03BW(),
-    Waveshare2in9(),
     GDEQ031T10(),
+    Waveshare2in13(),
+    Waveshare2in9(),
+    Waveshare2in9b(),
+    Waveshare2in7(),
+    Waveshare4in2(),
+    Waveshare7in5(),
+    Waveshare7in5HD(),
   ];
   int selectedIndex = -1;
 
@@ -74,7 +80,6 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                       ),
                       itemCount: displays.length,
                       itemBuilder: (context, index) {
-                        print('Display: ${displays[index].modelId}');
                         return DisplayCard(
                           key: Key(displays[index].modelId),
                           display: displays[index],

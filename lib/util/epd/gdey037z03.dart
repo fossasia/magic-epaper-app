@@ -29,9 +29,6 @@ class Gdey037z03 extends Epd {
   Driver get controller => Uc8253();
 
   @override
-  List<String> get displayChips => ['FOSSASIA Hardware Required'];
-
-  @override
   List<img.Image Function(img.Image)> get processingMethods => [
         ImageProcessing.bwrFloydSteinbergDither,
         ImageProcessing.bwrFalseFloydSteinbergDither,

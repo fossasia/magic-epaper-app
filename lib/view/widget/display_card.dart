@@ -3,7 +3,7 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/util/color_util.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/util/epd/epd.dart';
-import 'package:magicepaperapp/util/epd/configurable_editor.dart';
+import 'package:magicepaperapp/util/epd/waveshare_nfc_display.dart';
 import 'package:magicepaperapp/view/widget/color_dot.dart';
 
 class DisplayCard extends StatelessWidget {
@@ -23,12 +23,10 @@ class DisplayCard extends StatelessWidget {
     final String driverText;
     final currentDisplay = display;
 
-    if (currentDisplay is ConfigurableEpd) {
-      driverText = 'NA';
-    } else if (currentDisplay is Epd) {
+    if (currentDisplay is Epd) {
       driverText = currentDisplay.driverName;
     } else {
-      driverText = 'Waveshare NFC';
+      driverText = 'Waveshare SDK';
     }
 
     final chips = display.displayChips;
@@ -93,7 +91,7 @@ class DisplayCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  if (chips.isNotEmpty) ...[
+                  if (chips != null && chips.isNotEmpty) ...[
                     Wrap(
                       spacing: 4,
                       runSpacing: 4,
@@ -117,13 +115,20 @@ class DisplayCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  _buildSpecRow('Model:', display.modelId),
-                  _buildSpecRow(
-                      'Resolution:', '${display.width} × ${display.height}'),
-                  _buildSpecRow('Driver:', driverText),
+                  if (display is WaveshareNfcDisplay) ...[
+                    _buildSpecRow('SKU:', display.modelId),
+                    _buildSpecRow(
+                        'Resolution:', '${display.width} × ${display.height}'),
+                    _buildSpecRow('SDK:', driverText),
+                  ] else ...[
+                    _buildSpecRow('Model:', display.modelId),
+                    _buildSpecRow(
+                        'Resolution:', '${display.width} × ${display.height}'),
+                    _buildSpecRow('Display Driver:', driverText),
+                  ],
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),
