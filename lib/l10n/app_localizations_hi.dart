@@ -9,7 +9,7 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
-  String get appName => 'Magic Epaper';
+  String get appName => 'Magic ePaper';
 
   @override
   String get aboutUsDescription =>
@@ -618,11 +618,11 @@ class AppLocalizationsHi extends AppLocalizations {
   String get transferComplete => 'Transfer complete!';
 
   @override
-  String get writingToEpaper => 'Writing to E-Paper';
+  String get writingToEpaper => 'Writing to ePaper';
 
   @override
   String get pleaseBringPhoneClose =>
-      'Please bring your phone close to the Magic E-Paper device';
+      'Please bring your phone close to the Magic ePaper device';
 
   @override
   String get keepPhoneClose => 'Keep your phone close!';
@@ -919,7 +919,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get bringPhoneNearMagicEpaperHardware =>
-      'Bring your phone near to the Magic Epaper Hardware';
+      'Bring your phone near to the Magic ePaper Hardware';
 
   @override
   String get tagDetectedInitializing => 'Tag detected! Initializing...';
@@ -934,7 +934,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get refreshingDisplay => 'Refreshing display...';
 
   @override
-  String get notMagicEpaperHardware => 'Not a Magic Epaper Hardware';
+  String get notMagicEpaperHardware => 'Not a Magic ePaper Hardware';
 
   @override
   String get errorCheckingMessage => 'Error checking message: ';

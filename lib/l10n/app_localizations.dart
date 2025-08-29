@@ -129,7 +129,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In en, this message translates to:
-  /// **'Magic Epaper'**
+  /// **'Magic ePaper'**
   String get appName;
 
   /// No description provided for @aboutUsDescription.
@@ -1323,13 +1323,13 @@ abstract class AppLocalizations {
   /// No description provided for @writingToEpaper.
   ///
   /// In en, this message translates to:
-  /// **'Writing to E-Paper'**
+  /// **'Writing to ePaper'**
   String get writingToEpaper;
 
   /// No description provided for @pleaseBringPhoneClose.
   ///
   /// In en, this message translates to:
-  /// **'Please bring your phone close to the Magic E-Paper device'**
+  /// **'Please bring your phone close to the Magic ePaper device'**
   String get pleaseBringPhoneClose;
 
   /// No description provided for @keepPhoneClose.
@@ -1899,7 +1899,7 @@ abstract class AppLocalizations {
   /// No description provided for @bringPhoneNearMagicEpaperHardware.
   ///
   /// In en, this message translates to:
-  /// **'Bring your phone near to the Magic Epaper Hardware'**
+  /// **'Bring your phone near to the Magic ePaper Hardware'**
   String get bringPhoneNearMagicEpaperHardware;
 
   /// No description provided for @tagDetectedInitializing.
@@ -1929,7 +1929,7 @@ abstract class AppLocalizations {
   /// No description provided for @notMagicEpaperHardware.
   ///
   /// In en, this message translates to:
-  /// **'Not a Magic Epaper Hardware'**
+  /// **'Not a Magic ePaper Hardware'**
   String get notMagicEpaperHardware;
 
   /// No description provided for @errorCheckingMessage.
