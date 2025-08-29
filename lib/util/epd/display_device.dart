@@ -15,7 +15,7 @@ abstract class DisplayDevice {
   int get width;
   int get height;
   List<Color> get colors;
-  List<String> get displayChips;
+  List<String>? get displayChips;
   List<img.Image Function(img.Image)> get processingMethods;
 
   Future<void> transfer(
