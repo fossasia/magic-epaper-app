@@ -8,6 +8,10 @@ import 'package:magicepaperapp/image_library/widgets/dialogs/image_properties_di
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_rename_dialog.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class ImagePreviewDialog extends StatelessWidget {
   final SavedImage image;
@@ -71,7 +75,7 @@ class ImagePreviewDialog extends StatelessWidget {
           IconButton(
             onPressed: () => _showPropertiesDialog(context),
             icon: const Icon(Icons.info_outline, color: Colors.white),
-            tooltip: 'Image Properties',
+            tooltip: appLocalizations.imageProperties,
           ),
           IconButton(
             onPressed: () => Navigator.pop(context),
@@ -120,22 +124,22 @@ class ImagePreviewDialog extends StatelessWidget {
       children: [
         _buildInfoRow(
           Icons.access_time,
-          'Created ${dt.DateUtils.formatFullDate(image.createdAt)}',
+          '${appLocalizations.created} ${dt.DateUtils.formatFullDate(image.createdAt)}',
         ),
         const SizedBox(height: 8),
         _buildInfoRow(
           Icons.source,
-          'Source: ${SourceUtils.getSourceName(image.source)}',
+          '${appLocalizations.source} ${SourceUtils.getSourceName(image.source)}',
         ),
         const SizedBox(height: 8),
         _buildInfoRow(
           Icons.filter_alt,
-          'Filter: ${FilterUtils.getFilterName(image.metadata)}',
+          '${appLocalizations.filter} ${FilterUtils.getFilterName(image.metadata)}',
         ),
         const SizedBox(height: 8),
         _buildInfoRow(
           Icons.display_settings,
-          'EPD Model: ${epd.modelId}',
+          '${appLocalizations.epdModel} ${epd.modelId}',
         ),
       ],
     );
@@ -166,7 +170,7 @@ class ImagePreviewDialog extends StatelessWidget {
                   onDelete();
                 },
                 icon: const Icon(Icons.delete_outline, color: Colors.red),
-                label: const Text('Delete'),
+                label: Text(appLocalizations.delete),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.red,
                   side: const BorderSide(color: Colors.red),
@@ -178,7 +182,7 @@ class ImagePreviewDialog extends StatelessWidget {
               child: OutlinedButton.icon(
                 onPressed: () => _showRenameDialog(context),
                 icon: const Icon(Icons.edit_outlined),
-                label: const Text('Rename'),
+                label: Text(appLocalizations.rename),
               ),
             ),
           ],
@@ -192,7 +196,7 @@ class ImagePreviewDialog extends StatelessWidget {
               onTransfer();
             },
             icon: const Icon(Icons.send),
-            label: const Text('Transfer to ePaper'),
+            label: Text(appLocalizations.transferToEpaper),
             style: ElevatedButton.styleFrom(
               backgroundColor: colorAccent,
               foregroundColor: Colors.white,

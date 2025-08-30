@@ -5,7 +5,11 @@ import 'package:flutter/rendering.dart';
 import 'package:mobile_scanner/mobile_scanner.dart' as scanner;
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:image/image.dart' as img;
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class BarcodeScannerScreen extends StatefulWidget {
   final int width;
@@ -74,14 +78,14 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
       if (!allowedChars.contains(rune)) {
         final char = String.fromCharCode(rune);
         final rules = barcodeFormatToSupportedChars[_selectedBarcode.name];
-        return "Invalid character '$char' \nSupported characters are ${rules ?? 'Please check the barcode rules.'}";
+        return "${appLocalizations.invalidCharacter} '$char' \n${appLocalizations.supportedCharacters} ${rules ?? appLocalizations.pleaseCheckBarcodeRules}";
       }
     }
     if (data.length < barcode.minLength) {
-      return 'Data is too short. Minimum length for ${barcode.name} is ${barcode.minLength}.';
+      return '${appLocalizations.dataTooShort} ${barcode.name} ${appLocalizations.isText} ${barcode.minLength}.';
     }
     if (barcode.maxLength < 10000 && data.length > barcode.maxLength) {
-      return 'Data is too long. Maximum length for ${barcode.name} is ${barcode.maxLength}.';
+      return '${appLocalizations.dataTooLong} ${barcode.name} ${appLocalizations.isText} ${barcode.maxLength}.';
     }
     return null;
   }
@@ -208,12 +212,12 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
 
     return DropdownButtonFormField<String>(
       value: _selectedBarcode.name,
-      decoration: const InputDecoration(
-        labelText: 'Barcode Format',
-        border: OutlineInputBorder(
+      decoration: InputDecoration(
+        labelText: appLocalizations.barcodeFormat,
+        border: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.red),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.red, width: 2),
         ),
       ),
@@ -247,10 +251,10 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: const Center(
+        child: Center(
           child: Text(
-            'Enter or scan barcode data',
-            style: TextStyle(color: Colors.grey),
+            appLocalizations.enterOrScanBarcodeData,
+            style: const TextStyle(color: Colors.grey),
           ),
         ),
       );
@@ -290,7 +294,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Invalid Barcode',
+                  appLocalizations.invalidBarcode,
                   style: TextStyle(
                     color: Colors.red[700],
                     fontSize: 20,
@@ -327,7 +331,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
   Widget _buildScannerView() {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scan Barcode'),
+        title: Text(appLocalizations.scanBarcode),
         backgroundColor: colorAccent,
         leading: IconButton(
           icon: const Icon(Icons.close),
@@ -347,10 +351,10 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
               alignment: Alignment.bottomCenter,
               height: 100,
               color: const Color.fromRGBO(0, 0, 0, 0.4),
-              child: const Center(
+              child: Center(
                 child: Text(
-                  'Point camera at barcode to scan',
-                  style: TextStyle(color: colorWhite, fontSize: 16),
+                  appLocalizations.pointCameraAtBarcode,
+                  style: const TextStyle(color: colorWhite, fontSize: 16),
                 ),
               ),
             ),
@@ -368,7 +372,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Barcode Generator'),
+        title: Text(appLocalizations.barcodeGenerator),
         titleTextStyle: const TextStyle(
           color: Colors.white,
           fontSize: 20,
@@ -387,14 +391,14 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
               children: [
                 TextField(
                   controller: _textController,
-                  decoration: const InputDecoration(
-                    labelText: 'Barcode Data',
-                    hintText: 'Enter barcode data or scan',
-                    prefixIcon: Icon(Icons.qr_code_2_rounded),
-                    border: OutlineInputBorder(
+                  decoration: InputDecoration(
+                    labelText: appLocalizations.barcodeData,
+                    hintText: appLocalizations.barcodeDataHint,
+                    prefixIcon: const Icon(Icons.qr_code_2_rounded),
+                    border: const OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.red),
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.red, width: 2),
                     ),
                   ),
@@ -402,7 +406,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, left: 4.0),
                   child: Text(
-                    'Characters: ${_barcodeData.length}',
+                    '${appLocalizations.characters}: ${_barcodeData.length}',
                     style: TextStyle(
                       color: Colors.grey[600],
                       fontSize: 12,
@@ -418,7 +422,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
               child: ElevatedButton.icon(
                 onPressed: _startScanning,
                 icon: const Icon(Icons.qr_code_scanner),
-                label: const Text('Scan Barcode'),
+                label: Text(appLocalizations.scanBarcode),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colorAccent,
                   foregroundColor: colorWhite,
@@ -443,7 +447,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                     foregroundColor: colorWhite,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
-                  child: const Text('Generate Image'),
+                  child: Text(appLocalizations.generateImage),
                 ),
               ),
           ],

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:magicepaperapp/card_templates/employee_id_model.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 
-import 'package:magicepaperapp/constants/string_constants.dart';
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class EmployeeIdCardWidget extends StatelessWidget {
   final EmployeeIdModel data;
@@ -52,7 +54,7 @@ class EmployeeIdCardWidget extends StatelessWidget {
               Text(
                 data.companyName.isNotEmpty
                     ? data.companyName
-                    : StringConstants.defaultCompanyName,
+                    : appLocalizations.defaultCompanyName,
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
@@ -69,10 +71,12 @@ class EmployeeIdCardWidget extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildInfoRow(StringConstants.nameLabel, data.name),
-                    _buildInfoRow(StringConstants.positionLabel, data.position),
-                    _buildInfoRow(StringConstants.divisionLabel, data.division),
-                    _buildInfoRow(StringConstants.idLabel, data.idNumber),
+                    _buildInfoRow(appLocalizations.nameLabel, data.name),
+                    _buildInfoRow(
+                        appLocalizations.positionLabel, data.position),
+                    _buildInfoRow(
+                        appLocalizations.divisionLabel, data.division),
+                    _buildInfoRow(appLocalizations.idLabel, data.idNumber),
                   ],
                 ),
               ),
@@ -111,7 +115,7 @@ class EmployeeIdCardWidget extends StatelessWidget {
   Widget _buildInfoRow(String label, String value) {
     final displayText = value.isNotEmpty
         ? '$label: $value'
-        : '$label: ${StringConstants.emptyFieldPlaceholder}';
+        : '$label: ${appLocalizations.emptyFieldPlaceholder}';
     final isEmpty = value.isEmpty;
 
     return Text(

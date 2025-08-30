@@ -1,16 +1,19 @@
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/ndef_screen/models/nfc_operation_result.dart';
 import 'package:magicepaperapp/ndef_screen/models/nfc_tag_info.dart';
 import 'package:magicepaperapp/ndef_screen/services/ndef_record_parser.dart';
 import 'package:magicepaperapp/ndef_screen/services/nfc_session_manager.dart';
 import 'package:ndef/ndef.dart' as ndef;
 
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+
 class NFCOperationsService {
   static Future<NFCOperationResult> readNDEF() async {
     try {
       final tag = await NFCSessionManager.pollForTag(
-        iosAlertMessage: StringConstants.scanYourNfcTag,
+        iosAlertMessage: appLocalizations.scanYourNfcTag,
       );
 
       final tagInfo = NFCTagInfo(
@@ -22,9 +25,9 @@ class NFCOperationsService {
 
       if (tag.ndefAvailable != true) {
         await NFCSessionManager.finishSession(
-            iosMessage: StringConstants.tagIsNotNdefCompatible);
+            iosMessage: appLocalizations.tagIsNotNdefCompatible);
         return NFCOperationResult.failure(
-          error: StringConstants.tagIsNotNdefCompatible,
+          error: appLocalizations.tagIsNotNdefCompatible,
           operationType: NFCOperationType.read,
           tagInfo: tagInfo,
         );
@@ -32,21 +35,21 @@ class NFCOperationsService {
 
       final records = await FlutterNfcKit.readNDEFRecords();
       await NFCSessionManager.finishSession(
-          iosMessage: StringConstants.readOperationCompleted);
+          iosMessage: appLocalizations.readOperationCompleted);
 
       String message = '${tagInfo.toString()}\n\n';
-      message += '${StringConstants.ndefRecordsFound}${records.length}\n\n';
+      message += '${appLocalizations.ndefRecordsFound}${records.length}\n\n';
 
       if (records.isEmpty) {
-        message += StringConstants.theTagIsEmpty;
+        message += appLocalizations.theTagIsEmpty;
       } else {
         for (int i = 0; i < records.length; i++) {
-          message += '${StringConstants.record}${i + 1}:\n';
+          message += '${appLocalizations.record}${i + 1}:\n';
           message +=
-              '${StringConstants.type}${NDEFRecordParser.getRecordTypeString(records[i])}\n';
-          message += '${StringConstants.tnf}${records[i].tnf}\n';
+              '${appLocalizations.type}${NDEFRecordParser.getRecordTypeString(records[i])}\n';
+          message += '${appLocalizations.tnf}${records[i].tnf}\n';
           message +=
-              '${StringConstants.content}${NDEFRecordParser.getRecordInfo(records[i])}\n\n';
+              '${appLocalizations.content}${NDEFRecordParser.getRecordInfo(records[i])}\n\n';
         }
       }
 
@@ -60,7 +63,7 @@ class NFCOperationsService {
       await NFCSessionManager.finishSession();
       return NFCOperationResult.failure(
         error:
-            '${StringConstants.errorReadingTag}$e${StringConstants.holdTagCloseAndTryAgain}',
+            '${appLocalizations.errorReadingTag}$e${appLocalizations.holdTagCloseAndTryAgain}',
         operationType: NFCOperationType.read,
       );
     }
@@ -70,14 +73,14 @@ class NFCOperationsService {
       List<ndef.NDEFRecord> records) async {
     if (records.isEmpty) {
       return NFCOperationResult.failure(
-        error: StringConstants.noRecordsToWrite,
+        error: appLocalizations.noRecordsToWrite,
         operationType: NFCOperationType.write,
       );
     }
 
     try {
       final tag = await NFCSessionManager.pollForTag(
-        iosAlertMessage: StringConstants.scanYourNfcTagToWrite,
+        iosAlertMessage: appLocalizations.scanYourNfcTagToWrite,
       );
 
       final tagInfo = NFCTagInfo(
@@ -89,9 +92,9 @@ class NFCOperationsService {
 
       if (tag.ndefAvailable != true) {
         await NFCSessionManager.finishSession(
-            iosMessage: StringConstants.tagDoesNotSupportNdef);
+            iosMessage: appLocalizations.tagDoesNotSupportNdef);
         return NFCOperationResult.failure(
-          error: StringConstants.tagDoesNotSupportNdef,
+          error: appLocalizations.tagDoesNotSupportNdef,
           operationType: NFCOperationType.write,
           tagInfo: tagInfo,
         );
@@ -99,9 +102,9 @@ class NFCOperationsService {
 
       if (tag.ndefWritable != true) {
         await NFCSessionManager.finishSession(
-            iosMessage: StringConstants.tagIsNotWritable);
+            iosMessage: appLocalizations.tagIsNotWritable);
         return NFCOperationResult.failure(
-          error: StringConstants.tagIsNotWritable,
+          error: appLocalizations.tagIsNotWritable,
           operationType: NFCOperationType.write,
           tagInfo: tagInfo,
         );
@@ -109,18 +112,18 @@ class NFCOperationsService {
 
       await FlutterNfcKit.writeNDEFRecords(records);
       await NFCSessionManager.finishSession(
-          iosMessage: StringConstants.writeOperationCompleted);
+          iosMessage: appLocalizations.writeOperationCompleted);
 
       String message = '${tagInfo.toString()}\n\n';
-      message += '${StringConstants.ndefRecordsWrittenSuccessfully}\n';
-      message += '${StringConstants.recordsWritten}${records.length}\n\n';
+      message += '${appLocalizations.ndefRecordsWrittenSuccessfully}\n';
+      message += '${appLocalizations.recordsWritten}${records.length}\n\n';
 
       for (int i = 0; i < records.length; i++) {
-        message += '${StringConstants.writtenRecord}${i + 1}:\n';
+        message += '${appLocalizations.writtenRecord}${i + 1}:\n';
         message +=
-            '${StringConstants.type}${NDEFRecordParser.getRecordTypeString(records[i])}\n';
+            '${appLocalizations.type}${NDEFRecordParser.getRecordTypeString(records[i])}\n';
         message +=
-            '${StringConstants.content}${NDEFRecordParser.getRecordInfo(records[i])}\n\n';
+            '${appLocalizations.content}${NDEFRecordParser.getRecordInfo(records[i])}\n\n';
       }
 
       return NFCOperationResult.success(
@@ -133,7 +136,7 @@ class NFCOperationsService {
       await NFCSessionManager.finishSession();
       return NFCOperationResult.failure(
         error:
-            '${StringConstants.errorWritingToTag}$e${StringConstants.tryHoldingTagCloser}',
+            '${appLocalizations.errorWritingToTag}$e${appLocalizations.tryHoldingTagCloser}',
         operationType: NFCOperationType.write,
       );
     }
@@ -142,7 +145,7 @@ class NFCOperationsService {
   static Future<NFCOperationResult> clearNDEF() async {
     try {
       final tag = await NFCSessionManager.pollForTag(
-        iosAlertMessage: StringConstants.scanYourNfcTagToClear,
+        iosAlertMessage: appLocalizations.scanYourNfcTagToClear,
       );
 
       final tagInfo = NFCTagInfo(
@@ -154,9 +157,9 @@ class NFCOperationsService {
 
       if (tag.ndefAvailable != true) {
         await NFCSessionManager.finishSession(
-            iosMessage: StringConstants.tagDoesNotSupportNdef);
+            iosMessage: appLocalizations.tagDoesNotSupportNdef);
         return NFCOperationResult.failure(
-          error: StringConstants.tagDoesNotSupportNdefCannotClear,
+          error: appLocalizations.tagDoesNotSupportNdefCannotClear,
           operationType: NFCOperationType.clear,
           tagInfo: tagInfo,
         );
@@ -164,9 +167,9 @@ class NFCOperationsService {
 
       if (tag.ndefWritable != true) {
         await NFCSessionManager.finishSession(
-            iosMessage: StringConstants.tagIsNotWritable);
+            iosMessage: appLocalizations.tagIsNotWritable);
         return NFCOperationResult.failure(
-          error: StringConstants.tagIsNotWritableCannotClear,
+          error: appLocalizations.tagIsNotWritableCannotClear,
           operationType: NFCOperationType.clear,
           tagInfo: tagInfo,
         );
@@ -174,12 +177,12 @@ class NFCOperationsService {
 
       String clearMethod = await _attemptClearMethods();
       await NFCSessionManager.finishSession(
-          iosMessage: StringConstants.clearOperationCompleted);
+          iosMessage: appLocalizations.clearOperationCompleted);
 
       String message = '${tagInfo.toString()}\n\n';
-      message += '${StringConstants.tagClearedSuccessfully}\n';
-      message += '${StringConstants.method}$clearMethod\n';
-      message += StringConstants.tagIsNowReadyForNewData;
+      message += '${appLocalizations.tagClearedSuccessfully}\n';
+      message += '${appLocalizations.method}$clearMethod\n';
+      message += appLocalizations.tagIsNowReadyForNewData;
 
       return NFCOperationResult.success(
         message: message,
@@ -190,7 +193,7 @@ class NFCOperationsService {
       await NFCSessionManager.finishSession();
       return NFCOperationResult.failure(
         error:
-            '${StringConstants.errorClearingTag}$e${StringConstants.tryMovingTagCloser}',
+            '${appLocalizations.errorClearingTag}$e${appLocalizations.tryMovingTagCloser}',
         operationType: NFCOperationType.clear,
       );
     }
@@ -200,40 +203,40 @@ class NFCOperationsService {
     try {
       final emptyRecord = NDEFRecordFactory.createEmptyTextRecord();
       await FlutterNfcKit.writeNDEFRecords([emptyRecord]);
-      return StringConstants.emptyTextRecord;
+      return appLocalizations.emptyTextRecord;
     } catch (e) {
-      print('${StringConstants.method1EmptyTextRecordFailed}$e');
+      print('${appLocalizations.method1EmptyTextRecordFailed}$e');
     }
 
     try {
       final emptyRecord = NDEFRecordFactory.createEmptyRecord();
       await FlutterNfcKit.writeNDEFRecords([emptyRecord]);
-      return StringConstants.emptyNdefRecord;
+      return appLocalizations.emptyNdefRecord;
     } catch (e) {
-      print('${StringConstants.method2EmptyNdefRecordFailed}$e');
+      print('${appLocalizations.method2EmptyNdefRecordFailed}$e');
     }
 
     try {
       final minimalRecord = NDEFRecordFactory.createMinimalRecord();
       await FlutterNfcKit.writeNDEFRecords([minimalRecord]);
-      return StringConstants.minimalSpaceCharacter;
+      return appLocalizations.minimalSpaceCharacter;
     } catch (e) {
-      print('${StringConstants.method3MinimalRecordFailed}$e');
+      print('${appLocalizations.method3MinimalRecordFailed}$e');
     }
 
     try {
       await FlutterNfcKit.writeNDEFRecords([]);
-      return StringConstants.emptyRecordList;
+      return appLocalizations.emptyRecordList;
     } catch (e) {
-      print('${StringConstants.method4EmptyListFailed}$e');
-      throw Exception('${StringConstants.allClearingMethodsFailed}$e');
+      print('${appLocalizations.method4EmptyListFailed}$e');
+      throw Exception('${appLocalizations.allClearingMethodsFailed}$e');
     }
   }
 
   static Future<NFCOperationResult> verifyTag() async {
     try {
       final tag = await NFCSessionManager.pollForTag(
-        iosAlertMessage: StringConstants.scanTagToVerifyContent,
+        iosAlertMessage: appLocalizations.scanTagToVerifyContent,
       );
 
       final tagInfo = NFCTagInfo(
@@ -245,9 +248,9 @@ class NFCOperationsService {
 
       if (tag.ndefAvailable != true) {
         await NFCSessionManager.finishSession(
-            iosMessage: StringConstants.tagDoesNotSupportNdef);
+            iosMessage: appLocalizations.tagDoesNotSupportNdef);
         return NFCOperationResult.failure(
-          error: StringConstants.tagDoesNotSupportNdef,
+          error: appLocalizations.tagDoesNotSupportNdef,
           operationType: NFCOperationType.verify,
           tagInfo: tagInfo,
         );
@@ -256,13 +259,13 @@ class NFCOperationsService {
       final records = await FlutterNfcKit.readNDEFRecords();
       await NFCSessionManager.finishSession();
 
-      String message = '${StringConstants.verificationResults}\n';
+      String message = '${appLocalizations.verificationResults}\n';
       message += '${tagInfo.toString()}\n';
-      message += '${StringConstants.recordsFound}${records.length}\n\n';
+      message += '${appLocalizations.recordsFound}${records.length}\n\n';
 
       if (records.isEmpty) {
-        message += '${StringConstants.noNdefRecordsFoundOnTag}\n';
-        message += StringConstants.theTagIsEmptyCleared;
+        message += '${appLocalizations.noNdefRecordsFoundOnTag}\n';
+        message += appLocalizations.theTagIsEmptyCleared;
       } else {
         message += NDEFRecordParser.formatRecordsForDisplay(records);
       }
@@ -276,7 +279,7 @@ class NFCOperationsService {
     } catch (e) {
       await NFCSessionManager.finishSession();
       return NFCOperationResult.failure(
-        error: '${StringConstants.verificationError}$e',
+        error: '${appLocalizations.verificationError}$e',
         operationType: NFCOperationType.verify,
       );
     }

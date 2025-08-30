@@ -335,13 +335,19 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               DropdownButtonFormField<DisplayPreset>(
-                value: _selectedPreset,
+                initialValue: _selectedPreset,
                 items: _presets
                     .map((preset) => DropdownMenuItem(
-                        value: preset, child: Text(preset.name)))
+                        value: preset,
+                        child: Text(
+                          preset.name,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        )))
                     .toList(),
                 onChanged: _onPresetChanged,
                 decoration: const InputDecoration(labelText: 'Display Preset'),
+                isExpanded: true,
               ),
               const SizedBox(height: 16),
               Row(
@@ -384,7 +390,10 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                 children: _currentColors.map((color) {
                   return Chip(
                     avatar: CircleAvatar(backgroundColor: color, radius: 12),
-                    label: Text(ColorUtils.getColorDisplayName(color)),
+                    label: Text(
+                      ColorUtils.getColorDisplayName(color),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     backgroundColor: color.withAlpha(30),
                     onDeleted: (_isCustom &&
                             color != Colors.white &&
@@ -402,13 +411,15 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
       actions: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 2.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            alignment: WrapAlignment.spaceBetween,
             children: [
               if (_isCustom)
                 ElevatedButton.icon(
                   onPressed: _addColor,
-                  icon: const Icon(Icons.add),
+                  icon: const Icon(Icons.add, size: 16),
                   label: const Text("Add Color"),
                   style: _dialogButtonStyle,
                 ),

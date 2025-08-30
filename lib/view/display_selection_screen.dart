@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/util/epd/gdeq031t10.dart';
@@ -12,6 +12,8 @@ import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/view/widget/display_card.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class DisplaySelectionScreen extends StatefulWidget {
   const DisplaySelectionScreen({super.key});
@@ -43,23 +45,23 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
         return CommonScaffold(
           index: 0,
           toolbarHeight: 85,
-          titleWidget: const Padding(
-            padding: EdgeInsets.fromLTRB(5, 16, 16, 5),
+          titleWidget: Padding(
+            padding: const EdgeInsets.fromLTRB(5, 16, 16, 5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  StringConstants.appName,
-                  style: TextStyle(
+                  appLocalizations.appName,
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
-                  StringConstants.selectDisplayType,
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  appLocalizations.selectDisplayType,
+                  style: const TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ],
             ),
@@ -131,9 +133,9 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
             borderRadius: BorderRadius.circular(8.0),
           ),
         ),
-        child: const Text(
-          StringConstants.continueButton,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        child: Text(
+          appLocalizations.continueButton,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );

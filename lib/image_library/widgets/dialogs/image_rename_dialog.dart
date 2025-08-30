@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class ImageRenameDialog extends StatelessWidget {
   final String currentName;
@@ -61,22 +65,22 @@ class ImageRenameDialog extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 16),
-        const Expanded(
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Rename Image',
-                style: TextStyle(
+                appLocalizations.renameImage,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
-                'Enter a new name for your image',
-                style: TextStyle(
+                appLocalizations.enterNewNameForImage,
+                style: const TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
                 ),
@@ -93,9 +97,9 @@ class ImageRenameDialog extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Image Name',
-            style: TextStyle(
+          Text(
+            appLocalizations.imageName,
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
               color: Colors.black87,
@@ -107,7 +111,7 @@ class ImageRenameDialog extends StatelessWidget {
             autofocus: true,
             maxLength: 50,
             decoration: InputDecoration(
-              hintText: 'Enter image name...',
+              hintText: appLocalizations.enterImageName,
               filled: true,
               fillColor: Colors.grey.shade50,
               border: OutlineInputBorder(
@@ -158,9 +162,9 @@ class ImageRenameDialog extends StatelessWidget {
               side: BorderSide(color: Colors.grey.shade300),
               foregroundColor: Colors.grey.shade700,
             ),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(
+            child: Text(
+              appLocalizations.cancel,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
@@ -180,14 +184,14 @@ class ImageRenameDialog extends StatelessWidget {
               ),
               elevation: 0,
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.check, size: 20),
-                SizedBox(width: 8),
+                const Icon(Icons.check, size: 20),
+                const SizedBox(width: 8),
                 Text(
-                  'Rename',
-                  style: TextStyle(
+                  appLocalizations.rename,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
