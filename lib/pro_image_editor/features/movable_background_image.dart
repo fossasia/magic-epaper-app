@@ -90,7 +90,6 @@ class _MovableBackgroundImageExampleState
     if (editor == null) return;
     for (final layer in layers) {
       if (layer.text != null) {
-        // Add as TextLayer
         editor.addLayer(
           TextLayer(
             textStyle: layer.textStyle,
@@ -113,7 +112,6 @@ class _MovableBackgroundImageExampleState
           blockSelectLayer: true,
         );
       } else if (layer.widget != null) {
-        // Add as WidgetLayer
         editor.addLayer(
           WidgetLayer(
             interaction: LayerInteraction(
@@ -427,12 +425,20 @@ class _MovableBackgroundImageExampleState
                   onAfterViewInit: () {
                     editorKey.currentState!.addLayer(
                       WidgetLayer(
+                        interaction: LayerInteraction(
+                          enableEdit: false,
+                          enableMove: false,
+                          enableRotate: false,
+                          enableScale: false,
+                          enableSelection: false,
+                        ),
                         offset: Offset.zero,
                         scale: _initScale,
                         widget: Image.asset(
                           ImageAssets.whiteBoard,
                           width: _canvasWidth,
                           height: _canvasHeight,
+                          fit: BoxFit.cover,
                           frameBuilder:
                               (context, child, frame, wasSynchronouslyLoaded) {
                             return AnimatedSwitcher(
@@ -466,28 +472,6 @@ class _MovableBackgroundImageExampleState
                     if (widget.initialLayers != null) {
                       addInitialLayers(widget.initialLayers!);
                     }
-                    //code testing
-                    //editorKey.currentState!.openTextEditor(initialText: "Hello World");
-                    // editorKey.currentState!.addLayer(
-                    //   TextLayer(
-                    //     align: TextAlign.left,
-                    //     offset: const Offset(0, -100),
-                    //     /// Add below
-                    //     color: Colors.black,
-                    //     background: Colors.white,
-                    //     colorMode: LayerBackgroundMode.backgroundAndColor,
-
-                    //     text: 'Hello World',
-                    //     interaction: LayerInteraction(
-                    //       enableEdit: true,
-                    //       enableMove: true,
-                    //       enableRotate: true,
-                    //       enableScale: true,
-                    //       enableSelection: true,
-                    //     ),
-                    //   ),
-                    //   blockSelectLayer: true,
-                    // );
                   },
                 ),
               ),
@@ -511,8 +495,7 @@ class _MovableBackgroundImageExampleState
                       return [
                         ReactiveWidget(
                           stream: rebuildStream,
-                          builder: (_) => editor.selectedLayerIndex >= 0 ||
-                                  editor.isSubEditorOpen
+                          builder: (_) => editor.isSubEditorOpen
                               ? const SizedBox.shrink()
                               : Positioned(
                                   bottom: 20,
@@ -551,7 +534,7 @@ class _MovableBackgroundImageExampleState
                     uiOverlayStyle: SystemUiOverlayStyle(
                       statusBarColor: Colors.black,
                     ),
-                    background: Colors.transparent,
+                    background: ui.Color.fromARGB(255, 155, 152, 152),
                   ),
                 ),
                 paintEditor: PaintEditorConfigs(
@@ -592,12 +575,9 @@ class _MovableBackgroundImageExampleState
                           ? MainAxisAlignment.spaceEvenly
                           : MainAxisAlignment.start),
                 ),
-
-                /// Crop-Rotate, Filter and Blur editors are not supported
                 cropRotateEditor: const CropRotateEditorConfigs(enabled: false),
                 filterEditor: const FilterEditorConfigs(enabled: false),
                 blurEditor: const BlurEditorConfigs(enabled: false),
-
                 stickerEditor: StickerEditorConfigs(
                   enabled: false,
                   initWidth:
@@ -605,9 +585,7 @@ class _MovableBackgroundImageExampleState
                               ? _editorSize.height
                               : _editorSize.width) /
                           _initScale,
-                  // ignore: deprecated_member_use
-                  buildStickers: (setLayer, scrollController) {
-                    // Optionally your code to pick layers
+                  builder: (setLayer, scrollController) {
                     return const SizedBox();
                   },
                 ),
