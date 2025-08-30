@@ -64,9 +64,12 @@ class _ReorderLayerSheetState extends State<ReorderLayerSheet> {
       dragStartBehavior: DragStartBehavior.down,
       itemBuilder: (context, index) {
         Layer layer = widget.layers[index];
+        bool isFirstLayer = index == 0; // Canvas layer should not be movable
         return ListTile(
           key: ValueKey(layer),
-          tileColor: Theme.of(context).cardColor,
+          tileColor: isFirstLayer
+              ? Theme.of(context).disabledColor.withOpacity(0.1)
+              : Theme.of(context).cardColor,
           title: layer.runtimeType == TextLayer
               ? Text(
                   (layer as TextLayer).text,
@@ -98,7 +101,6 @@ class _ReorderLayerSheetState extends State<ReorderLayerSheet> {
                                         item: layer.item,
                                         scale: layer.scale,
                                         enabledHitDetection: false,
-                                        freeStyleHighPerformance: false,
                                       ),
                                     ),
                             ),
@@ -115,10 +117,36 @@ class _ReorderLayerSheetState extends State<ReorderLayerSheet> {
                           : Text(
                               layer.id.toString(),
                             ),
+          subtitle: isFirstLayer
+              ? const Text(
+                  'Canvas (Fixed)',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                    fontStyle: FontStyle.italic,
+                  ),
+                )
+              : null,
+          trailing: isFirstLayer
+              ? const Icon(
+                  Icons.lock,
+                  color: Colors.grey,
+                  size: 20,
+                )
+              : const Icon(
+                  Icons.drag_handle,
+                  color: Colors.grey,
+                ),
         );
       },
       itemCount: widget.layers.length,
-      onReorder: widget.onReorder,
+      onReorder: (oldIndex, newIndex) {
+        // Prevent moving the first layer (canvas)
+        if (oldIndex == 0 || newIndex == 0) {
+          return;
+        }
+        widget.onReorder(oldIndex, newIndex);
+      },
     );
   }
 }
