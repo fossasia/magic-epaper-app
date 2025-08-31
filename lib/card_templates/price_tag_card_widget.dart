@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/card_templates/price_tag_model.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class PriceTagCardWidget extends StatelessWidget {
   final PriceTagModel data;
@@ -73,7 +76,7 @@ class PriceTagCardWidget extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  StringConstants.productImage,
+                                  appLocalizations.productImage,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 10,
@@ -111,7 +114,7 @@ class PriceTagCardWidget extends StatelessWidget {
                                 : Container(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      StringConstants.productName,
+                                      appLocalizations.productName,
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey.shade400,
@@ -133,7 +136,7 @@ class PriceTagCardWidget extends StatelessWidget {
                                     ),
                                   )
                                 : Text(
-                                    StringConstants.sizeQuantity,
+                                    appLocalizations.sizeQuantity,
                                     style: TextStyle(
                                       fontSize: 11,
                                       color: Colors.grey.shade400,
@@ -189,7 +192,7 @@ class PriceTagCardWidget extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  StringConstants.barcode,
+                                  appLocalizations.barcode,
                                   style: TextStyle(
                                     fontSize: 9,
                                     color: Colors.grey.shade500,
@@ -225,7 +228,7 @@ class PriceTagCardWidget extends StatelessWidget {
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
-                                  '${data.currency.isNotEmpty ? data.currency : StringConstants.defaultCurrency}${data.price.isNotEmpty ? ' ${data.price}' : StringConstants.defaultPrice}',
+                                  '${data.currency.isNotEmpty ? data.currency : appLocalizations.defaultCurrency}${data.price.isNotEmpty ? ' ${data.price}' : appLocalizations.defaultPrice}',
                                   style: const TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
@@ -244,7 +247,7 @@ class PriceTagCardWidget extends StatelessWidget {
                                   color: Colors.grey.shade400,
                                 ),
                                 Text(
-                                  StringConstants.price,
+                                  appLocalizations.price,
                                   style: TextStyle(
                                     fontSize: 9,
                                     color: Colors.grey.shade500,

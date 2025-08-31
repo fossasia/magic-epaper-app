@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/card_templates/template_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/card_templates/employee_id_form.dart';
 import 'package:magicepaperapp/card_templates/price_tag_form.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class CardTemplateSelectionView extends StatelessWidget {
   final int width;
@@ -21,23 +24,23 @@ class CardTemplateSelectionView extends StatelessWidget {
     return CommonScaffold(
       index: -1,
       toolbarHeight: 85,
-      titleWidget: const Padding(
-        padding: EdgeInsets.fromLTRB(5, 16, 16, 5),
+      titleWidget: Padding(
+        padding: const EdgeInsets.fromLTRB(5, 16, 16, 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              StringConstants.cardTemplates,
-              style: TextStyle(
+              appLocalizations.cardTemplates,
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
-              StringConstants.chooseTemplateSubtitle,
-              style: TextStyle(fontSize: 16, color: Colors.white),
+              appLocalizations.chooseTemplateSubtitle,
+              style: const TextStyle(fontSize: 16, color: Colors.white),
             ),
           ],
         ),
@@ -66,8 +69,8 @@ class CardTemplateSelectionView extends StatelessWidget {
   List<TemplateItem> _getTemplates() {
     return [
       TemplateItem(
-        title: StringConstants.employeeIdCardTitle,
-        description: StringConstants.employeeIdCardDescription,
+        title: appLocalizations.employeeIdCardTitle,
+        description: appLocalizations.employeeIdCardDescription,
         icon: Icons.badge_outlined,
         color: Colors.blue,
         isEnabled: true,
@@ -81,8 +84,8 @@ class CardTemplateSelectionView extends StatelessWidget {
         },
       ),
       TemplateItem(
-        title: StringConstants.shopPriceTagTitle,
-        description: StringConstants.shopPriceTagDescription,
+        title: appLocalizations.shopPriceTagTitle,
+        description: appLocalizations.shopPriceTagDescription,
         icon: Icons.local_offer_outlined,
         color: Colors.green,
         isEnabled: true,
@@ -95,16 +98,16 @@ class CardTemplateSelectionView extends StatelessWidget {
         },
       ),
       TemplateItem(
-        title: StringConstants.entryPassTagTitle,
-        description: StringConstants.entryPassTagDescription,
+        title: appLocalizations.entryPassTagTitle,
+        description: appLocalizations.entryPassTagDescription,
         icon: Icons.card_membership_outlined,
         color: Colors.orange,
         isEnabled: false,
         onTap: (context) => _showComingSoonDialog(context),
       ),
       TemplateItem(
-        title: StringConstants.eventBadgeTitle,
-        description: StringConstants.eventBadgeDescription,
+        title: appLocalizations.eventBadgeTitle,
+        description: appLocalizations.eventBadgeDescription,
         icon: Icons.person_outline,
         color: Colors.purple,
         isEnabled: false,
@@ -223,7 +226,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                               ),
                             ),
                             child: Text(
-                              StringConstants.comingSoon,
+                              appLocalizations.comingSoon,
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
@@ -252,22 +255,22 @@ class CardTemplateSelectionView extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          title: const Row(
+          title: Row(
             children: [
-              Icon(Icons.info_outline, color: colorAccent, size: 24),
-              SizedBox(width: 12),
+              const Icon(Icons.info_outline, color: colorAccent, size: 24),
+              const SizedBox(width: 12),
               Text(
-                StringConstants.comingSoon,
-                style: TextStyle(
+                appLocalizations.comingSoon,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-          content: const Text(
-            StringConstants.comingSoonMessage,
-            style: TextStyle(fontSize: 14, height: 1.4),
+          content: Text(
+            appLocalizations.comingSoonMessage,
+            style: const TextStyle(fontSize: 14, height: 1.4),
           ),
           actions: [
             TextButton(
@@ -279,7 +282,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text(StringConstants.ok),
+              child: Text(appLocalizations.ok),
             ),
           ],
         );

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
 import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/v_card_form.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCWriteCard extends StatefulWidget {
   final bool isWriting;
@@ -87,16 +92,16 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildSectionTitle(StringConstants.writeNdefRecords),
+                  _buildSectionTitle(appLocalizations.writeNdefRecords),
                   const SizedBox(height: 20),
                   _buildRecordSection(
-                    title: StringConstants.textRecord,
+                    title: appLocalizations.textRecord,
                     icon: Icons.text_fields,
                     child: Column(
                       children: [
                         _buildTextField(
                           onChanged: widget.onTextChanged,
-                          hintText: StringConstants.enterTextToWriteToNfcTag,
+                          hintText: appLocalizations.enterTextToWriteToNfcTag,
                           prefixIcon: Icons.text_format,
                           maxLines: 2,
                         ),
@@ -118,21 +123,21 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                                 )
                               : const Icon(Icons.edit, color: colorWhite),
                           label: widget.isWriting
-                              ? StringConstants.writing
-                              : StringConstants.writeText,
+                              ? appLocalizations.writing
+                              : appLocalizations.writeText,
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 20),
                   _buildRecordSection(
-                    title: StringConstants.urlRecord,
+                    title: appLocalizations.urlRecord,
                     icon: Icons.link,
                     child: Column(
                       children: [
                         _buildTextField(
                           onChanged: widget.onUrlChanged,
-                          hintText: StringConstants.enterUrl,
+                          hintText: appLocalizations.enterUrl,
                           prefixIcon: Icons.link,
                         ),
                         const SizedBox(height: 12),
@@ -153,27 +158,27 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                                 )
                               : const Icon(Icons.link, color: colorWhite),
                           label: widget.isWriting
-                              ? StringConstants.writing
-                              : StringConstants.writeUrl,
+                              ? appLocalizations.writing
+                              : appLocalizations.writeUrl,
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 20),
                   _buildRecordSection(
-                    title: StringConstants.wifiRecord,
+                    title: appLocalizations.wifiRecord,
                     icon: Icons.wifi,
                     child: Column(
                       children: [
                         _buildTextField(
                           onChanged: widget.onWifiSSIDChanged,
-                          hintText: StringConstants.wifiNetworkNameSsid,
+                          hintText: appLocalizations.wifiNetworkNameSsid,
                           prefixIcon: Icons.wifi,
                         ),
                         const SizedBox(height: 12),
                         _buildTextField(
                           onChanged: widget.onWifiPasswordChanged,
-                          hintText: StringConstants.wifiPassword,
+                          hintText: appLocalizations.wifiPassword,
                           prefixIcon: Icons.lock,
                           obscureText: true,
                         ),
@@ -195,21 +200,21 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                                 )
                               : const Icon(Icons.wifi, color: colorWhite),
                           label: widget.isWriting
-                              ? StringConstants.writing
-                              : StringConstants.writeWifi,
+                              ? appLocalizations.writing
+                              : appLocalizations.writeWifi,
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 20),
                   _buildRecordSection(
-                    title: StringConstants.writeAllRecords,
+                    title: appLocalizations.writeAllRecords,
                     icon: Icons.layers,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          StringConstants.writeAllNonEmptyFieldsDescription,
+                          appLocalizations.writeAllNonEmptyFieldsDescription,
                           style: TextStyle(
                             fontSize: 13,
                             color: Colors.grey[600],
@@ -232,8 +237,8 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                                 )
                               : const Icon(Icons.layers, color: colorWhite),
                           label: widget.isWriting
-                              ? StringConstants.writing
-                              : StringConstants.writeMultipleRecords,
+                              ? appLocalizations.writing
+                              : appLocalizations.writeMultipleRecords,
                         ),
                       ],
                     ),
