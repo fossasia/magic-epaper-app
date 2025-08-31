@@ -181,7 +181,7 @@ jobs:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
         run: |
-          cd ./iOS
+          cd ./ios
           git clone --branch=fastlane-ios --depth=1 https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} fastlane
           fastlane setupCertificates
           if [[ $? -ne 0 ]]; then
@@ -197,7 +197,7 @@ jobs:
       - name: Push app to testflight
         if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
         run: |
-          cd ./iOS
+          cd ./ios
           fastlane uploadToBeta
           if [[ $? -ne 0 ]]; then
               exit 1
