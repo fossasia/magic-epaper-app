@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
-import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
