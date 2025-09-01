@@ -22,7 +22,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      index: 5,
+      index: 6,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
