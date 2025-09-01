@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 //import 'package:share_plus/share_plus.dart';
 import 'package:magicepaperapp/util/url_util.dart';
 import 'package:magicepaperapp/view/widget/configurable_epd_dialog.dart';
@@ -8,6 +9,8 @@ import 'package:magicepaperapp/util/epd/configurable_editor.dart';
 import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:provider/provider.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class AppDrawer extends StatefulWidget {
   final int selectedIndex;
@@ -115,7 +118,7 @@ class _AppDrawerState extends State<AppDrawer> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          const AspectRatio(
+          AspectRatio(
             aspectRatio: 16 / 9,
             child: DrawerHeader(
               decoration: BoxDecoration(
@@ -123,8 +126,8 @@ class _AppDrawerState extends State<AppDrawer> {
               ),
               child: Center(
                 child: Text(
-                  StringConstants.appName,
-                  style: TextStyle(
+                  appLocalizations.appName,
+                  style: const TextStyle(
                       color: drawerHeaderTitle,
                       fontSize: 25,
                       fontWeight: FontWeight.bold),
@@ -153,13 +156,13 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTile(
             index: 3,
             icon: Icons.settings,
-            title: StringConstants.settings,
+            title: appLocalizations.settings,
             routeName: '/settings',
           ),
           _buildListTile(
             index: 4,
             icon: Icons.people,
-            title: StringConstants.aboutUs,
+            title: appLocalizations.aboutUs,
             routeName: '/aboutUs',
           ),
           _buildListTileWithTooltip(
@@ -172,11 +175,11 @@ class _AppDrawerState extends State<AppDrawer> {
             showHelp: true,
           ),
           const Divider(),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
             child: Text(
-              StringConstants.other,
-              style: TextStyle(
+              appLocalizations.other,
+              style: const TextStyle(
                 color: Colors.black54,
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
@@ -210,7 +213,7 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTile(
             index: 7,
             icon: Icons.bug_report,
-            title: StringConstants.feedbackBugReports,
+            title: appLocalizations.feedbackBugReports,
             routeName: '/feedback',
             externalLink: 'https://github.com/fossasia/magic-epaper-app/issues',
           ),

@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
 import 'package:magicepaperapp/card_templates/price_tag_card_widget.dart';
 import 'package:magicepaperapp/card_templates/price_tag_model.dart';
 import 'package:magicepaperapp/util/template_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class PriceTagForm extends StatefulWidget {
   final int width;
@@ -199,23 +202,23 @@ class _PriceTagFormState extends State<PriceTagForm> {
     return CommonScaffold(
       index: -1,
       toolbarHeight: 85,
-      titleWidget: const Padding(
-        padding: EdgeInsets.fromLTRB(5, 16, 16, 5),
+      titleWidget: Padding(
+        padding: const EdgeInsets.fromLTRB(5, 16, 16, 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              StringConstants.priceTagGenerator,
-              style: TextStyle(
+              appLocalizations.priceTagGenerator,
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
-              StringConstants.priceTagDescription,
-              style: TextStyle(fontSize: 16, color: Colors.white),
+              appLocalizations.priceTagDescription,
+              style: const TextStyle(fontSize: 16, color: Colors.white),
             ),
           ],
         ),
@@ -243,14 +246,14 @@ class _PriceTagFormState extends State<PriceTagForm> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Row(
+                        Row(
                           children: [
-                            Icon(Icons.local_offer_outlined,
+                            const Icon(Icons.local_offer_outlined,
                                 color: colorAccent, size: 20),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Text(
-                              StringConstants.productDetails,
-                              style: TextStyle(
+                              appLocalizations.productDetails,
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: colorBlack,
@@ -263,11 +266,11 @@ class _PriceTagFormState extends State<PriceTagForm> {
                         const SizedBox(height: 20),
                         _buildTextFormField(
                           controller: _productNameController,
-                          label: StringConstants.productName,
-                          hint: StringConstants.productNameHint,
+                          label: appLocalizations.productName,
+                          hint: appLocalizations.productNameHint,
                           icon: Icons.inventory_2_outlined,
                           validator: (value) => value?.isEmpty ?? true
-                              ? StringConstants.pleaseEnterProductName
+                              ? appLocalizations.pleaseEnterProductName
                               : null,
                         ),
                         const SizedBox(height: 16),
@@ -277,11 +280,11 @@ class _PriceTagFormState extends State<PriceTagForm> {
                               flex: 1,
                               child: _buildTextFormField(
                                 controller: _currencyController,
-                                label: StringConstants.currency,
-                                hint: StringConstants.currencyHint,
+                                label: appLocalizations.currency,
+                                hint: appLocalizations.currencyHint,
                                 icon: Icons.currency_exchange_outlined,
                                 validator: (value) => value?.isEmpty ?? true
-                                    ? StringConstants.required
+                                    ? appLocalizations.required
                                     : null,
                               ),
                             ),
@@ -290,12 +293,12 @@ class _PriceTagFormState extends State<PriceTagForm> {
                               flex: 2,
                               child: _buildTextFormField(
                                 controller: _priceController,
-                                label: StringConstants.price,
-                                hint: StringConstants.priceHint,
+                                label: appLocalizations.price,
+                                hint: appLocalizations.priceHint,
                                 icon: Icons.attach_money_outlined,
                                 keyboardType: TextInputType.number,
                                 validator: (value) => value?.isEmpty ?? true
-                                    ? StringConstants.pleaseEnterPrice
+                                    ? appLocalizations.pleaseEnterPrice
                                     : null,
                               ),
                             ),
@@ -304,21 +307,21 @@ class _PriceTagFormState extends State<PriceTagForm> {
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _quantityController,
-                          label: StringConstants.quantitySize,
-                          hint: StringConstants.quantitySizeHint,
+                          label: appLocalizations.quantitySize,
+                          hint: appLocalizations.quantitySizeHint,
                           icon: Icons.straighten_outlined,
                           validator: (value) => value?.isEmpty ?? true
-                              ? StringConstants.pleaseEnterQuantitySize
+                              ? appLocalizations.pleaseEnterQuantitySize
                               : null,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _barcodeController,
-                          label: StringConstants.barcodeData,
-                          hint: StringConstants.barcodeDataHint,
+                          label: appLocalizations.barcodeData,
+                          hint: appLocalizations.barcodeDataHint,
                           icon: Icons.qr_code_scanner_outlined,
                           validator: (value) => value?.isEmpty ?? true
-                              ? StringConstants.pleaseEnterBarcodeData
+                              ? appLocalizations.pleaseEnterBarcodeData
                               : null,
                         ),
                       ],
@@ -344,10 +347,10 @@ class _PriceTagFormState extends State<PriceTagForm> {
                     ),
                   ),
                   child: _isGenerating
-                      ? const Row(
+                      ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 20,
                               height: 20,
                               child: CircularProgressIndicator(
@@ -356,22 +359,22 @@ class _PriceTagFormState extends State<PriceTagForm> {
                                     AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             ),
-                            SizedBox(width: 12),
+                            const SizedBox(width: 12),
                             Text(
-                              StringConstants.generatingPriceTag,
-                              style: TextStyle(
+                              appLocalizations.generatingPriceTag,
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           ],
                         )
-                      : const Row(
+                      : Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.local_offer, size: 18),
-                            SizedBox(width: 8),
+                            const Icon(Icons.local_offer, size: 18),
+                            const SizedBox(width: 8),
                             Text(
-                              StringConstants.generatePriceTag,
-                              style: TextStyle(
+                              appLocalizations.generatePriceTag,
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -482,9 +485,9 @@ class _PriceTagFormState extends State<PriceTagForm> {
               children: [
                 const Icon(Icons.image_outlined, color: colorAccent, size: 18),
                 const SizedBox(width: 8),
-                const Text(
-                  StringConstants.productImageIn,
-                  style: TextStyle(
+                Text(
+                  appLocalizations.productImageIn,
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: colorBlack,
@@ -499,9 +502,9 @@ class _PriceTagFormState extends State<PriceTagForm> {
                       color: colorPrimary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Text(
-                      StringConstants.selected,
-                      style: TextStyle(
+                    child: Text(
+                      appLocalizations.selected,
+                      style: const TextStyle(
                         fontSize: 12,
                         color: colorPrimary,
                         fontWeight: FontWeight.w600,
@@ -586,8 +589,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
                         children: [
                           Text(
                             _productImage != null
-                                ? StringConstants.productImageSelected
-                                : StringConstants.selectProductImage,
+                                ? appLocalizations.productImageSelected
+                                : appLocalizations.selectProductImage,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -599,8 +602,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
                           const SizedBox(height: 4),
                           Text(
                             _productImage != null
-                                ? StringConstants.tapToChangeImage
-                                : StringConstants.chooseImageFromGallery,
+                                ? appLocalizations.tapToChangeImage
+                                : appLocalizations.chooseImageFromGallery,
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey.shade600,

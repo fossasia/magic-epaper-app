@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/waveshare/services/waveshare_nfc_services.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 enum _TransferState { processing, waitingForNfc, flashing, complete, error }
 
@@ -107,7 +111,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
       final result = await services.flashImage(
           _processedImageBytes!, widget.ePaperSizeEnum);
       setState(() {
-        _message = result ?? 'Transfer complete!';
+        _message = result ?? appLocalizations.transferCompleteMessage;
         _currentState = _TransferState.complete;
       });
     } on PlatformException catch (e) {
@@ -141,7 +145,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
             key: 'processing',
             icon: Icons.hourglass_empty,
             color: Colors.blue,
-            title: "Processing Image...",
+            title: appLocalizations.processingImage,
             child: const CircularProgressIndicator());
 
       case _TransferState.waitingForNfc:
@@ -162,7 +166,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
               const Text(
                 "Hold your phone near the display to begin.",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
             ],
           ),
@@ -172,7 +176,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
             key: 'flashing',
             icon: Icons.nfc,
             color: colorPrimary,
-            title: "Flashing...",
+            title: appLocalizations.flashing,
             child: Column(
               children: [
                 LinearProgressIndicator(
@@ -184,10 +188,10 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
                 const SizedBox(height: 12),
                 Text("${(_progress * 100).toInt()}%"),
                 const SizedBox(height: 20),
-                const Text(
-                  "Keep your phone still.",
+                Text(
+                  appLocalizations.keepPhoneStill,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16),
                 ),
               ],
             ));
@@ -196,15 +200,15 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
           key: 'complete',
           icon: Icons.check_circle,
           color: Colors.green,
-          title: "Success!",
+          title: appLocalizations.success,
           child: Column(
             children: [
-              Text(_message ?? "Transfer complete!",
+              Text(_message ?? appLocalizations.transferCompleteMessage,
                   textAlign: TextAlign.center),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text("Done"),
+                child: Text(appLocalizations.done),
               )
             ],
           ),
@@ -214,15 +218,15 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
           key: 'error',
           icon: Icons.error,
           color: Colors.red,
-          title: "Error",
+          title: appLocalizations.error,
           child: Column(
             children: [
-              Text(_message ?? "An unknown error occurred.",
+              Text(_message ?? appLocalizations.unknownErrorOccurred,
                   textAlign: TextAlign.center),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text("Close"),
+                child: Text(appLocalizations.close),
               )
             ],
           ),

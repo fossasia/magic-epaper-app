@@ -1,6 +1,10 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class ImageSaveDialog extends StatelessWidget {
   final Uint8List imageData;
@@ -73,22 +77,22 @@ class ImageSaveDialog extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 16),
-        const Expanded(
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Save Image',
-                style: TextStyle(
+                appLocalizations.saveImage,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
-                'Save your filtered image to the library',
-                style: TextStyle(
+                appLocalizations.saveFilteredImageToLibrary,
+                style: const TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
                 ),
@@ -124,9 +128,9 @@ class ImageSaveDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Image Name',
-          style: TextStyle(
+        Text(
+          appLocalizations.imageName,
+          style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
             color: Colors.black87,
@@ -138,7 +142,7 @@ class ImageSaveDialog extends StatelessWidget {
           autofocus: true,
           maxLength: 50,
           decoration: InputDecoration(
-            hintText: 'Enter image name...',
+            hintText: appLocalizations.enterImageName,
             filled: true,
             fillColor: Colors.grey.shade50,
             border: OutlineInputBorder(
@@ -191,7 +195,7 @@ class ImageSaveDialog extends StatelessWidget {
           ),
           const SizedBox(width: 6),
           Text(
-            'Filter: $filterName',
+            '${appLocalizations.filterApplied} $filterName',
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
@@ -218,9 +222,9 @@ class ImageSaveDialog extends StatelessWidget {
               side: BorderSide(color: Colors.grey.shade300),
               foregroundColor: Colors.grey.shade700,
             ),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(
+            child: Text(
+              appLocalizations.cancel,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
@@ -240,14 +244,14 @@ class ImageSaveDialog extends StatelessWidget {
               ),
               elevation: 0,
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.download, size: 20),
-                SizedBox(width: 8),
+                const Icon(Icons.download, size: 20),
+                const SizedBox(width: 8),
                 Text(
-                  'Save',
-                  style: TextStyle(
+                  appLocalizations.save,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),

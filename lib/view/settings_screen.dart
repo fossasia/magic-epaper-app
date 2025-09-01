@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 //import 'package:flutter/services.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/orientation_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 //TODO add Language Support and Dark mode support here
 class SettingsScreen extends StatefulWidget {
@@ -32,9 +36,9 @@ class SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Language',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              appLocalizations.language,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Container(
@@ -67,7 +71,7 @@ class SettingsScreenState extends State<SettingsScreen> {
           ],
         ),
       ),
-      title: 'Magic ePaper',
+      title: appLocalizations.appName,
     );
   }
 }

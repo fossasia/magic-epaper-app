@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/orientation_util.dart';
 import 'package:magicepaperapp/util/url_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class AboutUsScreen extends StatefulWidget {
   const AboutUsScreen({super.key});
@@ -58,7 +61,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                       ),
                       const SizedBox(height: 30),
                       Text(
-                        StringConstants.aboutUsDescription,
+                        appLocalizations.aboutUsDescription,
                         textAlign: TextAlign.justify,
                         style: GoogleFonts.sora(
                           wordSpacing: 3,
@@ -74,7 +77,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         children: [
                           Flexible(
                             child: Text(
-                              StringConstants.developedBy,
+                              appLocalizations.developedBy,
                               style: GoogleFonts.sora(
                                 fontWeight: FontWeight.w500,
                                 color: Colors.grey,
@@ -88,7 +91,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                               onTap: () => openUrl(context,
                                   'https://github.com/fossasia/magic-epaper-app/graphs/contributors'),
                               child: Text(
-                                StringConstants.fossasiaContributors,
+                                appLocalizations.fossasiaContributors,
                                 style: GoogleFonts.sora(
                                   fontWeight: FontWeight.w500,
                                   color: Colors.red,
@@ -123,7 +126,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 12.0, top: 12.0),
                       child: Text(
-                        StringConstants.contactWithUs,
+                        appLocalizations.contactWithUs,
                         style: GoogleFonts.sora(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -138,7 +141,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         fit: BoxFit.contain,
                       ),
                       title: Text(
-                        StringConstants.github,
+                        appLocalizations.github,
                         style: GoogleFonts.sora(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -146,7 +149,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         ),
                       ),
                       subtitle: Text(
-                        StringConstants.githubSubtitle,
+                        appLocalizations.githubSubtitle,
                         style: GoogleFonts.sora(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -179,7 +182,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
-                        StringConstants.license,
+                        appLocalizations.license,
                         style: GoogleFonts.sora(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
@@ -194,7 +197,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         fit: BoxFit.contain,
                       ),
                       title: Text(
-                        StringConstants.license,
+                        appLocalizations.license,
                         style: GoogleFonts.sora(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -202,7 +205,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         ),
                       ),
                       subtitle: Text(
-                        StringConstants.licenseSubtitle,
+                        appLocalizations.licenseSubtitle,
                         style: GoogleFonts.sora(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -238,7 +241,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
           ),
         ),
       ),
-      title: StringConstants.appName,
+      title: appLocalizations.appName,
     );
   }
 }

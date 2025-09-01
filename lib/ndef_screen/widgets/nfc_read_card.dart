@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCReadCard extends StatelessWidget {
   final bool isReading;
@@ -41,13 +46,13 @@ class NFCReadCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
-                Icon(Icons.nfc, color: colorAccent, size: 22),
-                SizedBox(width: 8),
+                const Icon(Icons.nfc, color: colorAccent, size: 22),
+                const SizedBox(width: 8),
                 Text(
-                  StringConstants.readNdefTags,
-                  style: TextStyle(
+                  appLocalizations.readNdefTags,
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: colorBlack,
@@ -82,8 +87,8 @@ class NFCReadCard extends StatelessWidget {
                                 )
                               : const Icon(Icons.nfc, color: colorWhite),
                           label: isReading
-                              ? StringConstants.reading
-                              : StringConstants.readNfcTag,
+                              ? appLocalizations.reading
+                              : appLocalizations.readNfcTag,
                           backgroundColor: colorAccent,
                         ),
                       ),
@@ -91,7 +96,7 @@ class NFCReadCard extends StatelessWidget {
                       _buildActionButton(
                         onPressed: onVerify,
                         icon: const Icon(Icons.search, color: colorWhite),
-                        label: StringConstants.verify,
+                        label: appLocalizations.verify,
                         backgroundColor: Colors.orange,
                         isCompact: true,
                       ),
@@ -114,8 +119,8 @@ class NFCReadCard extends StatelessWidget {
                             )
                           : const Icon(Icons.delete_forever, color: colorWhite),
                       label: isClearing
-                          ? StringConstants.clearing
-                          : StringConstants.clearNfcTag,
+                          ? appLocalizations.clearing
+                          : appLocalizations.clearNfcTag,
                       backgroundColor: Colors.red[700]!,
                     ),
                   ),
@@ -151,8 +156,8 @@ class NFCReadCard extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: SelectableText(
                     result,
-                    style: const TextStyle(
-                      fontFamily: StringConstants.monospaceFontFamily,
+                    style: TextStyle(
+                      fontFamily: appLocalizations.monospaceFontFamily,
                       fontSize: 12,
                       color: colorBlack,
                       height: 1.4,

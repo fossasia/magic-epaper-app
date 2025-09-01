@@ -8,10 +8,10 @@ import 'epd.dart';
 
 class GDEQ031T10 extends Epd {
   @override
-  get width => 320;
+  get width => 240;
 
   @override
-  get height => 240;
+  get height => 320;
 
   @override
   String get name => 'Magic ePaper 3.1" (WB)"';

@@ -79,7 +79,7 @@ runs:
         cd fastlane
         
         rm -rf metadata/android/en-US/images/phoneScreenshots/*
-        cp -r ../../screenshots/. metadata/android/en-US/images/phoneScreenshots/
+        cp -r ../../screenshots/. metadata/en-US/images/phoneScreenshots/
         
         # Force push to fastlane branch
         git checkout --orphan temporary

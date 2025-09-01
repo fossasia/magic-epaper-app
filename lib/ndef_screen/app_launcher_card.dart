@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+
 import 'package:magicepaperapp/ndef_screen/app_nfc/app_data_model.dart';
 import 'package:magicepaperapp/ndef_screen/app_nfc/app_selection_service.dart';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class AppLauncherCard extends StatefulWidget {
   final AppData? selectedApp;
@@ -58,7 +64,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading apps: $e')),
+          SnackBar(content: Text('${appLocalizations.errorLoadingApps}$e')),
         );
       }
     }
@@ -75,7 +81,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
     if (packageName.isEmpty) return;
     if (!AppLauncherService.isValidPackageName(packageName)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(StringConstants.invalidPackageName)),
+        SnackBar(content: Text(appLocalizations.invalidPackageName)),
       );
       return;
     }
@@ -113,13 +119,13 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Row(
+                Row(
                   children: [
-                    Icon(Icons.apps, color: colorAccent, size: 22),
-                    SizedBox(width: 8),
+                    const Icon(Icons.apps, color: colorAccent, size: 22),
+                    const SizedBox(width: 8),
                     Text(
-                      StringConstants.writeAppLauncherData,
-                      style: TextStyle(
+                      appLocalizations.writeAppLauncherData,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: colorBlack,
@@ -230,8 +236,8 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                       )
                     : const Icon(Icons.nfc, color: colorWhite),
                 label: widget.isWriting
-                    ? StringConstants.writing
-                    : StringConstants.writeAppLauncher,
+                    ? appLocalizations.writing
+                    : appLocalizations.writeAppLauncher,
               ),
             ],
             if (_isExpanded) ...[
@@ -262,13 +268,13 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
         children: [
           _buildTextField(
             controller: _searchController,
-            hintText: StringConstants.searchApps,
+            hintText: appLocalizations.searchApps,
             prefixIcon: Icons.search,
             suffixIcon: IconButton(
               icon: const Icon(Icons.add, color: colorAccent, size: 20),
               onPressed: () =>
                   setState(() => _showCustomInput = !_showCustomInput),
-              tooltip: StringConstants.customPackageName,
+              tooltip: appLocalizations.customPackageName,
             ),
             onChanged: _filterApps,
           ),
@@ -279,7 +285,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                 Expanded(
                   child: _buildTextField(
                     controller: _customPackageController,
-                    hintText: StringConstants.enterPackageName,
+                    hintText: appLocalizations.enterPackageName,
                     prefixIcon: Icons.code,
                   ),
                 ),
@@ -296,9 +302,9 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text(
-                    'Add',
-                    style: TextStyle(
+                  child: Text(
+                    appLocalizations.add,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
@@ -351,15 +357,15 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: mdGrey400.withValues(alpha: 0.2)),
         ),
-        child: const Center(
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.search_off, color: Colors.grey, size: 48),
-              SizedBox(height: 8),
+              const Icon(Icons.search_off, color: Colors.grey, size: 48),
+              const SizedBox(height: 8),
               Text(
-                StringConstants.noAppsFound,
-                style: TextStyle(
+                appLocalizations.noAppsFound,
+                style: const TextStyle(
                   color: colorBlack,
                   fontSize: 14,
                 ),
@@ -548,9 +554,9 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
       child: OutlinedButton.icon(
         onPressed: () => setState(() => _isExpanded = true),
         icon: const Icon(Icons.apps, color: colorAccent),
-        label: const Text(
-          StringConstants.selectApplication,
-          style: TextStyle(
+        label: Text(
+          appLocalizations.selectApplication,
+          style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
             color: colorAccent,
