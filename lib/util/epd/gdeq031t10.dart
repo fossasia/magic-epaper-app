@@ -14,7 +14,7 @@ class GDEQ031T10 extends Epd {
   get height => 240;
 
   @override
-  String get name => 'Goodisplay ePaper 3.1"';
+  String get name => 'Magic ePaper 3.1" (WB)"';
   @override
   String get modelId => 'GDEQ031T10';
   @override

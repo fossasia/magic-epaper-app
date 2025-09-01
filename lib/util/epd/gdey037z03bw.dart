@@ -14,7 +14,7 @@ class Gdey037z03BW extends Epd {
   get height => 416; // pixels
 
   @override
-  String get name => 'Goodisplay ePaper 3.7"';
+  String get name => 'Magic ePaper 3.7" (WB)';
   @override
   String get modelId => 'GDEY037T03';
   @override

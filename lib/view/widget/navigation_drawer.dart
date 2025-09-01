@@ -119,7 +119,7 @@ class _AppDrawerState extends State<AppDrawer> {
             aspectRatio: 16 / 9,
             child: DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.red,
+                color: colorAccent,
               ),
               child: Center(
                 child: Text(
@@ -135,29 +135,35 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTile(
             index: 0,
             icon: Icons.edit,
-            title: StringConstants.selectDisplay,
+            title: 'Create & Transfer Image',
             routeName: '/',
           ),
           _buildListTile(
             index: 1,
             icon: Icons.nfc,
-            title: StringConstants.ndefScreen,
-            routeName: '/ndefScreen',
+            title: 'Read NFC Tags',
+            routeName: '/nfcReadScreen',
           ),
           _buildListTile(
             index: 2,
+            icon: Icons.nfc_outlined,
+            title: 'Write NFC Tags',
+            routeName: '/nfcWriteScreen',
+          ),
+          _buildListTile(
+            index: 3,
             icon: Icons.settings,
             title: StringConstants.settings,
             routeName: '/settings',
           ),
           _buildListTile(
-            index: 3,
+            index: 4,
             icon: Icons.people,
             title: StringConstants.aboutUs,
             routeName: '/aboutUs',
           ),
           _buildListTileWithTooltip(
-            index: 4,
+            index: 5,
             icon: Icons.code,
             title: 'Arduino Export',
             subtitle: 'Export XMB files for Arduino',
@@ -178,11 +184,10 @@ class _AppDrawerState extends State<AppDrawer> {
             ),
           ),
           _buildListTile(
-            index: 5,
+            index: 6,
             icon: Icons.shopping_cart,
-            title: StringConstants.buyBadge,
+            title: 'Get Badge',
             routeName: '/buyBadge',
-            externalLink: 'https://fossasia.com/',
           ),
           //TODO after adding app to the appstore
           // _buildListTile(
@@ -203,11 +208,18 @@ class _AppDrawerState extends State<AppDrawer> {
           //       : 'https://play.google.com/store/apps/details?id=org.fossasia.badgemagic',
           // ),
           _buildListTile(
-            index: 6,
+            index: 7,
             icon: Icons.bug_report,
             title: StringConstants.feedbackBugReports,
             routeName: '/feedback',
             externalLink: 'https://github.com/fossasia/magic-epaper-app/issues',
+          ),
+          _buildListTile(
+            index: 8,
+            icon: Icons.article,
+            title: 'Privacy Policy',
+            routeName: '/feedback',
+            externalLink: 'https://badgemagic.fossasia.org/privacy/',
           ),
           //TODO after adding privacy policy
           // _buildListTile(

@@ -121,7 +121,7 @@ class DisplayCard extends StatelessWidget {
                         'Resolution:', '${display.width} × ${display.height}'),
                     _buildSpecRow('SDK:', driverText),
                   ] else ...[
-                    _buildSpecRow('Model:', display.modelId),
+                    _buildSpecRow('Display:', display.modelId),
                     _buildSpecRow(
                         'Resolution:', '${display.width} × ${display.height}'),
                     _buildSpecRow('Display Driver:', driverText),

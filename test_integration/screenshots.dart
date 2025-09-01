@@ -50,11 +50,11 @@ void main() {
         await tester.tap(GDEY037T03);
         await tester.pumpAndSettle();
       }
-      final continueButton = find.text('Continue');
-      if (continueButton.evaluate().isNotEmpty) {
-        await tester.tap(continueButton);
-        await tester.pumpAndSettle();
-      }
+      // final continueButton = find.text('Continue');
+      // if (continueButton.evaluate().isNotEmpty) {
+      //   await tester.tap(continueButton);
+      //   await tester.pumpAndSettle();
+      // }
       await tester.pump(const Duration(seconds: 1));
 
       final imageEditorButton = find.text('Select a Filter');

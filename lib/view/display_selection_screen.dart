@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/string_constants.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
@@ -33,8 +32,6 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
     Waveshare7in5(),
     Waveshare7in5HD(),
   ];
-  int selectedIndex = -1;
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ColorPaletteProvider>(
@@ -67,75 +64,41 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10.0, 14, 16.0, 16.0),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.6,
-                        mainAxisSpacing: 8,
-                        crossAxisSpacing: 8,
-                      ),
-                      itemCount: displays.length,
-                      itemBuilder: (context, index) {
-                        return DisplayCard(
-                          key: Key(displays[index].modelId),
-                          display: displays[index],
-                          isSelected: selectedIndex == index,
-                          onTap: () {
-                            setState(() => selectedIndex = index);
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  _buildContinueButton(context),
-                ],
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.6,
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 8,
+                ),
+                itemCount: displays.length,
+                itemBuilder: (context, index) {
+                  return DisplayCard(
+                    key: Key(displays[index].modelId),
+                    display: displays[index],
+                    isSelected: false,
+                    onTap: () {
+                      context.read<ColorPaletteProvider>().updateColors(
+                            displays[index].colors,
+                          );
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ImageEditor(
+                            isExportOnly: false,
+                            device: displays[index],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             ),
           ),
         );
       },
-    );
-  }
-
-  Widget _buildContinueButton(BuildContext context) {
-    final isEnabled = selectedIndex != -1;
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
-      child: ElevatedButton(
-        onPressed: isEnabled
-            ? () {
-                context.read<ColorPaletteProvider>().updateColors(
-                      displays[selectedIndex].colors,
-                    );
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ImageEditor(
-                      isExportOnly: false,
-                      device: displays[selectedIndex],
-                    ),
-                  ),
-                );
-              }
-            : null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: colorPrimary.withAlpha(isEnabled ? 255 : 125),
-          foregroundColor: Colors.white.withAlpha(isEnabled ? 255 : 178),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-        ),
-        child: const Text(
-          StringConstants.continueButton,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-      ),
     );
   }
 }
