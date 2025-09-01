@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/ndef_screen/ndef_screen.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/provider/image_loader.dart';
 import 'package:magicepaperapp/view/about_us_screen.dart';
@@ -16,10 +15,13 @@ void main() {
   /// Sets up the GetIt service locator for dependency injection.
   setupLocator();
   runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => ImageLoader()),
-      ChangeNotifierProvider(create: (_) => ImageLibraryProvider()),
-    ], child: const MyApp()),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ImageLoader()),
+        ChangeNotifierProvider(create: (_) => ImageLibraryProvider()),
+      ],
+      child: const MyApp(),
+    ),
   );
 }
 
@@ -49,7 +51,6 @@ class MyApp extends StatelessWidget {
         '/aboutUs': (context) => const AboutUsScreen(),
         '/buyBadge': (context) => const BuyBadgeScreen(),
         '/settings': (context) => const SettingsScreen(),
-        '/ndefScreen': (context) => const NDEFScreen(),
         '/nfcReadScreen': (context) => const NFCReadScreen(),
         '/nfcWriteScreen': (context) => const NFCWriteScreen(),
       },
