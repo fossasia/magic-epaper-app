@@ -170,8 +170,10 @@ class ImagePreviewDialog extends StatelessWidget {
                   onDelete();
                 },
                 icon: const Icon(Icons.delete_outline, color: Colors.red),
-                label: Text(appLocalizations.delete,
-                  style: TextStyle(fontSize: 12),),
+                label: Text(
+                  appLocalizations.delete,
+                  style: TextStyle(fontSize: 12),
+                ),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.red,
                   side: const BorderSide(color: Colors.red),
@@ -183,8 +185,10 @@ class ImagePreviewDialog extends StatelessWidget {
               child: OutlinedButton.icon(
                 onPressed: () => _showRenameDialog(context),
                 icon: const Icon(Icons.edit_outlined),
-                label: Text(appLocalizations.rename,
-                  style: TextStyle(fontSize: 12),),
+                label: Text(
+                  appLocalizations.rename,
+                  style: TextStyle(fontSize: 12),
+                ),
               ),
             ),
           ],
