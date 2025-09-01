@@ -224,6 +224,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
         ),
       ),
       body: SafeArea(
+        top: false,
+        bottom: true,
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(16.0, 14, 16.0, 16.0),
           child: Column(

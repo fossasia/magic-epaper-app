@@ -67,6 +67,8 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
             ),
           ),
           body: SafeArea(
+            top: false,
+            bottom: true,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10.0, 14, 16.0, 16.0),
               child: Column(
