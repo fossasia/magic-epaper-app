@@ -68,10 +68,8 @@ class _AppDrawerState extends State<AppDrawer> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ImageEditor(
-              isExportOnly: true,
-              device: customEpd,
-            ),
+            builder: (context) =>
+                ImageEditor(isExportOnly: true, device: customEpd),
           ),
         );
       }
@@ -121,16 +119,15 @@ class _AppDrawerState extends State<AppDrawer> {
           AspectRatio(
             aspectRatio: 16 / 9,
             child: DrawerHeader(
-              decoration: BoxDecoration(
-                color: colorAccent,
-              ),
+              decoration: BoxDecoration(color: colorAccent),
               child: Center(
                 child: Text(
                   appLocalizations.appName,
                   style: const TextStyle(
-                      color: drawerHeaderTitle,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold),
+                    color: drawerHeaderTitle,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -138,19 +135,19 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTile(
             index: 0,
             icon: Icons.edit,
-            title: 'Create & Transfer Image',
+            title: appLocalizations.createTransfer,
             routeName: '/',
           ),
           _buildListTile(
             index: 1,
             icon: Icons.nfc,
-            title: 'Read NFC Tags',
+            title: appLocalizations.readNfcTags,
             routeName: '/nfcReadScreen',
           ),
           _buildListTile(
             index: 2,
             icon: Icons.nfc_outlined,
-            title: 'Write NFC Tags',
+            title: appLocalizations.writeNfcTags,
             routeName: '/nfcWriteScreen',
           ),
           _buildListTile(
@@ -168,8 +165,8 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTileWithTooltip(
             index: 5,
             icon: Icons.code,
-            title: 'Arduino Export',
-            subtitle: 'Export XMB files for Arduino',
+            title: appLocalizations.arduinoExport,
+            subtitle: appLocalizations.exportXmbFilesForArduino,
             routeName: '/arduinoExport',
             isCustomAction: true,
             showHelp: true,
@@ -189,7 +186,7 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTile(
             index: 6,
             icon: Icons.shopping_cart,
-            title: 'Get Badge',
+            title: appLocalizations.getBadge,
             routeName: '/buyBadge',
           ),
           //TODO after adding app to the appstore
@@ -250,10 +247,7 @@ class _AppDrawerState extends State<AppDrawer> {
     return ListTile(
       dense: true,
       leading: icon != null
-          ? Icon(
-              icon,
-              color: currentIndex == index ? colorAccent : colorBlack,
-            )
+          ? Icon(icon, color: currentIndex == index ? colorAccent : colorBlack)
           : Image.asset(
               assetIcon!,
               height: 18,
@@ -306,10 +300,7 @@ class _AppDrawerState extends State<AppDrawer> {
     return ListTile(
       dense: true,
       leading: icon != null
-          ? Icon(
-              icon,
-              color: currentIndex == index ? colorAccent : colorBlack,
-            )
+          ? Icon(icon, color: currentIndex == index ? colorAccent : colorBlack)
           : Image.asset(
               assetIcon!,
               height: 18,
@@ -336,11 +327,7 @@ class _AppDrawerState extends State<AppDrawer> {
           : null,
       trailing: showHelp
           ? IconButton(
-              icon: Icon(
-                Icons.help_outline,
-                size: 18,
-                color: Colors.grey[600],
-              ),
+              icon: Icon(Icons.help_outline, size: 18, color: Colors.grey[600]),
               onPressed: _showArduinoHelpDialog,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),

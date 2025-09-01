@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/ndef_screen/app_launcher_card.dart';
 import 'package:magicepaperapp/ndef_screen/app_nfc/app_data_model.dart';
 import 'package:magicepaperapp/ndef_screen/controller/nfc_controller.dart';
@@ -9,6 +10,8 @@ import 'package:magicepaperapp/ndef_screen/widgets/nfc_status_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_write_card.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'dart:async';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCWriteScreen extends StatefulWidget {
   const NFCWriteScreen({super.key});
@@ -80,12 +83,11 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
   void _startNFCAvailabilityListener() {
     _stopNFCAvailabilityListener();
 
-    _nfcAvailabilityTimer = Timer.periodic(
-      const Duration(seconds: 2),
-      (timer) async {
-        await _checkNFCAvailabilityWithChangeDetection();
-      },
-    );
+    _nfcAvailabilityTimer = Timer.periodic(const Duration(seconds: 2), (
+      timer,
+    ) async {
+      await _checkNFCAvailabilityWithChangeDetection();
+    });
   }
 
   void _stopNFCAvailabilityListener() {
@@ -100,7 +102,9 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
 
       if (previousAvailability != _nfcController.availability) {
         _showNFCStatusChangeMessage(
-            previousAvailability, _nfcController.availability);
+          previousAvailability,
+          _nfcController.availability,
+        );
       }
     } catch (e) {
       debugPrint('Error checking NFC availability: $e');
@@ -113,15 +117,14 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
 
     switch (to) {
       case NFCAvailability.available:
-        message = 'NFC is now enabled and ready to use!';
+        message = appLocalizations.nfcIsNowEnabledAndReady;
         break;
       case NFCAvailability.disabled:
-        message =
-            'NFC has been disabled. Please enable it to continue using NFC features.';
+        message = appLocalizations.nfcHasBeenDisabled;
         isError = true;
         break;
       case NFCAvailability.not_supported:
-        message = 'NFC is not supported on this device.';
+        message = appLocalizations.nfcIsNotSupportedOnDevice;
         isError = true;
         break;
     }
@@ -162,7 +165,7 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
     if (_selectedApp != null) {
       await _nfcController.writeAppLauncherRecord(_selectedApp!.packageName);
       _handleWriteResult();
-      if (_nfcController.result.contains(StringConstants.successfully)) {
+      if (_nfcController.result.contains(appLocalizations.successfully)) {
         setState(() {
           _selectedApp = null;
         });
@@ -171,10 +174,10 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
   }
 
   void _handleWriteResult() {
-    if (_nfcController.result.contains(StringConstants.error)) {
-      _showSnackBar(StringConstants.writeOperationFailed, isError: true);
-    } else if (_nfcController.result.contains(StringConstants.successfully)) {
-      _showSnackBar(StringConstants.dataWrittenSuccessfully);
+    if (_nfcController.result.contains(appLocalizations.error)) {
+      _showSnackBar(appLocalizations.writeOperationFailed, isError: true);
+    } else if (_nfcController.result.contains(appLocalizations.successfully)) {
+      _showSnackBar(appLocalizations.dataWrittenSuccessfully);
       setState(() {
         _textValue = '';
         _urlValue = '';
@@ -200,21 +203,18 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      title: 'Write NFC Tags',
+      title: appLocalizations.writeNfcTags,
       index: 2,
       actions: [
         IconButton(
-          icon: const Icon(
-            Icons.clear_all,
-            color: Colors.white,
-          ),
+          icon: const Icon(Icons.clear_all, color: Colors.white),
           onPressed: _nfcController.result.isNotEmpty
               ? () {
                   _nfcController.clearResult();
-                  _showSnackBar('Results cleared');
+                  _showSnackBar(appLocalizations.resultsCleared);
                 }
               : null,
-          tooltip: 'Clear Results',
+          tooltip: appLocalizations.clearResults,
         ),
       ],
       body: SingleChildScrollView(
@@ -251,7 +251,9 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
                 },
                 onWriteWifi: () async {
                   await _nfcController.writeWifiRecord(
-                      _wifiSSIDValue, _wifiPasswordValue);
+                    _wifiSSIDValue,
+                    _wifiPasswordValue,
+                  );
                   _handleWriteResult();
                 },
                 onWriteVCard: () async {
@@ -310,9 +312,9 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
                         ),
                       ),
                       const SizedBox(height: 24),
-                      const Text(
-                        StringConstants.nfcNotAvailable,
-                        style: TextStyle(
+                      Text(
+                        appLocalizations.nfcNotAvailable,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
@@ -321,7 +323,7 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        StringConstants.enableNfcMessage,
+                        appLocalizations.enableNfcMessage,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,

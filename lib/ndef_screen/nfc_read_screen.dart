@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magicepaperapp/constants/string_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/ndef_screen/controller/nfc_controller.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_status_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_read_card.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'dart:async';
+
+AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCReadScreen extends StatefulWidget {
   const NFCReadScreen({super.key});
@@ -57,12 +60,11 @@ class _NFCReadScreenState extends State<NFCReadScreen>
   void _startNFCAvailabilityListener() {
     _stopNFCAvailabilityListener();
 
-    _nfcAvailabilityTimer = Timer.periodic(
-      const Duration(seconds: 2),
-      (timer) async {
-        await _checkNFCAvailabilityWithChangeDetection();
-      },
-    );
+    _nfcAvailabilityTimer = Timer.periodic(const Duration(seconds: 2), (
+      timer,
+    ) async {
+      await _checkNFCAvailabilityWithChangeDetection();
+    });
   }
 
   void _stopNFCAvailabilityListener() {
@@ -77,7 +79,9 @@ class _NFCReadScreenState extends State<NFCReadScreen>
 
       if (previousAvailability != _nfcController.availability) {
         _showNFCStatusChangeMessage(
-            previousAvailability, _nfcController.availability);
+          previousAvailability,
+          _nfcController.availability,
+        );
       }
     } catch (e) {
       debugPrint('Error checking NFC availability: $e');
@@ -90,15 +94,14 @@ class _NFCReadScreenState extends State<NFCReadScreen>
 
     switch (to) {
       case NFCAvailability.available:
-        message = 'NFC is now enabled and ready to use!';
+        message = appLocalizations.nfcIsNowEnabledAndReady;
         break;
       case NFCAvailability.disabled:
-        message =
-            'NFC has been disabled. Please enable it to continue using NFC features.';
+        message = appLocalizations.nfcHasBeenDisabled;
         isError = true;
         break;
       case NFCAvailability.not_supported:
-        message = 'NFC is not supported on this device.';
+        message = appLocalizations.nfcIsNotSupportedOnDevice;
         isError = true;
         break;
     }
@@ -139,12 +142,12 @@ class _NFCReadScreenState extends State<NFCReadScreen>
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text(StringConstants.cancel),
+                  child: Text(appLocalizations.cancel),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   style: TextButton.styleFrom(foregroundColor: Colors.red),
-                  child: const Text(StringConstants.confirm),
+                  child: Text(appLocalizations.confirm),
                 ),
               ],
             );
@@ -156,21 +159,18 @@ class _NFCReadScreenState extends State<NFCReadScreen>
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      title: 'Read NFC Tags',
+      title: appLocalizations.readNfcTags,
       index: 1,
       actions: [
         IconButton(
-          icon: const Icon(
-            Icons.clear_all,
-            color: Colors.white,
-          ),
+          icon: const Icon(Icons.clear_all, color: Colors.white),
           onPressed: _nfcController.result.isNotEmpty
               ? () {
                   _nfcController.clearResult();
-                  _showSnackBar('Results cleared');
+                  _showSnackBar(appLocalizations.resultsCleared);
                 }
               : null,
-          tooltip: 'Clear Results',
+          tooltip: appLocalizations.clearResults,
         ),
       ],
       body: SingleChildScrollView(
@@ -188,34 +188,42 @@ class _NFCReadScreenState extends State<NFCReadScreen>
                 result: _nfcController.result,
                 onRead: () async {
                   await _nfcController.readNDEF();
-                  if (_nfcController.result.contains(StringConstants.error)) {
-                    _showSnackBar(StringConstants.readOperationFailed,
-                        isError: true);
+                  if (_nfcController.result.contains(appLocalizations.error)) {
+                    _showSnackBar(
+                      appLocalizations.readOperationFailed,
+                      isError: true,
+                    );
                   } else {
-                    _showSnackBar(StringConstants.tagReadSuccessfully);
+                    _showSnackBar(appLocalizations.tagReadSuccessfully);
                   }
                 },
                 onVerify: () async {
                   await _nfcController.verifyWrite();
-                  if (_nfcController.result.contains(StringConstants.error)) {
-                    _showSnackBar(StringConstants.verificationFailed,
-                        isError: true);
+                  if (_nfcController.result.contains(appLocalizations.error)) {
+                    _showSnackBar(
+                      appLocalizations.verificationFailed,
+                      isError: true,
+                    );
                   } else {
-                    _showSnackBar(StringConstants.tagVerifiedSuccessfully);
+                    _showSnackBar(appLocalizations.tagVerifiedSuccessfully);
                   }
                 },
                 onClear: () async {
                   bool confirmed = await _showConfirmDialog(
-                    StringConstants.clearNfcTag,
-                    StringConstants.clearNfcTagConfirmation,
+                    appLocalizations.clearNfcTag,
+                    appLocalizations.clearNfcTagConfirmation,
                   );
                   if (confirmed) {
                     await _nfcController.clearNDEF();
-                    if (_nfcController.result.contains(StringConstants.error)) {
-                      _showSnackBar(StringConstants.clearOperationFailed,
-                          isError: true);
+                    if (_nfcController.result.contains(
+                      appLocalizations.error,
+                    )) {
+                      _showSnackBar(
+                        appLocalizations.clearOperationFailed,
+                        isError: true,
+                      );
                     } else {
-                      _showSnackBar(StringConstants.tagClearedSuccessfully);
+                      _showSnackBar(appLocalizations.tagClearedSuccessfully);
                     }
                   }
                 },
@@ -253,9 +261,9 @@ class _NFCReadScreenState extends State<NFCReadScreen>
                         ),
                       ),
                       const SizedBox(height: 24),
-                      const Text(
-                        StringConstants.nfcNotAvailable,
-                        style: TextStyle(
+                      Text(
+                        appLocalizations.nfcNotAvailable,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
@@ -264,7 +272,7 @@ class _NFCReadScreenState extends State<NFCReadScreen>
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        StringConstants.enableNfcMessage,
+                        appLocalizations.enableNfcMessage,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,

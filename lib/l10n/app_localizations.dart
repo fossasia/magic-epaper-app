@@ -75,7 +75,7 @@ import 'app_localizations_zh.dart';
 /// property.
 abstract class AppLocalizations {
   AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -98,11 +98,11 @@ abstract class AppLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
@@ -123,7 +123,7 @@ abstract class AppLocalizations {
     Locale('vi'),
     Locale('zh'),
     Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
-    Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant')
+    Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
   ];
 
   /// No description provided for @appName.
@@ -180,11 +180,11 @@ abstract class AppLocalizations {
   /// **'Check Apache License 2.0 terms used on Magic ePaper.'**
   String get licenseSubtitle;
 
-  /// No description provided for @selectDisplay.
+  /// No description provided for @createTransfer.
   ///
   /// In en, this message translates to:
-  /// **'Select Display'**
-  String get selectDisplay;
+  /// **'Create & Transfer Images'**
+  String get createTransfer;
 
   /// No description provided for @ndefScreen.
   ///
@@ -216,11 +216,11 @@ abstract class AppLocalizations {
   /// **'Other'**
   String get other;
 
-  /// No description provided for @buyBadge.
+  /// No description provided for @getBadge.
   ///
   /// In en, this message translates to:
-  /// **'Buy Badge'**
-  String get buyBadge;
+  /// **'Get Badge'**
+  String get getBadge;
 
   /// No description provided for @feedbackBugReports.
   ///
@@ -2058,6 +2058,66 @@ abstract class AppLocalizations {
   /// **'Add'**
   String get add;
 
+  /// No description provided for @readNfcTags.
+  ///
+  /// In en, this message translates to:
+  /// **'Read NFC Tags'**
+  String get readNfcTags;
+
+  /// No description provided for @writeNfcTags.
+  ///
+  /// In en, this message translates to:
+  /// **'Write NFC Tags'**
+  String get writeNfcTags;
+
+  /// No description provided for @nfcIsReadyToUse.
+  ///
+  /// In en, this message translates to:
+  /// **'NFC is ready to use. You can read and write NFC tags.'**
+  String get nfcIsReadyToUse;
+
+  /// No description provided for @deviceDoesNotSupportNfc.
+  ///
+  /// In en, this message translates to:
+  /// **'This device does not support NFC functionality.'**
+  String get deviceDoesNotSupportNfc;
+
+  /// No description provided for @pleaseEnableNfcInSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enable NFC in your device settings to continue.'**
+  String get pleaseEnableNfcInSettings;
+
+  /// No description provided for @nfcIsNowEnabledAndReady.
+  ///
+  /// In en, this message translates to:
+  /// **'NFC is now enabled and ready to use!'**
+  String get nfcIsNowEnabledAndReady;
+
+  /// No description provided for @nfcHasBeenDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'NFC has been disabled. Please enable it to continue using NFC features.'**
+  String get nfcHasBeenDisabled;
+
+  /// No description provided for @nfcIsNotSupportedOnDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'NFC is not supported on this device.'**
+  String get nfcIsNotSupportedOnDevice;
+
+  /// No description provided for @arduinoExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Arduino Export'**
+  String get arduinoExport;
+
+  /// No description provided for @exportXmbFilesForArduino.
+  ///
+  /// In en, this message translates to:
+  /// **'Export XMB files for Arduino'**
+  String get exportXmbFilesForArduino;
+
   /// No description provided for @cardTemplates.
   ///
   /// In en, this message translates to:
@@ -2544,21 +2604,21 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) => <String>[
-        'de',
-        'en',
-        'es',
-        'fr',
-        'he',
-        'hi',
-        'id',
-        'ja',
-        'nb',
-        'pt',
-        'ru',
-        'uk',
-        'vi',
-        'zh'
-      ].contains(locale.languageCode);
+    'de',
+    'en',
+    'es',
+    'fr',
+    'he',
+    'hi',
+    'id',
+    'ja',
+    'nb',
+    'pt',
+    'ru',
+    'uk',
+    'vi',
+    'zh',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -2632,8 +2692,9 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
 }

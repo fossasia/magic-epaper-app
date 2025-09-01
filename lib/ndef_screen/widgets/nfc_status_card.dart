@@ -46,8 +46,11 @@ class NFCStatusCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.nfc_outlined,
-                        color: colorAccent, size: 22),
+                    const Icon(
+                      Icons.nfc_outlined,
+                      color: colorAccent,
+                      size: 22,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       appLocalizations.nfcStatus,
@@ -73,8 +76,11 @@ class NFCStatusCard extends StatelessWidget {
                     ],
                   ),
                   child: IconButton(
-                    icon:
-                        const Icon(Icons.refresh, color: colorAccent, size: 20),
+                    icon: const Icon(
+                      Icons.refresh,
+                      color: colorAccent,
+                      size: 20,
+                    ),
                     onPressed: onRefresh,
                     tooltip: appLocalizations.refreshNfcStatus,
                     padding: const EdgeInsets.all(8),
@@ -94,9 +100,9 @@ class NFCStatusCard extends StatelessWidget {
                 color: _getStatusBackgroundColor(),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color:
-                      NFCAvailabilityService.getAvailabilityColor(availability)
-                          .withValues(alpha: 0.3),
+                  color: NFCAvailabilityService.getAvailabilityColor(
+                    availability,
+                  ).withValues(alpha: 0.3),
                   width: 1.5,
                 ),
               ),
@@ -106,14 +112,15 @@ class NFCStatusCard extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: NFCAvailabilityService.getAvailabilityColor(
-                              availability)
-                          .withValues(alpha: 0.1),
+                        availability,
+                      ).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
                       NFCAvailabilityService.getAvailabilityIcon(availability),
                       color: NFCAvailabilityService.getAvailabilityColor(
-                          availability),
+                        availability,
+                      ),
                       size: 24,
                     ),
                   ),
@@ -124,12 +131,14 @@ class NFCStatusCard extends StatelessWidget {
                       children: [
                         Text(
                           NFCAvailabilityService.getAvailabilityString(
-                              availability),
+                            availability,
+                          ),
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 16,
                             color: NFCAvailabilityService.getAvailabilityColor(
-                                availability),
+                              availability,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -167,11 +176,11 @@ class NFCStatusCard extends StatelessWidget {
   String _getStatusDescription() {
     switch (availability) {
       case NFCAvailability.available:
-        return 'NFC is ready to use. You can read and write NFC tags.';
+        return appLocalizations.nfcIsReadyToUse;
       case NFCAvailability.not_supported:
-        return 'This device does not support NFC functionality.';
+        return appLocalizations.deviceDoesNotSupportNfc;
       case NFCAvailability.disabled:
-        return 'Please enable NFC in your device settings to continue.';
+        return appLocalizations.pleaseEnableNfcInSettings;
     }
   }
 }
