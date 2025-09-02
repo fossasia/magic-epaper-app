@@ -26,7 +26,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      index: 3,
+      index: 5,
       body: SafeArea(
         top: false,
         bottom: true,

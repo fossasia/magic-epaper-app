@@ -39,7 +39,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Check Apache License 2.0 terms used on Magic ePaper.';
 
   @override
-  String get selectDisplay => 'Select Display';
+  String get createTransfer => 'Create & Transfer Images';
 
   @override
   String get ndefScreen => 'Ndef';
@@ -57,7 +57,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get other => 'Other';
 
   @override
-  String get buyBadge => 'Buy Badge';
+  String get getBadge => 'Get Badge';
 
   @override
   String get feedbackBugReports => 'Feedback/Bug Reports';
@@ -999,6 +999,41 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get add => 'Add';
+
+  @override
+  String get readNfcTags => 'Read NFC Tags';
+
+  @override
+  String get writeNfcTags => 'Write NFC Tags';
+
+  @override
+  String get nfcIsReadyToUse =>
+      'NFC is ready to use. You can read and write NFC tags.';
+
+  @override
+  String get deviceDoesNotSupportNfc =>
+      'This device does not support NFC functionality.';
+
+  @override
+  String get pleaseEnableNfcInSettings =>
+      'Please enable NFC in your device settings to continue.';
+
+  @override
+  String get nfcIsNowEnabledAndReady => 'NFC is now enabled and ready to use!';
+
+  @override
+  String get nfcHasBeenDisabled =>
+      'NFC has been disabled. Please enable it to continue using NFC features.';
+
+  @override
+  String get nfcIsNotSupportedOnDevice =>
+      'NFC is not supported on this device.';
+
+  @override
+  String get arduinoExport => 'Arduino Export';
+
+  @override
+  String get exportXmbFilesForArduino => 'Export XMB files for Arduino';
 
   @override
   String get cardTemplates => 'Card Templates';

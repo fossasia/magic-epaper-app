@@ -3,8 +3,8 @@ class StringConstants {
 
   static const String aboutUsDescription =
       'Magic ePaper is an app designed to control and update ePaper displays.'
-      'The goal is to provide tools for customizing and transferring images, text, and patterns to ePaper screens using NFC.'
-      'Data transfer from the smartphone to the ePaper hardware is done wirelessly via NFC. The project is built on top of custom firmware and display drivers for seamless communication and efficient image rendering.';
+      ' The goal is to provide tools for customizing and transferring images, text, and patterns to ePaper screens using NFC.'
+      ' Data transfer from the smartphone to the ePaper hardware is done wirelessly via NFC. The project is built on top of custom firmware and display drivers for seamless communication and efficient image rendering.';
   static const String developedBy = 'Developed by';
   static const String fossasiaContributors = 'FOSSASIA contributors';
   static const String contactWithUs = 'Contact With Us';

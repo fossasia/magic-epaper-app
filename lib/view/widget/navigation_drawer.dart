@@ -68,10 +68,8 @@ class _AppDrawerState extends State<AppDrawer> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ImageEditor(
-              isExportOnly: true,
-              device: customEpd,
-            ),
+            builder: (context) =>
+                ImageEditor(isExportOnly: true, device: customEpd),
           ),
         );
       }
@@ -121,16 +119,15 @@ class _AppDrawerState extends State<AppDrawer> {
           AspectRatio(
             aspectRatio: 16 / 9,
             child: DrawerHeader(
-              decoration: const BoxDecoration(
-                color: Colors.red,
-              ),
+              decoration: BoxDecoration(color: colorAccent),
               child: Center(
                 child: Text(
                   appLocalizations.appName,
                   style: const TextStyle(
-                      color: drawerHeaderTitle,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold),
+                    color: drawerHeaderTitle,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -138,35 +135,40 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTile(
             index: 0,
             icon: Icons.edit,
-            title: appLocalizations.selectDisplay,
+            title: appLocalizations.createTransfer,
             routeName: '/',
           ),
           _buildListTile(
             index: 1,
             icon: Icons.nfc,
-            title: appLocalizations.ndefScreen,
-            routeName: '/ndefScreen',
+            title: appLocalizations.readNfcTags,
+            routeName: '/nfcReadScreen',
           ),
           _buildListTile(
             index: 2,
+            icon: Icons.nfc_outlined,
+            title: appLocalizations.writeNfcTags,
+            routeName: '/nfcWriteScreen',
+          ),
+          _buildListTileWithTooltip(
+            index: 3,
+            icon: Icons.code,
+            title: appLocalizations.arduinoExport,
+            routeName: '/arduinoExport',
+            isCustomAction: true,
+            showHelp: true,
+          ),
+          _buildListTile(
+            index: 4,
             icon: Icons.settings,
             title: appLocalizations.settings,
             routeName: '/settings',
           ),
           _buildListTile(
-            index: 3,
+            index: 5,
             icon: Icons.people,
             title: appLocalizations.aboutUs,
             routeName: '/aboutUs',
-          ),
-          _buildListTileWithTooltip(
-            index: 4,
-            icon: Icons.code,
-            title: 'Arduino Export',
-            subtitle: 'Export XMB files for Arduino',
-            routeName: '/arduinoExport',
-            isCustomAction: true,
-            showHelp: true,
           ),
           const Divider(),
           Padding(
@@ -181,11 +183,10 @@ class _AppDrawerState extends State<AppDrawer> {
             ),
           ),
           _buildListTile(
-            index: 5,
+            index: 6,
             icon: Icons.shopping_cart,
-            title: appLocalizations.buyBadge,
+            title: appLocalizations.getBadge,
             routeName: '/buyBadge',
-            externalLink: 'https://fossasia.com/',
           ),
           //TODO after adding app to the appstore
           // _buildListTile(
@@ -206,11 +207,18 @@ class _AppDrawerState extends State<AppDrawer> {
           //       : 'https://play.google.com/store/apps/details?id=org.fossasia.badgemagic',
           // ),
           _buildListTile(
-            index: 6,
+            index: 7,
             icon: Icons.bug_report,
             title: appLocalizations.feedbackBugReports,
             routeName: '/feedback',
             externalLink: 'https://github.com/fossasia/magic-epaper-app/issues',
+          ),
+          _buildListTile(
+            index: 8,
+            icon: Icons.article,
+            title: 'Privacy Policy',
+            routeName: '/feedback',
+            externalLink: 'https://badgemagic.fossasia.org/privacy/',
           ),
           //TODO after adding privacy policy
           // _buildListTile(
@@ -238,10 +246,7 @@ class _AppDrawerState extends State<AppDrawer> {
     return ListTile(
       dense: true,
       leading: icon != null
-          ? Icon(
-              icon,
-              color: currentIndex == index ? colorAccent : colorBlack,
-            )
+          ? Icon(icon, color: currentIndex == index ? colorAccent : colorBlack)
           : Image.asset(
               assetIcon!,
               height: 18,
@@ -294,10 +299,7 @@ class _AppDrawerState extends State<AppDrawer> {
     return ListTile(
       dense: true,
       leading: icon != null
-          ? Icon(
-              icon,
-              color: currentIndex == index ? colorAccent : colorBlack,
-            )
+          ? Icon(icon, color: currentIndex == index ? colorAccent : colorBlack)
           : Image.asset(
               assetIcon!,
               height: 18,
@@ -324,11 +326,7 @@ class _AppDrawerState extends State<AppDrawer> {
           : null,
       trailing: showHelp
           ? IconButton(
-              icon: Icon(
-                Icons.help_outline,
-                size: 18,
-                color: Colors.grey[600],
-              ),
+              icon: Icon(Icons.help_outline, size: 18, color: Colors.grey[600]),
               onPressed: _showArduinoHelpDialog,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),

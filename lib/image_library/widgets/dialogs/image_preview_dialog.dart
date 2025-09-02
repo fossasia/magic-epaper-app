@@ -88,7 +88,7 @@ class ImagePreviewDialog extends StatelessWidget {
 
   Widget _buildContent(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -170,19 +170,25 @@ class ImagePreviewDialog extends StatelessWidget {
                   onDelete();
                 },
                 icon: const Icon(Icons.delete_outline, color: Colors.red),
-                label: Text(appLocalizations.delete),
+                label: Text(
+                  appLocalizations.delete,
+                  style: TextStyle(fontSize: 12),
+                ),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.red,
                   side: const BorderSide(color: Colors.red),
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 4),
             Expanded(
               child: OutlinedButton.icon(
                 onPressed: () => _showRenameDialog(context),
                 icon: const Icon(Icons.edit_outlined),
-                label: Text(appLocalizations.rename),
+                label: Text(
+                  appLocalizations.rename,
+                  style: TextStyle(fontSize: 12),
+                ),
               ),
             ),
           ],

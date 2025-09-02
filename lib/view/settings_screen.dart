@@ -30,7 +30,7 @@ class SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      index: 2,
+      index: 4,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
