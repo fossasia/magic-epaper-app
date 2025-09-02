@@ -46,6 +46,8 @@ class CardTemplateSelectionView extends StatelessWidget {
         ),
       ),
       body: SafeArea(
+        top: false,
+        bottom: true,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 24, 16.0, 16.0),
           child: GridView.builder(
