@@ -150,26 +150,25 @@ class _AppDrawerState extends State<AppDrawer> {
             title: appLocalizations.writeNfcTags,
             routeName: '/nfcWriteScreen',
           ),
-          _buildListTile(
+          _buildListTileWithTooltip(
             index: 3,
+            icon: Icons.code,
+            title: appLocalizations.arduinoExport,
+            routeName: '/arduinoExport',
+            isCustomAction: true,
+            showHelp: true,
+          ),
+          _buildListTile(
+            index: 4,
             icon: Icons.settings,
             title: appLocalizations.settings,
             routeName: '/settings',
           ),
           _buildListTile(
-            index: 4,
+            index: 5,
             icon: Icons.people,
             title: appLocalizations.aboutUs,
             routeName: '/aboutUs',
-          ),
-          _buildListTileWithTooltip(
-            index: 5,
-            icon: Icons.code,
-            title: appLocalizations.arduinoExport,
-            subtitle: appLocalizations.exportXmbFilesForArduino,
-            routeName: '/arduinoExport',
-            isCustomAction: true,
-            showHelp: true,
           ),
           const Divider(),
           Padding(
