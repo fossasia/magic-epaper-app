@@ -24,7 +24,7 @@ dependencies:
   flutter_svg_provider: ^1.0.7
   matrix2d: ^1.0.4
   image: ^4.3.0
-  image_picker: ^1.1.2
+  image_picker: ^1.2.0
   image_cropper: ^9.0.0
   app_settings: ^6.1.1
   fluttertoast: ^8.2.12
