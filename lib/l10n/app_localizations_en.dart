@@ -510,6 +510,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exportXbm => 'Export XBM';
 
   @override
+  String get exportingXbm => 'Exporting XBM files...';
+
+  @override
   String get fullRefresh => 'Full Refresh';
 
   @override

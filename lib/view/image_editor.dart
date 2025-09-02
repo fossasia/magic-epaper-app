@@ -171,9 +171,9 @@ class _ImageEditorState extends State<ImageEditor> {
 
     final messenger = ScaffoldMessenger.of(context);
     messenger.showSnackBar(
-      const SnackBar(
-        duration: Duration(seconds: 2),
-        content: Text('Exporting XBM files...'),
+      SnackBar(
+        duration: const Duration(seconds: 2),
+        content: Text(appLocalizations.exportingXbm),
       ),
     );
 
