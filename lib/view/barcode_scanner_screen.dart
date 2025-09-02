@@ -380,77 +380,81 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
         ),
         backgroundColor: colorAccent,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  controller: _textController,
-                  decoration: InputDecoration(
-                    labelText: appLocalizations.barcodeData,
-                    hintText: appLocalizations.barcodeDataHint,
-                    prefixIcon: const Icon(Icons.qr_code_2_rounded),
-                    border: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red, width: 2),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, left: 4.0),
-                  child: Text(
-                    '${appLocalizations.characters}: ${_barcodeData.length}',
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
+      body: SafeArea(
+        top: false,
+        bottom: true,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    controller: _textController,
+                    decoration: InputDecoration(
+                      labelText: appLocalizations.barcodeData,
+                      hintText: appLocalizations.barcodeDataHint,
+                      prefixIcon: const Icon(Icons.qr_code_2_rounded),
+                      border: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red, width: 2),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: _startScanning,
-                icon: const Icon(Icons.qr_code_scanner),
-                label: Text(appLocalizations.scanBarcode),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorAccent,
-                  foregroundColor: colorWhite,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0, left: 4.0),
+                    child: Text(
+                      '${appLocalizations.characters}: ${_barcodeData.length}',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 40),
-            if (_barcodeData.isNotEmpty) _buildFormatSelector(),
-            RepaintBoundary(
-              key: _barcodeKey,
-              child: Center(child: _buildBarcodePreview()),
-            ),
-            const SizedBox(height: 20),
-            if (_barcodeData.isNotEmpty && !_hasError)
+              const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _generateBarcodeImage,
+                child: ElevatedButton.icon(
+                  onPressed: _startScanning,
+                  icon: const Icon(Icons.qr_code_scanner),
+                  label: Text(appLocalizations.scanBarcode),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: colorAccent,
                     foregroundColor: colorWhite,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
-                  child: Text(appLocalizations.generateImage),
                 ),
               ),
-          ],
+              const SizedBox(height: 40),
+              if (_barcodeData.isNotEmpty) _buildFormatSelector(),
+              RepaintBoundary(
+                key: _barcodeKey,
+                child: Center(child: _buildBarcodePreview()),
+              ),
+              const SizedBox(height: 20),
+              if (_barcodeData.isNotEmpty && !_hasError)
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _generateBarcodeImage,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: colorWhite,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: Text(appLocalizations.generateImage),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
