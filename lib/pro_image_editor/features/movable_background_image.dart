@@ -68,7 +68,6 @@ class _MovableBackgroundImageExampleState
   final TextEditingController _barcodeController = TextEditingController();
   Barcode _selectedBarcode = Barcode.qrCode();
   String _barcodeData = '';
-  bool _hasBarcodeError = false;
 
   @override
   void initState() {
@@ -83,11 +82,9 @@ class _MovableBackgroundImageExampleState
     preCacheImage(assetPath: ImageAssets.yellowBoard);
     _bottomBarScrollCtrl = ScrollController();
 
-    // listeners for barcode controller
     _barcodeController.addListener(() {
       setState(() {
         _barcodeData = _barcodeController.text;
-        _hasBarcodeError = false;
       });
     });
   }
@@ -473,7 +470,6 @@ class _MovableBackgroundImageExampleState
                     onChanged: (value) {
                       setModalState(() {
                         _barcodeData = value;
-                        _hasBarcodeError = false;
                       });
                     },
                   ),
@@ -497,7 +493,9 @@ class _MovableBackgroundImageExampleState
                     ),
                   ),
                   const SizedBox(height: 20),
-                  if (_barcodeData.isNotEmpty && !_hasBarcodeError)
+                  if (_barcodeData.isNotEmpty &&
+                      _validateBarcodeData(_barcodeData, _selectedBarcode) ==
+                          null)
                     ElevatedButton(
                       onPressed: () {
                         _addBarcodeLayer();
@@ -563,7 +561,6 @@ class _MovableBackgroundImageExampleState
               (barcode) => barcode.name == newBarcodeName,
               orElse: () => Barcode.qrCode(),
             );
-            _hasBarcodeError = false;
           });
         }
       },
@@ -589,66 +586,58 @@ class _MovableBackgroundImageExampleState
       );
     }
 
-    return BarcodeWidget(
-      errorBuilder: (context, error) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          setState(() {
-            _hasBarcodeError = true;
-          });
-        });
-
-        final validationError =
-            _validateBarcodeData(_barcodeData, _selectedBarcode);
-        if (validationError != null) {
-          error = validationError;
-        }
-
-        return Container(
-          width: double.infinity,
-          height: 200,
-          decoration: BoxDecoration(
-            color: Colors.red[50],
-            border: Border.all(color: Colors.red[400]!, width: 2),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  color: Colors.red[600],
-                  size: 45,
+    // Check for validation errors before trying to build the barcode
+    final validationError =
+        _validateBarcodeData(_barcodeData, _selectedBarcode);
+    if (validationError != null) {
+      return Container(
+        width: double.infinity,
+        height: 200,
+        decoration: BoxDecoration(
+          color: Colors.red[50],
+          border: Border.all(color: Colors.red[400]!, width: 2),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                color: Colors.red[600],
+                size: 45,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Invalid Barcode',
+                style: TextStyle(
+                  color: Colors.red[700],
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Invalid Barcode',
-                  style: TextStyle(
-                    color: Colors.red[700],
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Text(
-                      error.toString(),
-                      style: TextStyle(
-                        color: Colors.red[600],
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 4),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Text(
+                    validationError,
+                    style: TextStyle(
+                      color: Colors.red[600],
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      );
+    }
+
+    return BarcodeWidget(
       style: const TextStyle(color: Colors.black),
       padding: const EdgeInsets.all(10),
       backgroundColor: Colors.white,
@@ -697,7 +686,6 @@ class _MovableBackgroundImageExampleState
 
     _barcodeController.clear();
     _barcodeData = '';
-    _hasBarcodeError = false;
   }
 
   Future<Uint8List> _loadAndResizeWhiteBoard() async {
