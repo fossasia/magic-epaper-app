@@ -83,7 +83,7 @@ class _MovableBackgroundImageExampleState
     preCacheImage(assetPath: ImageAssets.yellowBoard);
     _bottomBarScrollCtrl = ScrollController();
 
-    // Add listener for barcode controller
+    // listeners for barcode controller
     _barcodeController.addListener(() {
       setState(() {
         _barcodeData = _barcodeController.text;
