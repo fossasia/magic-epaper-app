@@ -18,7 +18,7 @@ class AppLauncherService {
     AppData(appName: 'Settings', packageName: 'com.android.settings'),
   ];
 
-  static Future<List<AppData>> getCommonApps() async {
+  static List<AppData> getCommonApps() {
     final apps = List<AppData>.from(_commonApps);
     apps.sort((a, b) => a.appName.compareTo(b.appName));
     return apps;

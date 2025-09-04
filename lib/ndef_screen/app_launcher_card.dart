@@ -51,10 +51,10 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
     super.dispose();
   }
 
-  Future<void> _loadApps() async {
+  void _loadApps() {
     setState(() => _isLoading = true);
     try {
-      final apps = await AppLauncherService.getCommonApps();
+      final apps = AppLauncherService.getCommonApps();
       setState(() {
         _allApps = apps;
         _filteredApps = apps;
