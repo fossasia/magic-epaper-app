@@ -54,7 +54,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
   Future<void> _loadApps() async {
     setState(() => _isLoading = true);
     try {
-      final apps = await AppLauncherService.getInstalledApps();
+      final apps = await AppLauncherService.getCommonApps();
       setState(() {
         _allApps = apps;
         _filteredApps = apps;
@@ -86,10 +86,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
       return;
     }
 
-    final customApp = AppData(
-      appName: 'Custom: $packageName',
-      packageName: packageName,
-    );
+    final customApp = AppLauncherService.createCustomApp(packageName);
     widget.onAppSelected(customApp);
     _customPackageController.clear();
     setState(() => _showCustomInput = false);
