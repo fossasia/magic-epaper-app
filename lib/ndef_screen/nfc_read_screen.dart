@@ -173,120 +173,126 @@ class _NFCReadScreenState extends State<NFCReadScreen>
           tooltip: appLocalizations.clearResults,
         ),
       ],
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            NFCStatusCard(
-              availability: _nfcController.availability,
-              onRefresh: _checkNFCAvailability,
-            ),
-            const SizedBox(height: 16),
-            if (_nfcController.availability == NFCAvailability.available) ...[
-              NFCReadCard(
-                isReading: _nfcController.isReading,
-                isClearing: _nfcController.isClearing,
-                result: _nfcController.result,
-                onRead: () async {
-                  await _nfcController.readNDEF();
-                  if (_nfcController.result.contains(appLocalizations.error)) {
-                    _showSnackBar(
-                      appLocalizations.readOperationFailed,
-                      isError: true,
-                    );
-                  } else {
-                    _showSnackBar(appLocalizations.tagReadSuccessfully);
-                  }
-                },
-                onVerify: () async {
-                  await _nfcController.verifyWrite();
-                  if (_nfcController.result.contains(appLocalizations.error)) {
-                    _showSnackBar(
-                      appLocalizations.verificationFailed,
-                      isError: true,
-                    );
-                  } else {
-                    _showSnackBar(appLocalizations.tagVerifiedSuccessfully);
-                  }
-                },
-                onClear: () async {
-                  bool confirmed = await _showConfirmDialog(
-                    appLocalizations.clearNfcTag,
-                    appLocalizations.clearNfcTagConfirmation,
-                  );
-                  if (confirmed) {
-                    await _nfcController.clearNDEF();
-                    if (_nfcController.result.contains(
-                      appLocalizations.error,
-                    )) {
+      body: SafeArea(
+        top: false,
+        bottom: true,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              NFCStatusCard(
+                availability: _nfcController.availability,
+                onRefresh: _checkNFCAvailability,
+              ),
+              const SizedBox(height: 16),
+              if (_nfcController.availability == NFCAvailability.available) ...[
+                NFCReadCard(
+                  isReading: _nfcController.isReading,
+                  isClearing: _nfcController.isClearing,
+                  result: _nfcController.result,
+                  onRead: () async {
+                    await _nfcController.readNDEF();
+                    if (_nfcController.result
+                        .contains(appLocalizations.error)) {
                       _showSnackBar(
-                        appLocalizations.clearOperationFailed,
+                        appLocalizations.readOperationFailed,
                         isError: true,
                       );
                     } else {
-                      _showSnackBar(appLocalizations.tagClearedSuccessfully);
+                      _showSnackBar(appLocalizations.tagReadSuccessfully);
                     }
-                  }
-                },
-              ),
-              const SizedBox(height: 16),
-            ] else ...[
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.08),
-                      spreadRadius: 0,
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  },
+                  onVerify: () async {
+                    await _nfcController.verifyWrite();
+                    if (_nfcController.result
+                        .contains(appLocalizations.error)) {
+                      _showSnackBar(
+                        appLocalizations.verificationFailed,
+                        isError: true,
+                      );
+                    } else {
+                      _showSnackBar(appLocalizations.tagVerifiedSuccessfully);
+                    }
+                  },
+                  onClear: () async {
+                    bool confirmed = await _showConfirmDialog(
+                      appLocalizations.clearNfcTag,
+                      appLocalizations.clearNfcTagConfirmation,
+                    );
+                    if (confirmed) {
+                      await _nfcController.clearNDEF();
+                      if (_nfcController.result.contains(
+                        appLocalizations.error,
+                      )) {
+                        _showSnackBar(
+                          appLocalizations.clearOperationFailed,
+                          isError: true,
+                        );
+                      } else {
+                        _showSnackBar(appLocalizations.tagClearedSuccessfully);
+                      }
+                    }
+                  },
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: const Icon(
-                          Icons.warning_outlined,
-                          size: 48,
-                          color: Colors.orange,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      Text(
-                        appLocalizations.nfcNotAvailable,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        appLocalizations.enableNfcMessage,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[600],
-                          height: 1.4,
-                        ),
+                const SizedBox(height: 16),
+              ] else ...[
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        spreadRadius: 0,
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: const Icon(
+                            Icons.warning_outlined,
+                            size: 48,
+                            color: Colors.orange,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          appLocalizations.nfcNotAvailable,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          appLocalizations.enableNfcMessage,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[600],
+                            height: 1.4,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
+              const SizedBox(height: 16),
             ],
-            const SizedBox(height: 16),
-          ],
+          ),
         ),
       ),
     );

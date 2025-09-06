@@ -1104,6 +1104,12 @@ abstract class AppLocalizations {
   /// **'Export XBM'**
   String get exportXbm;
 
+  /// No description provided for @exportingXbm.
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting XBM files...'**
+  String get exportingXbm;
+
   /// No description provided for @fullRefresh.
   ///
   /// In en, this message translates to:
