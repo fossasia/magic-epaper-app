@@ -158,10 +158,10 @@ jobs:
                 <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-4_filter_selection.png?raw=true" width="1080"/></td>
               </tr>
               <tr>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-5_adjust_image.png?raw=true" width="1080"/></td>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-6_barcode_screen.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-5_barcode_screen.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-6_Barcode_added.png?raw=true" width="1080"/></td>
                 <td>
-                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-7_generated_Barcode.png?raw=true" width="1080"/>
+                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-7_Templates_screen.png?raw=true" width="1080"/>
                 </td>
               </tr>
             </table>
@@ -179,10 +179,10 @@ jobs:
                 <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-4_filter_selection.png?raw=true" width="1080"/></td>
               </tr>
               <tr>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-5_adjust_image.png?raw=true" width="1080"/></td>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-6_barcode_screen.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-5_barcode_screen.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-6_6_Barcode_added.png?raw=true" width="1080"/></td>
                 <td>
-                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-7_generated_Barcode.png?raw=true" width="1080"/></td>
+                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-7_7_Templates_screen.png?raw=true" width="1080"/></td>
               </tr>
             </table>
             </details>
@@ -199,10 +199,10 @@ jobs:
                 <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-4_filter_selection.png?raw=true" width="1080"/></td>
               </tr>
               <tr>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-5_adjust_image.png?raw=true" width="1080"/></td>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-6_barcode_screen.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-5_barcode_screen.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-6_Barcode_added.png?raw=true" width="1080"/></td>
                 <td>
-                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-7_generated_Barcode.png?raw=true" width="1080"/></td>
+                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-7_Templates_screen.png?raw=true" width="1080"/></td>
               </tr>
             </table>
             </details>

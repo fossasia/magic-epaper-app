@@ -11,7 +11,6 @@ import 'package:magicepaperapp/util/epd/driver/waveform.dart';
 import 'package:magicepaperapp/util/image_editor_utils.dart';
 import 'package:magicepaperapp/util/xbm_encoder.dart';
 import 'package:magicepaperapp/view/widget/image_list.dart';
-import 'package:magicepaperapp/view/barcode_scanner_screen.dart';
 import 'package:magicepaperapp/util/orientation_util.dart';
 
 import 'package:pro_image_editor/pro_image_editor.dart';
@@ -525,31 +524,6 @@ class BottomActionMenu extends StatelessWidget {
                         backgroundColor: colorPrimary,
                       ),
                     );
-                  }
-                },
-              ),
-              _buildActionButton(
-                key: const Key('barcodeButton'),
-                context: context,
-                icon: Icons.qr_code_scanner,
-                label: appLocalizations.barcode,
-                onTap: () async {
-                  final result = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => BarcodeScannerScreen(
-                        width: epd.width,
-                        height: epd.height,
-                      ),
-                    ),
-                  );
-
-                  if (result is Uint8List) {
-                    await imgLoader.updateImage(
-                      bytes: result,
-                      width: epd.width,
-                      height: epd.height,
-                    );
-                    await imgLoader.saveFinalizedImageBytes(result);
                   }
                 },
               ),
