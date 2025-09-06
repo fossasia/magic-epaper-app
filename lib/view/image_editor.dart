@@ -10,7 +10,6 @@ import 'package:magicepaperapp/util/epd/driver/waveform.dart';
 import 'package:magicepaperapp/util/image_editor_utils.dart';
 import 'package:magicepaperapp/util/xbm_encoder.dart';
 import 'package:magicepaperapp/view/widget/image_list.dart';
-import 'package:magicepaperapp/view/barcode_scanner_screen.dart';
 import 'package:magicepaperapp/util/orientation_util.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
@@ -454,7 +453,7 @@ class BottomActionMenu extends StatelessWidget {
                 key: const Key('openEditorButton'),
                 context: context,
                 icon: Icons.edit_outlined,
-                label: appLocalizations.editor,
+                label: appLocalizations.openEditor,
                 onTap: () async {
                   final canvasBytes =
                       await Navigator.of(context).push<Uint8List>(
@@ -522,31 +521,6 @@ class BottomActionMenu extends StatelessWidget {
               //     }
               //   },
               // ),
-              _buildActionButton(
-                key: const Key('barcodeButton'),
-                context: context,
-                icon: Icons.qr_code_scanner,
-                label: appLocalizations.barcode,
-                onTap: () async {
-                  final result = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => BarcodeScannerScreen(
-                        width: epd.width,
-                        height: epd.height,
-                      ),
-                    ),
-                  );
-
-                  if (result is Uint8List) {
-                    await imgLoader.updateImage(
-                      bytes: result,
-                      width: epd.width,
-                      height: epd.height,
-                    );
-                    await imgLoader.saveFinalizedImageBytes(result);
-                  }
-                },
-              ),
               _buildActionButton(
                 context: context,
                 icon: Icons.photo_library_outlined,
