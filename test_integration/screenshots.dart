@@ -69,31 +69,34 @@ void main() {
 
       await tester.pump(const Duration(seconds: 2));
 
-      final adjustButton = find.byKey(const Key('adjustButton'));
-      await tester.tap(adjustButton);
+      final templatesButton = find.text('Templates');
+      await tester.tap(templatesButton);
       await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 2));
-      await binding.takeScreenshot('5_adjust_image');
+      await binding.takeScreenshot('7_Templates_screen');
 
       navigator.pop();
       await tester.pumpAndSettle();
 
-      final barcodeButton = find.byKey(const Key('barcodeButton'));
+      await tester.pump(const Duration(seconds: 2));
+      final editorButton = find.byKey(const Key('openEditorButton'));
+      await tester.tap(editorButton);
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 2));
+      final barcodeButton = find.byIcon(Icons.qr_code);
       await tester.tap(barcodeButton);
       await tester.pumpAndSettle();
-
       final inputField = find.byType(TextField);
       await tester.tap(inputField);
       await tester.pumpAndSettle();
       await tester.enterText(inputField, 'fossasia');
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
-      await binding.takeScreenshot('6_barcode_screen');
-      await tester.pumpAndSettle();
-      final generateImage = find.text('Generate Image');
-      await tester.tap(generateImage);
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-      await binding.takeScreenshot('7_generated_Barcode');
+      await binding.takeScreenshot('5_barcode_screen');
+      final addBarcode = find.byKey(const Key('addBarcodeButton'));
+      await tester.tap(addBarcode);
+      await tester.pump(const Duration(seconds: 2));
+      await binding.takeScreenshot('6_Barcode_added');
     });
   });
 }

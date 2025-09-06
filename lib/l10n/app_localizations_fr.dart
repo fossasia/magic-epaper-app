@@ -75,7 +75,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get importImageButtonLabel => 'Import';
 
   @override
-  String get openEditor => 'Editor';
+  String get openEditor => 'Create';
 
   @override
   String get importStartingImageFeedback => 'Import an image to begin';

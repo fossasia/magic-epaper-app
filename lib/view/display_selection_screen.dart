@@ -23,9 +23,9 @@ class DisplaySelectionScreen extends StatefulWidget {
 
 class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   final List<DisplayDevice> displays = [
-    Gdey037z03(),
-    Gdey037z03BW(),
     GDEQ031T10(),
+    Gdey037z03BW(),
+    Gdey037z03(),
     Waveshare2in13(),
     Waveshare2in9(),
     Waveshare2in9b(),
