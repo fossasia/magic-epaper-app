@@ -217,127 +217,131 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
           tooltip: appLocalizations.clearResults,
         ),
       ],
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            NFCStatusCard(
-              availability: _nfcController.availability,
-              onRefresh: _checkNFCAvailability,
-            ),
-            const SizedBox(height: 16),
-            if (_nfcController.availability == NFCAvailability.available) ...[
-              NFCWriteCard(
-                isWriting: _nfcController.isWriting,
-                textValue: _textValue,
-                urlValue: _urlValue,
-                wifiSSIDValue: _wifiSSIDValue,
-                wifiPasswordValue: _wifiPasswordValue,
-                vCardData: _vCardData,
-                onTextChanged: (value) => setState(() => _textValue = value),
-                onUrlChanged: (value) => setState(() => _urlValue = value),
-                onWifiSSIDChanged: (value) =>
-                    setState(() => _wifiSSIDValue = value),
-                onWifiPasswordChanged: (value) =>
-                    setState(() => _wifiPasswordValue = value),
-                onVCardChanged: (vCardData) =>
-                    setState(() => _vCardData = vCardData),
-                onWriteText: () async {
-                  await _nfcController.writeTextRecord(_textValue);
-                  _handleWriteResult();
-                },
-                onWriteUrl: () async {
-                  await _nfcController.writeUrlRecord(_urlValue);
-                  _handleWriteResult();
-                },
-                onWriteWifi: () async {
-                  await _nfcController.writeWifiRecord(
-                    _wifiSSIDValue,
-                    _wifiPasswordValue,
-                  );
-                  _handleWriteResult();
-                },
-                onWriteVCard: () async {
-                  if (_vCardData != null) {
-                    await _nfcController.writeVCardRecord(_vCardData!);
-                    _handleWriteResult();
-                  }
-                },
-                onWriteMultiple: () async {
-                  await _nfcController.writeMultipleRecords(
-                    _textValue,
-                    _urlValue,
-                    _wifiSSIDValue,
-                    _wifiPasswordValue,
-                    _vCardData,
-                  );
-                  _handleWriteResult();
-                },
-              ),
-              AppLauncherCard(
-                selectedApp: _selectedApp,
-                onAppSelected: _onAppSelected,
-                isWriting: _nfcController.isWriting,
-                onWriteAppLauncher: _writeAppLauncher,
+      body: SafeArea(
+        top: false,
+        bottom: true,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              NFCStatusCard(
+                availability: _nfcController.availability,
+                onRefresh: _checkNFCAvailability,
               ),
               const SizedBox(height: 16),
-            ] else ...[
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.08),
-                      spreadRadius: 0,
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+              if (_nfcController.availability == NFCAvailability.available) ...[
+                NFCWriteCard(
+                  isWriting: _nfcController.isWriting,
+                  textValue: _textValue,
+                  urlValue: _urlValue,
+                  wifiSSIDValue: _wifiSSIDValue,
+                  wifiPasswordValue: _wifiPasswordValue,
+                  vCardData: _vCardData,
+                  onTextChanged: (value) => setState(() => _textValue = value),
+                  onUrlChanged: (value) => setState(() => _urlValue = value),
+                  onWifiSSIDChanged: (value) =>
+                      setState(() => _wifiSSIDValue = value),
+                  onWifiPasswordChanged: (value) =>
+                      setState(() => _wifiPasswordValue = value),
+                  onVCardChanged: (vCardData) =>
+                      setState(() => _vCardData = vCardData),
+                  onWriteText: () async {
+                    await _nfcController.writeTextRecord(_textValue);
+                    _handleWriteResult();
+                  },
+                  onWriteUrl: () async {
+                    await _nfcController.writeUrlRecord(_urlValue);
+                    _handleWriteResult();
+                  },
+                  onWriteWifi: () async {
+                    await _nfcController.writeWifiRecord(
+                      _wifiSSIDValue,
+                      _wifiPasswordValue,
+                    );
+                    _handleWriteResult();
+                  },
+                  onWriteVCard: () async {
+                    if (_vCardData != null) {
+                      await _nfcController.writeVCardRecord(_vCardData!);
+                      _handleWriteResult();
+                    }
+                  },
+                  onWriteMultiple: () async {
+                    await _nfcController.writeMultipleRecords(
+                      _textValue,
+                      _urlValue,
+                      _wifiSSIDValue,
+                      _wifiPasswordValue,
+                      _vCardData,
+                    );
+                    _handleWriteResult();
+                  },
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: const Icon(
-                          Icons.warning_outlined,
-                          size: 48,
-                          color: Colors.orange,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      Text(
-                        appLocalizations.nfcNotAvailable,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        appLocalizations.enableNfcMessage,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[600],
-                          height: 1.4,
-                        ),
+                AppLauncherCard(
+                  selectedApp: _selectedApp,
+                  onAppSelected: _onAppSelected,
+                  isWriting: _nfcController.isWriting,
+                  onWriteAppLauncher: _writeAppLauncher,
+                ),
+                const SizedBox(height: 16),
+              ] else ...[
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        spreadRadius: 0,
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: const Icon(
+                            Icons.warning_outlined,
+                            size: 48,
+                            color: Colors.orange,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          appLocalizations.nfcNotAvailable,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          appLocalizations.enableNfcMessage,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[600],
+                            height: 1.4,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
+              const SizedBox(height: 16),
             ],
-            const SizedBox(height: 16),
-          ],
+          ),
         ),
       ),
     );
