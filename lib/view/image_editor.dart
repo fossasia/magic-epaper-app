@@ -12,12 +12,9 @@ import 'package:magicepaperapp/util/xbm_encoder.dart';
 import 'package:magicepaperapp/view/widget/image_list.dart';
 import 'package:magicepaperapp/view/barcode_scanner_screen.dart';
 import 'package:magicepaperapp/util/orientation_util.dart';
-
-import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/util/epd/display_device.dart';
-
 import 'package:magicepaperapp/provider/image_loader.dart';
 import 'package:magicepaperapp/util/epd/epd.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
@@ -479,52 +476,52 @@ class BottomActionMenu extends StatelessWidget {
                   }
                 },
               ),
-              _buildActionButton(
-                key: const Key('adjustButton'),
-                context: context,
-                icon: Icons.tune_rounded,
-                label: appLocalizations.adjustButtonLabel,
-                onTap: () async {
-                  if (imgLoader.image != null) {
-                    final canvasBytes =
-                        await Navigator.of(context).push<Uint8List>(
-                      MaterialPageRoute(
-                        builder: (context) => ProImageEditor.memory(
-                          img.encodeJpg(imgLoader.image!),
-                          callbacks: ProImageEditorCallbacks(
-                            onImageEditingComplete: (Uint8List bytes) async {
-                              Navigator.pop(context, bytes);
-                            },
-                          ),
-                          configs: const ProImageEditorConfigs(
-                            paintEditor: PaintEditorConfigs(enabled: false),
-                            textEditor: TextEditorConfigs(enabled: false),
-                            cropRotateEditor: CropRotateEditorConfigs(
-                              enabled: false,
-                            ),
-                            emojiEditor: EmojiEditorConfigs(enabled: false),
-                          ),
-                        ),
-                      ),
-                    );
-                    if (canvasBytes != null) {
-                      imgLoader.updateImage(
-                        bytes: canvasBytes,
-                        width: epd.width,
-                        height: epd.height,
-                      );
-                    }
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        duration: Durations.medium4,
-                        content: Text(appLocalizations.noImageSelectedFeedback),
-                        backgroundColor: colorPrimary,
-                      ),
-                    );
-                  }
-                },
-              ),
+              // _buildActionButton(
+              //   key: const Key('adjustButton'),
+              //   context: context,
+              //   icon: Icons.tune_rounded,
+              //   label: appLocalizations.adjustButtonLabel,
+              //   onTap: () async {
+              //     if (imgLoader.image != null) {
+              //       final canvasBytes =
+              //           await Navigator.of(context).push<Uint8List>(
+              //         MaterialPageRoute(
+              //           builder: (context) => ProImageEditor.memory(
+              //             img.encodeJpg(imgLoader.image!),
+              //             callbacks: ProImageEditorCallbacks(
+              //               onImageEditingComplete: (Uint8List bytes) async {
+              //                 Navigator.pop(context, bytes);
+              //               },
+              //             ),
+              //             configs: const ProImageEditorConfigs(
+              //               paintEditor: PaintEditorConfigs(enabled: false),
+              //               textEditor: TextEditorConfigs(enabled: false),
+              //               cropRotateEditor: CropRotateEditorConfigs(
+              //                 enabled: false,
+              //               ),
+              //               emojiEditor: EmojiEditorConfigs(enabled: false),
+              //             ),
+              //           ),
+              //         ),
+              //       );
+              //       if (canvasBytes != null) {
+              //         imgLoader.updateImage(
+              //           bytes: canvasBytes,
+              //           width: epd.width,
+              //           height: epd.height,
+              //         );
+              //       }
+              //     } else {
+              //       ScaffoldMessenger.of(context).showSnackBar(
+              //         SnackBar(
+              //           duration: Durations.medium4,
+              //           content: Text(appLocalizations.noImageSelectedFeedback),
+              //           backgroundColor: colorPrimary,
+              //         ),
+              //       );
+              //     }
+              //   },
+              // ),
               _buildActionButton(
                 key: const Key('barcodeButton'),
                 context: context,
