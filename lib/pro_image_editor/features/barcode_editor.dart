@@ -72,12 +72,16 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     if (data.isEmpty) {
       return null;
     }
-    final allowedChars = barcode.charSet.toSet();
-    for (final rune in data.runes) {
-      if (!allowedChars.contains(rune)) {
-        final char = String.fromCharCode(rune);
-        final rules = barcodeFormatToSupportedChars[_selectedBarcode.name];
-        return "Invalid character '$char' \nSupported characters: ${rules ?? 'Please check barcode rules'}";
+    if (barcode.charSet.isEmpty || barcode.name == 'QR-Code') {
+      // No character validation needed
+    } else {
+      final allowedChars = barcode.charSet.toSet();
+      for (final rune in data.runes) {
+        if (!allowedChars.contains(rune)) {
+          final char = String.fromCharCode(rune);
+          final rules = barcodeFormatToSupportedChars[_selectedBarcode.name];
+          return "Invalid character '$char' \nSupported characters: ${rules ?? 'Please check barcode rules'}";
+        }
       }
     }
     if (data.length < barcode.minLength) {

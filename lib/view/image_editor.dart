@@ -453,7 +453,7 @@ class BottomActionMenu extends StatelessWidget {
                 key: const Key('openEditorButton'),
                 context: context,
                 icon: Icons.edit_outlined,
-                label: appLocalizations.editor,
+                label: appLocalizations.openEditor,
                 onTap: () async {
                   final canvasBytes =
                       await Navigator.of(context).push<Uint8List>(
