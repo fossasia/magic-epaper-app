@@ -60,6 +60,47 @@ jobs:
       - name: iOS Workflow
         uses: ./.github/actions/ios
 
+
+  macos:
+    name: macOS Flutter Build
+    needs: common
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: macOS Workflow
+        uses: ./.github/actions/macos
+
+  windows:
+    name: Windows Flutter Build
+    needs: common
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Windows Workflow
+        uses: ./.github/actions/windows
+
+  debian:
+    name: Debian Flutter Build
+    needs: common
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Debian Workflow
+        uses: ./.github/actions/debian
+  
+  web:
+    name: Web Flutter Build
+    needs: common
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Web Workflow
+        uses: ./.github/actions/web
+
   screenshots-android:
     name: Screenshots (Android)
     runs-on: ubuntu-latest
