@@ -63,7 +63,6 @@ class SettingsScreenState extends State<SettingsScreen> {
                   onChanged: (Locale? newLocale) {
                     if (newLocale != null) {
                       localeProvider.setLocale(newLocale);
-                      print('Locale changed to: ${newLocale.languageCode}');
                     }
                   },
                   items: [
