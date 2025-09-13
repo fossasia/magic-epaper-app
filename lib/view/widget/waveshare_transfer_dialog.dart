@@ -81,8 +81,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
     });
     await Future.delayed(const Duration(milliseconds: 200));
 
-    final rotatedImage = img.copyRotate(widget.image, angle: 90);
-    _processedImageBytes = Uint8List.fromList(img.encodePng(rotatedImage));
+    _processedImageBytes = Uint8List.fromList(img.encodePng(widget.image));
 
     _flashImage();
 
