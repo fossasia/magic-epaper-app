@@ -12,9 +12,9 @@ class Waveshare2in13 extends WaveshareNfcDisplay {
   @override
   String get modelId => '17745';
   @override
-  int get width => 122;
+  int get width => 250;
   @override
-  int get height => 250;
+  int get height => 122;
   @override
   String get imgPath => ImageAssets.waveshare2_13;
 }
@@ -27,9 +27,9 @@ class Waveshare2in9 extends WaveshareNfcDisplay {
   @override
   String get modelId => '17746';
   @override
-  int get width => 128;
+  int get width => 296;
   @override
-  int get height => 296;
+  int get height => 128;
   @override
   String get imgPath => ImageAssets.waveshare2_9;
 }
@@ -42,9 +42,9 @@ class Waveshare4in2 extends WaveshareNfcDisplay {
   @override
   String get modelId => '17341';
   @override
-  int get width => 300;
+  int get width => 400;
   @override
-  int get height => 400;
+  int get height => 300;
   @override
   String get imgPath => ImageAssets.waveshare4_2;
 }
@@ -57,9 +57,9 @@ class Waveshare7in5 extends WaveshareNfcDisplay {
   @override
   String get modelId => '17675';
   @override
-  int get width => 480;
+  int get width => 800;
   @override
-  int get height => 800;
+  int get height => 480;
   @override
   String get imgPath => ImageAssets.waveshare7_5;
 }
@@ -72,9 +72,9 @@ class Waveshare7in5HD extends WaveshareNfcDisplay {
   @override
   String get modelId => '18082';
   @override
-  int get width => 528;
+  int get width => 880;
   @override
-  int get height => 880;
+  int get height => 528;
   @override
   String get imgPath => ImageAssets.waveshare7_5hd;
 }
@@ -87,9 +87,9 @@ class Waveshare2in7 extends WaveshareNfcDisplay {
   @override
   String get modelId => '18136';
   @override
-  int get width => 176;
+  int get width => 264;
   @override
-  int get height => 264;
+  int get height => 176;
   @override
   String get imgPath => ImageAssets.waveshare2_7;
 }
@@ -102,9 +102,9 @@ class Waveshare2in9b extends WaveshareNfcDisplay {
   @override
   String get modelId => '13339';
   @override
-  int get width => 128;
+  int get width => 296;
   @override
-  int get height => 296;
+  int get height => 128;
   @override
   String get imgPath => ImageAssets.waveshare2_9b;
 

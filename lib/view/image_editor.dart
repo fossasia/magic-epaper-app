@@ -42,7 +42,6 @@ class _ImageEditorState extends State<ImageEditor> {
   String _currentImageSource = 'imported';
   img.Image? _processedSourceImage;
   List<img.Image> _rawImages = [];
-  List<img.Image> _rotatedImages = [];
   List<Uint8List> _processedPngs = [];
   ImageSaveHandler? _imageSaveHandler;
 
@@ -96,7 +95,7 @@ class _ImageEditorState extends State<ImageEditor> {
     if (_imageSaveHandler == null) return;
 
     await _imageSaveHandler!.saveCurrentImage(
-      rawImages: _rotatedImages,
+      rawImages: _rawImages,
       selectedFilterIndex: _selectedFilterIndex,
       flipHorizontal: flipHorizontal,
       flipVertical: flipVertical,
@@ -132,7 +131,6 @@ class _ImageEditorState extends State<ImageEditor> {
         setState(() {
           _processedSourceImage = null;
           _rawImages = [];
-          _rotatedImages = [];
           _processedPngs = [];
         });
       }
@@ -145,10 +143,8 @@ class _ImageEditorState extends State<ImageEditor> {
 
     _rawImages = processImages(originalImage: sourceImage, epd: widget.device);
 
-    _rotatedImages =
-        _rawImages.map((rawImg) => img.copyRotate(rawImg, angle: 90)).toList();
     _processedPngs =
-        _rotatedImages.map((rotatedImg) => img.encodePng(rotatedImg)).toList();
+        _rawImages.map((rawImage) => img.encodePng(rawImage)).toList();
 
     setState(() {
       _processedSourceImage = sourceImage;
@@ -362,8 +358,8 @@ class _ImageEditorState extends State<ImageEditor> {
                         key: ValueKey(_processedSourceImage),
                         processedPngs: _processedPngs,
                         epd: widget.device,
-                        width: widget.device.width,
-                        height: widget.device.height,
+                        width: widget.device.height,
+                        height: widget.device.width,
                         selectedIndex: _selectedFilterIndex,
                         flipHorizontal: flipHorizontal,
                         flipVertical: flipVertical,

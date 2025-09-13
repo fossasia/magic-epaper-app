@@ -8,10 +8,11 @@ import 'package:image/image.dart' as img;
 
 class Gdey037z03 extends Epd {
   @override
-  int get width => 240; // pixels
+  @override
+  int get width => 416; // pixels
 
   @override
-  int get height => 416; // pixels
+  int get height => 240; // pixels
 
   @override
   String get name => 'Magic ePaper 3.7" (WBR)';
