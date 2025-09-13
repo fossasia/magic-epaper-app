@@ -180,7 +180,7 @@ jobs:
               </tr>
               <tr>
                 <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-5_barcode_screen.png?raw=true" width="1080"/></td>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-6_6_Barcode_added.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-6_Barcode_added.png?raw=true" width="1080"/></td>
                 <td>
                   <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-7_Templates_screen.png?raw=true" width="1080"/></td>
               </tr>
