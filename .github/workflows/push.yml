@@ -163,7 +163,7 @@ jobs:
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
-          xcode-version: latest-stable
+          xcode-version: '16.4.0'
           
       - uses: actions/checkout@v4
 
@@ -246,7 +246,7 @@ jobs:
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
-          xcode-version: latest-stable
+          xcode-version: '16.4.0'
 
       - uses: actions/checkout@v4
 
@@ -263,7 +263,7 @@ jobs:
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
-          xcode-version: latest-stable
+          xcode-version: '16.4.0'
 
       - uses: actions/checkout@v4
 
@@ -273,40 +273,48 @@ jobs:
           IPAD_DEVICE_MODEL: ${{ env.IPAD_DEVICE_MODEL }}
 
 
-  debian:
-    name: Debian Flutter Build
+  linux:
+    name: Linux Flutter Build
     needs: common
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Debian Workflow
-        uses: ./.github/actions/debian
+      - name: Linux Workflow
+        uses: ./.github/actions/linux
         with:
-          VERSION_NAME: ${{ needs.common.outputs.VERSION_NAME }}
-          VERSION_CODE: ${{ needs.common.outputs.VERSION_CODE }}
+          VERSION_NAME: ${{needs.common.outputs.VERSION_NAME}}
+          VERSION_CODE: ${{needs.common.outputs.VERSION_CODE}}
 
-      - name: Upload Debian Build
-        uses: actions/upload-artifact@v4
-        with:
-          name: Debian Build
-          path: build/linux/x64/release/bundle/
-
-      - name: Push Debian Build to app branch
-        shell: bash
+      - name: Upload packages to app branch
+        if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git clone --branch=app https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} app
+
+          git clone --branch=app https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} apk
           cd app
+          
           branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
-          cp -r ../build/linux/x64/release/bundle/* .
+
+          echo "Removing previous files from branch"
+
+          rm -rf *.deb *.rpm
+
+          echo "Copying new build files"
+
+          cp -v ../*.deb .
+          cp -v ../*.rpm .
+
+          echo "Pushing to app branch"
+
           git checkout --orphan temporary
-          git add --all
-          git commit -m "[Auto] Update Debian build from $branch ($(date +%Y-%m-%d.%H:%M:%S))"
+          git add --all .
+          git commit -am "[Auto] Update Linux Packages from $branch ($(date +%Y-%m-%d.%H:%M:%S))"
           git branch -D app
           git branch -m app
           git push --force origin app
+
   macos:
     name: macOS Flutter Build
     needs: common
@@ -352,64 +360,36 @@ jobs:
       - name: Windows Workflow
         uses: ./.github/actions/windows
         with:
-          VERSION_NAME: ${{ needs.common.outputs.VERSION_NAME }}
-          VERSION_CODE: ${{ needs.common.outputs.VERSION_CODE }}
+          VERSION_NAME: ${{needs.common.outputs.VERSION_NAME}}
+          VERSION_CODE: ${{needs.common.outputs.VERSION_CODE}}
 
-      - name: Upload Windows Build
-        uses: actions/upload-artifact@v4
-        with:
-          name: Windows Build
-          path: build/windows/x64/runner/Release/
-
-      - name: Push Windows Build to app branch
+      - name: Upload installer to app branch
+        if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
         shell: bash
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git clone --branch=app https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} app
+
+          git clone --branch=app https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} apk
           cd app
+          
           branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
-          # Copy all Windows build artifacts to root
-          cp -r ../build/windows/x64/runner/Release/* .
+
+          echo "Removing previous files from branch"
+
+          rm -rf *.exe
+
+          echo "Copying new build files"
+
+          cp -v ../build/windows/x64/installer/Release/*.exe .
+
+          echo "Pushing to app branch"
+
           git checkout --orphan temporary
-          git add --all
-          git commit -m "[Auto] Update Windows build from $branch ($(date +%Y-%m-%d.%H:%M:%S))"
+          git add --all .
+          git commit -am "[Auto] Update Windows Installer's from $branch ($(date +%Y-%m-%d.%H:%M:%S))"
           git branch -D app
           git branch -m app
           git push --force origin app
           
-web:
-  name: Web Flutter Build
-  needs: common
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v4
 
-    - name: Web Workflow
-      uses: ./.github/actions/web
-      with:
-        VERSION_NAME: ${{ needs.common.outputs.VERSION_NAME }}
-        VERSION_CODE: ${{ needs.common.outputs.VERSION_CODE }}
-
-    - name: Upload Web Build
-      uses: actions/upload-artifact@v4
-      with:
-        name: Web Build
-        path: build/web
-
-    - name: Push Web Build to app branch
-      shell: bash
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git clone --branch=app https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} app
-        cd app
-        branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
-        # Copy all Web build artifacts to root
-        cp -r ../build/web/* .
-        git checkout --orphan temporary
-        git add --all
-        git commit -m "[Auto] Update Web build from $branch ($(date +%Y-%m-%d.%H:%M:%S))"
-        git branch -D app
-        git branch -m app
-        git push --force origin app

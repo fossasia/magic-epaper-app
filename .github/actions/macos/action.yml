@@ -19,10 +19,24 @@ runs:
         cache: true
         flutter-version-file: pubspec.yaml
 
+    - name: Update Podfile
+      shell: bash
+      run: |
+        cd ./macos
+        flutter pub get
+        pod install --repo-update
+
     - name: Build macOS App
       shell: bash
       env:
         VERSION_NAME: ${{ inputs.VERSION_NAME }}
         VERSION_CODE: ${{ inputs.VERSION_CODE }}
       run: |
+        flutter config --enable-macos-desktop
         flutter build macos --build-name $VERSION_NAME --build-number $VERSION_CODE
+
+    - name: Store App file
+      uses: actions/upload-artifact@v4
+      with:
+        name: macos-app
+        path: build/macos/Build/Products/Release/magicepaper.app
