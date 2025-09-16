@@ -93,6 +93,7 @@ class _MovableBackgroundImageExampleState
       if (layer.text != null) {
         editor.addLayer(
           TextLayer(
+            maxTextWidth: _canvasWidth - 70,
             textStyle: layer.textStyle,
             align: layer.textAlign ?? TextAlign.left,
             offset: layer.offset,
@@ -506,6 +507,7 @@ class _MovableBackgroundImageExampleState
                       MediaQuery.devicePixelRatioOf(context)),
                 ),
                 mainEditor: MainEditorConfigs(
+                  enableZoom: true,
                   enableCloseButton: !isDesktopMode(context),
                   widgets: MainEditorWidgets(
                     bodyItems: (editor, rebuildStream) {
@@ -555,6 +557,7 @@ class _MovableBackgroundImageExampleState
                   ),
                 ),
                 paintEditor: PaintEditorConfigs(
+                  enableZoom: true,
                   widgets: PaintEditorWidgets(
                     colorPicker:
                         (editor, rebuildStream, currentColor, setColor) => null,

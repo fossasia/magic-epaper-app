@@ -17,8 +17,8 @@ class PriceTagCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 296,
-        height: 144,
+        width: 320,
+        height: 180,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -123,27 +123,26 @@ class PriceTagCardWidget extends StatelessWidget {
                                     ),
                                   ),
                           ),
-                          const SizedBox(height: 4),
-                          Container(
-                            constraints: const BoxConstraints(minHeight: 18),
-                            child: data.quantity.isNotEmpty
-                                ? Text(
-                                    data.quantity,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  )
-                                : Text(
-                                    appLocalizations.sizeQuantity,
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.grey.shade400,
-                                      fontWeight: FontWeight.w400,
-                                    ),
+                          const SizedBox(height: 6),
+                          data.productDescription.isNotEmpty
+                              ? Text(
+                                  data.productDescription,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w400,
                                   ),
-                          ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              : Text(
+                                  'Product Description',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.grey.shade400,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
                         ],
                       ),
                     ),
@@ -208,54 +207,58 @@ class PriceTagCardWidget extends StatelessWidget {
                     flex: 2,
                     child: Container(
                       height: double.infinity,
-                      decoration: BoxDecoration(
-                        color:
-                            (data.currency.isNotEmpty || data.price.isNotEmpty)
-                                ? Colors.red.shade50
-                                : Colors.grey.shade50,
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(
-                          color: (data.currency.isNotEmpty ||
-                                  data.price.isNotEmpty)
-                              ? Colors.red.shade200
-                              : Colors.grey.shade300,
-                          width: 1,
-                        ),
-                      ),
-                      padding: const EdgeInsets.all(4),
-                      child: (data.currency.isNotEmpty || data.price.isNotEmpty)
-                          ? Center(
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  '${data.currency.isNotEmpty ? data.currency : appLocalizations.defaultCurrency}${data.price.isNotEmpty ? ' ${data.price}' : appLocalizations.defaultPrice}',
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          (data.currency.isNotEmpty || data.price.isNotEmpty)
+                              ? Text(
+                                  '${data.currency.isNotEmpty ? data.currency : appLocalizations.defaultCurrency}${data.price.isNotEmpty ? ' ${data.price}' : ' ${appLocalizations.defaultPrice}'}',
                                   style: const TextStyle(
-                                    fontSize: 24,
+                                    fontSize: 22,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.red,
                                   ),
-                                  textAlign: TextAlign.center,
+                                )
+                              : Row(
+                                  children: [
+                                    Icon(
+                                      Icons.attach_money,
+                                      size: 18,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      appLocalizations.price,
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey.shade500,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            )
-                          : Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.attach_money,
-                                  size: 20,
-                                  color: Colors.grey.shade400,
-                                ),
-                                Text(
-                                  appLocalizations.price,
-                                  style: TextStyle(
-                                    fontSize: 9,
-                                    color: Colors.grey.shade500,
+                          const SizedBox(height: 6),
+                          data.quantity.isNotEmpty
+                              ? Text(
+                                  data.quantity,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
                                     fontWeight: FontWeight.w500,
                                   ),
+                                )
+                              : Text(
+                                  appLocalizations.sizeQuantity,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.grey.shade400,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
-                              ],
-                            ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

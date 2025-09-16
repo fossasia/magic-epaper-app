@@ -11,6 +11,7 @@ import 'package:magicepaperapp/pro_image_editor/features/movable_background_imag
 import 'package:magicepaperapp/card_templates/price_tag_card_widget.dart';
 import 'package:magicepaperapp/card_templates/price_tag_model.dart';
 import 'package:magicepaperapp/util/template_util.dart';
+import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
@@ -28,6 +29,7 @@ class PriceTagForm extends StatefulWidget {
 class _PriceTagFormState extends State<PriceTagForm> {
   final _formKey = GlobalKey<FormState>();
   final _productNameController = TextEditingController();
+  final _productDescriptionController = TextEditingController();
   final _priceController = TextEditingController();
   final _currencyController = TextEditingController();
   final _quantityController = TextEditingController();
@@ -44,6 +46,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
     super.initState();
     _data = PriceTagModel(
       productName: '',
+      productDescription: '',
       price: '',
       currency: '',
       quantity: '',
@@ -51,6 +54,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
     );
 
     _productNameController.addListener(_updatePreview);
+    _productDescriptionController.addListener(_updatePreview);
     _priceController.addListener(_updatePreview);
     _currencyController.addListener(_updatePreview);
     _quantityController.addListener(_updatePreview);
@@ -60,12 +64,14 @@ class _PriceTagFormState extends State<PriceTagForm> {
   @override
   void dispose() {
     _productNameController.removeListener(_updatePreview);
+    _productDescriptionController.removeListener(_updatePreview);
     _priceController.removeListener(_updatePreview);
     _currencyController.removeListener(_updatePreview);
     _quantityController.removeListener(_updatePreview);
     _barcodeController.removeListener(_updatePreview);
 
     _productNameController.dispose();
+    _productDescriptionController.dispose();
     _priceController.dispose();
     _currencyController.dispose();
     _quantityController.dispose();
@@ -77,6 +83,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
     setState(() {
       _data = PriceTagModel(
         productName: _productNameController.text,
+        productDescription: _productDescriptionController.text,
         price: _priceController.text,
         currency: _currencyController.text,
         quantity: _quantityController.text,
@@ -97,14 +104,15 @@ class _PriceTagFormState extends State<PriceTagForm> {
   }
 
   void _submitForm() async {
-    if (_formKey.currentState?.validate() != true) return;
-
     setState(() {
       _isGenerating = true;
     });
 
     try {
       final List<LayerSpec> layers = [];
+
+      final layoutParams =
+          ResponsiveLayoutUtil.getPriceTagLayout(widget.width, widget.height);
 
       if (_productImage != null) {
         layers.add(LayerSpec.widget(
@@ -113,48 +121,62 @@ class _PriceTagFormState extends State<PriceTagForm> {
             child: Image.file(_productImage!,
                 width: 200, height: 160, fit: BoxFit.cover),
           ),
-          offset: const Offset(-90, 160),
-          scale: 10,
-          rotation: -1.57,
+          offset: layoutParams.productImageOffset,
+          scale: layoutParams.productImageScale,
         ));
       }
 
       if (_data.productName.isNotEmpty) {
         layers.add(LayerSpec.text(
           text: _data.productName,
-          textStyle: const TextStyle(fontSize: 45, fontWeight: FontWeight.bold),
+          textStyle: TextStyle(
+              fontSize: layoutParams.productNameFontSize,
+              fontWeight: FontWeight.bold),
           backgroundColor: Colors.white,
           textColor: Colors.black,
           textAlign: TextAlign.center,
-          offset: const Offset(-100, -100),
-          scale: 2,
-          rotation: -1.57,
+          offset: layoutParams.productNameOffset,
+          scale: layoutParams.productNameScale,
         ));
+        if (_data.productDescription.isNotEmpty) {
+          layers.add(LayerSpec.text(
+            text: _data.productDescription,
+            textStyle: TextStyle(
+              fontSize: layoutParams.productDescriptionFontSize,
+              fontWeight: FontWeight.normal,
+            ),
+            backgroundColor: Colors.white,
+            textColor: Colors.black,
+            textAlign: TextAlign.center,
+            offset: layoutParams.productDescriptionOffset,
+            scale: layoutParams.productDescriptionScale,
+          ));
+        }
       }
 
       if (_data.price.isNotEmpty || _data.currency.isNotEmpty) {
         layers.add(LayerSpec.text(
           text: '${_data.currency} ${_data.price}',
-          textStyle: const TextStyle(fontWeight: FontWeight.bold),
+          textStyle: TextStyle(
+              fontSize: layoutParams.priceFontSize,
+              fontWeight: FontWeight.bold),
           backgroundColor: Colors.white,
           textColor: Colors.red,
           textAlign: TextAlign.center,
-          offset: const Offset(80, -140),
-          scale: 4,
-          rotation: -1.57,
+          offset: layoutParams.priceOffset,
+          scale: layoutParams.priceScale,
         ));
       }
 
       if (_data.quantity.isNotEmpty) {
         layers.add(LayerSpec.text(
           text: _data.quantity,
-          textStyle: const TextStyle(fontSize: 40),
+          textStyle: TextStyle(fontSize: layoutParams.quantityFontSize),
           backgroundColor: Colors.white,
           textColor: Colors.black,
           textAlign: TextAlign.center,
-          offset: const Offset(-50, -120),
-          scale: 1,
-          rotation: -1.57,
+          offset: layoutParams.quantityOffset,
+          scale: layoutParams.quantityScale,
         ));
       }
 
@@ -162,16 +184,15 @@ class _PriceTagFormState extends State<PriceTagForm> {
         layers.add(LayerSpec.widget(
           widget: BarcodeWidget(
             style: const TextStyle(color: Colors.black),
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(2),
             backgroundColor: colorWhite,
             barcode: Barcode.code128(),
             data: _data.barcodeData,
-            width: 240,
-            height: 120,
+            width: layoutParams.barcodeSize.width,
+            height: layoutParams.barcodeSize.height,
           ),
-          offset: const Offset(90, 120),
-          scale: 15,
-          rotation: -1.57,
+          offset: layoutParams.barcodeOffset,
+          scale: layoutParams.barcodeScale,
         ));
       }
 
@@ -271,9 +292,14 @@ class _PriceTagFormState extends State<PriceTagForm> {
                           label: appLocalizations.productName,
                           hint: appLocalizations.productNameHint,
                           icon: Icons.inventory_2_outlined,
-                          validator: (value) => value?.isEmpty ?? true
-                              ? appLocalizations.pleaseEnterProductName
-                              : null,
+                        ),
+                        const SizedBox(height: 12),
+                        _buildTextFormField(
+                          controller: _productDescriptionController,
+                          label: 'Description',
+                          hint: '',
+                          icon: Icons.description_outlined,
+                          maxLines: 2,
                         ),
                         const SizedBox(height: 16),
                         Row(
@@ -285,9 +311,6 @@ class _PriceTagFormState extends State<PriceTagForm> {
                                 label: appLocalizations.currency,
                                 hint: appLocalizations.currencyHint,
                                 icon: Icons.currency_exchange_outlined,
-                                validator: (value) => value?.isEmpty ?? true
-                                    ? appLocalizations.required
-                                    : null,
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -299,9 +322,6 @@ class _PriceTagFormState extends State<PriceTagForm> {
                                 hint: appLocalizations.priceHint,
                                 icon: Icons.attach_money_outlined,
                                 keyboardType: TextInputType.number,
-                                validator: (value) => value?.isEmpty ?? true
-                                    ? appLocalizations.pleaseEnterPrice
-                                    : null,
                               ),
                             ),
                           ],
@@ -312,9 +332,6 @@ class _PriceTagFormState extends State<PriceTagForm> {
                           label: appLocalizations.quantitySize,
                           hint: appLocalizations.quantitySizeHint,
                           icon: Icons.straighten_outlined,
-                          validator: (value) => value?.isEmpty ?? true
-                              ? appLocalizations.pleaseEnterQuantitySize
-                              : null,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
@@ -322,9 +339,6 @@ class _PriceTagFormState extends State<PriceTagForm> {
                           label: appLocalizations.barcodeData,
                           hint: appLocalizations.barcodeDataHint,
                           icon: Icons.qr_code_scanner_outlined,
-                          validator: (value) => value?.isEmpty ?? true
-                              ? appLocalizations.pleaseEnterBarcodeData
-                              : null,
                         ),
                       ],
                     ),
