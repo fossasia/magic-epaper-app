@@ -43,7 +43,7 @@ runs:
         mkdir -p build/linux/package/usr/local/bin
         cp -r ./build/linux/x64/release/bundle/* build/linux/package/usr/local/bin/
         fpm -s dir -t deb \
-          -n pslab \
+          -n magicepaper \
           -v ${{ inputs.VERSION_NAME }} \
           --prefix=/ \
           -C build/linux/package \
@@ -52,7 +52,7 @@ runs:
       shell: bash
       run: |
         fpm -s dir -t rpm \
-          -n pslab \
+          -n magicepaper \
           -v ${{ inputs.VERSION_NAME }} \
           --prefix=/ \
           -C build/linux/package \
