@@ -27,7 +27,7 @@ dependencies:
   image_picker: ^1.2.0
   image_cropper: ^9.0.0
   app_settings: ^6.1.1
-  fluttertoast: ^8.2.12
+  fluttertoast: ^8.2.14
   pro_image_editor: ^11.5.7
   gal: ^2.3.1
   file_saver: ^0.3.1
