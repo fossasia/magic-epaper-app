@@ -44,6 +44,8 @@ class _ImageEditorState extends State<ImageEditor> {
   List<img.Image> _rawImages = [];
   List<Uint8List> _processedPngs = [];
   ImageSaveHandler? _imageSaveHandler;
+  bool _isProcessingImages = false;
+  bool _isInitializing = true;
 
   @override
   void initState() {
@@ -52,33 +54,44 @@ class _ImageEditorState extends State<ImageEditor> {
     _selectedWaveform = null;
     _selectedWaveformName = null;
 
-    Future.microtask(() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _isInitializing = false;
+      });
       loadInitialImage();
     });
   }
 
   Future<void> loadInitialImage() async {
-    final imgLoader = context.read<ImageLoader>();
-    if (imgLoader.image == null) {
-      await imgLoader.loadFinalizedImage(
-        width: widget.device.width,
-        height: widget.device.height,
-      );
-    }
-    if (imgLoader.image == null) {
-      loadDefaultImage(imgLoader);
+    try {
+      final imgLoader = context.read<ImageLoader>();
+      if (imgLoader.image == null) {
+        await imgLoader.loadFinalizedImage(
+          width: widget.device.width,
+          height: widget.device.height,
+        );
+      }
+      if (imgLoader.image == null) {
+        await loadDefaultImage(imgLoader);
+      }
+    } catch (e) {
+      debugPrint('Error loading initial image: $e');
     }
   }
 
   Future<void> loadDefaultImage(ImageLoader imgLoader) async {
-    const assetPath = 'assets/images/FOSSASIA.png';
-    final byteData = await rootBundle.load(assetPath);
-    final pngBytes = byteData.buffer.asUint8List();
-    await imgLoader.updateImage(
-      bytes: pngBytes,
-      width: widget.device.width,
-      height: widget.device.height,
-    );
+    try {
+      const assetPath = 'assets/images/FOSSASIA.png';
+      final byteData = await rootBundle.load(assetPath);
+      final pngBytes = byteData.buffer.asUint8List();
+      await imgLoader.updateImage(
+        bytes: pngBytes,
+        width: widget.device.width,
+        height: widget.device.height,
+      );
+    } catch (e) {
+      debugPrint('Error loading default image: $e');
+    }
   }
 
   @override
@@ -132,6 +145,7 @@ class _ImageEditorState extends State<ImageEditor> {
           _processedSourceImage = null;
           _rawImages = [];
           _processedPngs = [];
+          _isProcessingImages = false;
         });
       }
       return;
@@ -141,17 +155,43 @@ class _ImageEditorState extends State<ImageEditor> {
       return;
     }
 
-    _rawImages = processImages(originalImage: sourceImage, epd: widget.device);
+    _processImagesAsync(sourceImage);
+  }
 
-    _processedPngs =
-        _rawImages.map((rawImage) => img.encodePng(rawImage)).toList();
-
+  Future<void> _processImagesAsync(img.Image sourceImage) async {
+    if (_isProcessingImages) return;
     setState(() {
-      _processedSourceImage = sourceImage;
-      _selectedFilterIndex = 0;
-      flipHorizontal = false;
-      flipVertical = false;
+      _isProcessingImages = true;
     });
+    try {
+      await Future.delayed(const Duration(milliseconds: 50));
+      final rawImages =
+          processImages(originalImage: sourceImage, epd: widget.device);
+      final processedPngs = <Uint8List>[];
+      for (int i = 0; i < rawImages.length; i++) {
+        processedPngs.add(img.encodePng(rawImages[i]));
+        if (i % 2 == 0) {
+          await Future.delayed(const Duration(milliseconds: 1));
+        }
+      }
+      if (mounted) {
+        setState(() {
+          _rawImages = rawImages;
+          _processedPngs = processedPngs;
+          _processedSourceImage = sourceImage;
+          _selectedFilterIndex = 0;
+          flipHorizontal = false;
+          flipVertical = false;
+          _isProcessingImages = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isProcessingImages = false;
+        });
+      }
+    }
   }
 
   Future<void> _exportXbmFiles() async {
@@ -218,7 +258,11 @@ class _ImageEditorState extends State<ImageEditor> {
   @override
   Widget build(BuildContext context) {
     var imgLoader = context.watch<ImageLoader>();
-    _updateProcessedImages(imgLoader.image);
+    if (!_isInitializing && imgLoader.image != null && !_isProcessingImages) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _updateProcessedImages(imgLoader.image);
+      });
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -344,11 +388,22 @@ class _ImageEditorState extends State<ImageEditor> {
       body: SafeArea(
         top: false,
         bottom: true,
-        child: imgLoader.isLoading
+        child: _isInitializing || imgLoader.isLoading || _isProcessingImages
             ? Center(
-                child: Text(
-                  appLocalizations.loading,
-                  style: const TextStyle(color: colorBlack, fontSize: 14),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(colorAccent),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      _isProcessingImages
+                          ? appLocalizations.processingImages
+                          : appLocalizations.loading,
+                      style: const TextStyle(color: colorBlack, fontSize: 14),
+                    ),
+                  ],
                 ),
               )
             : Padding(

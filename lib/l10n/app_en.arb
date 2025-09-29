@@ -574,5 +574,6 @@
   "productImageSelected": "Product Image Selected",
   "selectProductImage": "Select Product Image",
   "tapToChangeImage": "Tap to change image",
-  "chooseImageFromGallery": "Choose image from gallery"
+  "chooseImageFromGallery": "Choose image from gallery",
+  "processingImages": "Processing images..."
 }
