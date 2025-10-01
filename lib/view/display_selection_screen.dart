@@ -88,11 +88,23 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
 
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => ImageEditor(
-                            isExportOnly: false,
-                            device: displays[index],
+                        PageRouteBuilder(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  _LoadingWrapper(
+                            child: ImageEditor(
+                              isExportOnly: false,
+                              device: displays[index],
+                            ),
                           ),
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                            return FadeTransition(
+                              opacity: animation,
+                              child: child,
+                            );
+                          },
+                          transitionDuration: const Duration(milliseconds: 300),
                         ),
                       );
                     },
@@ -104,5 +116,58 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
         );
       },
     );
+  }
+}
+
+class _LoadingWrapper extends StatefulWidget {
+  final Widget child;
+
+  const _LoadingWrapper({required this.child});
+
+  @override
+  State<_LoadingWrapper> createState() => _LoadingWrapperState();
+}
+
+class _LoadingWrapperState extends State<_LoadingWrapper> {
+  bool _showLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(milliseconds: 50), () {
+        if (mounted) {
+          setState(() {
+            _showLoading = false;
+          });
+        }
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_showLoading) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2196F3)),
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Loading...',
+                style: TextStyle(color: Colors.black, fontSize: 14),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return widget.child;
   }
 }
