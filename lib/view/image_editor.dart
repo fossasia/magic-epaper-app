@@ -375,67 +375,93 @@ class _ImageEditorState extends State<ImageEditor> {
                     }),
                   ];
 
-                  return GestureDetector(
-                      onLongPress: () => _showRefreshModeInfoDialog(context),
-                      child: Container(
-                        height: 36,
-                        constraints: const BoxConstraints(minWidth: 120),
-                        decoration: BoxDecoration(
-                          color: colorAccent,
-                          border: Border.all(color: Colors.white, width: 1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String?>(
-                            value: _selectedWaveformName,
-                            hint: Text(
-                              appLocalizations.fullRefresh,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                          onLongPress: () =>
+                              _showRefreshModeInfoDialog(context),
+                          child: Container(
+                            height: 36,
+                            constraints: const BoxConstraints(minWidth: 120),
+                            decoration: BoxDecoration(
+                              color: colorAccent,
+                              border: Border.all(color: Colors.white, width: 1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String?>(
+                                value: _selectedWaveformName,
+                                hint: Text(
+                                  appLocalizations.fullRefresh,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                isDense: true,
+                                dropdownColor: colorAccent,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                                icon: const Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                items: dropdownItems,
+                                onChanged: (String? newName) {
+                                  setState(() {
+                                    _selectedWaveformName = newName;
+                                    if (newName == null) {
+                                      _selectedWaveform = null;
+                                    } else {
+                                      _selectedWaveform = epd
+                                          .controller.waveforms
+                                          .firstWhere((w) => w.name == newName);
+                                    }
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      duration: Durations.medium3,
+                                      content: Text(
+                                        _selectedWaveform == null
+                                            ? appLocalizations
+                                                .fullRefreshSelected
+                                            : "${appLocalizations.waveformSelected} ${_selectedWaveform!.name}",
+                                      ),
+                                      backgroundColor: colorPrimary,
+                                    ),
+                                  );
+                                },
                               ),
                             ),
-                            isDense: true,
-                            dropdownColor: colorAccent,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          )),
+                      const SizedBox(width: 4),
+                      GestureDetector(
+                        onTap: () => _showRefreshModeInfoDialog(context),
+                        child: Container(
+                          height: 36,
+                          width: 36,
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            // border: Border.all(color: Colors.white, width: 1),
                             borderRadius: BorderRadius.circular(8),
-                            icon: const Icon(
-                              Icons.keyboard_arrow_down,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                            items: dropdownItems,
-                            onChanged: (String? newName) {
-                              setState(() {
-                                _selectedWaveformName = newName;
-                                if (newName == null) {
-                                  _selectedWaveform = null;
-                                } else {
-                                  _selectedWaveform = epd.controller.waveforms
-                                      .firstWhere((w) => w.name == newName);
-                                }
-                              });
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  duration: Durations.medium3,
-                                  content: Text(
-                                    _selectedWaveform == null
-                                        ? appLocalizations.fullRefreshSelected
-                                        : "${appLocalizations.waveformSelected} ${_selectedWaveform!.name}",
-                                  ),
-                                  backgroundColor: colorPrimary,
-                                ),
-                              );
-                            },
+                          ),
+                          child: const Icon(
+                            Icons.info_outline,
+                            color: Colors.white,
+                            size: 26,
                           ),
                         ),
-                      ));
+                      ),
+                    ],
+                  );
                 }),
               ),
             Padding(
