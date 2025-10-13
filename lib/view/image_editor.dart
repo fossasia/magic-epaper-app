@@ -478,7 +478,6 @@ class _ImageEditorState extends State<ImageEditor> {
                         if (flipVertical) {
                           finalImg = img.flipVertical(finalImg);
                         }
-                        finalImg = img.copyRotate(finalImg, angle: 90);
                         await widget.device.transfer(
                           context,
                           finalImg,
