@@ -83,7 +83,7 @@ class StoragePermissionDialog extends StatelessWidget {
                       'Cancel',
                       style: TextStyle(
                         color: Colors.grey,
-                        fontSize: 19,
+                        fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -109,7 +109,7 @@ class StoragePermissionDialog extends StatelessWidget {
                       'Grant Permission',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 19,
+                        fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
