@@ -13,6 +13,7 @@ import 'package:magicepaperapp/util/magic_epaper_firmware.dart';
 import 'package:magicepaperapp/util/nfc_settings_launcher.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'app_logger.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
@@ -84,7 +85,7 @@ class Protocol {
     await _sleep();
     for (int i = 0; i < chunks.length; i++) {
       Uint8List chunk = chunks[i];
-      debugPrint(
+      AppLogger.debug(
           "${appLocalizations.writingChunk}${i + 1}/${chunks.length} len ${chunk.lengthInBytes}: ${chunk.map((e) => e.toRadixString(16)).toList()}");
 
       await writeMsg(chunk);
@@ -95,7 +96,7 @@ class Protocol {
             "${appLocalizations.writingChunk}${i + 1}/${chunks.length}");
       }
     }
-    debugPrint(appLocalizations.transferredSuccessfully);
+    AppLogger.info(appLocalizations.transferredSuccessfully);
   }
 
   List<Uint8List> _split({required Uint8List data, int chunkSize = 220}) {
@@ -137,10 +138,10 @@ class Protocol {
     onProgress?.call(0.0, appLocalizations.waitingForNfcTag);
     Fluttertoast.showToast(
         msg: appLocalizations.bringPhoneNearMagicEpaperHardware);
-    debugPrint(appLocalizations.bringPhoneNearMagicEpaperHardware);
+    AppLogger.info(appLocalizations.bringPhoneNearMagicEpaperHardware);
 
     final tag = await FlutterNfcKit.poll(timeout: timeout);
-    debugPrint(appLocalizations.gotTag);
+    AppLogger.info(appLocalizations.gotTag);
     onTagDetected?.call();
     onProgress?.call(0.1, appLocalizations.tagDetectedInitializing);
 

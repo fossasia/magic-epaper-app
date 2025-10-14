@@ -7,6 +7,7 @@ import 'package:magicepaperapp/ndef_screen/services/ndef_record_parser.dart';
 import 'package:magicepaperapp/ndef_screen/services/nfc_availability_service.dart';
 import 'package:magicepaperapp/ndef_screen/services/nfc_operations_service.dart';
 import 'package:ndef/ndef.dart' as ndef;
+import '../../util/app_logger.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 

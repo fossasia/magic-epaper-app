@@ -12,6 +12,7 @@ import 'package:image/image.dart' as img;
 import 'dart:typed_data';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
+import '../../util/app_logger.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
@@ -234,7 +235,7 @@ class ImageOperationsService {
       imageFrame.dispose();
       return properties;
     } catch (e) {
-      debugPrint('Error loading image properties: $e');
+      AppLogger.error('Error loading image properties: $e');
       return null;
     }
   }

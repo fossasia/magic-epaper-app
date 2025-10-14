@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import '../../util/app_logger.dart';
 
 class SavedImage {
   final String id;
@@ -49,7 +50,7 @@ class SavedImage {
       }
       return null;
     } catch (e) {
-      debugPrint('Error reading image file: $e');
+      AppLogger.error('Error reading image file: $e');
       return null;
     }
   }
