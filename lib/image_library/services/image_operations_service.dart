@@ -176,10 +176,9 @@ class ImageOperationsService {
       }
       final decodedImage = img.decodeImage(imageData);
       if (decodedImage != null) {
-        final rotatedImage = img.copyRotate(decodedImage, angle: -90);
         imageEpd.transfer(
           context,
-          rotatedImage,
+          decodedImage,
         );
       } else {
         _showErrorSnackBar(
