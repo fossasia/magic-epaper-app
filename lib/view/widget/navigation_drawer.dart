@@ -9,6 +9,7 @@ import 'package:magicepaperapp/util/epd/configurable_editor.dart';
 import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:provider/provider.dart';
+import '../../util/app_logger.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
@@ -62,7 +63,7 @@ class _AppDrawerState extends State<AppDrawer> {
         try {
           context.read<ColorPaletteProvider>().updateColors(customEpd.colors);
         } catch (e) {
-          debugPrint('ColorPaletteProvider not available: $e');
+          AppLogger.warning('ColorPaletteProvider not available: $e');
         }
         Navigator.pop(context);
         Navigator.push(

@@ -8,6 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/image_library/services/image_operations_service.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_save_dialog.dart';
+import '../../util/app_logger.dart';
 
 class ImageSaveHandler {
   final BuildContext context;
@@ -87,7 +88,7 @@ class ImageSaveHandler {
       }
       return _hasStoragePermission;
     } catch (e) {
-      debugPrint('Error requesting storage permission: $e');
+      AppLogger.error('Error requesting storage permission: $e');
       _hasStoragePermission = false;
       return false;
     }
@@ -100,7 +101,7 @@ class ImageSaveHandler {
         await requestStoragePermission();
       },
       onCancel: () {
-        debugPrint('Storage permission dialog cancelled');
+        AppLogger.debug('Storage permission dialog cancelled');
       },
       colorAccent: colorAccent,
       colorBlack: colorBlack,

@@ -7,6 +7,7 @@ import 'package:magicepaperapp/ndef_screen/widgets/nfc_status_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_read_card.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'dart:async';
+import '../util/app_logger.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
@@ -84,7 +85,7 @@ class _NFCReadScreenState extends State<NFCReadScreen>
         );
       }
     } catch (e) {
-      debugPrint('Error checking NFC availability: $e');
+      AppLogger.error('Error checking NFC availability: $e');
     }
   }
 

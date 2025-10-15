@@ -18,6 +18,7 @@ import 'package:magicepaperapp/provider/image_loader.dart';
 import 'package:magicepaperapp/util/epd/epd.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
+import '../util/app_logger.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
@@ -75,7 +76,7 @@ class _ImageEditorState extends State<ImageEditor> {
         await loadDefaultImage(imgLoader);
       }
     } catch (e) {
-      debugPrint('Error loading initial image: $e');
+      AppLogger.error('Error loading initial image: $e');
     }
   }
 
@@ -90,7 +91,7 @@ class _ImageEditorState extends State<ImageEditor> {
         height: widget.device.height,
       );
     } catch (e) {
-      debugPrint('Error loading default image: $e');
+      AppLogger.error('Error loading default image: $e');
     }
   }
 

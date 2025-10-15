@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
+import '../../util/app_logger.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
@@ -14,11 +15,11 @@ class NFCSessionManager {
         await FlutterNfcKit.finish();
       }
     } catch (e) {
-      debugPrint('${appLocalizations.errorFinishingNfcSession}$e');
+      AppLogger.error('${appLocalizations.errorFinishingNfcSession}$e');
       try {
         await FlutterNfcKit.finish();
       } catch (e2) {
-        debugPrint('${appLocalizations.secondaryCleanupAlsoFailed}$e2');
+        AppLogger.error('${appLocalizations.secondaryCleanupAlsoFailed}$e2');
       }
     }
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'app_logger.dart';
 
 class NFCSettingsLauncher {
   static const platform = MethodChannel('org.fossasia.magicepaperapp/settings');
@@ -8,7 +9,7 @@ class NFCSettingsLauncher {
     try {
       await platform.invokeMethod('openNFCSettings');
     } on PlatformException catch (e) {
-      debugPrint("Failed to open NFC settings: ${e.message}");
+      AppLogger.error("Failed to open NFC settings: ${e.message}");
     }
   }
 }
