@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image/image.dart' as img;

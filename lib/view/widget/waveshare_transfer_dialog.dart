@@ -165,7 +165,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
               const Text(
                 "Hold your phone near the display to begin.",
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 16),
               ),
             ],
           ),

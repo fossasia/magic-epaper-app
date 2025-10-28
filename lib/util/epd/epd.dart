@@ -10,6 +10,7 @@ import 'driver/driver.dart';
 abstract class Epd extends DisplayDevice {
   Driver get controller;
   String get driverName => controller.driverName;
+  @override
   List<String>? get displayChips => ['FOSSASIA Hardware'];
 
   @override
