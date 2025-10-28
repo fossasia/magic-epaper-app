@@ -163,7 +163,8 @@ class ImageLibraryProvider extends ChangeNotifier {
       );
       _savedImages.add(savedImage);
       await _persistMetadata();
-      AppLogger.info('Successfully saved image: $name (${imageData.length} bytes)');
+      AppLogger.info(
+          'Successfully saved image: $name (${imageData.length} bytes)');
       notifyListeners();
     } catch (e) {
       AppLogger.error('Error saving image: $e');
