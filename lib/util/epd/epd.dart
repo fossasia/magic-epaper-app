@@ -18,9 +18,10 @@ abstract class Epd extends DisplayDevice {
       {Waveform? waveform}) async {
     if (!context.mounted) return;
 
+    final rotatedImage = img.copyRotate(image, angle: 90);
     await TransferProgressDialog.show(
       context: context,
-      finalImg: image,
+      finalImg: rotatedImage,
       transferFunction: (img, onProgress, onTagDetected) async {
         if (!context.mounted) return;
         final currentEpdDevice = this;

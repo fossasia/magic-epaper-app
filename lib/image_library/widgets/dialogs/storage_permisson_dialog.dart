@@ -107,6 +107,7 @@ class StoragePermissionDialog extends StatelessWidget {
                     ),
                     child: const Text(
                       'Grant Permission',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
