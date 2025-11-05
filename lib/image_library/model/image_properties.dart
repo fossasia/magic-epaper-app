@@ -27,7 +27,7 @@ class ImageProperties {
     }
   }
 
-  String get resolution => '${width} × ${height}';
+  String get resolution => '$width × $height';
 
   String get megapixels {
     final mp = (width * height) / 1000000;
