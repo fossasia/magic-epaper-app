@@ -647,10 +647,14 @@ class _MovableBackgroundImageExampleState
                   children: <Widget>[
                     FlatIconTextButton(
                       label: Text('Canvas Color', style: _bottomTextStyle),
-                      icon: const Icon(
-                        Icons.check_box_outline_blank,
-                        size: 22.0,
-                        color: Colors.white,
+                      icon: Container(
+                        width: 22.0,
+                        height: 22.0,
+                        decoration: BoxDecoration(
+                          color: availableCanvasColors[currentCanvasColorIndex],
+                          border: Border.all(color: Colors.white, width: 2),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
                       onPressed: _changeCanvasColor,
                     ),
