@@ -178,7 +178,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Container(
+                        SizedBox(
                           height: 40,
                           // color: Colors.red,
                           child: Column(

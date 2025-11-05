@@ -315,7 +315,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                             ),
                             const SizedBox(width: 12),
                             Expanded(
-                              flex: 2,
+                              flex: 1,
                               child: _buildTextFormField(
                                 controller: _priceController,
                                 label: appLocalizations.price,
