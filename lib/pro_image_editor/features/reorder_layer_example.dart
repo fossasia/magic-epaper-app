@@ -145,6 +145,10 @@ class _ReorderLayerSheetState extends State<ReorderLayerSheet> {
         if (oldIndex == 0 || newIndex == 0) {
           return;
         }
+
+        if (oldIndex < newIndex) {
+          newIndex -= 1;
+        }
         widget.onReorder(oldIndex, newIndex);
       },
     );
