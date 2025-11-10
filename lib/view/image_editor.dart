@@ -756,12 +756,13 @@ class BottomActionMenu extends StatelessWidget {
                       modelId: result.presetName,
                     );
 
-                    try {
+                     try {
                       context.read<ColorPaletteProvider>().updateColors(customEpd.colors);
-                    } catch (e) {
-                      // provider may not be available in some contexts; ignore silently
+                    } catch (e, stackTrace) {
+                      // provider may not be available in some contexts; log for debugging
+                      debugPrint('ColorPaletteProvider unavailable: $e\n$stackTrace');
                     }
-
+                    
                     // Open export-only ImageEditor with the custom display
                     Navigator.push(
                       context,
