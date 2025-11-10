@@ -1,22 +1,17 @@
 ### Overview
-This PR adds automatic logging of up to five annotated images before training starts.  
-It helps verify that image–annotation alignment is correct.
+This PR re-submits the clean version of my previous contribution that adds a **"Custom" option** on the image screen (similar to Arduino).
 
-### Motivation
-Users often make mistakes in dataset setup.  
-By logging a few samples automatically, this feature helps confirm that annotations and images match correctly.
-
-### Implementation
-- Added logic in `on_train_start()`.
-- Randomly selects up to 5 annotated samples from `non_empty_train_annotations`.
-- Uses `visualize.plot_annotations()` to generate visualizations.
-- Logs images using the active experiment logger (Comet, WandB, or TensorBoard).
-- Code is simple and consistent with existing style.
-
-### Testing
-- Verified locally with different datasets.
-- Confirmed compatibility with all supported loggers.
+### Features
+- Added "Custom" option to image screen.
+- Opens a configuration screen for:
+	- Custom screen size
+	- Display driver/SDK
+	- Color selection
+	- Activity type
 
 ### Notes
-Only relevant code changes are included.  
-No formatting or unrelated files modified.
+- Only relevant changes are included.
+- No formatting or unrelated file modifications.
+- All code written manually following project conventions.
+
+Thank you for the feedback earlier — I’ve created this clean PR as requested.
