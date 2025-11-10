@@ -20,6 +20,9 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import '../util/app_logger.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/view/widget/configurable_epd_dialog.dart';
+import 'package:magicepaperapp/util/epd/configurable_editor.dart';
+import 'package:magicepaperapp/provider/color_palette_provider.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
@@ -719,6 +722,53 @@ class BottomActionMenu extends StatelessWidget {
                     await imgLoader.saveFinalizedImageBytes(result);
 
                     onSourceChanged?.call('template');
+                  }
+                },
+              ),
+              _buildActionButton(
+                context: context,
+                icon: Icons.developer_mode_outlined,
+                label: 'Custom',
+                onTap: () async {
+                  // Open the existing configurable EPD dialog used by the drawer/Arduino flow
+                  final configurable = ConfigurableEpd(
+                    modelId: 'NA',
+                    width: 400,
+                    height: 300,
+                    colors: [Colors.white, Colors.black, Colors.red],
+                  );
+
+                  final result = await showDialog<CustomEpdConfig>(
+                    context: context,
+                    builder: (context) => ConfigurableEpdDialog(
+                      initialWidth: configurable.width,
+                      initialHeight: configurable.height,
+                      initialColors: List<Color>.from(configurable.colors),
+                    ),
+                  );
+
+                  if (result != null) {
+                    final customEpd = ConfigurableEpd(
+                      width: result.width,
+                      height: result.height,
+                      colors: result.colors,
+                      name: result.presetName,
+                      modelId: result.presetName,
+                    );
+
+                    try {
+                      context.read<ColorPaletteProvider>().updateColors(customEpd.colors);
+                    } catch (e) {
+                      // provider may not be available in some contexts; ignore silently
+                    }
+
+                    // Open export-only ImageEditor with the custom display
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ImageEditor(isExportOnly: true, device: customEpd),
+                      ),
+                    );
                   }
                 },
               ),
