@@ -298,7 +298,6 @@ class TextFitEditorState extends State<TextFitEditor> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border.all(color: Colors.grey.shade600, width: 1),
-
                   boxShadow: [
                     BoxShadow(
                       color: colorBlack.withValues(alpha: .08),
