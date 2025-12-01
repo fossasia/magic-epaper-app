@@ -45,7 +45,7 @@ dependencies:
   get_it: ^9.0.5
   path: ^1.9.1
   permission_handler: ^12.0.1
-  ndef: ^0.3.1
+  ndef: ^0.3.5
   logger: ^2.4.0
 
 dev_dependencies:
