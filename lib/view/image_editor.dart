@@ -9,6 +9,7 @@ import 'package:magicepaperapp/util/color_util.dart';
 import 'package:magicepaperapp/util/epd/driver/waveform.dart';
 import 'package:magicepaperapp/util/image_editor_utils.dart';
 import 'package:magicepaperapp/util/xbm_encoder.dart';
+import 'package:magicepaperapp/view/text_fit_editor.dart';
 import 'package:magicepaperapp/view/widget/image_list.dart';
 import 'package:magicepaperapp/util/orientation_util.dart';
 import 'package:provider/provider.dart';
@@ -639,6 +640,30 @@ class BottomActionMenu extends StatelessWidget {
                     );
                     await imgLoader.saveFinalizedImageBytes(canvasBytes);
                     onSourceChanged?.call('editor');
+                  }
+                },
+              ),
+              _buildActionButton(
+                context: context,
+                icon: Icons.text_fields,
+                label: "Text",
+                onTap: () async {
+                  final bytes = await Navigator.of(context).push<Uint8List>(
+                    MaterialPageRoute(
+                      builder: (context) => TextFitEditor(
+                        width: epd.width,
+                        height: epd.height,
+                      ),
+                    ),
+                  );
+                  if (bytes != null) {
+                    await imgLoader.updateImage(
+                      bytes: bytes,
+                      width: epd.width,
+                      height: epd.height,
+                    );
+                    await imgLoader.saveFinalizedImageBytes(bytes);
+                    onSourceChanged?.call('text');
                   }
                 },
               ),
