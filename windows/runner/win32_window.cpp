@@ -141,6 +141,13 @@ bool Win32Window::Create(const std::wstring& title,
       nullptr, nullptr, GetModuleHandle(nullptr), this);
 
   if (!window) {
+    #ifdef DEBUG_WINDOW_CREATION
+    DWORD error = GetLastError();
+    wchar_t debug_msg[256];
+    swprintf_s(debug_msg, L"CreateWindow failed with error 0x%X (%lu)\n", 
+               error, error);
+    OutputDebugString(debug_msg);
+    #endif
     return false;
   }
 
@@ -166,8 +173,12 @@ LRESULT CALLBACK Win32Window::WndProc(HWND const window,
     auto that = static_cast<Win32Window*>(window_struct->lpCreateParams);
     EnableFullDpiSupportIfAvailable(window);
     that->window_handle_ = window;
-  } 
+    
+    // Handle WM_NCCREATE and then return to preserve original behavior
+    return DefWindowProc(window, message, wparam, lparam);
+  }
   
+  // For all other messages, check if we have a valid Win32Window instance
   Win32Window* that = GetThisFromHandle(window);
   if (that) {
     return that->MessageHandler(window, message, wparam, lparam);
