@@ -166,8 +166,20 @@ LRESULT CALLBACK Win32Window::WndProc(HWND const window,
     auto that = static_cast<Win32Window*>(window_struct->lpCreateParams);
     EnableFullDpiSupportIfAvailable(window);
     that->window_handle_ = window;
-  } else if (Win32Window* that = GetThisFromHandle(window)) {
+  } 
+  
+  Win32Window* that = GetThisFromHandle(window);
+  if (that) {
     return that->MessageHandler(window, message, wparam, lparam);
+  } else {
+    // Optional: debug message for messages arriving before WM_NCCREATE
+    // This can help identify if messages are arriving before the window is fully initialized
+    #ifdef DEBUG_EARLY_MESSAGES
+    wchar_t debug_msg[256];
+    swprintf_s(debug_msg, L"Received message 0x%X before WM_NCCREATE for window 0x%p\n", 
+               message, window);
+    OutputDebugString(debug_msg);
+    #endif
   }
 
   return DefWindowProc(window, message, wparam, lparam);
