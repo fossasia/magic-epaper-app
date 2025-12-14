@@ -14,14 +14,10 @@ subprojects {
 }
 
 subprojects { subproj ->
-    afterEvaluate {
-        if (subproj.plugins.hasPlugin("com.android.library")) {
-            subproj.android {
-                compileSdk = 36
-                defaultConfig {
-                    targetSdk = 36
-                }
-            }
+    subproj.plugins.withId("com.android.library") {
+        subproj.extensions.configure(com.android.build.gradle.LibraryExtension) { ext ->
+            ext.compileSdk = 36
+            ext.defaultConfig.targetSdk = 36
         }
     }
 }
