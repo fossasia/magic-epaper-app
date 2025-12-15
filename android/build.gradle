@@ -13,15 +13,6 @@ subprojects {
     project.evaluationDependsOn(":app")
 }
 
-subprojects { subproj ->
-    subproj.plugins.withId("com.android.library") {
-        subproj.extensions.configure(com.android.build.gradle.LibraryExtension) { ext ->
-            ext.compileSdk = 36
-            ext.defaultConfig.targetSdk = 36
-        }
-    }
-}
-
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
