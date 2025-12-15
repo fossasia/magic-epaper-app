@@ -173,10 +173,10 @@ packages:
     dependency: "direct main"
     description:
       name: file_picker
-      sha256: f2d9f173c2c14635cc0e9b14c143c49ef30b4934e8d1d274d6206fcb0086a06f
+      sha256: f8f4ea435f791ab1f817b4e338ed958cb3d04ba43d6736ffc39958d950754967
       url: "https://pub.dev"
     source: hosted
-    version: "10.3.3"
+    version: "10.3.6"
   file_saver:
     dependency: "direct main"
     description:
@@ -728,10 +728,10 @@ packages:
     dependency: "direct main"
     description:
       name: pro_image_editor
-      sha256: a6ad2a4e55a8522e49d3eed2b92efd6413636ad6bc598ca385943e656af27dd7
+      sha256: d9c495610d1ee1b8a0460d40fc228e8ac6c3eb47a9d0d679b6b91e7f9b4c6798
       url: "https://pub.dev"
     source: hosted
-    version: "11.11.0"
+    version: "11.12.2"
   process:
     dependency: transitive
     description:
