@@ -73,3 +73,4 @@ dependencies {
     implementation files("libs/waveshare-nfc/NFC.jar")
     implementation "com.squareup.okhttp3:okhttp:4.12.0"
 }
+ 
