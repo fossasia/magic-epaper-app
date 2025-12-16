@@ -260,10 +260,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_nfc_kit
-      sha256: "3cc4059626fa672031261512299458dd274de4ccb57a7f0ee0951ddd70a048e5"
+      sha256: "3cf589592373f1d0b0bd9583532368bb85e7cd76ae014a2b67a5ab2d68ae9450"
       url: "https://pub.dev"
     source: hosted
-    version: "3.6.0"
+    version: "3.6.1"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -544,10 +544,10 @@ packages:
     dependency: "direct main"
     description:
       name: media_kit
-      sha256: "52a8e989babc431db0aa242f32a4a08e55f60662477ea09759a105d7cd6410da"
+      sha256: ae9e79597500c7ad6083a3c7b7b7544ddabfceacce7ae5c9709b0ec16a5d6643
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.1"
+    version: "1.2.6"
   meta:
     dependency: transitive
     description:
@@ -576,10 +576,10 @@ packages:
     dependency: "direct main"
     description:
       name: ndef
-      sha256: bdf82a56da97983c75375ec914b7068fba4e6e0defb616c66457c28360b9c38f
+      sha256: "198ba3798e80cea381648569d84059dbba64cd140079fb7b0d9c3f1e0f5973f3"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.5"
+    version: "0.4.0"
   nested:
     dependency: transitive
     description:
@@ -736,10 +736,10 @@ packages:
     dependency: "direct main"
     description:
       name: pro_image_editor
-      sha256: d9c495610d1ee1b8a0460d40fc228e8ac6c3eb47a9d0d679b6b91e7f9b4c6798
+      sha256: "549ae69f6aaad2bb5d70cc7c9effcc6ffce5417ab5c5e63cd2178fa5034b857b"
       url: "https://pub.dev"
     source: hosted
-    version: "11.12.2"
+    version: "11.14.1"
   process:
     dependency: transitive
     description:
@@ -925,10 +925,10 @@ packages:
     dependency: transitive
     description:
       name: uri_parser
-      sha256: ff4d2c720aca3f4f7d5445e23b11b2d15ef8af5ddce5164643f38ff962dcb270
+      sha256: "051c62e5f693de98ca9f130ee707f8916e2266945565926be3ff20659f7853ce"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.2"
   url_launcher:
     dependency: "direct main"
     description:
