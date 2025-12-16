@@ -23,7 +23,7 @@ dependencies:
   convert: ^3.1.2
   flutter_svg_provider: ^1.0.7
   matrix2d: ^1.0.4
-  image: ^4.3.0
+  image: ^4.6.0
   image_picker: ^1.2.1
   image_cropper: ^11.0.0
   app_settings: ^7.0.0
