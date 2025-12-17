@@ -35,7 +35,7 @@ dependencies:
   media_kit: ^1.2.6
   url_launcher: ^6.3.1
   google_fonts: ^6.3.3
-  file_picker: ^10.3.6
+  file_picker: ^10.3.7
   flutter_colorpicker: ^1.1.0
   mime: ^2.0.0
   mobile_scanner: ^7.1.3
