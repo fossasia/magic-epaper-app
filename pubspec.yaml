@@ -42,7 +42,7 @@ dependencies:
   barcode_widget: ^2.0.4
   intl: ^0.20.2
   path_provider: ^2.0.15
-  get_it: ^9.0.5
+  get_it: ^9.2.0
   path: ^1.9.1
   permission_handler: ^12.0.1
   ndef: ^0.4.0
