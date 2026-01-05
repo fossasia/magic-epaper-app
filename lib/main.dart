@@ -19,7 +19,8 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => ImageLoader()),
         ChangeNotifierProvider(create: (_) => ImageLibraryProvider()),
-        ChangeNotifierProvider(create: (_) => LocaleProvider()),
+        // Load saved locale on startup
+        ChangeNotifierProvider(create: (_) => LocaleProvider()..loadSavedLocale()),
       ],
       child: const MyApp(),
     ),
