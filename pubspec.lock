@@ -736,10 +736,10 @@ packages:
     dependency: "direct main"
     description:
       name: pro_image_editor
-      sha256: c186bf0b2a8debda3df8ba1fae51c9c75f19fc921a492a985593cc29f9a6e93c
+      sha256: baa12ac91b25617d0f98e3146a890edf47a2a6ab5f575cf3caf9abbb9366f24c
       url: "https://pub.dev"
     source: hosted
-    version: "11.15.1"
+    version: "11.15.5"
   process:
     dependency: transitive
     description:
