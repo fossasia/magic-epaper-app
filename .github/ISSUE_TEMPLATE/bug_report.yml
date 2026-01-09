@@ -51,6 +51,7 @@ body:
         - Windows
         - macOS
         - Linux
+        - Other
     validations:
       required: true
 
