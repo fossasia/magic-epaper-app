@@ -163,17 +163,21 @@ class _NFCReadScreenState extends State<NFCReadScreen>
       title: appLocalizations.readNfcTags,
       index: 1,
       actions: [
-        IconButton(
-          icon: const Icon(Icons.clear_all, color: Colors.white),
-          onPressed: _nfcController.result.isNotEmpty
-              ? () {
-                  _nfcController.clearResult();
-                  _showSnackBar(appLocalizations.resultsCleared);
-                }
-              : null,
-          tooltip: appLocalizations.clearResults,
-        ),
-      ],
+  IconButton(
+    icon: const Icon(Icons.menu, color: Colors.white), // keep hamburger look (matches issue)
+    onPressed: () {
+      if (_nfcController.result.isNotEmpty) {
+        _nfcController.clearResult();
+        _showSnackBar(appLocalizations.resultsCleared);
+      } else {
+        _showSnackBar('Nothing to clear'); // if you don’t have this key, use a simple string
+        // _showSnackBar('Nothing to clear');
+      }
+    },
+    tooltip: appLocalizations.clearResults,
+  ),
+],
+
       body: SafeArea(
         top: false,
         bottom: true,
