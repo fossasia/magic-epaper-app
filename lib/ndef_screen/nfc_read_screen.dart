@@ -164,14 +164,13 @@ class _NFCReadScreenState extends State<NFCReadScreen>
       index: 1,
       actions: [
   IconButton(
-    icon: const Icon(Icons.menu, color: Colors.white), // keep hamburger look (matches issue)
+    icon: const Icon(Icons.menu, color: Colors.white), 
     onPressed: () {
       if (_nfcController.result.isNotEmpty) {
         _nfcController.clearResult();
         _showSnackBar(appLocalizations.resultsCleared);
       } else {
-        _showSnackBar('Nothing to clear'); // if you don’t have this key, use a simple string
-        // _showSnackBar('Nothing to clear');
+        _showSnackBar('Nothing to clear'); 
       }
     },
     tooltip: appLocalizations.clearResults,
