@@ -81,6 +81,53 @@ Please read FOSSASIA's [Best Practices](https://blog.fossasia.org/open-source-de
 * Before you join development, please set up the project on your local machine, run it and go through the application completely. Press on any button you can find and see where it leads to. Explore.
 * If you would like to work on an issue, drop in a comment at the issue. If it is already assigned to someone, but there is no sign of any work being done, please free to drop in a comment and start working on it.
 
+
+## Quick Start for Contributors
+
+This section helps contributors set up the project quickly and start contributing without friction.
+
+### Recommended Development Setup
+- Flutter SDK (stable channel)
+- Android Studio or VS Code with Flutter extension
+- A physical Android device is recommended for NFC-related changes  
+  (most emulators do not support NFC)
+
+Verify your environment:
+```
+flutter doctor
+```
+Run the app locally:
+```
+flutter pub get
+```
+
+```
+flutter run
+```
+
+
+> **Note:** NFC read/write features generally require a real Android device.  
+> UI-only changes can be tested using an emulator.
+
+
+## How to Test Your Changes (Before PR)
+
+Before opening a pull request, please ensure the following:
+
+- The app builds successfully using `flutter run`
+- No new warnings or errors are introduced
+- UI changes are tested on at least one screen size
+- NFC-related changes are tested on a physical device (if applicable)
+- Screenshots are attached for UI-related changes
+
+## Common Contributor Pitfalls
+
+- NFC functionality usually does not work on emulators,use a physical device when required
+- Avoid touching unrelated files in a single pull request
+- Follow the single-commit rule mentioned above
+- UI changes should respect existing spacing and design patterns
+- Always describe what was tested and how in the pull request description
+
 ## Dev Container usage
 
 Opening this repository in VSCode, GitHub Codespaces or another supported editor/IDE will allow the repository to be opened in a [Dev Container](https://containers.dev/).
