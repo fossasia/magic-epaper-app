@@ -4,6 +4,7 @@ import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import '../../util/app_logger.dart';
 
 class ImageLibraryProvider extends ChangeNotifier {
   List<SavedImage> _savedImages = [];
@@ -82,10 +83,10 @@ class ImageLibraryProvider extends ChangeNotifier {
       _searchQuery = '';
       _selectedSource = 'all';
 
-      debugPrint('All data cleared successfully');
+      AppLogger.info('All data cleared successfully');
       notifyListeners();
     } catch (e) {
-      debugPrint('Error clearing all data: $e');
+      AppLogger.error('Error clearing all data: $e');
       rethrow;
     }
   }
@@ -107,14 +108,14 @@ class ImageLibraryProvider extends ChangeNotifier {
                 if (await image.fileExists()) {
                   _savedImages.add(image);
                 } else {
-                  debugPrint('Image file not found: ${image.filePath}');
+                  AppLogger.warning('Image file not found: ${image.filePath}');
                 }
               } catch (e) {
-                debugPrint('Error parsing individual image metadata: $e');
+                AppLogger.error('Error parsing individual image metadata: $e');
               }
             }
           } catch (e) {
-            debugPrint('Error parsing JSON metadata file: $e');
+            AppLogger.error('Error parsing JSON metadata file: $e');
           }
         }
       }
@@ -122,15 +123,15 @@ class ImageLibraryProvider extends ChangeNotifier {
         const encoder = JsonEncoder.withIndent('  ');
         final imageJsonList = _savedImages.map((img) => img.toJson()).toList();
         final prettyJson = encoder.convert(imageJsonList);
-        debugPrint('Loaded image metadata (JSON):\n$prettyJson');
+        AppLogger.debug('Loaded image metadata (JSON):\n$prettyJson');
       } else {
-        debugPrint('No saved images to print.');
+        AppLogger.debug('No saved images to print.');
       }
       await _cleanupOrphanedFiles();
-      debugPrint('Loaded ${_savedImages.length} images successfully');
+      AppLogger.info('Loaded ${_savedImages.length} images successfully');
       _isInitialized = true;
     } catch (e) {
-      debugPrint('Error loading saved images: $e');
+      AppLogger.error('Error loading saved images: $e');
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -162,10 +163,11 @@ class ImageLibraryProvider extends ChangeNotifier {
       );
       _savedImages.add(savedImage);
       await _persistMetadata();
-      debugPrint('Successfully saved image: $name (${imageData.length} bytes)');
+      AppLogger.info(
+          'Successfully saved image: $name (${imageData.length} bytes)');
       notifyListeners();
     } catch (e) {
-      debugPrint('Error saving image: $e');
+      AppLogger.error('Error saving image: $e');
       rethrow;
     }
   }
@@ -184,7 +186,7 @@ class ImageLibraryProvider extends ChangeNotifier {
       await _persistMetadata();
       notifyListeners();
     } catch (e) {
-      debugPrint('Error deleting image: $e');
+      AppLogger.error('Error deleting image: $e');
       rethrow;
     }
   }
@@ -206,7 +208,7 @@ class ImageLibraryProvider extends ChangeNotifier {
       await _persistMetadata();
       notifyListeners();
     } catch (e) {
-      debugPrint('Error renaming image: $e');
+      AppLogger.error('Error renaming image: $e');
       rethrow;
     }
   }
@@ -229,10 +231,10 @@ class ImageLibraryProvider extends ChangeNotifier {
       final jsonString = jsonEncode(imageJsonList);
       await _metadataFile!.writeAsString(jsonString);
       final fileSize = await _metadataFile!.length();
-      debugPrint('Metadata file size: $fileSize bytes');
-      debugPrint('Metadata saved to: ${_metadataFile!.path}');
+      AppLogger.debug('Metadata file size: $fileSize bytes');
+      AppLogger.debug('Metadata saved to: ${_metadataFile!.path}');
     } catch (e) {
-      debugPrint('Error persisting metadata: $e');
+      AppLogger.error('Error persisting metadata: $e');
       rethrow;
     }
   }
@@ -244,12 +246,12 @@ class ImageLibraryProvider extends ChangeNotifier {
       final validFilePaths = _savedImages.map((img) => img.filePath).toSet();
       for (final file in files) {
         if (file is File && !validFilePaths.contains(file.path)) {
-          debugPrint('Deleting orphaned file: ${file.path}');
+          AppLogger.debug('Deleting orphaned file: ${file.path}');
           await file.delete();
         }
       }
     } catch (e) {
-      debugPrint('Error cleaning up orphaned files: $e');
+      AppLogger.error('Error cleaning up orphaned files: $e');
     }
   }
 }

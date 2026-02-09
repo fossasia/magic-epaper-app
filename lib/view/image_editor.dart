@@ -9,6 +9,7 @@ import 'package:magicepaperapp/util/color_util.dart';
 import 'package:magicepaperapp/util/epd/driver/waveform.dart';
 import 'package:magicepaperapp/util/image_editor_utils.dart';
 import 'package:magicepaperapp/util/xbm_encoder.dart';
+import 'package:magicepaperapp/view/text_fit_editor.dart';
 import 'package:magicepaperapp/view/widget/image_list.dart';
 import 'package:magicepaperapp/util/orientation_util.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,7 @@ import 'package:magicepaperapp/provider/image_loader.dart';
 import 'package:magicepaperapp/util/epd/epd.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
+import '../util/app_logger.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
@@ -42,9 +44,10 @@ class _ImageEditorState extends State<ImageEditor> {
   String _currentImageSource = 'imported';
   img.Image? _processedSourceImage;
   List<img.Image> _rawImages = [];
-  List<img.Image> _rotatedImages = [];
   List<Uint8List> _processedPngs = [];
   ImageSaveHandler? _imageSaveHandler;
+  bool _isProcessingImages = false;
+  bool _isInitializing = true;
 
   @override
   void initState() {
@@ -53,33 +56,44 @@ class _ImageEditorState extends State<ImageEditor> {
     _selectedWaveform = null;
     _selectedWaveformName = null;
 
-    Future.microtask(() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _isInitializing = false;
+      });
       loadInitialImage();
     });
   }
 
   Future<void> loadInitialImage() async {
-    final imgLoader = context.read<ImageLoader>();
-    if (imgLoader.image == null) {
-      await imgLoader.loadFinalizedImage(
-        width: widget.device.width,
-        height: widget.device.height,
-      );
-    }
-    if (imgLoader.image == null) {
-      loadDefaultImage(imgLoader);
+    try {
+      final imgLoader = context.read<ImageLoader>();
+      if (imgLoader.image == null) {
+        await imgLoader.loadFinalizedImage(
+          width: widget.device.width,
+          height: widget.device.height,
+        );
+      }
+      if (imgLoader.image == null) {
+        await loadDefaultImage(imgLoader);
+      }
+    } catch (e) {
+      AppLogger.error('Error loading initial image: $e');
     }
   }
 
   Future<void> loadDefaultImage(ImageLoader imgLoader) async {
-    const assetPath = 'assets/images/FOSSASIA.png';
-    final byteData = await rootBundle.load(assetPath);
-    final pngBytes = byteData.buffer.asUint8List();
-    await imgLoader.updateImage(
-      bytes: pngBytes,
-      width: widget.device.width,
-      height: widget.device.height,
-    );
+    try {
+      const assetPath = 'assets/images/FOSSASIA.png';
+      final byteData = await rootBundle.load(assetPath);
+      final pngBytes = byteData.buffer.asUint8List();
+      await imgLoader.updateImage(
+        bytes: pngBytes,
+        width: widget.device.width,
+        height: widget.device.height,
+      );
+    } catch (e) {
+      AppLogger.error('Error loading default image: $e');
+    }
   }
 
   @override
@@ -96,7 +110,7 @@ class _ImageEditorState extends State<ImageEditor> {
     if (_imageSaveHandler == null) return;
 
     await _imageSaveHandler!.saveCurrentImage(
-      rawImages: _rotatedImages,
+      rawImages: _rawImages,
       selectedFilterIndex: _selectedFilterIndex,
       flipHorizontal: flipHorizontal,
       flipVertical: flipVertical,
@@ -132,8 +146,8 @@ class _ImageEditorState extends State<ImageEditor> {
         setState(() {
           _processedSourceImage = null;
           _rawImages = [];
-          _rotatedImages = [];
           _processedPngs = [];
+          _isProcessingImages = false;
         });
       }
       return;
@@ -143,19 +157,43 @@ class _ImageEditorState extends State<ImageEditor> {
       return;
     }
 
-    _rawImages = processImages(originalImage: sourceImage, epd: widget.device);
+    _processImagesAsync(sourceImage);
+  }
 
-    _rotatedImages =
-        _rawImages.map((rawImg) => img.copyRotate(rawImg, angle: 90)).toList();
-    _processedPngs =
-        _rotatedImages.map((rotatedImg) => img.encodePng(rotatedImg)).toList();
-
+  Future<void> _processImagesAsync(img.Image sourceImage) async {
+    if (_isProcessingImages) return;
     setState(() {
-      _processedSourceImage = sourceImage;
-      _selectedFilterIndex = 0;
-      flipHorizontal = false;
-      flipVertical = false;
+      _isProcessingImages = true;
     });
+    try {
+      await Future.delayed(const Duration(milliseconds: 50));
+      final rawImages =
+          processImages(originalImage: sourceImage, epd: widget.device);
+      final processedPngs = <Uint8List>[];
+      for (int i = 0; i < rawImages.length; i++) {
+        processedPngs.add(img.encodePng(rawImages[i]));
+        if (i % 2 == 0) {
+          await Future.delayed(const Duration(milliseconds: 1));
+        }
+      }
+      if (mounted) {
+        setState(() {
+          _rawImages = rawImages;
+          _processedPngs = processedPngs;
+          _processedSourceImage = sourceImage;
+          _selectedFilterIndex = 0;
+          flipHorizontal = false;
+          flipVertical = false;
+          _isProcessingImages = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isProcessingImages = false;
+        });
+      }
+    }
   }
 
   Future<void> _exportXbmFiles() async {
@@ -219,10 +257,76 @@ class _ImageEditorState extends State<ImageEditor> {
     }
   }
 
+  void _showRefreshModeInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            appLocalizations.refreshModeInfo,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  appLocalizations.fullRefreshInfo,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: colorAccent,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  appLocalizations.fullRefreshDescription,
+                  style: const TextStyle(fontSize: 14),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  appLocalizations.partialRefreshInfo,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: colorAccent,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  appLocalizations.partialRefreshDescription,
+                  style: const TextStyle(fontSize: 14),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              style: TextButton.styleFrom(
+                foregroundColor: colorAccent,
+              ),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var imgLoader = context.watch<ImageLoader>();
-    _updateProcessedImages(imgLoader.image);
+    if (!_isInitializing && imgLoader.image != null && !_isProcessingImages) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _updateProcessedImages(imgLoader.image);
+      });
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -242,70 +346,123 @@ class _ImageEditorState extends State<ImageEditor> {
           if (_rawImages.isNotEmpty) ...[
             if (widget.device is Epd && !widget.isExportOnly)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.only(right: 8.0),
                 child: Builder(builder: (context) {
                   final epd = widget.device as Epd;
                   final List<DropdownMenuItem<String?>> dropdownItems = [
                     DropdownMenuItem<String?>(
                       value: null,
-                      child: Text(appLocalizations.fullRefresh),
+                      child: Text(
+                        appLocalizations.fullRefresh,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                     ...epd.controller.waveforms.map((waveform) {
                       return DropdownMenuItem<String?>(
                         value: waveform.name,
                         child: Text(
                           waveform.name,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       );
                     }),
                   ];
 
-                  return Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white, width: 1.2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String?>(
-                        value: _selectedWaveformName,
-                        hint: Text(
-                          appLocalizations.fullRefresh,
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 16),
-                        ),
-                        isDense: true,
-                        dropdownColor: colorAccent,
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 14),
-                        borderRadius: BorderRadius.circular(8),
-                        icon: const SizedBox.shrink(),
-                        items: dropdownItems,
-                        onChanged: (String? newName) {
-                          setState(() {
-                            _selectedWaveformName = newName;
-                            if (newName == null) {
-                              _selectedWaveform = null;
-                            } else {
-                              _selectedWaveform = epd.controller.waveforms
-                                  .firstWhere((w) => w.name == newName);
-                            }
-                          });
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              duration: Durations.medium3,
-                              content: Text(
-                                _selectedWaveform == null
-                                    ? appLocalizations.fullRefreshSelected
-                                    : "${appLocalizations.waveformSelected} ${_selectedWaveform!.name}",
-                              ),
-                              backgroundColor: colorPrimary,
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                          onLongPress: () =>
+                              _showRefreshModeInfoDialog(context),
+                          child: Container(
+                            height: 36,
+                            constraints: const BoxConstraints(minWidth: 120),
+                            decoration: BoxDecoration(
+                              color: colorAccent,
+                              border: Border.all(color: Colors.white, width: 1),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                          );
-                        },
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String?>(
+                                value: _selectedWaveformName,
+                                hint: Text(
+                                  appLocalizations.fullRefresh,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                isDense: true,
+                                dropdownColor: colorAccent,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                                icon: const Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                items: dropdownItems,
+                                onChanged: (String? newName) {
+                                  setState(() {
+                                    _selectedWaveformName = newName;
+                                    if (newName == null) {
+                                      _selectedWaveform = null;
+                                    } else {
+                                      _selectedWaveform = epd
+                                          .controller.waveforms
+                                          .firstWhere((w) => w.name == newName);
+                                    }
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      duration: Durations.medium3,
+                                      content: Text(
+                                        _selectedWaveform == null
+                                            ? appLocalizations
+                                                .fullRefreshSelected
+                                            : "${appLocalizations.waveformSelected} ${_selectedWaveform!.name}",
+                                      ),
+                                      backgroundColor: colorPrimary,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          )),
+                      const SizedBox(width: 4),
+                      GestureDetector(
+                        onTap: () => _showRefreshModeInfoDialog(context),
+                        child: Container(
+                          height: 36,
+                          width: 36,
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            // border: Border.all(color: Colors.white, width: 1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(
+                            Icons.info_outline,
+                            color: Colors.white,
+                            size: 26,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   );
                 }),
               ),
@@ -348,11 +505,22 @@ class _ImageEditorState extends State<ImageEditor> {
       body: SafeArea(
         top: false,
         bottom: true,
-        child: imgLoader.isLoading
+        child: _isInitializing || imgLoader.isLoading || _isProcessingImages
             ? Center(
-                child: Text(
-                  appLocalizations.loading,
-                  style: const TextStyle(color: colorBlack, fontSize: 14),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(colorAccent),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      _isProcessingImages
+                          ? appLocalizations.processingImages
+                          : appLocalizations.loading,
+                      style: const TextStyle(color: colorBlack, fontSize: 14),
+                    ),
+                  ],
                 ),
               )
             : Padding(
@@ -362,8 +530,8 @@ class _ImageEditorState extends State<ImageEditor> {
                         key: ValueKey(_processedSourceImage),
                         processedPngs: _processedPngs,
                         epd: widget.device,
-                        width: widget.device.width,
-                        height: widget.device.height,
+                        width: widget.device.height,
+                        height: widget.device.width,
                         selectedIndex: _selectedFilterIndex,
                         flipHorizontal: flipHorizontal,
                         flipVertical: flipVertical,
@@ -472,6 +640,30 @@ class BottomActionMenu extends StatelessWidget {
                     );
                     await imgLoader.saveFinalizedImageBytes(canvasBytes);
                     onSourceChanged?.call('editor');
+                  }
+                },
+              ),
+              _buildActionButton(
+                context: context,
+                icon: Icons.text_fields,
+                label: "Text",
+                onTap: () async {
+                  final bytes = await Navigator.of(context).push<Uint8List>(
+                    MaterialPageRoute(
+                      builder: (context) => TextFitEditor(
+                        width: epd.width,
+                        height: epd.height,
+                      ),
+                    ),
+                  );
+                  if (bytes != null) {
+                    await imgLoader.updateImage(
+                      bytes: bytes,
+                      width: epd.width,
+                      height: epd.height,
+                    );
+                    await imgLoader.saveFinalizedImageBytes(bytes);
+                    onSourceChanged?.call('text');
                   }
                 },
               ),

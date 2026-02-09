@@ -15,11 +15,11 @@ class TransferProgressDialog extends StatefulWidget {
   final Color colorAccent;
 
   const TransferProgressDialog({
-    Key? key,
+    super.key,
     required this.finalImg,
     required this.transferFunction,
     required this.colorAccent,
-  }) : super(key: key);
+  });
 
   @override
   State<TransferProgressDialog> createState() => _TransferProgressDialogState();

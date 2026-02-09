@@ -166,7 +166,11 @@ LRESULT CALLBACK Win32Window::WndProc(HWND const window,
     auto that = static_cast<Win32Window*>(window_struct->lpCreateParams);
     EnableFullDpiSupportIfAvailable(window);
     that->window_handle_ = window;
-  } else if (Win32Window* that = GetThisFromHandle(window)) {
+    return DefWindowProc(window, message, wparam, lparam);
+  }
+
+  Win32Window* that = GetThisFromHandle(window);
+  if (that) {
     return that->MessageHandler(window, message, wparam, lparam);
   }
 

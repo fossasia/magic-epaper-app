@@ -226,7 +226,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     };
 
     return DropdownButtonFormField<String>(
-      value: _selectedBarcode.name,
+      initialValue: _selectedBarcode.name,
       decoration: const InputDecoration(
         labelText: 'Barcode Format',
         border: OutlineInputBorder(),

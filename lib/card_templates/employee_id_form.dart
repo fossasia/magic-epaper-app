@@ -10,6 +10,7 @@ import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:magicepaperapp/util/template_util.dart';
+import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
@@ -102,113 +103,126 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
   }
 
   void _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isGenerating = true;
-      });
+    setState(() {
+      _isGenerating = true;
+    });
 
-      try {
-        final List<LayerSpec> layers = [];
+    try {
+      final List<LayerSpec> layers = [];
 
-        if (_profileImage != null) {
-          layers.add(LayerSpec.widget(
-            widget: ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Image.file(_profileImage!,
-                  width: 200, height: 200, fit: BoxFit.cover),
-            ),
-            offset: const Offset(0, -205),
-            scale: 10,
-          ));
-        }
+      final layoutParams =
+          ResponsiveLayoutUtil.getEmployeeIdLayout(widget.width, widget.height);
 
-        if (_employeeData.companyName.isNotEmpty) {
-          layers.add(LayerSpec.text(
-            textStyle: const TextStyle(
-              fontSize: 50,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-            text: _employeeData.companyName,
-            textColor: Colors.black,
-            backgroundColor: Colors.white,
-            textAlign: TextAlign.center,
-            offset: const Offset(0, -80),
-            scale: 1,
-          ));
-        }
+      if (_profileImage != null) {
+        layers.add(LayerSpec.widget(
+          widget: ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Image.file(_profileImage!,
+                width: 200, height: 200, fit: BoxFit.cover),
+          ),
+          offset: layoutParams.profileImageOffset,
+          scale: layoutParams.profileImageScale,
+        ));
+      }
 
+      if (_employeeData.companyName.isNotEmpty) {
+        layers.add(LayerSpec.text(
+          textStyle: TextStyle(
+            fontSize: layoutParams.companyNameFontSize,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+          text: _employeeData.companyName,
+          textColor: Colors.black,
+          backgroundColor: Colors.white,
+          textAlign: TextAlign.center,
+          offset: layoutParams.companyNameOffset,
+          scale: layoutParams.companyNameScale,
+        ));
+      }
+
+      if (_employeeData.name.isNotEmpty) {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.namePrefix}${_employeeData.name}',
+          textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.left,
-          offset: const Offset(0, -30),
-          scale: 1,
+          offset: layoutParams.textOffsets['name']!,
+          scale: layoutParams.textFieldScale,
         ));
+      }
 
+      if (_employeeData.position.isNotEmpty) {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.positionPrefix}${_employeeData.position}',
+          textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.left,
-          offset: const Offset(0, 0),
-          scale: 1,
+          offset: layoutParams.textOffsets['position']!,
+          scale: layoutParams.textFieldScale,
         ));
+      }
 
+      if (_employeeData.division.isNotEmpty) {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.divisionPrefix}${_employeeData.division}',
+          textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.left,
-          offset: const Offset(0, 35),
-          scale: 1,
+          offset: layoutParams.textOffsets['division']!,
+          scale: layoutParams.textFieldScale,
         ));
+      }
 
+      if (_employeeData.idNumber.isNotEmpty) {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.idPrefix}${_employeeData.idNumber}',
+          textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.left,
-          offset: const Offset(0, 70),
-          scale: 1,
+          offset: layoutParams.textOffsets['idNumber']!,
+          scale: layoutParams.textFieldScale,
         ));
-
-        if (_employeeData.qrData.isNotEmpty) {
-          layers.add(LayerSpec.widget(
-            widget: BarcodeWidget(
-              padding: const EdgeInsets.all(10),
-              backgroundColor: colorWhite,
-              barcode: Barcode.qrCode(),
-              data: _employeeData.qrData,
-              width: 60,
-              height: 60,
-            ),
-            offset: const Offset(0, 170),
-            scale: 8,
-          ));
-        }
-
-        final result = await Navigator.of(context).push<Uint8List>(
-          MaterialPageRoute(
-            builder: (context) => MovableBackgroundImageExample(
-              width: widget.width,
-              height: widget.height,
-              initialLayers: layers,
-            ),
-          ),
-        );
-
-        if (result != null) {
-          Navigator.of(context)
-            ..pop()
-            ..pop(result);
-        }
-      } finally {
-        setState(() {
-          _isGenerating = false;
-        });
       }
+
+      if (_employeeData.qrData.isNotEmpty) {
+        layers.add(LayerSpec.widget(
+          widget: BarcodeWidget(
+            padding: const EdgeInsets.all(2),
+            backgroundColor: colorWhite,
+            barcode: Barcode.qrCode(),
+            data: _employeeData.qrData,
+            width: layoutParams.qrCodeSize.width,
+            height: layoutParams.qrCodeSize.height,
+          ),
+          offset: layoutParams.qrCodeOffset,
+          scale: layoutParams.qrCodeScale,
+        ));
+      }
+
+      final result = await Navigator.of(context).push<Uint8List>(
+        MaterialPageRoute(
+          builder: (context) => MovableBackgroundImageExample(
+            width: widget.width,
+            height: widget.height,
+            initialLayers: layers,
+          ),
+        ),
+      );
+
+      if (result != null) {
+        Navigator.of(context)
+          ..pop()
+          ..pop(result);
+      }
+    } finally {
+      setState(() {
+        _isGenerating = false;
+      });
     }
   }
 
@@ -286,9 +300,6 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                           label: appLocalizations.companyName,
                           hint: appLocalizations.enterCompanyName,
                           icon: Icons.business_outlined,
-                          validator: (value) => value?.isEmpty ?? true
-                              ? appLocalizations.pleaseEnterCompanyName
-                              : null,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
@@ -296,9 +307,6 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                           label: appLocalizations.name,
                           hint: appLocalizations.enterEmployeeName,
                           icon: Icons.person_outline,
-                          validator: (value) => value?.isEmpty ?? true
-                              ? appLocalizations.pleaseEnterName
-                              : null,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
@@ -306,9 +314,6 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                           label: appLocalizations.position,
                           hint: appLocalizations.enterJobPosition,
                           icon: Icons.work_outline,
-                          validator: (value) => value?.isEmpty ?? true
-                              ? appLocalizations.pleaseEnterPosition
-                              : null,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
@@ -316,9 +321,6 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                           label: appLocalizations.division,
                           hint: appLocalizations.enterDepartment,
                           icon: Icons.groups_outlined,
-                          validator: (value) => value?.isEmpty ?? true
-                              ? appLocalizations.pleaseEnterDivision
-                              : null,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
@@ -326,9 +328,6 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                           label: appLocalizations.idNumber,
                           hint: appLocalizations.enterUniqueId,
                           icon: Icons.badge_outlined,
-                          validator: (value) => value?.isEmpty ?? true
-                              ? appLocalizations.pleaseEnterIdNumber
-                              : null,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
@@ -337,9 +336,6 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                           hint: appLocalizations.enterQrCodeData,
                           icon: Icons.qr_code_outlined,
                           maxLines: 2,
-                          validator: (value) => value?.isEmpty ?? true
-                              ? appLocalizations.pleaseEnterQrCodeData
-                              : null,
                         ),
                       ],
                     ),

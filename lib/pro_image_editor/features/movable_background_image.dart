@@ -20,7 +20,6 @@ import 'package:pro_image_editor/core/models/layers/layer_interaction.dart';
 import 'package:pro_image_editor/designs/whatsapp/whatsapp_paint_colorpicker.dart';
 import 'package:pro_image_editor/designs/whatsapp/whatsapp_text_colorpicker.dart';
 import 'package:pro_image_editor/designs/whatsapp/whatsapp_text_size_slider.dart';
-import 'package:pro_image_editor/designs/whatsapp/widgets/appbar/whatsapp_paint_appbar.dart';
 import 'package:pro_image_editor/designs/whatsapp/widgets/appbar/whatsapp_text_appbar.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import '../core/mixin/example_helper.dart';
@@ -93,6 +92,7 @@ class _MovableBackgroundImageExampleState
       if (layer.text != null) {
         editor.addLayer(
           TextLayer(
+            maxTextWidth: _canvasWidth - 70,
             textStyle: layer.textStyle,
             align: layer.textAlign ?? TextAlign.left,
             offset: layer.offset,
@@ -242,7 +242,7 @@ class _MovableBackgroundImageExampleState
         ),
         builder: (context) {
           return Material(
-            color: Colors.transparent,
+            color: Colors.black,
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 24, left: 16, right: 16),
@@ -506,6 +506,7 @@ class _MovableBackgroundImageExampleState
                       MediaQuery.devicePixelRatioOf(context)),
                 ),
                 mainEditor: MainEditorConfigs(
+                  enableZoom: true,
                   enableCloseButton: !isDesktopMode(context),
                   widgets: MainEditorWidgets(
                     bodyItems: (editor, rebuildStream) {
@@ -555,6 +556,7 @@ class _MovableBackgroundImageExampleState
                   ),
                 ),
                 paintEditor: PaintEditorConfigs(
+                  enableZoom: true,
                   widgets: PaintEditorWidgets(
                     colorPicker:
                         (editor, rebuildStream, currentColor, setColor) => null,
@@ -565,7 +567,7 @@ class _MovableBackgroundImageExampleState
                     uiOverlayStyle: SystemUiOverlayStyle(
                       statusBarColor: Colors.black,
                     ),
-                    background: Colors.transparent,
+                    background: Colors.black,
                   ),
                 ),
                 textEditor: TextEditorConfigs(
@@ -587,7 +589,7 @@ class _MovableBackgroundImageExampleState
                   ),
                   style: TextEditorStyle(
                       textFieldMargin: EdgeInsets.zero,
-                      bottomBarBackground: Colors.transparent,
+                      bottomBarBackground: Colors.black,
                       bottomBarMainAxisAlignment: !_useMaterialDesign
                           ? MainAxisAlignment.spaceEvenly
                           : MainAxisAlignment.start),
@@ -644,10 +646,14 @@ class _MovableBackgroundImageExampleState
                   children: <Widget>[
                     FlatIconTextButton(
                       label: Text('Canvas Color', style: _bottomTextStyle),
-                      icon: const Icon(
-                        Icons.check_box_outline_blank,
-                        size: 22.0,
-                        color: Colors.white,
+                      icon: Container(
+                        width: 22.0,
+                        height: 22.0,
+                        decoration: BoxDecoration(
+                          color: availableCanvasColors[currentCanvasColorIndex],
+                          border: Border.all(color: Colors.white, width: 2),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
                       onPressed: _changeCanvasColor,
                     ),
@@ -729,17 +735,6 @@ List<ReactiveWidget> _buildPaintEditorBody(
         stream: rebuildStream,
         builder: (_) => WhatsappPaintColorpicker(paintEditor: paintEditor),
       ),
-    ReactiveWidget(
-      stream: rebuildStream,
-      builder: (_) => WhatsAppPaintAppBar(
-        configs: paintEditor.configs,
-        canUndo: paintEditor.canUndo,
-        onDone: paintEditor.done,
-        onTapUndo: paintEditor.undoAction,
-        onClose: paintEditor.close,
-        activeColor: paintEditor.activeColor,
-      ),
-    ),
   ];
 }
 

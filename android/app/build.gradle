@@ -71,4 +71,5 @@ flutter {
 
 dependencies {
     implementation files("libs/waveshare-nfc/NFC.jar")
+    implementation "com.squareup.okhttp3:okhttp:5.3.2"
 }

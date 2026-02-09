@@ -7,6 +7,7 @@ import 'package:magicepaperapp/image_library/utils/date_utils.dart' as dt;
 import 'package:magicepaperapp/image_library/utils/filter_utils.dart';
 import 'package:magicepaperapp/image_library/utils/source_utils.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import '../../../util/app_logger.dart';
 
 class ImagePropertiesDialog extends StatefulWidget {
   final SavedImage image;
@@ -41,7 +42,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
         _isLoadingProperties = false;
       });
     } catch (e) {
-      debugPrint('Error in dialog loading image properties: $e');
+      AppLogger.error('Error in dialog loading image properties: $e');
       setState(() {
         _isLoadingProperties = false;
       });

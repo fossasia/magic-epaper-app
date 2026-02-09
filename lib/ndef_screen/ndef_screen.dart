@@ -11,6 +11,7 @@ import 'package:magicepaperapp/ndef_screen/widgets/nfc_read_card.dart';
 import 'package:magicepaperapp/ndef_screen/app_launcher_card.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'dart:async';
+import '../util/app_logger.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
@@ -106,7 +107,7 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
             previousAvailability, _nfcController.availability);
       }
     } catch (e) {
-      debugPrint('Error checking NFC availability: $e');
+      AppLogger.error('Error checking NFC availability: $e');
     }
   }
 

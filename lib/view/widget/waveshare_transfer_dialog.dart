@@ -81,8 +81,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
     });
     await Future.delayed(const Duration(milliseconds: 200));
 
-    final rotatedImage = img.copyRotate(widget.image, angle: 90);
-    _processedImageBytes = Uint8List.fromList(img.encodePng(rotatedImage));
+    _processedImageBytes = Uint8List.fromList(img.encodePng(widget.image));
 
     _flashImage();
 
@@ -166,7 +165,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
               const Text(
                 "Hold your phone near the display to begin.",
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 16),
               ),
             ],
           ),
