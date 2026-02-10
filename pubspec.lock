@@ -448,7 +448,7 @@ packages:
     source: hosted
     version: "0.2.2"
   integration_test:
-    dependency: "direct dev"
+    dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -501,7 +501,7 @@ packages:
     source: hosted
     version: "6.0.0"
   logger:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: logger
       sha256: a7967e31b703831a893bbc3c3dd11db08126fe5f369b5c648a36f821979f5be3
@@ -565,7 +565,7 @@ packages:
     source: hosted
     version: "2.0.0"
   mobile_scanner:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: mobile_scanner
       sha256: c6184bf2913dd66be244108c9c27ca04b01caf726321c44b0e7a7a1e32d41044
@@ -736,10 +736,10 @@ packages:
     dependency: "direct main"
     description:
       name: pro_image_editor
-      sha256: "27a93dfef2fd7d9894deed71b12d6c95a1bf94a06c8a588419ef4d5e2b8f6034"
+      sha256: c186bf0b2a8debda3df8ba1fae51c9c75f19fc921a492a985593cc29f9a6e93c
       url: "https://pub.dev"
     source: hosted
-    version: "11.22.2"
+    version: "11.15.1"
   process:
     dependency: transitive
     description:
@@ -1082,5 +1082,5 @@ packages:
     source: hosted
     version: "6.5.0"
 sdks:
-  dart: ">=3.9.0 <4.0.0"
-  flutter: ">=3.38.5"
+  dart: ">=3.8.0 <4.0.0"
+  flutter: ">=3.32.8"
