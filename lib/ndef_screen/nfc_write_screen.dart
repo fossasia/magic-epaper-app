@@ -209,12 +209,14 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
       actions: [
         IconButton(
           icon: const Icon(Icons.clear_all, color: Colors.white),
-          onPressed: _nfcController.result.isNotEmpty
-              ? () {
-                  _nfcController.clearResult();
-                  _showSnackBar(appLocalizations.resultsCleared);
-                }
-              : null,
+          onPressed: () {
+            if (_nfcController.result.isNotEmpty) {
+              _nfcController.clearResult();
+              _showSnackBar(appLocalizations.resultsCleared);
+            } else {
+              _showSnackBar(appLocalizations.nothingToClear, isError: true);
+            }
+          },
           tooltip: appLocalizations.clearResults,
         ),
       ],

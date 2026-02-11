@@ -162,21 +162,20 @@ class _NFCReadScreenState extends State<NFCReadScreen>
     return CommonScaffold(
       title: appLocalizations.readNfcTags,
       index: 1,
-actions: [
-  IconButton(
-    icon: const Icon(Icons.clear_all, color: Colors.white),
-    onPressed: () {
-      if (_nfcController.result.isNotEmpty) {
-        _nfcController.clearResult();
-        _showSnackBar(appLocalizations.resultsCleared);
-      } else {
-        _showSnackBar(appLocalizations.nothingToClear, isError: true);
-      }
-    },
-    tooltip: appLocalizations.clearResults,
-  ),
-],
-
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.clear_all, color: Colors.white),
+          onPressed: () {
+            if (_nfcController.result.isNotEmpty) {
+              _nfcController.clearResult();
+              _showSnackBar(appLocalizations.resultsCleared);
+            } else {
+              _showSnackBar(appLocalizations.nothingToClear, isError: true);
+            }
+          },
+          tooltip: appLocalizations.clearResults,
+        ),
+      ],
       body: SafeArea(
         top: false,
         bottom: true,
