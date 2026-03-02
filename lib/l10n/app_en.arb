@@ -171,6 +171,7 @@
   "waveformSelected": "Selected",
   "barcode": "Barcode",
   "library": "Library",
+  "text": "Text",
   "templates": "Templates",
   "barcodeGenerator": "Barcode Generator",
   "barcodeData": "Barcode Data",
