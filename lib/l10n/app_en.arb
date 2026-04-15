@@ -168,16 +168,7 @@
   "exportingXbm": "Exporting XBM files...",
   "fullRefresh": "Full Refresh",
   "fullRefreshSelected": "Full Refresh Selected",
-  "waveformSelected": "{waveformName} Selected",
-  "@waveformSelected": {
-    "placeholders": {
-      "waveformName": {
-        "type": "String"
-      }
-    }
-  },
-
-
+  "waveformSelected": "Selected",
   "barcode": "Barcode",
   "library": "Library",
   "text": "Text",
