@@ -1124,8 +1124,8 @@ abstract class AppLocalizations {
   /// No description provided for @waveformSelected.
   ///
   /// In en, this message translates to:
-  /// **'Selected'**
-  String get waveformSelected;
+  /// **'{waveformName} Selected'**
+  String waveformSelected(String waveformName);
 
   /// No description provided for @barcode.
   ///
