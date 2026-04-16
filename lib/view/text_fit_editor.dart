@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 
@@ -103,8 +104,8 @@ class TextFitEditorState extends State<TextFitEditor> {
         titleSpacing: 0.0,
         backgroundColor: colorAccent,
         elevation: 0,
-        title: const Text('Text Editor',
-            style: TextStyle(
+        title: Text(AppLocalizations.of(context)!.textEditorTitle,
+            style: const TextStyle(
                 color: Colors.white,
                 fontSize: 13.8,
                 fontWeight: FontWeight.bold)),
