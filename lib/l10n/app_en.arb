@@ -3,6 +3,16 @@
   
   "appName": "Magic ePaper",
   "aboutUsDescription": "Magic ePaper is an app designed to control and update ePaper displays. The goal is to provide tools for customizing and transferring images, text, and patterns to ePaper screens using NFC. Data transfer from the smartphone to the ePaper hardware is done wirelessly via NFC. The project is built on top of custom firmware and display drivers for seamless communication and efficient image rendering.",
+  "shareAppMessage": "Magic ePaper is an app to control and update ePaper displays. This app provides tools for customizing and transferring images, text, and patterns to ePaper screens using NFC. You can download it from GitHub: https://github.com/fossasia/magic-epaper-app",
+  "canvasColor": "Canvas Color",
+  "addImage": "Add Image",
+  "paint": "Paint",
+  "text": "Text",
+  "barcode": "Barcode",
+  "emoji": "Emoji",
+  "camera": "Camera",
+  "gallery": "Gallery",
+  "cancel": "Cancel",
   "developedBy": "Developed by",
   "fossasiaContributors": "FOSSASIA contributors",
   "contactWithUs": "Contact With Us",
@@ -168,9 +178,18 @@
   "exportingXbm": "Exporting XBM files...",
   "fullRefresh": "Full Refresh",
   "fullRefreshSelected": "Full Refresh Selected",
-  "waveformSelected": "Selected",
+  "waveformSelected": "{waveformName} Selected",
+  "@waveformSelected": {
+    "placeholders": {
+      "waveformName": {
+        "type": "String",
+        "example": "A2"
+      }
+    }
+  },
   "barcode": "Barcode",
   "library": "Library",
+  "text": "Text",
   "templates": "Templates",
   "barcodeGenerator": "Barcode Generator",
   "barcodeData": "Barcode Data",
@@ -581,5 +600,6 @@
   "fullRefreshDescription": "Completely refreshes the entire display by clearing all pixels and redrawing the image. This provides the best image quality and contrast but takes longer to complete.",
   "partialRefreshInfo": "Partial Refresh (Waveforms)",
   "partialRefreshDescription": "Updates only the changed pixels using optimized waveforms. This is faster than full refresh but may result in ghosting or reduced contrast over time.",
-  "longPressForInfo": "Long press for more information"
+  "longPressForInfo": "Long press for more information",
+  "textEditorTitle": "Text Editor"
 }

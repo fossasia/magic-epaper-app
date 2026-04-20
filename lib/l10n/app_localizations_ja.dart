@@ -16,6 +16,37 @@ class AppLocalizationsJa extends AppLocalizations {
       'Magic ePaper is an app designed to control and update ePaper displays. The goal is to provide tools for customizing and transferring images, text, and patterns to ePaper screens using NFC. Data transfer from the smartphone to the ePaper hardware is done wirelessly via NFC. The project is built on top of custom firmware and display drivers for seamless communication and efficient image rendering.';
 
   @override
+  String get shareAppMessage =>
+      'Magic ePaper is an app to control and update ePaper displays. This app provides tools for customizing and transferring images, text, and patterns to ePaper screens using NFC. You can download it from GitHub: https://github.com/fossasia/magic-epaper-app';
+
+  @override
+  String get canvasColor => 'Canvas Color';
+
+  @override
+  String get addImage => 'Add Image';
+
+  @override
+  String get paint => 'Paint';
+
+  @override
+  String get text => 'Text';
+
+  @override
+  String get barcode => 'Barcode';
+
+  @override
+  String get emoji => 'Emoji';
+
+  @override
+  String get camera => 'Camera';
+
+  @override
+  String get gallery => 'Gallery';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
   String get developedBy => 'Developed by';
 
   @override
@@ -489,9 +520,6 @@ class AppLocalizationsJa extends AppLocalizations {
       'Please enable NFC in your device settings to use this feature.';
 
   @override
-  String get cancel => 'Cancel';
-
-  @override
   String get confirm => 'Confirm';
 
   @override
@@ -519,10 +547,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fullRefreshSelected => 'Full Refresh Selected';
 
   @override
-  String get waveformSelected => 'Selected';
-
-  @override
-  String get barcode => 'Barcode';
+  String waveformSelected(String waveformName) {
+    return '$waveformName Selected';
+  }
 
   @override
   String get library => 'Library';
@@ -1282,4 +1309,30 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get chooseImageFromGallery => 'Choose image from gallery';
+
+  @override
+  String get processingImages => 'Processing images...';
+
+  @override
+  String get refreshModeInfo => 'Refresh Mode Information';
+
+  @override
+  String get fullRefreshInfo => 'Full Refresh';
+
+  @override
+  String get fullRefreshDescription =>
+      'Completely refreshes the entire display by clearing all pixels and redrawing the image. This provides the best image quality and contrast but takes longer to complete.';
+
+  @override
+  String get partialRefreshInfo => 'Partial Refresh (Waveforms)';
+
+  @override
+  String get partialRefreshDescription =>
+      'Updates only the changed pixels using optimized waveforms. This is faster than full refresh but may result in ghosting or reduced contrast over time.';
+
+  @override
+  String get longPressForInfo => 'Long press for more information';
+
+  @override
+  String get textEditorTitle => 'Text Editor';
 }
