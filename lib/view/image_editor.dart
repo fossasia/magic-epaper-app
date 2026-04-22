@@ -22,7 +22,6 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import '../util/app_logger.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class ImageEditor extends StatefulWidget {
   final DisplayDevice device;
@@ -311,7 +310,7 @@ class _ImageEditorState extends State<ImageEditor> {
               style: TextButton.styleFrom(
                 foregroundColor: colorAccent,
               ),
-              child: const Text('OK'),
+              child: Text(appLocalizations.ok),
             ),
           ],
         );
@@ -321,6 +320,7 @@ class _ImageEditorState extends State<ImageEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     var imgLoader = context.watch<ImageLoader>();
     if (!_isInitializing && imgLoader.image != null && !_isProcessingImages) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -578,6 +578,7 @@ class BottomActionMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     final appLocalizations = AppLocalizations.of(context)!;
     return SafeArea(
       top: false,
       bottom: true,
@@ -602,7 +603,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.add_photo_alternate_outlined,
-                label: "Import",
+                label: appLocalizations.import,
                 onTap: () async {
                   final success = await imgLoader.pickImage(
                     width: epd.width,
@@ -646,7 +647,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.text_fields,
-                label: "Text",
+                label: appLocalizations.text,
                 onTap: () async {
                   final bytes = await Navigator.of(context).push<Uint8List>(
                     MaterialPageRoute(
