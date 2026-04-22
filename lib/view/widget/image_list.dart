@@ -84,13 +84,13 @@ class ImageList extends StatelessWidget {
               assetPath: ImageAssets.flipHorizontal,
               onPressed: onFlipHorizontal,
               tooltip: 'Flip Horizontally',
+              rotation: -1.5708,
             ),
             const SizedBox(width: 16),
             _buildFlipButton(
               assetPath: ImageAssets.flipHorizontal,
               onPressed: onFlipVertical,
               tooltip: 'Flip Vertically',
-              rotation: -1.5708,
             ),
             if (onSave != null) ...[
               const SizedBox(width: 16),
