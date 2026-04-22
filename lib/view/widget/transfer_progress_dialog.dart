@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/view/widget/common_alert_dialog.dart';
+import 'package:magicepaperapp/view/widget/common_dialog_button.dart';
 import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
@@ -438,15 +440,11 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
   Widget build(BuildContext context) {
     return SlideTransition(
       position: _slideAnimation,
-      child: Dialog(
+      child: CommonAlertDialog(
         backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
         elevation: 10,
-        child: Container(
+        content: Container(
           constraints: const BoxConstraints(maxWidth: 400),
-          padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -524,28 +522,14 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                 const SizedBox(height: 24),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
+                  child: CommonDialogButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: showRefreshingMessage
-                          ? Colors.orange.shade600
-                          : Colors.red.shade600,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 2,
-                    ),
-                    child: Text(
-                      showRefreshingMessage
-                          ? appLocalizations.done
-                          : appLocalizations.close,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    variant: showRefreshingMessage
+                        ? DialogButtonVariant.warning
+                        : DialogButtonVariant.danger,
+                    label: showRefreshingMessage
+                        ? appLocalizations.done
+                        : appLocalizations.close,
                   ),
                 ),
               ],

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/util/color_util.dart';
+import 'package:magicepaperapp/view/widget/common_alert_dialog.dart';
+import 'package:magicepaperapp/view/widget/common_dialog_button.dart';
+import 'package:magicepaperapp/view/widget/common_dialog_dropdown.dart';
 
 class CustomEpdConfig {
   final int width;
@@ -283,7 +286,7 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
     }
     final pickedColor = await showDialog<Color>(
         context: context,
-        builder: (context) => AlertDialog(
+        builder: (context) => CommonAlertDialog(
               title: const Text('Select a Color'),
               content: SizedBox(
                 width: double.maxFinite,
@@ -316,16 +319,9 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
     });
   }
 
-  static final ButtonStyle _dialogButtonStyle = ElevatedButton.styleFrom(
-    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-    visualDensity: VisualDensity.compact,
-    textStyle: const TextStyle(fontSize: 14),
-  );
-
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return CommonAlertDialog(
       title: const Text('Choose Your Display'),
       content: Form(
         key: _formKey,
@@ -334,8 +330,8 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              DropdownButtonFormField<DisplayPreset>(
-                initialValue: _selectedPreset,
+              CommonDialogDropdown<DisplayPreset>(
+                value: _selectedPreset,
                 items: _presets
                     .map((preset) => DropdownMenuItem(
                         value: preset,
@@ -346,8 +342,7 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                         )))
                     .toList(),
                 onChanged: _onPresetChanged,
-                decoration: const InputDecoration(labelText: 'Display Preset'),
-                isExpanded: true,
+                labelText: 'Display Preset',
               ),
               const SizedBox(height: 16),
               Row(
@@ -417,19 +412,17 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
             alignment: WrapAlignment.spaceBetween,
             children: [
               if (_isCustom)
-                ElevatedButton.icon(
+                CommonDialogButton(
                   onPressed: _addColor,
-                  icon: const Icon(Icons.add, size: 16),
-                  label: const Text("Add Color"),
-                  style: _dialogButtonStyle,
+                  icon: Icons.add,
+                  label: "Add Color",
                 ),
-              ElevatedButton(
+              CommonDialogButton(
                 onPressed: () => Navigator.of(context).pop(),
-                style: _dialogButtonStyle,
-                child: const Text('Cancel'),
+                variant: DialogButtonVariant.secondary,
+                label: 'Cancel',
               ),
-              ElevatedButton(
-                style: _dialogButtonStyle,
+              CommonDialogButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
@@ -443,7 +436,7 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                     );
                   }
                 },
-                child: const Text('OK'),
+                label: 'OK',
               ),
             ],
           ),

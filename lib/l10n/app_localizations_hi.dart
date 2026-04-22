@@ -9,11 +9,11 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
-  String get appName => 'Magic ePaper';
+  String get appName => 'मैजिक ईपेपर';
 
   @override
   String get aboutUsDescription =>
-      'Magic ePaper is an app designed to control and update ePaper displays. The goal is to provide tools for customizing and transferring images, text, and patterns to ePaper screens using NFC. Data transfer from the smartphone to the ePaper hardware is done wirelessly via NFC. The project is built on top of custom firmware and display drivers for seamless communication and efficient image rendering.';
+      'मैजिक ईपेपर एक ऐसा ऐप है जिसे ईपेपर डिस्प्ले को नियंत्रित और अपडेट करने के लिए डिज़ाइन किया गया है। इसका उद्देश्य एनएफसी का उपयोग करके ईपेपर स्क्रीन पर छवियों, टेक्स्ट और पैटर्न को अनुकूलित और स्थानांतरित करने के लिए उपकरण प्रदान करना है। स्मार्टफोन से ईपेपर हार्डवेयर में डेटा ट्रांसफर एनएफसी के माध्यम से वायरलेस तरीके से किया जाता है। यह प्रोजेक्ट निर्बाध संचार और कुशल इमेज रेंडरिंग के लिए कस्टम फ़र्मवेयर और डिस्प्ले ड्राइवरों पर आधारित है।';
 
   @override
   String get developedBy => 'Developed by';
@@ -1282,4 +1282,27 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get chooseImageFromGallery => 'Choose image from gallery';
+
+  @override
+  String get processingImages => 'Processing images...';
+
+  @override
+  String get refreshModeInfo => 'Refresh Mode Information';
+
+  @override
+  String get fullRefreshInfo => 'Full Refresh';
+
+  @override
+  String get fullRefreshDescription =>
+      'Completely refreshes the entire display by clearing all pixels and redrawing the image. This provides the best image quality and contrast but takes longer to complete.';
+
+  @override
+  String get partialRefreshInfo => 'Partial Refresh (Waveforms)';
+
+  @override
+  String get partialRefreshDescription =>
+      'Updates only the changed pixels using optimized waveforms. This is faster than full refresh but may result in ghosting or reduced contrast over time.';
+
+  @override
+  String get longPressForInfo => 'Long press for more information';
 }

@@ -16,10 +16,10 @@ class AppLocalizationsHe extends AppLocalizations {
       'Magic ePaper is an app designed to control and update ePaper displays. The goal is to provide tools for customizing and transferring images, text, and patterns to ePaper screens using NFC. Data transfer from the smartphone to the ePaper hardware is done wirelessly via NFC. The project is built on top of custom firmware and display drivers for seamless communication and efficient image rendering.';
 
   @override
-  String get developedBy => 'Developed by';
+  String get developedBy => 'פותח על ידי';
 
   @override
-  String get fossasiaContributors => 'FOSSASIA contributors';
+  String get fossasiaContributors => 'מתנדבי FOSSASIA';
 
   @override
   String get contactWithUs => 'Contact With Us';
@@ -51,7 +51,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get settings => 'Settings';
 
   @override
-  String get aboutUs => 'About Us';
+  String get aboutUs => 'עלינו';
 
   @override
   String get other => 'Other';
@@ -87,7 +87,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get filterScreenTitle => 'Select a Filter';
 
   @override
-  String get scanningForNfcTag => 'Scanning for NFC tag...';
+  String get scanningForNfcTag => 'מתבצעת סריקה לאיתור תג NFC…';
 
   @override
   String get scanningForNfcTagToWrite => 'Scanning for NFC tag to write...';
@@ -181,7 +181,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get absoluteUriPrefix => 'Absolute URI: ';
 
   @override
-  String get rawPrefix => 'Raw: ';
+  String get rawPrefix => 'גולמי: ';
 
   @override
   String get emptyPayload => 'Empty payload';
@@ -199,7 +199,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get noNdefRecordsFound => 'No NDEF records found';
 
   @override
-  String get recordPrefix => 'Record ';
+  String get recordPrefix => 'רשומה ';
 
   @override
   String get recordSuffix => ':';
@@ -220,7 +220,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get contentLabel => 'Content: ';
 
   @override
-  String get rawPayloadLabel => 'Raw Payload: ';
+  String get rawPayloadLabel => 'מטען גולמי: ';
 
   @override
   String get nullPayload => 'null';
@@ -260,7 +260,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get tagIsNotWritableCannotClear => 'Tag is not writable, cannot clear';
 
   @override
-  String get readOperationCompleted => 'Read operation completed';
+  String get readOperationCompleted => 'פעולת הקריאה הושלמה';
 
   @override
   String get writeOperationCompleted => 'Write operation completed';
@@ -275,7 +275,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get theTagIsEmpty => 'The tag is empty';
 
   @override
-  String get record => 'Record ';
+  String get record => 'רשומה ';
 
   @override
   String get type => 'Type: ';
@@ -294,7 +294,7 @@ class AppLocalizationsHe extends AppLocalizations {
       'NDEF records written successfully';
 
   @override
-  String get recordsWritten => 'Records written: ';
+  String get recordsWritten => 'רשומות שנכתבו: ';
 
   @override
   String get writtenRecord => 'Written record ';
@@ -327,7 +327,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get verificationResults => 'Verification Results:';
 
   @override
-  String get recordsFound => 'Records found: ';
+  String get recordsFound => 'רשומות שנמצאו: ';
 
   @override
   String get noNdefRecordsFoundOnTag => 'No NDEF records found on tag';
@@ -384,13 +384,13 @@ class AppLocalizationsHe extends AppLocalizations {
   String get scanYourNfcTagDefault => 'Scan your NFC tag';
 
   @override
-  String get readNdefTags => 'Read NDEF Tags';
+  String get readNdefTags => 'קריאת תגי NDEF';
 
   @override
-  String get reading => 'Reading...';
+  String get reading => 'מתבצעת קריאה…';
 
   @override
-  String get readNfcTag => 'Read NFC Tag';
+  String get readNfcTag => 'קריאת תג NFC';
 
   @override
   String get verify => 'Verify';
@@ -408,7 +408,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get nfcStatus => 'NFC Status';
 
   @override
-  String get refreshNfcStatus => 'Refresh NFC Status';
+  String get refreshNfcStatus => 'ריענון מצב NFC';
 
   @override
   String get writeNdefRecords => 'Write NDEF Records';
@@ -457,7 +457,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get writeMultipleRecords => 'Write Multiple Records';
 
   @override
-  String get readOperationFailed => 'Read operation failed';
+  String get readOperationFailed => 'פעולת הקריאה נכשלה';
 
   @override
   String get tagReadSuccessfully => 'Tag read successfully';
@@ -543,7 +543,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get characters => 'Characters';
 
   @override
-  String get scanBarcode => 'Scan Barcode';
+  String get scanBarcode => 'סריקת ברקוד';
 
   @override
   String get barcodeFormat => 'Barcode Format';
@@ -655,7 +655,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get processingImage => 'Processing Image...';
 
   @override
-  String get readyToFlash => 'Ready to Flash';
+  String get readyToFlash => 'מוכן לצריבה';
 
   @override
   String get imageProcessedSuccessfully => 'Image processed successfully.';
@@ -683,7 +683,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get unknownErrorOccurred => 'An unknown error occurred.';
 
   @override
-  String get resultsCleared => 'Results cleared';
+  String get resultsCleared => 'התוצאות התפנו';
 
   @override
   String get clearResults => 'Clear Results';
@@ -734,8 +734,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get noSavedImagesYet => 'No saved images yet';
 
   @override
-  String get saveImagesFromEditor =>
-      'Save images from the editor or import new ones';
+  String get saveImagesFromEditor => 'שמירת תמונות מהעורך או ייבוא חדשות';
 
   @override
   String get enterWifiSSID => 'Enter WiFi SSID';
@@ -808,7 +807,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get deleteAll => 'Delete All';
 
   @override
-  String get renameImage => 'Rename Image';
+  String get renameImage => 'שינוי שם התמונה';
 
   @override
   String get enterNewNameForImage => 'Enter a new name for your image';
@@ -820,7 +819,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get enterImageName => 'Enter image name...';
 
   @override
-  String get rename => 'Rename';
+  String get rename => 'שינוי שם';
 
   @override
   String get imageProperties => 'Image Properties';
@@ -838,17 +837,16 @@ class AppLocalizationsHe extends AppLocalizations {
   String get transferToEpaper => 'Transfer to ePaper';
 
   @override
-  String get saveImage => 'Save Image';
+  String get saveImage => 'שמירת תמונה';
 
   @override
-  String get saveFilteredImageToLibrary =>
-      'Save your filtered image to the library';
+  String get saveFilteredImageToLibrary => 'שמירת התמונה המרוטשת שלך לספרייה';
 
   @override
   String get filterApplied => 'Filter Applied:';
 
   @override
-  String get save => 'Save';
+  String get save => 'שמירה';
 
   @override
   String get noImagesMatchSearch => 'No images match your search';
@@ -857,7 +855,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get vCardDataCannotBeEmpty => 'VCard data cannot be empty';
 
   @override
-  String get renamingImage => 'Renaming image...';
+  String get renamingImage => 'שם התמונה משתנה…';
 
   @override
   String get imageRenamedTo => 'Image renamed to \"';
@@ -902,7 +900,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get failedToTransfer => 'Failed to transfer \"';
 
   @override
-  String get savingImage => 'Saving image...';
+  String get savingImage => 'התמונה נשמרת…';
 
   @override
   String get imageSavedToLibrary => 'Image saved to library!';
@@ -934,7 +932,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get processingImageData => 'Processing image data...';
 
   @override
-  String get refreshingDisplay => 'Refreshing display...';
+  String get refreshingDisplay => 'התצוגה מתרעננת…';
 
   @override
   String get notMagicEpaperHardware => 'Not a Magic ePaper Hardware';
@@ -1004,7 +1002,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get add => 'Add';
 
   @override
-  String get readNfcTags => 'Read NFC Tags';
+  String get readNfcTags => 'קריאת תגי NFC';
 
   @override
   String get writeNfcTags => 'Write NFC Tags';
@@ -1101,10 +1099,10 @@ class AppLocalizationsHe extends AppLocalizations {
   String get emptyFieldPlaceholder => 'Not specified';
 
   @override
-  String get productImage => 'Product Image';
+  String get productImage => 'תמונת המוצר';
 
   @override
-  String get productName => 'Product Name';
+  String get productName => 'שם המוצר';
 
   @override
   String get sizeQuantity => 'Size/Quantity';
@@ -1119,7 +1117,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get price => 'Price';
 
   @override
-  String get quantitySize => 'Quantity/Size';
+  String get quantitySize => 'כמות/גודל';
 
   @override
   String get quantitySizeHint =>
@@ -1193,7 +1191,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get pleaseEnterIdNumber => 'Please enter ID number';
 
   @override
-  String get qrCodeData => 'QR Code Data';
+  String get qrCodeData => 'נתוני קוד QR';
 
   @override
   String get enterQrCodeData => 'Enter QR code data';
@@ -1208,7 +1206,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get generateIdCard => 'Generate ID Card';
 
   @override
-  String get profilePhoto => 'Profile Photo';
+  String get profilePhoto => 'תמונת פרופיל';
 
   @override
   String get selected => 'Selected';
@@ -1233,7 +1231,7 @@ class AppLocalizationsHe extends AppLocalizations {
       'Create professional price tags for your products';
 
   @override
-  String get productDetails => 'Product Details';
+  String get productDetails => 'פרטי המוצר';
 
   @override
   String get productNameHint => 'Enter product name (e.g., iPhone 15 Pro)';
@@ -1248,7 +1246,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get currencyHint => '₹';
 
   @override
-  String get required => 'Required';
+  String get required => 'חובה';
 
   @override
   String get priceHint => '999.99';
@@ -1269,10 +1267,10 @@ class AppLocalizationsHe extends AppLocalizations {
   String get generatePriceTag => 'Generate Price Tag';
 
   @override
-  String get productImageIn => 'Product Image';
+  String get productImageIn => 'תמונת המוצר';
 
   @override
-  String get productImageSelected => 'Product Image Selected';
+  String get productImageSelected => 'תמונת המוצר נבחרה';
 
   @override
   String get selectProductImage => 'Select Product Image';
@@ -1282,4 +1280,27 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get chooseImageFromGallery => 'Choose image from gallery';
+
+  @override
+  String get processingImages => 'התמונות עוברות עיבוד…';
+
+  @override
+  String get refreshModeInfo => 'Refresh Mode Information';
+
+  @override
+  String get fullRefreshInfo => 'Full Refresh';
+
+  @override
+  String get fullRefreshDescription =>
+      'Completely refreshes the entire display by clearing all pixels and redrawing the image. This provides the best image quality and contrast but takes longer to complete.';
+
+  @override
+  String get partialRefreshInfo => 'Partial Refresh (Waveforms)';
+
+  @override
+  String get partialRefreshDescription =>
+      'Updates only the changed pixels using optimized waveforms. This is faster than full refresh but may result in ghosting or reduced contrast over time.';
+
+  @override
+  String get longPressForInfo => 'Long press for more information';
 }

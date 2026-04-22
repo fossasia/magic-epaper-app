@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/view/widget/common_alert_dialog.dart';
+import 'package:magicepaperapp/view/widget/common_dialog_button.dart';
 
 class ClearAllConfirmationDialog extends StatelessWidget {
   final VoidCallback onConfirm;
@@ -12,34 +14,18 @@ class ClearAllConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      child: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          margin: const EdgeInsets.symmetric(vertical: 48),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(),
-              const SizedBox(height: 24),
-              _buildDataSummary(),
-              const SizedBox(height: 24),
-              _buildActionButtons(context),
-            ],
-          ),
+    return CommonAlertDialog(
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(),
+            const SizedBox(height: 24),
+            _buildDataSummary(),
+            const SizedBox(height: 24),
+            _buildActionButtons(context),
+          ],
         ),
       ),
     );
@@ -157,52 +143,19 @@ class ClearAllConfirmationDialog extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: OutlinedButton(
+          child: CommonDialogButton(
             onPressed: () => Navigator.pop(context),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              side: BorderSide(color: Colors.grey.shade300),
-              foregroundColor: Colors.grey.shade700,
-            ),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            variant: DialogButtonVariant.secondary,
+            label: 'Cancel',
           ),
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: ElevatedButton(
+          child: CommonDialogButton(
             onPressed: onConfirm,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 0,
-            ),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.delete_forever, size: 20),
-                SizedBox(width: 8),
-                Text(
-                  'Clear All',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
+            variant: DialogButtonVariant.danger,
+            icon: Icons.delete_forever,
+            label: 'Clear All',
           ),
         ),
       ],

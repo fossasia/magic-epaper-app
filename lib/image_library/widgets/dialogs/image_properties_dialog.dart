@@ -7,6 +7,7 @@ import 'package:magicepaperapp/image_library/utils/date_utils.dart' as dt;
 import 'package:magicepaperapp/image_library/utils/filter_utils.dart';
 import 'package:magicepaperapp/image_library/utils/source_utils.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/view/widget/common_alert_dialog.dart';
 import '../../../util/app_logger.dart';
 
 class ImagePropertiesDialog extends StatefulWidget {
@@ -51,12 +52,12 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
+    return CommonAlertDialog(
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: ConstrainedBox(
+      contentPadding: EdgeInsets.zero,
+      titlePadding: EdgeInsets.zero,
+      title: _buildHeader(context),
+      content: ConstrainedBox(
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.8,
           maxWidth: MediaQuery.of(context).size.width * 0.9,
@@ -64,7 +65,6 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildHeader(context),
             Flexible(
               child: SingleChildScrollView(
                 child: _buildContent(context),
@@ -81,7 +81,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
         color: colorAccent,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       child: Row(
         children: [

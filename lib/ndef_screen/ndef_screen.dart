@@ -12,6 +12,8 @@ import 'package:magicepaperapp/ndef_screen/app_launcher_card.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'dart:async';
 import '../util/app_logger.dart';
+import 'package:magicepaperapp/view/widget/common_alert_dialog.dart';
+import 'package:magicepaperapp/view/widget/common_dialog_button.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
@@ -395,18 +397,19 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
     return await showDialog<bool>(
           context: context,
           builder: (BuildContext context) {
-            return AlertDialog(
+            return CommonAlertDialog(
               title: Text(title),
               content: Text(content),
               actions: [
-                TextButton(
+                CommonDialogButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(appLocalizations.cancel),
+                  variant: DialogButtonVariant.secondary,
+                  label: appLocalizations.cancel,
                 ),
-                TextButton(
+                CommonDialogButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  style: TextButton.styleFrom(foregroundColor: Colors.red),
-                  child: Text(appLocalizations.confirm),
+                  variant: DialogButtonVariant.danger,
+                  label: appLocalizations.confirm,
                 ),
               ],
             );

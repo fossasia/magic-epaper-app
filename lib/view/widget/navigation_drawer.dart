@@ -10,6 +10,8 @@ import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:provider/provider.dart';
 import '../../util/app_logger.dart';
+import 'package:magicepaperapp/view/widget/common_alert_dialog.dart';
+import 'package:magicepaperapp/view/widget/common_dialog_button.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
@@ -80,7 +82,7 @@ class _AppDrawerState extends State<AppDrawer> {
   void _showArduinoHelpDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (context) => CommonAlertDialog(
         title: const Row(
           children: [
             Icon(Icons.info_outline, color: Colors.blue),
@@ -94,16 +96,17 @@ class _AppDrawerState extends State<AppDrawer> {
           'Perfect for creating custom badges, signs, and displays for your Arduino projects!',
         ),
         actions: [
-          TextButton(
+          CommonDialogButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Got it'),
+            variant: DialogButtonVariant.secondary,
+            label: 'Got it',
           ),
-          ElevatedButton(
+          CommonDialogButton(
             onPressed: () {
               Navigator.of(context).pop();
               _showArduinoExportDialog();
             },
-            child: const Text('Continue'),
+            label: 'Continue',
           ),
         ],
       ),

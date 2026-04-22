@@ -6,6 +6,7 @@ import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/card_templates/employee_id_form.dart';
 import 'package:magicepaperapp/card_templates/price_tag_form.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/view/widget/common_alert_dialog.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
@@ -253,20 +254,13 @@ class CardTemplateSelectionView extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+        return CommonAlertDialog(
           title: Row(
             children: [
               const Icon(Icons.info_outline, color: colorAccent, size: 24),
               const SizedBox(width: 12),
               Text(
                 appLocalizations.comingSoon,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
               ),
             ],
           ),

@@ -21,7 +21,7 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import '../util/app_logger.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
-
+import 'package:magicepaperapp/view/widget/common_alert_dialog.dart';
 
 class ImageEditor extends StatefulWidget {
   final DisplayDevice device;
@@ -260,13 +260,9 @@ class _ImageEditorState extends State<ImageEditor> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return CommonAlertDialog(
           title: Text(
             appLocalizations.refreshModeInfo,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
           ),
           content: SingleChildScrollView(
             child: Column(
@@ -578,7 +574,7 @@ class BottomActionMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context)!;
     return SafeArea(
       top: false,
       bottom: true,
@@ -603,7 +599,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.add_photo_alternate_outlined,
-                label: appLocalizations.import,
+                label: appLocalizations.importImageButtonLabel,
                 onTap: () async {
                   final success = await imgLoader.pickImage(
                     width: epd.width,
@@ -647,7 +643,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.text_fields,
-                label: appLocalizations.text,
+                label: appLocalizations.textPrefix,
                 onTap: () async {
                   final bytes = await Navigator.of(context).push<Uint8List>(
                     MaterialPageRoute(

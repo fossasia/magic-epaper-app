@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/view/widget/common_alert_dialog.dart';
+import 'package:magicepaperapp/view/widget/common_dialog_button.dart';
 
 class StoragePermissionDialog extends StatelessWidget {
   final VoidCallback? onGrantPermission;
@@ -16,109 +18,71 @@ class StoragePermissionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+    return CommonAlertDialog(
+      backgroundColor: Colors.white,
       elevation: 8,
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 64,
-              height: 64,
-              decoration: BoxDecoration(
-                color: colorAccent.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.folder_outlined,
-                size: 32,
-                color: colorAccent,
-              ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 64,
+            height: 64,
+            decoration: BoxDecoration(
+              color: colorAccent.withOpacity(0.1),
+              shape: BoxShape.circle,
             ),
-            const SizedBox(height: 20),
-            Text(
-              'Storage Permission Required',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: colorBlack,
-              ),
-              textAlign: TextAlign.center,
+            child: Icon(
+              Icons.folder_outlined,
+              size: 32,
+              color: colorAccent,
             ),
-            const SizedBox(height: 12),
-            const Text(
-              'To save images and access your photo library, we need storage permission. Please grant permission to continue.',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-                height: 1.4,
-              ),
-              textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+          Text(
+            'Storage Permission Required',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: colorBlack,
             ),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      onCancel?.call();
-                    },
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: BorderSide(color: Colors.grey.shade300),
-                      ),
-                    ),
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'To save images and access your photo library, we need storage permission. Please grant permission to continue.',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey,
+              height: 1.4,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          Row(
+            children: [
+              Expanded(
+                child: CommonDialogButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    onCancel?.call();
+                  },
+                  variant: DialogButtonVariant.secondary,
+                  label: 'Cancel',
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      onGrantPermission?.call();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorAccent,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: const Text(
-                      'Grant Permission',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: CommonDialogButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    onGrantPermission?.call();
+                  },
+                  label: 'Grant Permission',
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

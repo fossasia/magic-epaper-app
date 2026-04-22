@@ -10,6 +10,8 @@ import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/view/widget/common_alert_dialog.dart';
+import 'package:magicepaperapp/view/widget/common_dialog_button.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
@@ -31,12 +33,12 @@ class ImagePreviewDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
+    return CommonAlertDialog(
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: ConstrainedBox(
+      contentPadding: EdgeInsets.zero,
+      titlePadding: EdgeInsets.zero,
+      title: _buildHeader(context),
+      content: ConstrainedBox(
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.8,
         ),
@@ -44,7 +46,6 @@ class ImagePreviewDialog extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildHeader(context),
               _buildContent(context),
             ],
           ),
@@ -58,7 +59,7 @@ class ImagePreviewDialog extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
         color: colorAccent,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       child: Row(
         children: [
@@ -164,50 +165,37 @@ class ImagePreviewDialog extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: OutlinedButton.icon(
+              child: CommonDialogButton(
                 onPressed: () {
                   Navigator.pop(context);
                   onDelete();
                 },
-                icon: const Icon(Icons.delete_outline, color: Colors.red),
-                label: Text(
-                  appLocalizations.delete,
-                  style: TextStyle(fontSize: 12),
-                ),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.red,
-                  side: const BorderSide(color: Colors.red),
-                ),
+                variant: DialogButtonVariant.danger,
+                icon: Icons.delete_outline,
+                label: appLocalizations.delete,
               ),
             ),
-            const SizedBox(width: 4),
+            const SizedBox(width: 8),
             Expanded(
-              child: OutlinedButton.icon(
+              child: CommonDialogButton(
                 onPressed: () => _showRenameDialog(context),
-                icon: const Icon(Icons.edit_outlined),
-                label: Text(
-                  appLocalizations.rename,
-                  style: TextStyle(fontSize: 12),
-                ),
+                variant: DialogButtonVariant.secondary,
+                icon: Icons.edit_outlined,
+                label: appLocalizations.rename,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         SizedBox(
           width: double.infinity,
-          child: ElevatedButton.icon(
+          child: CommonDialogButton(
             onPressed: () {
               Navigator.pop(context);
               onTransfer();
             },
-            icon: const Icon(Icons.send),
-            label: Text(appLocalizations.transferToEpaper),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: colorAccent,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 12),
-            ),
+            icon: Icons.send,
+            label: appLocalizations.transferToEpaper,
           ),
         ),
       ],

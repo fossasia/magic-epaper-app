@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/view/widget/common_alert_dialog.dart';
+import 'package:magicepaperapp/view/widget/common_dialog_button.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/constants/color_constants.dart';
@@ -125,14 +127,10 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          child: _buildContent(),
-        ),
+    return CommonAlertDialog(
+      content: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: _buildContent(),
       ),
     );
   }
@@ -205,9 +203,9 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
               Text(_message ?? appLocalizations.transferCompleteMessage,
                   textAlign: TextAlign.center),
               const SizedBox(height: 20),
-              ElevatedButton(
+              CommonDialogButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text(appLocalizations.done),
+                label: appLocalizations.done,
               )
             ],
           ),
@@ -223,9 +221,9 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
               Text(_message ?? appLocalizations.unknownErrorOccurred,
                   textAlign: TextAlign.center),
               const SizedBox(height: 20),
-              ElevatedButton(
+              CommonDialogButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text(appLocalizations.close),
+                label: appLocalizations.close,
               )
             ],
           ),
