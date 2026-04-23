@@ -214,7 +214,7 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
               _nfcController.clearResult();
               _showSnackBar(appLocalizations.resultsCleared);
             } else {
-              _showSnackBar(appLocalizations.nothingToClear, isError: true);
+              _showSnackBar('Nothing to clear', isError: true);
             }
           },
           tooltip: appLocalizations.clearResults,
