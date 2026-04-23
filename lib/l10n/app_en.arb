@@ -575,12 +575,23 @@
   "selectProductImage": "Select Product Image",
   "tapToChangeImage": "Tap to change image",
   "chooseImageFromGallery": "Choose image from gallery",
-  "processingImages": "Processing images...",
+    "processingImages": "Processing images...",
   "refreshModeInfo": "Refresh Mode Information",
   "fullRefreshInfo": "Full Refresh",
   "fullRefreshDescription": "Completely refreshes the entire display by clearing all pixels and redrawing the image. This provides the best image quality and contrast but takes longer to complete.",
   "partialRefreshInfo": "Partial Refresh (Waveforms)",
   "partialRefreshDescription": "Updates only the changed pixels using optimized waveforms. This is faster than full refresh but may result in ghosting or reduced contrast over time.",
   "longPressForInfo": "Long press for more information",
-  "nothingToClear": "Nothing to clear"
+  "nothingToClear": "Nothing to clear",
+  "@nothingToClear": {
+    "description": "Shown when the user taps clear but there are no NFC results to clear"
+  },
+  "import": "Import",
+  "@import": {
+    "description": "Label for import action"
+  },
+  "text": "Text",
+  "@text": {
+    "description": "Label for text action"
+  }
 }

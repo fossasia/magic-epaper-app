@@ -1308,6 +1308,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get nothingToClear => 'Nothing to clear';
+
+  @override
+  String get import => 'Import';
+
+  @override
+  String get text => 'Text';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).

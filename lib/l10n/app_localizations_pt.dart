@@ -1308,6 +1308,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get nothingToClear => 'Nothing to clear';
+
+  @override
+  String get import => 'Import';
+
+  @override
+  String get text => 'Text';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).

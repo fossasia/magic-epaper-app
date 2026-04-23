@@ -1308,4 +1308,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get nothingToClear => 'Nothing to clear';
+
+  @override
+  String get import => 'Import';
+
+  @override
+  String get text => 'Text';
 }

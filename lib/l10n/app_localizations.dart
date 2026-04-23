@@ -2639,11 +2639,23 @@ abstract class AppLocalizations {
   /// **'Long press for more information'**
   String get longPressForInfo;
 
-  /// No description provided for @nothingToClear.
+  /// Shown when the user taps clear but there are no NFC results to clear
   ///
   /// In en, this message translates to:
   /// **'Nothing to clear'**
   String get nothingToClear;
+
+  /// Label for import action
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get import;
+
+  /// Label for text action
+  ///
+  /// In en, this message translates to:
+  /// **'Text'**
+  String get text;
 }
 
 class _AppLocalizationsDelegate
