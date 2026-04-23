@@ -6,44 +6,67 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// This class extends [ChangeNotifier] to allow widgets to listen for
 /// changes in the locale and rebuild accordingly.
 class LocaleProvider with ChangeNotifier {
-  static const String _localeKey = 'app_locale';
+  static const String _localeKey = 'selected_locale';
 
   Locale _locale = const Locale('en');
 
   Locale get locale => _locale;
 
-  /// Loads the saved locale from local storage (SharedPreferences).
-  /// Call this once when the provider is created.
+  /// Loads the saved locale from local storage.
+  ///
+  /// If no locale is saved, the app continues using the default locale.
   Future<void> loadSavedLocale() async {
-    final prefs = await SharedPreferences.getInstance();
-    final code = prefs.getString(_localeKey);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final savedLocale = prefs.getString(_localeKey);
 
-    if (code == null || code.isEmpty) return;
+      if (savedLocale == null || savedLocale.isEmpty) return;
 
-    _locale = Locale(code);
-    notifyListeners();
+      final parts = savedLocale.split('_');
+
+      _locale = parts.length > 1 && parts[1].isNotEmpty
+          ? Locale(parts[0], parts[1])
+          : Locale(parts[0]);
+
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error loading saved locale: $e');
+    }
   }
 
-  /// Sets the application's locale and persists it.
+  /// Sets the application's locale and saves it locally.
   ///
   /// When the locale is changed, it notifies all listening widgets to rebuild.
   Future<void> setLocale(Locale newLocale) async {
-    _locale = newLocale;
+    try {
+      _locale = newLocale;
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_localeKey, newLocale.languageCode);
+      final prefs = await SharedPreferences.getInstance();
+      final localeString = newLocale.countryCode != null &&
+              newLocale.countryCode!.isNotEmpty
+          ? '${newLocale.languageCode}_${newLocale.countryCode}'
+          : newLocale.languageCode;
 
-    notifyListeners();
+      await prefs.setString(_localeKey, localeString);
+
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error saving locale: $e');
+    }
   }
 
-  /// Optional: Reset to system/default behavior.
-  /// Use this if you provide a "System Default" option in UI.
+  /// Resets the locale to the app's default locale (English)
+  /// and clears any saved locale preference.
   Future<void> clearLocale() async {
-    _locale = const Locale('en'); // or set to null if your app supports null locale
+    try {
+      _locale = const Locale('en');
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_localeKey);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_localeKey);
 
-    notifyListeners();
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error clearing locale: $e');
+    }
   }
 }
