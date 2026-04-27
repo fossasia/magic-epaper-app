@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 
 import 'package:magicepaperapp/constants/color_constants.dart';
 
 import 'package:magicepaperapp/ndef_screen/app_nfc/app_data_model.dart';
 import 'package:magicepaperapp/ndef_screen/app_nfc/app_selection_service.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class AppLauncherCard extends StatefulWidget {
   final AppData? selectedApp;
@@ -64,7 +62,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${appLocalizations.errorLoadingApps}$e')),
+          SnackBar(content: Text('${LocaleProvider.current!.errorLoadingApps}$e')),
         );
       }
     }
@@ -81,7 +79,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
     if (packageName.isEmpty) return;
     if (!AppLauncherService.isValidPackageName(packageName)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(appLocalizations.invalidPackageName)),
+        SnackBar(content: Text(LocaleProvider.current!.invalidPackageName)),
       );
       return;
     }
@@ -121,7 +119,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                     const Icon(Icons.apps, color: colorAccent, size: 22),
                     const SizedBox(width: 8),
                     Text(
-                      appLocalizations.writeAppLauncherData,
+                      LocaleProvider.current!.writeAppLauncherData,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -233,8 +231,8 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                       )
                     : const Icon(Icons.nfc, color: colorWhite),
                 label: widget.isWriting
-                    ? appLocalizations.writing
-                    : appLocalizations.writeAppLauncher,
+                    ? LocaleProvider.current!.writing
+                    : LocaleProvider.current!.writeAppLauncher,
               ),
             ],
             if (_isExpanded) ...[
@@ -265,13 +263,13 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
         children: [
           _buildTextField(
             controller: _searchController,
-            hintText: appLocalizations.searchApps,
+            hintText: LocaleProvider.current!.searchApps,
             prefixIcon: Icons.search,
             suffixIcon: IconButton(
               icon: const Icon(Icons.add, color: colorAccent, size: 20),
               onPressed: () =>
                   setState(() => _showCustomInput = !_showCustomInput),
-              tooltip: appLocalizations.customPackageName,
+              tooltip: LocaleProvider.current!.customPackageName,
             ),
             onChanged: _filterApps,
           ),
@@ -282,7 +280,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                 Expanded(
                   child: _buildTextField(
                     controller: _customPackageController,
-                    hintText: appLocalizations.enterPackageName,
+                    hintText: LocaleProvider.current!.enterPackageName,
                     prefixIcon: Icons.code,
                   ),
                 ),
@@ -300,7 +298,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                     ),
                   ),
                   child: Text(
-                    appLocalizations.add,
+                    LocaleProvider.current!.add,
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -361,7 +359,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
               const Icon(Icons.search_off, color: Colors.grey, size: 48),
               const SizedBox(height: 8),
               Text(
-                appLocalizations.noAppsFound,
+                LocaleProvider.current!.noAppsFound,
                 style: const TextStyle(
                   color: colorBlack,
                   fontSize: 14,
@@ -552,7 +550,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
         onPressed: () => setState(() => _isExpanded = true),
         icon: const Icon(Icons.apps, color: colorAccent),
         label: Text(
-          appLocalizations.selectApplication,
+          LocaleProvider.current!.selectApplication,
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,

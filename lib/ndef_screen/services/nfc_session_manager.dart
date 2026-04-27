@@ -1,9 +1,7 @@
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 import '../../util/app_logger.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCSessionManager {
   static Future<void> finishSession({String? iosMessage}) async {
@@ -14,11 +12,11 @@ class NFCSessionManager {
         await FlutterNfcKit.finish();
       }
     } catch (e) {
-      AppLogger.error('${appLocalizations.errorFinishingNfcSession}$e');
+      AppLogger.error('${LocaleProvider.current!.errorFinishingNfcSession}$e');
       try {
         await FlutterNfcKit.finish();
       } catch (e2) {
-        AppLogger.error('${appLocalizations.secondaryCleanupAlsoFailed}$e2');
+        AppLogger.error('${LocaleProvider.current!.secondaryCleanupAlsoFailed}$e2');
       }
     }
   }
@@ -31,9 +29,9 @@ class NFCSessionManager {
     return await FlutterNfcKit.poll(
       timeout: timeout,
       iosMultipleTagMessage: iosMultipleTagMessage ??
-          appLocalizations.multipleTagsFoundPleaseSelectOne,
+          LocaleProvider.current!.multipleTagsFoundPleaseSelectOne,
       iosAlertMessage:
-          iosAlertMessage ?? appLocalizations.scanYourNfcTagDefault,
+          iosAlertMessage ?? LocaleProvider.current!.scanYourNfcTagDefault,
     );
   }
 }

@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
 import 'package:magicepaperapp/ndef_screen/services/ndef_record_parser.dart';
 import 'package:magicepaperapp/ndef_screen/services/nfc_availability_service.dart';
 import 'package:magicepaperapp/ndef_screen/services/nfc_operations_service.dart';
 import 'package:ndef/ndef.dart' as ndef;
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCController extends ChangeNotifier {
   NFCAvailability _availability = NFCAvailability.not_supported;
@@ -33,7 +31,7 @@ class NFCController extends ChangeNotifier {
     if (_availability != NFCAvailability.available) return;
 
     _setReading(true);
-    _setResult(appLocalizations.scanningForNfcTag);
+    _setResult(LocaleProvider.current!.scanningForNfcTag);
 
     final result = await NFCOperationsService.readNDEF();
     _setResult(result.message);
@@ -48,7 +46,7 @@ class NFCController extends ChangeNotifier {
       final record = NDEFRecordFactory.createTextRecord(text);
       await _performWrite([record]);
     } catch (e) {
-      _setResult('${appLocalizations.errorCreatingTextRecord}$e');
+      _setResult('${LocaleProvider.current!.errorCreatingTextRecord}$e');
     }
   }
 
@@ -60,7 +58,7 @@ class NFCController extends ChangeNotifier {
       final record = NDEFRecordFactory.createUrlRecord(url);
       await _performWrite([record]);
     } catch (e) {
-      _setResult('${appLocalizations.errorCreatingUrlRecord}$e');
+      _setResult('${LocaleProvider.current!.errorCreatingUrlRecord}$e');
     }
   }
 
@@ -72,7 +70,7 @@ class NFCController extends ChangeNotifier {
       final record = NDEFRecordFactory.createWifiRecord(ssid, password);
       await _performWrite([record]);
     } catch (e) {
-      _setResult('${appLocalizations.errorCreatingWifiRecord}$e');
+      _setResult('${LocaleProvider.current!.errorCreatingWifiRecord}$e');
     }
   }
 
@@ -87,7 +85,7 @@ class NFCController extends ChangeNotifier {
           appUri: appUri);
       await _performWrite(records);
     } catch (e) {
-      _setResult('${appLocalizations.errorCreatingAppRecord}$e');
+      _setResult('${LocaleProvider.current!.errorCreatingAppRecord}$e');
     }
   }
 
@@ -125,18 +123,18 @@ class NFCController extends ChangeNotifier {
         records.add(NDEFRecordFactory.createWifiRecord(wifiSSID, wifiPassword));
       }
       if (records.isEmpty) {
-        _setResult(appLocalizations.pleaseEnterAtLeastOneRecord);
+        _setResult(LocaleProvider.current!.pleaseEnterAtLeastOneRecord);
         return;
       }
       await _performWrite(records);
     } catch (e) {
-      _setResult('${appLocalizations.errorCreatingMultipleRecords}$e');
+      _setResult('${LocaleProvider.current!.errorCreatingMultipleRecords}$e');
     }
   }
 
   Future<void> _performWrite(List<ndef.NDEFRecord> records) async {
     _setWriting(true);
-    _setResult(appLocalizations.scanningForNfcTagToWrite);
+    _setResult(LocaleProvider.current!.scanningForNfcTagToWrite);
     final result = await NFCOperationsService.writeNDEF(records);
     _setResult(result.message);
     _setWriting(false);
@@ -145,7 +143,7 @@ class NFCController extends ChangeNotifier {
   Future<void> clearNDEF() async {
     if (_availability != NFCAvailability.available) return;
     _setClearing(true);
-    _setResult(appLocalizations.scanningForNfcTagToClear);
+    _setResult(LocaleProvider.current!.scanningForNfcTagToClear);
     final result = await NFCOperationsService.clearNDEF();
     _setResult(result.message);
     _setClearing(false);
@@ -153,7 +151,7 @@ class NFCController extends ChangeNotifier {
 
   Future<void> verifyWrite() async {
     if (_availability != NFCAvailability.available) return;
-    _setResult(appLocalizations.scanningTagForVerification);
+    _setResult(LocaleProvider.current!.scanningTagForVerification);
     final result = await NFCOperationsService.verifyTag();
     _setResult(result.message);
   }
@@ -167,7 +165,7 @@ class NFCController extends ChangeNotifier {
       final record = NDEFRecordFactory.createVCardRecord(vCardData);
       await _performWrite([record]);
     } catch (e) {
-      _setResult('${appLocalizations.errorCreatingVCardRecord}$e');
+      _setResult('${LocaleProvider.current!.errorCreatingVCardRecord}$e');
     }
   }
 

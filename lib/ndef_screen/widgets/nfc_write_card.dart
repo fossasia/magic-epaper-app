@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/v_card_form.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCWriteCard extends StatefulWidget {
   final bool isWriting;
@@ -92,16 +90,16 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildSectionTitle(appLocalizations.writeNdefRecords),
+                  _buildSectionTitle(LocaleProvider.current!.writeNdefRecords),
                   const SizedBox(height: 20),
                   _buildRecordSection(
-                    title: appLocalizations.textRecord,
+                    title: LocaleProvider.current!.textRecord,
                     icon: Icons.text_fields,
                     child: Column(
                       children: [
                         _buildTextField(
                           onChanged: widget.onTextChanged,
-                          hintText: appLocalizations.enterTextToWriteToNfcTag,
+                          hintText: LocaleProvider.current!.enterTextToWriteToNfcTag,
                           prefixIcon: Icons.text_format,
                           maxLines: 2,
                         ),
@@ -123,21 +121,21 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                                 )
                               : const Icon(Icons.edit, color: colorWhite),
                           label: widget.isWriting
-                              ? appLocalizations.writing
-                              : appLocalizations.writeText,
+                              ? LocaleProvider.current!.writing
+                              : LocaleProvider.current!.writeText,
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 20),
                   _buildRecordSection(
-                    title: appLocalizations.urlRecord,
+                    title: LocaleProvider.current!.urlRecord,
                     icon: Icons.link,
                     child: Column(
                       children: [
                         _buildTextField(
                           onChanged: widget.onUrlChanged,
-                          hintText: appLocalizations.enterUrl,
+                          hintText: LocaleProvider.current!.enterUrl,
                           prefixIcon: Icons.link,
                         ),
                         const SizedBox(height: 12),
@@ -158,27 +156,27 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                                 )
                               : const Icon(Icons.link, color: colorWhite),
                           label: widget.isWriting
-                              ? appLocalizations.writing
-                              : appLocalizations.writeUrl,
+                              ? LocaleProvider.current!.writing
+                              : LocaleProvider.current!.writeUrl,
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 20),
                   _buildRecordSection(
-                    title: appLocalizations.wifiRecord,
+                    title: LocaleProvider.current!.wifiRecord,
                     icon: Icons.wifi,
                     child: Column(
                       children: [
                         _buildTextField(
                           onChanged: widget.onWifiSSIDChanged,
-                          hintText: appLocalizations.wifiNetworkNameSsid,
+                          hintText: LocaleProvider.current!.wifiNetworkNameSsid,
                           prefixIcon: Icons.wifi,
                         ),
                         const SizedBox(height: 12),
                         _buildTextField(
                           onChanged: widget.onWifiPasswordChanged,
-                          hintText: appLocalizations.wifiPassword,
+                          hintText: LocaleProvider.current!.wifiPassword,
                           prefixIcon: Icons.lock,
                           obscureText: true,
                         ),
@@ -200,21 +198,21 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                                 )
                               : const Icon(Icons.wifi, color: colorWhite),
                           label: widget.isWriting
-                              ? appLocalizations.writing
-                              : appLocalizations.writeWifi,
+                              ? LocaleProvider.current!.writing
+                              : LocaleProvider.current!.writeWifi,
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 20),
                   _buildRecordSection(
-                    title: appLocalizations.writeAllRecords,
+                    title: LocaleProvider.current!.writeAllRecords,
                     icon: Icons.layers,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          appLocalizations.writeAllNonEmptyFieldsDescription,
+                          LocaleProvider.current!.writeAllNonEmptyFieldsDescription,
                           style: TextStyle(
                             fontSize: 13,
                             color: Colors.grey[600],
@@ -237,8 +235,8 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                                 )
                               : const Icon(Icons.layers, color: colorWhite),
                           label: widget.isWriting
-                              ? appLocalizations.writing
-                              : appLocalizations.writeMultipleRecords,
+                              ? LocaleProvider.current!.writing
+                              : LocaleProvider.current!.writeMultipleRecords,
                         ),
                       ],
                     ),

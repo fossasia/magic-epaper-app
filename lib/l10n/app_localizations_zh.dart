@@ -13,133 +13,130 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get aboutUsDescription =>
-      'Magic ePaper is an app designed to control and update ePaper displays. The goal is to provide tools for customizing and transferring images, text, and patterns to ePaper screens using NFC. Data transfer from the smartphone to the ePaper hardware is done wirelessly via NFC. The project is built on top of custom firmware and display drivers for seamless communication and efficient image rendering.';
+      'Magic ePaper 是一款专为控制和更新墨水屏（ePaper）设计的应用程序。其目标是提供使用 NFC 自定义图像、文本及图案并将其传输到墨水屏的工具。智能手机到 ePaper 硬件的数据传输通过 NFC 无线完成。该项目建立在定制固件和显示驱动程序之上，以实现无缝通信和高效的图像渲染。';
 
   @override
-  String get developedBy => 'Developed by';
+  String get developedBy => '开发者：';
 
   @override
-  String get fossasiaContributors => 'FOSSASIA contributors';
+  String get fossasiaContributors => 'FOSSASIA 贡献者';
 
   @override
-  String get contactWithUs => 'Contact With Us';
+  String get contactWithUs => '联系我们';
 
   @override
   String get github => 'GitHub';
 
   @override
-  String get githubSubtitle =>
-      'Fork the repo and push changes or submit new issues.';
+  String get githubSubtitle => 'Fork 仓库并推送更改或提交新问题。';
 
   @override
-  String get license => 'License';
+  String get license => '许可证';
 
   @override
-  String get licenseSubtitle =>
-      'Check Apache License 2.0 terms used on Magic ePaper.';
+  String get licenseSubtitle => '查看 Magic ePaper 使用的 Apache License 2.0 条款。';
 
   @override
-  String get createTransfer => 'Create & Transfer Images';
+  String get createTransfer => '创建与传输图像';
 
   @override
   String get ndefScreen => 'Ndef';
 
   @override
-  String get selectDisplayType => 'Select your ePaper display type';
+  String get selectDisplayType => '选择您的墨水屏类型';
 
   @override
-  String get settings => 'Settings';
+  String get settings => '设置';
 
   @override
-  String get aboutUs => 'About Us';
+  String get aboutUs => '关于我们';
 
   @override
-  String get other => 'Other';
+  String get other => '其他';
 
   @override
-  String get getBadge => 'Get Badge';
+  String get getBadge => '获取徽章';
 
   @override
-  String get feedbackBugReports => 'Feedback/Bug Reports';
+  String get feedbackBugReports => '反馈/错误报告';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => '继续';
 
   @override
-  String get noImageSelectedFeedback => 'Import an image first!';
+  String get noImageSelectedFeedback => '请先导入图片！';
 
   @override
-  String get adjustButtonLabel => 'Adjust';
+  String get adjustButtonLabel => '调整';
 
   @override
-  String get importImageButtonLabel => 'Import';
+  String get importImageButtonLabel => '导入';
 
   @override
-  String get openEditor => 'Create';
+  String get openEditor => '创建';
 
   @override
-  String get importStartingImageFeedback => 'Import an image to begin';
+  String get importStartingImageFeedback => '导入图片以开始';
 
   @override
-  String get transferButtonLabel => 'Transfer';
+  String get transferButtonLabel => '传输';
 
   @override
-  String get filterScreenTitle => 'Select a Filter';
+  String get filterScreenTitle => '选择滤镜';
 
   @override
-  String get scanningForNfcTag => 'Scanning for NFC tag...';
+  String get scanningForNfcTag => '正在扫描 NFC 标签...';
 
   @override
-  String get scanningForNfcTagToWrite => 'Scanning for NFC tag to write...';
+  String get scanningForNfcTagToWrite => '正在扫描要写入的 NFC 标签...';
 
   @override
-  String get scanningForNfcTagToClear => 'Scanning for NFC tag to clear...';
+  String get scanningForNfcTagToClear => '正在扫描要清除的 NFC 标签...';
 
   @override
-  String get scanningTagForVerification => 'Scanning tag for verification...';
+  String get scanningTagForVerification => '正在扫描标签以进行验证...';
 
   @override
-  String get errorCreatingTextRecord => 'Error creating text record: ';
+  String get errorCreatingTextRecord => '创建文本记录时出错：';
 
   @override
-  String get errorCreatingUrlRecord => 'Error creating URL record: ';
+  String get errorCreatingUrlRecord => '创建 URL 记录时出错：';
 
   @override
-  String get errorCreatingWifiRecord => 'Error creating WiFi record: ';
+  String get errorCreatingWifiRecord => '创建 WiFi 记录时出错：';
 
   @override
-  String get errorCreatingMultipleRecords =>
-      'Error creating multiple records: ';
+  String get errorCreatingMultipleRecords => '创建多个记录时出错：';
 
   @override
-  String get pleaseEnterAtLeastOneRecord => 'Please enter at least one record';
+  String get pleaseEnterAtLeastOneRecord => '请输入至少一条记录';
 
   @override
-  String get tagType => 'Tag Type: ';
+  String get tagType => '标签类型：';
 
   @override
-  String get tagId => 'Tag ID: ';
+  String get tagId => '标签 ID：';
 
   @override
-  String get ndefAvailable => 'NDEF Available: ';
+  String get ndefAvailable => 'NDEF 可用：';
 
   @override
-  String get ndefWritable => 'NDEF Writable: ';
+  String get ndefWritable => 'NDEF 可写：';
 
   @override
-  String get unknown => 'Unknown';
+  String get unknown => '未知';
 
   @override
-  String get textCannotBeEmpty => 'Text cannot be empty';
+  String get textCannotBeEmpty => '文本不能为空';
 
   @override
-  String get urlCannotBeEmpty => 'URL cannot be empty';
+  String get urlCannotBeEmpty => 'URL 不能为空';
 
   @override
-  String get wifiSsidCannotBeEmpty => 'WiFi SSID cannot be empty';
+  String get wifiSsidCannotBeEmpty => 'WiFi SSID 不能为空';
 
   @override
-  String get defaultLanguage => 'en';
+  String get defaultLanguage => 'zh';
 
   @override
   String get httpsPrefix => 'https://';
@@ -160,67 +157,67 @@ class AppLocalizationsZh extends AppLocalizations {
   String get emptySpace => ' ';
 
   @override
-  String get unknownNull => 'Unknown (null)';
+  String get unknownNull => '未知 (null)';
 
   @override
-  String get unknownType => 'Unknown type: ';
+  String get unknownType => '未知类型：';
 
   @override
-  String get textPrefix => 'Text: ';
+  String get textPrefix => '文本：';
 
   @override
-  String get textSuffix => ' (Language: ';
+  String get textSuffix => ' (语言：';
 
   @override
-  String get uriPrefix => 'URI: ';
+  String get uriPrefix => 'URI：';
 
   @override
-  String get mimePrefix => 'MIME: ';
+  String get mimePrefix => 'MIME：';
 
   @override
-  String get absoluteUriPrefix => 'Absolute URI: ';
+  String get absoluteUriPrefix => '绝对 URI：';
 
   @override
-  String get rawPrefix => 'Raw: ';
+  String get rawPrefix => '原始数据：';
 
   @override
-  String get emptyPayload => 'Empty payload';
+  String get emptyPayload => '有效载荷为空';
 
   @override
-  String get binaryDataPrefix => 'Binary data (';
+  String get binaryDataPrefix => '二进制数据 (';
 
   @override
-  String get binaryDataSuffix => ' bytes): ';
+  String get binaryDataSuffix => ' 字节)：';
 
   @override
-  String get errorDecodingRecord => 'Error decoding record: ';
+  String get errorDecodingRecord => '解码记录时出错：';
 
   @override
-  String get noNdefRecordsFound => 'No NDEF records found';
+  String get noNdefRecordsFound => '未找到 NDEF 记录';
 
   @override
-  String get recordPrefix => 'Record ';
+  String get recordPrefix => '记录 ';
 
   @override
-  String get recordSuffix => ':';
+  String get recordSuffix => '：';
 
   @override
-  String get tnfLabel => 'TNF: ';
+  String get tnfLabel => 'TNF：';
 
   @override
-  String get typeLabel => 'Type: ';
+  String get typeLabel => '类型：';
 
   @override
-  String get payloadSizeLabel => 'Payload Size: ';
+  String get payloadSizeLabel => '有效载荷大小：';
 
   @override
-  String get bytesLabel => ' bytes';
+  String get bytesLabel => ' 字节';
 
   @override
-  String get contentLabel => 'Content: ';
+  String get contentLabel => '内容：';
 
   @override
-  String get rawPayloadLabel => 'Raw Payload: ';
+  String get rawPayloadLabel => '原始有效载荷：';
 
   @override
   String get nullPayload => 'null';
@@ -232,1064 +229,1044 @@ class AppLocalizationsZh extends AppLocalizations {
   String get closingParenthesisNewline => ')\n';
 
   @override
-  String get scanYourNfcTag => 'Scan your NFC tag';
+  String get scanYourNfcTag => '请扫描您的 NFC 标签';
 
   @override
-  String get scanYourNfcTagToWrite => 'Scan your NFC tag to write';
+  String get scanYourNfcTagToWrite => '扫描您的 NFC 标签以写入';
 
   @override
-  String get scanYourNfcTagToClear => 'Scan your NFC tag to clear';
+  String get scanYourNfcTagToClear => '扫描您的 NFC 标签以清除';
 
   @override
-  String get scanTagToVerifyContent => 'Scan tag to verify content';
+  String get scanTagToVerifyContent => '扫描标签以验证内容';
 
   @override
-  String get tagIsNotNdefCompatible => 'Tag is not NDEF compatible';
+  String get tagIsNotNdefCompatible => '标签不兼容 NDEF';
 
   @override
-  String get tagDoesNotSupportNdef => 'Tag does not support NDEF';
+  String get tagDoesNotSupportNdef => '标签不支持 NDEF';
 
   @override
-  String get tagIsNotWritable => 'Tag is not writable';
+  String get tagIsNotWritable => '标签不可写';
 
   @override
-  String get tagDoesNotSupportNdefCannotClear =>
-      'Tag does not support NDEF, cannot clear';
+  String get tagDoesNotSupportNdefCannotClear => '标签不支持 NDEF，无法清除';
 
   @override
-  String get tagIsNotWritableCannotClear => 'Tag is not writable, cannot clear';
+  String get tagIsNotWritableCannotClear => '标签不可写，无法清除';
 
   @override
-  String get readOperationCompleted => 'Read operation completed';
+  String get readOperationCompleted => '读取操作完成';
 
   @override
-  String get writeOperationCompleted => 'Write operation completed';
+  String get writeOperationCompleted => '写入操作完成';
 
   @override
-  String get clearOperationCompleted => 'Clear operation completed';
+  String get clearOperationCompleted => '清除操作完成';
 
   @override
-  String get ndefRecordsFound => 'NDEF records found: ';
+  String get ndefRecordsFound => '找到 NDEF 记录：';
 
   @override
-  String get theTagIsEmpty => 'The tag is empty';
+  String get theTagIsEmpty => '标签为空';
 
   @override
-  String get record => 'Record ';
+  String get record => '记录 ';
 
   @override
-  String get type => 'Type: ';
+  String get type => '类型：';
 
   @override
-  String get tnf => 'TNF: ';
+  String get tnf => 'TNF：';
 
   @override
-  String get content => 'Content: ';
+  String get content => '内容：';
 
   @override
-  String get noRecordsToWrite => 'No records to write';
+  String get noRecordsToWrite => '没有要写入的记录';
 
   @override
-  String get ndefRecordsWrittenSuccessfully =>
-      'NDEF records written successfully';
+  String get ndefRecordsWrittenSuccessfully => 'NDEF 记录写入成功';
 
   @override
-  String get recordsWritten => 'Records written: ';
+  String get recordsWritten => '已写入的记录：';
 
   @override
-  String get writtenRecord => 'Written record ';
+  String get writtenRecord => '已写入的记录 ';
 
   @override
-  String get tagClearedSuccessfully => 'Tag cleared successfully';
+  String get tagClearedSuccessfully => '标签清除成功';
 
   @override
-  String get method => 'Method: ';
+  String get method => '方法：';
 
   @override
-  String get tagIsNowReadyForNewData => 'Tag is now ready for new data';
+  String get tagIsNowReadyForNewData => '标签现已准备好接收新数据';
 
   @override
-  String get emptyTextRecord => 'Empty text record';
+  String get emptyTextRecord => '空文本记录';
 
   @override
-  String get emptyNdefRecord => 'Empty NDEF record';
+  String get emptyNdefRecord => '空 NDEF 记录';
 
   @override
-  String get minimalSpaceCharacter => 'Minimal space character';
+  String get minimalSpaceCharacter => '最小空格字符';
 
   @override
-  String get emptyRecordList => 'Empty record list';
+  String get emptyRecordList => '空记录列表';
 
   @override
-  String get allClearingMethodsFailed => 'All clearing methods failed: ';
+  String get allClearingMethodsFailed => '所有清除方法均失败：';
 
   @override
-  String get verificationResults => 'Verification Results:';
+  String get verificationResults => '验证结果：';
 
   @override
-  String get recordsFound => 'Records found: ';
+  String get recordsFound => '找到的记录：';
 
   @override
-  String get noNdefRecordsFoundOnTag => 'No NDEF records found on tag';
+  String get noNdefRecordsFoundOnTag => '标签上未找到 NDEF 记录';
 
   @override
-  String get theTagIsEmptyCleared => 'The tag is empty/cleared';
+  String get theTagIsEmptyCleared => '标签为空/已清除';
 
   @override
-  String get errorReadingTag => 'Error reading tag: ';
+  String get errorReadingTag => '读取标签时出错：';
 
   @override
-  String get errorWritingToTag => 'Error writing to tag: ';
+  String get errorWritingToTag => '写入标签时出错：';
 
   @override
-  String get errorClearingTag => 'Error clearing tag: ';
+  String get errorClearingTag => '清除标签时出错：';
 
   @override
-  String get verificationError => 'Verification error: ';
+  String get verificationError => '验证错误：';
 
   @override
-  String get holdTagCloseAndTryAgain => '. Hold tag close and try again';
+  String get holdTagCloseAndTryAgain => '。请将标签靠近并重试';
 
   @override
-  String get tryHoldingTagCloser => '. Try holding tag closer';
+  String get tryHoldingTagCloser => '。请尝试将标签靠得更近';
 
   @override
-  String get tryMovingTagCloser => '. Try moving tag closer';
+  String get tryMovingTagCloser => '。请尝试将标签移近';
 
   @override
-  String get method1EmptyTextRecordFailed =>
-      'Method 1 (empty text record) failed: ';
+  String get method1EmptyTextRecordFailed => '方法 1（空文本记录）失败：';
 
   @override
-  String get method2EmptyNdefRecordFailed =>
-      'Method 2 (empty NDEF record) failed: ';
+  String get method2EmptyNdefRecordFailed => '方法 2（空 NDEF 记录）失败：';
 
   @override
-  String get method3MinimalRecordFailed => 'Method 3 (minimal record) failed: ';
+  String get method3MinimalRecordFailed => '方法 3（最小记录）失败：';
 
   @override
-  String get method4EmptyListFailed => 'Method 4 (empty list) failed: ';
+  String get method4EmptyListFailed => '方法 4（空列表）失败：';
 
   @override
-  String get errorFinishingNfcSession => 'Error finishing NFC session: ';
+  String get errorFinishingNfcSession => '结束 NFC 会话时出错：';
 
   @override
-  String get secondaryCleanupAlsoFailed => 'Secondary cleanup also failed: ';
+  String get secondaryCleanupAlsoFailed => '二次清理也失败了：';
 
   @override
-  String get multipleTagsFoundPleaseSelectOne =>
-      'Multiple tags found, please select one';
+  String get multipleTagsFoundPleaseSelectOne => '找到多个标签，请选择一个';
 
   @override
-  String get scanYourNfcTagDefault => 'Scan your NFC tag';
+  String get scanYourNfcTagDefault => '扫描您的 NFC 标签';
 
   @override
-  String get readNdefTags => 'Read NDEF Tags';
+  String get readNdefTags => '读取 NDEF 标签';
 
   @override
-  String get reading => 'Reading...';
+  String get reading => '正在读取...';
 
   @override
-  String get readNfcTag => 'Read NFC Tag';
+  String get readNfcTag => '读取 NFC 标签';
 
   @override
-  String get verify => 'Verify';
+  String get verify => '验证';
 
   @override
-  String get clearing => 'Clearing...';
+  String get clearing => '正在清除...';
 
   @override
-  String get clearNfcTag => 'Clear NFC Tag';
+  String get clearNfcTag => '清除 NFC 标签';
 
   @override
   String get monospaceFontFamily => 'monospace';
 
   @override
-  String get nfcStatus => 'NFC Status';
+  String get nfcStatus => 'NFC 状态';
 
   @override
-  String get refreshNfcStatus => 'Refresh NFC Status';
+  String get refreshNfcStatus => '刷新 NFC 状态';
 
   @override
-  String get writeNdefRecords => 'Write NDEF Records';
+  String get writeNdefRecords => '写入 NDEF 记录';
 
   @override
-  String get textRecord => 'Text Record';
+  String get textRecord => '文本记录';
 
   @override
-  String get enterTextToWriteToNfcTag => 'Enter text to write to NFC tag';
+  String get enterTextToWriteToNfcTag => '输入要写入 NFC 标签的文本';
 
   @override
-  String get writing => 'Writing...';
+  String get writing => '正在写入...';
 
   @override
-  String get writeText => 'Write Text';
+  String get writeText => '写入文本';
 
   @override
-  String get urlRecord => 'URL Record';
+  String get urlRecord => 'URL 记录';
 
   @override
-  String get enterUrl => 'Enter URL';
+  String get enterUrl => '输入 URL';
 
   @override
-  String get writeUrl => 'Write URL';
+  String get writeUrl => '写入 URL';
 
   @override
-  String get wifiRecord => 'WiFi Record';
+  String get wifiRecord => 'WiFi 记录';
 
   @override
-  String get wifiNetworkNameSsid => 'WiFi Network Name (SSID)';
+  String get wifiNetworkNameSsid => 'WiFi 网络名称 (SSID)';
 
   @override
-  String get wifiPassword => 'WiFi Password';
+  String get wifiPassword => 'WiFi 密码';
 
   @override
-  String get writeWifi => 'Write WiFi';
+  String get writeWifi => '写入 WiFi';
 
   @override
-  String get writeAllRecords => 'Write All Records';
+  String get writeAllRecords => '写入所有记录';
 
   @override
-  String get writeAllNonEmptyFieldsDescription =>
-      'Write all non-empty fields to the NFC tag at once';
+  String get writeAllNonEmptyFieldsDescription => '一次性将所有非空字段写入 NFC 标签';
 
   @override
-  String get writeMultipleRecords => 'Write Multiple Records';
+  String get writeMultipleRecords => '写入多个记录';
 
   @override
-  String get readOperationFailed => 'Read operation failed';
+  String get readOperationFailed => '读取操作失败';
 
   @override
-  String get tagReadSuccessfully => 'Tag read successfully';
+  String get tagReadSuccessfully => '标签读取成功';
 
   @override
-  String get verificationFailed => 'Verification failed';
+  String get verificationFailed => '验证失败';
 
   @override
-  String get tagVerifiedSuccessfully => 'Tag verified successfully';
+  String get tagVerifiedSuccessfully => '标签验证成功';
 
   @override
-  String get clearNfcTagConfirmation =>
-      'Are you sure you want to clear this NFC tag? This action cannot be undone.';
+  String get clearNfcTagConfirmation => '您确定要清除此 NFC 标签吗？此操作无法撤销。';
 
   @override
-  String get clearOperationFailed => 'Clear operation failed';
+  String get clearOperationFailed => '清除操作失败';
 
   @override
-  String get writeOperationFailed => 'Write operation failed';
+  String get writeOperationFailed => '写入操作失败';
 
   @override
-  String get dataWrittenSuccessfully => 'Data written successfully';
+  String get dataWrittenSuccessfully => '数据写入成功';
 
   @override
-  String get nfcNotAvailable => 'NFC Not Available';
+  String get nfcNotAvailable => 'NFC 不可用';
 
   @override
-  String get enableNfcMessage =>
-      'Please enable NFC in your device settings to use this feature.';
+  String get enableNfcMessage => '请在您的设备设置中启用 NFC 以使用此功能。';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => '取消';
 
   @override
-  String get confirm => 'Confirm';
+  String get confirm => '确认';
 
   @override
-  String get error => 'Error';
+  String get error => '错误';
 
   @override
-  String get successfully => 'successfully';
+  String get successfully => '成功';
 
   @override
-  String get language => 'Language';
+  String get language => '语言';
 
   @override
-  String get loading => 'Loading...';
+  String get loading => '正在加载...';
 
   @override
-  String get exportXbm => 'Export XBM';
+  String get exportXbm => '导出 XBM';
 
   @override
-  String get exportingXbm => 'Exporting XBM files...';
+  String get exportingXbm => '正在导出 XBM 文件...';
 
   @override
-  String get fullRefresh => 'Full Refresh';
+  String get fullRefresh => '全局刷新';
 
   @override
-  String get fullRefreshSelected => 'Full Refresh Selected';
+  String get fullRefreshSelected => '已选择全局刷新';
 
   @override
-  String get waveformSelected => 'Selected';
+  String get waveformSelected => '已选择';
 
   @override
-  String get barcode => 'Barcode';
+  String get barcode => '条形码';
 
   @override
-  String get library => 'Library';
+  String get library => '图库';
 
   @override
-  String get templates => 'Templates';
+  String get templates => '模板';
 
   @override
-  String get barcodeGenerator => 'Barcode Generator';
+  String get barcodeGenerator => '条形码生成器';
 
   @override
-  String get barcodeData => 'Barcode Data';
+  String get barcodeData => '条形码数据';
 
   @override
-  String get barcodeDataHint => 'Enter barcode number or SKU';
+  String get barcodeDataHint => '输入条形码或 SKU';
 
   @override
-  String get characters => 'Characters';
+  String get characters => '字符';
 
   @override
-  String get scanBarcode => 'Scan Barcode';
+  String get scanBarcode => '扫描条形码';
 
   @override
-  String get barcodeFormat => 'Barcode Format';
+  String get barcodeFormat => '条形码格式';
 
   @override
-  String get enterOrScanBarcodeData => 'Enter or scan barcode data';
+  String get enterOrScanBarcodeData => '输入或扫描条形码数据';
 
   @override
-  String get invalidBarcode => 'Invalid Barcode';
+  String get invalidBarcode => '无效的条形码';
 
   @override
-  String get invalidCharacter => 'Invalid character';
+  String get invalidCharacter => '无效字符';
 
   @override
-  String get supportedCharacters => 'Supported characters are';
+  String get supportedCharacters => '支持的字符包括';
 
   @override
-  String get pleaseCheckBarcodeRules => 'Please check the barcode rules.';
+  String get pleaseCheckBarcodeRules => '请检查条形码规则。';
 
   @override
-  String get dataTooShort => 'Data is too short. Minimum length for';
+  String get dataTooShort => '数据太短。最小长度为';
 
   @override
-  String get dataTooLong => 'Data is too long. Maximum length for';
+  String get dataTooLong => '数据太长。最大长度为';
 
   @override
-  String get isText => 'is';
+  String get isText => '是';
 
   @override
-  String get pointCameraAtBarcode => 'Point camera at barcode to scan';
+  String get pointCameraAtBarcode => '将相机对准条形码进行扫描';
 
   @override
-  String get generateImage => 'Generate Image';
+  String get generateImage => '生成图像';
 
   @override
-  String get exportFailed => 'Export failed';
+  String get exportFailed => '导出失败';
 
   @override
-  String get exportedXbmFiles => 'Exported XBM file(s) to MagicEpaper/XBM/';
+  String get exportedXbmFiles => '已将 XBM 文件导出至 MagicEpaper/XBM/';
 
   @override
-  String get exported => 'Exported';
+  String get exported => '已导出';
 
   @override
-  String get xbmFilesToMagicEpaper => 'XBM file(s) to MagicEpaper/XBM/';
+  String get xbmFilesToMagicEpaper => 'XBM 文件至 MagicEpaper/XBM/';
 
   @override
-  String get floydSteinberg => 'Classic';
+  String get floydSteinberg => '经典';
 
   @override
-  String get stucki => 'Sharp';
+  String get stucki => '锐利';
 
   @override
-  String get atkinson => 'Vintage';
+  String get atkinson => '复古';
 
   @override
-  String get falseFloydSteinberg => 'Simple';
+  String get falseFloydSteinberg => '简单';
 
   @override
-  String get halftone => 'Newspaper';
+  String get halftone => '报纸';
 
   @override
-  String get threshold => 'Posterize';
+  String get threshold => '海报化';
 
   @override
-  String get colorHalftone => 'Color Newspaper';
+  String get colorHalftone => '彩色报纸';
 
   @override
-  String get searchingForDevice => 'Searching for Device';
+  String get searchingForDevice => '正在搜索设备';
 
   @override
-  String get displayRefreshing => 'Display Refreshing';
+  String get displayRefreshing => '屏幕正在刷新';
 
   @override
-  String get transferComplete => 'Transfer complete!';
+  String get transferComplete => '传输完成！';
 
   @override
-  String get writingToEpaper => 'Writing to ePaper';
+  String get writingToEpaper => '正在写入墨水屏';
 
   @override
-  String get pleaseBringPhoneClose =>
-      'Please bring your phone close to the Magic ePaper device';
+  String get pleaseBringPhoneClose => '请将手机靠近 Magic ePaper 设备';
 
   @override
-  String get keepPhoneClose => 'Keep your phone close!';
+  String get keepPhoneClose => '请保持手机靠近！';
 
   @override
-  String get displayRefreshingMessage =>
-      'The display is refreshing. Please keep your phone near the device until the image appears completely.';
+  String get displayRefreshingMessage => '屏幕正在刷新。请将手机靠近设备，直到图像完全显示。';
 
   @override
-  String get transferFailed => 'Transfer Failed';
+  String get transferFailed => '传输失败';
 
   @override
-  String get deviceConnectionTimeout =>
-      'Device connection timed out. Please try bringing your phone closer to the device and try again.';
+  String get deviceConnectionTimeout => '设备连接超时。请尝试将手机更靠近设备，然后重试。';
 
   @override
-  String get connectionLostDuringTransfer =>
-      'Connection was lost during transfer. Please keep your phone close to the device and try again.';
+  String get connectionLostDuringTransfer => '传输过程中连接丢失。请将手机靠近设备并重试。';
 
   @override
-  String get done => 'Done';
+  String get done => '完成';
 
   @override
-  String get close => 'Close';
+  String get close => '关闭';
 
   @override
-  String get processingImage => 'Processing Image...';
+  String get processingImage => '正在处理图像...';
 
   @override
-  String get readyToFlash => 'Ready to Flash';
+  String get readyToFlash => '准备好刷入';
 
   @override
-  String get imageProcessedSuccessfully => 'Image processed successfully.';
+  String get imageProcessedSuccessfully => '图像处理成功。';
 
   @override
-  String get tapBelowAndHold =>
-      'Tap below and hold your phone near the display.';
+  String get tapBelowAndHold => '点击下方并将手机靠近屏幕。';
 
   @override
-  String get startFlashing => 'Start Flashing';
+  String get startFlashing => '开始刷入';
 
   @override
-  String get flashing => 'Flashing...';
+  String get flashing => '正在刷入...';
 
   @override
-  String get keepPhoneStill => 'Keep your phone still.';
+  String get keepPhoneStill => '请保持手机静止。';
 
   @override
-  String get success => 'Success!';
+  String get success => '成功！';
 
   @override
-  String get transferCompleteMessage => 'Transfer complete!';
+  String get transferCompleteMessage => '传输完成！';
 
   @override
-  String get unknownErrorOccurred => 'An unknown error occurred.';
+  String get unknownErrorOccurred => '发生未知错误。';
 
   @override
-  String get resultsCleared => 'Results cleared';
+  String get resultsCleared => '结果已清除';
 
   @override
-  String get clearResults => 'Clear Results';
+  String get clearResults => '清除结果';
 
   @override
-  String get vCardContact => 'vCard Contact';
+  String get vCardContact => 'vCard 联系人';
 
   @override
-  String get writingVCard => 'Writing vCard...';
+  String get writingVCard => '正在写入 vCard...';
 
   @override
-  String get writeVCard => 'Write vCard';
+  String get writeVCard => '写入 vCard';
 
   @override
-  String get firstName => 'First Name';
+  String get firstName => '名字';
 
   @override
-  String get lastName => 'Last Name';
+  String get lastName => '姓氏';
 
   @override
-  String get organization => 'Organization';
+  String get organization => '组织/公司';
 
   @override
-  String get title => 'Title';
+  String get title => '职位';
 
   @override
-  String get mobileNumber => 'Mobile Number';
+  String get mobileNumber => '手机号码';
 
   @override
-  String get emailAddress => 'Email Address';
+  String get emailAddress => '电子邮件地址';
 
   @override
-  String get streetAddress => 'Street Address';
+  String get streetAddress => '街道地址';
 
   @override
-  String get city => 'City';
+  String get city => '城市';
 
   @override
-  String get zipCode => 'Zip Code';
+  String get zipCode => '邮政编码';
 
   @override
-  String get country => 'Country';
+  String get country => '国家/地区';
 
   @override
-  String get website => 'Website';
+  String get website => '网站';
 
   @override
-  String get noSavedImagesYet => 'No saved images yet';
+  String get noSavedImagesYet => '暂无保存的图像';
 
   @override
-  String get saveImagesFromEditor =>
-      'Save images from the editor or import new ones';
+  String get saveImagesFromEditor => '从编辑器保存图像或导入新图像';
 
   @override
-  String get enterWifiSSID => 'Enter WiFi SSID';
+  String get enterWifiSSID => '输入 WiFi SSID';
 
   @override
-  String get enterWifiPassword => 'Enter WiFi password';
+  String get enterWifiPassword => '输入 WiFi 密码';
 
   @override
-  String get writeMultiple => 'Write Multiple';
+  String get writeMultiple => '写入多个';
 
   @override
-  String get searchImages => 'Search images...';
+  String get searchImages => '搜索图像...';
 
   @override
-  String get filter => 'Filter:';
+  String get filter => '滤镜：';
 
   @override
-  String get all => 'All';
+  String get all => '全部';
 
   @override
-  String get imported => 'Imported';
+  String get imported => '已导入';
 
   @override
-  String get editor => 'Editor';
+  String get editor => '编辑器';
 
   @override
-  String get imageLibrary => 'Image Library';
+  String get imageLibrary => '图库';
 
   @override
-  String get selectImagesToDelete => 'Select Images to Delete';
+  String get selectImagesToDelete => '选择要删除的图像';
 
   @override
-  String get delete => 'Delete';
+  String get delete => '删除';
 
   @override
-  String get deleteMode => 'Delete Mode';
+  String get deleteMode => '删除模式';
 
   @override
-  String get deleteImage => 'Delete Image';
+  String get deleteImage => '删除图像';
 
   @override
-  String get thisActionCannotBeUndone => 'This action cannot be undone';
+  String get thisActionCannotBeUndone => '此操作无法撤销';
 
   @override
-  String get filterLabel => 'Filter:';
+  String get filterLabel => '滤镜：';
 
   @override
-  String get areYouSureDeleteImage =>
-      'Are you sure you want to delete this image? This action cannot be undone.';
+  String get areYouSureDeleteImage => '您确定要删除此图像吗？此操作无法撤销。';
 
   @override
-  String get deleteMultipleImages => 'Delete Multiple Images';
+  String get deleteMultipleImages => '删除多张图像';
 
   @override
-  String get imagesSelected => 'image(s) selected';
+  String get imagesSelected => '张图像已选中';
 
   @override
-  String get imagesSelectedForDeletion => 'image(s) selected for deletion';
+  String get imagesSelectedForDeletion => '张图像被选中待删除';
 
   @override
   String areYouSureDeleteMultipleImages(Object count) {
-    return 'Are you sure you want to delete these $count images? This action cannot be undone.';
+    return '您确定要删除这 $count 张图像吗？此操作无法撤销。';
   }
 
   @override
-  String get areYouSureDeleteSingleImage =>
-      'Are you sure you want to delete this image? This action cannot be undone.';
+  String get areYouSureDeleteSingleImage => '您确定要删除此图像吗？此操作无法撤销。';
 
   @override
-  String get deleteAll => 'Delete All';
+  String get deleteAll => '删除全部';
 
   @override
-  String get renameImage => 'Rename Image';
+  String get renameImage => '重命名图像';
 
   @override
-  String get enterNewNameForImage => 'Enter a new name for your image';
+  String get enterNewNameForImage => '为您的图像输入新名称';
 
   @override
-  String get imageName => 'Image Name';
+  String get imageName => '图像名称';
 
   @override
-  String get enterImageName => 'Enter image name...';
+  String get enterImageName => '输入图像名称...';
 
   @override
-  String get rename => 'Rename';
+  String get rename => '重命名';
 
   @override
-  String get imageProperties => 'Image Properties';
+  String get imageProperties => '图像属性';
 
   @override
-  String get created => 'Created';
+  String get created => '创建时间';
 
   @override
-  String get source => 'Source:';
+  String get source => '来源：';
 
   @override
-  String get epdModel => 'EPD Model:';
+  String get epdModel => 'EPD 型号：';
 
   @override
-  String get transferToEpaper => 'Transfer to ePaper';
+  String get transferToEpaper => '传输至墨水屏';
 
   @override
-  String get saveImage => 'Save Image';
+  String get saveImage => '保存图像';
 
   @override
-  String get saveFilteredImageToLibrary =>
-      'Save your filtered image to the library';
+  String get saveFilteredImageToLibrary => '将应用了滤镜的图像保存到图库';
 
   @override
-  String get filterApplied => 'Filter Applied:';
+  String get filterApplied => '已应用滤镜：';
 
   @override
-  String get save => 'Save';
+  String get save => '保存';
 
   @override
-  String get noImagesMatchSearch => 'No images match your search';
+  String get noImagesMatchSearch => '没有与您的搜索匹配的图像';
 
   @override
-  String get vCardDataCannotBeEmpty => 'VCard data cannot be empty';
+  String get vCardDataCannotBeEmpty => 'vCard 数据不能为空';
 
   @override
-  String get renamingImage => 'Renaming image...';
+  String get renamingImage => '正在重命名图像...';
 
   @override
-  String get imageRenamedTo => 'Image renamed to \"';
+  String get imageRenamedTo => '图像重命名为 \"';
 
   @override
-  String get failedToRenameImage => 'Failed to rename image: ';
+  String get failedToRenameImage => '重命名图像失败：';
 
   @override
-  String get deletingImage => 'Deleting image...';
+  String get deletingImage => '正在删除图像...';
 
   @override
-  String get imageDeleted => 'Image \"';
+  String get imageDeleted => '图像 \"';
 
   @override
-  String get deleted => '\" deleted';
+  String get deleted => '\" 已删除';
 
   @override
-  String get failedToDeleteImage => 'Failed to delete image: ';
+  String get failedToDeleteImage => '删除图像失败：';
 
   @override
-  String get deletingImages => 'Deleting ';
+  String get deletingImages => '正在删除 ';
 
   @override
-  String get images => ' image(s)...';
+  String get images => ' 张图像...';
 
   @override
-  String get failedToDeleteImages => 'Failed to delete images: ';
+  String get failedToDeleteImages => '删除图像失败：';
 
   @override
-  String get imagesDeletedSuccessfully => ' images deleted successfully';
+  String get imagesDeletedSuccessfully => ' 张图像已成功删除';
 
   @override
-  String get imageDeletedSuccessfully => 'Image deleted successfully';
+  String get imageDeletedSuccessfully => '图像已成功删除';
 
   @override
-  String get failedToLoadImageData => 'Failed to load image data for \"';
+  String get failedToLoadImageData => '无法加载图像数据：\"';
 
   @override
-  String get failedToDecodeImage => 'Failed to decode image \"';
+  String get failedToDecodeImage => '无法解码图像：\"';
 
   @override
-  String get failedToTransfer => 'Failed to transfer \"';
+  String get failedToTransfer => '传输失败：\"';
 
   @override
-  String get savingImage => 'Saving image...';
+  String get savingImage => '正在保存图像...';
 
   @override
-  String get imageSavedToLibrary => 'Image saved to library!';
+  String get imageSavedToLibrary => '图像已保存到图库！';
 
   @override
-  String get failedToSaveImage => 'Failed to save image: ';
+  String get failedToSaveImage => '保存图像失败：';
 
   @override
-  String get errorCreatingVCardRecord => 'Error creating vCard record: ';
+  String get errorCreatingVCardRecord => '创建 vCard 记录时出错：';
 
   @override
-  String get nfcIsDisabledPleaseEnableIt =>
-      'NFC is disabled. Please enable it.';
+  String get nfcIsDisabledPleaseEnableIt => 'NFC 已禁用。请启用它。';
 
   @override
-  String get thisDeviceDoesNotSupportNfc => 'This device does not support NFC.';
+  String get thisDeviceDoesNotSupportNfc => '此设备不支持 NFC。';
 
   @override
-  String get bringPhoneNearMagicEpaperHardware =>
-      'Bring your phone near to the Magic ePaper Hardware';
+  String get bringPhoneNearMagicEpaperHardware => '将手机靠近 Magic ePaper 硬件';
 
   @override
-  String get tagDetectedInitializing => 'Tag detected! Initializing...';
+  String get tagDetectedInitializing => '检测到标签！正在初始化...';
 
   @override
-  String get enablingEnergyHarvesting => 'Enabling energy harvesting...';
+  String get enablingEnergyHarvesting => '正在启用能量收集...';
 
   @override
-  String get processingImageData => 'Processing image data...';
+  String get processingImageData => '正在处理图像数据...';
 
   @override
-  String get refreshingDisplay => 'Refreshing display...';
+  String get refreshingDisplay => '正在刷新屏幕...';
 
   @override
-  String get notMagicEpaperHardware => 'Not a Magic ePaper Hardware';
+  String get notMagicEpaperHardware => '不是 Magic ePaper 硬件';
 
   @override
-  String get errorCheckingMessage => 'Error checking message: ';
+  String get errorCheckingMessage => '检查消息时出错：';
 
   @override
-  String get timeoutWaitingForI2cMessage => 'Timeout waiting for I2C message';
+  String get timeoutWaitingForI2cMessage => '等待 I2C 消息超时';
 
   @override
-  String get writingChunk => 'Writing chunk ';
+  String get writingChunk => '正在写入数据块 ';
 
   @override
-  String get transferredSuccessfully => 'Transferred successfully.';
+  String get transferredSuccessfully => '传输成功。';
 
   @override
-  String get waitingForNfcTag => 'Waiting for NFC tag...';
+  String get waitingForNfcTag => '等待 NFC 标签...';
 
   @override
-  String get gotTag => 'Got a tag!';
+  String get gotTag => '找到标签！';
 
   @override
-  String get frame => 'Frame ';
+  String get frame => '帧 ';
 
   @override
-  String get couldNotOpenLink => 'Could not open the link.';
+  String get couldNotOpenLink => '无法打开链接。';
 
   @override
-  String get errorOccurredWhileOpeningLink =>
-      'An error occurred while opening the link.';
+  String get errorOccurredWhileOpeningLink => '打开链接时发生错误。';
 
   @override
-  String get errorCreatingAppRecord => 'Error creating app record: ';
+  String get errorCreatingAppRecord => '创建应用记录时出错：';
 
   @override
-  String get appCannotBeEmpty => 'App cannot be empty';
+  String get appCannotBeEmpty => '应用不能为空';
 
   @override
-  String get invalidPackageName => 'Invalid package name';
+  String get invalidPackageName => '无效的包名';
 
   @override
-  String get writeAppLauncherData => 'Write App Launcher Data';
+  String get writeAppLauncherData => '写入应用启动器数据';
 
   @override
-  String get writeAppLauncher => 'Write App Launcher';
+  String get writeAppLauncher => '写入应用启动器';
 
   @override
-  String get searchApps => 'Search apps...';
+  String get searchApps => '搜索应用...';
 
   @override
-  String get customPackageName => 'Custom Package Name';
+  String get customPackageName => '自定义包名';
 
   @override
-  String get enterPackageName => 'Enter package name...';
+  String get enterPackageName => '输入包名...';
 
   @override
-  String get noAppsFound => 'No apps found';
+  String get noAppsFound => '未找到应用';
 
   @override
-  String get selectApplication => 'Select Application';
+  String get selectApplication => '选择应用程序';
 
   @override
-  String get errorLoadingApps => 'Error loading apps: ';
+  String get errorLoadingApps => '加载应用时出错：';
 
   @override
-  String get add => 'Add';
+  String get add => '添加';
 
   @override
-  String get readNfcTags => 'Read NFC Tags';
+  String get readNfcTags => '读取 NFC 标签';
 
   @override
-  String get writeNfcTags => 'Write NFC Tags';
+  String get writeNfcTags => '写入 NFC 标签';
 
   @override
-  String get nfcIsReadyToUse =>
-      'NFC is ready to use. You can read and write NFC tags.';
+  String get nfcIsReadyToUse => 'NFC 已准备就绪。您可以读取和写入 NFC 标签。';
 
   @override
-  String get deviceDoesNotSupportNfc =>
-      'This device does not support NFC functionality.';
+  String get deviceDoesNotSupportNfc => '此设备不支持 NFC 功能。';
 
   @override
-  String get pleaseEnableNfcInSettings =>
-      'Please enable NFC in your device settings to continue.';
+  String get pleaseEnableNfcInSettings => '请在您的设备设置中启用 NFC 以继续。';
 
   @override
-  String get nfcIsNowEnabledAndReady => 'NFC is now enabled and ready to use!';
+  String get nfcIsNowEnabledAndReady => 'NFC 现已启用并准备就绪！';
 
   @override
-  String get nfcHasBeenDisabled =>
-      'NFC has been disabled. Please enable it to continue using NFC features.';
+  String get nfcHasBeenDisabled => 'NFC 已被禁用。请启用以继续使用 NFC 功能。';
 
   @override
-  String get nfcIsNotSupportedOnDevice =>
-      'NFC is not supported on this device.';
+  String get nfcIsNotSupportedOnDevice => '此设备不支持 NFC。';
 
   @override
-  String get arduinoExport => 'Arduino Export';
+  String get arduinoExport => '导出为 Arduino 代码';
 
   @override
-  String get exportXmbFilesForArduino => 'Export XMB files for Arduino';
+  String get exportXmbFilesForArduino => '为 Arduino 导出 XMB 文件';
 
   @override
-  String get cardTemplates => 'Card Templates';
+  String get cardTemplates => '卡片模板';
 
   @override
-  String get chooseTemplateSubtitle => 'Choose a template to get started';
+  String get chooseTemplateSubtitle => '选择一个模板以开始';
 
   @override
-  String get employeeIdCardTitle => 'Employee ID Card';
+  String get employeeIdCardTitle => '员工工牌';
 
   @override
-  String get employeeIdCardDescription =>
-      'Create professional employee identification cards';
+  String get employeeIdCardDescription => '创建专业的员工身份识别卡';
 
   @override
-  String get shopPriceTagTitle => 'Shop Price Tag';
+  String get shopPriceTagTitle => '商店价格标签';
 
   @override
-  String get shopPriceTagDescription =>
-      'Design attractive price tags for your products';
+  String get shopPriceTagDescription => '为您的产品设计吸引人的价格标签';
 
   @override
-  String get entryPassTagTitle => 'Entry Pass Tag';
+  String get entryPassTagTitle => '入场通行证';
 
   @override
-  String get entryPassTagDescription =>
-      'Generate entry passes for events and venues';
+  String get entryPassTagDescription => '生成活动和场地的入场通行证';
 
   @override
-  String get eventBadgeTitle => 'Event Badge';
+  String get eventBadgeTitle => '活动徽章';
 
   @override
-  String get eventBadgeDescription =>
-      'Create personalized event badges and name tags';
+  String get eventBadgeDescription => '创建个性化的活动徽章和名牌';
 
   @override
-  String get comingSoon => 'Coming Soon';
+  String get comingSoon => '敬请期待';
 
   @override
-  String get comingSoonMessage =>
-      'This template is currently under development and will be available soon.';
+  String get comingSoonMessage => '此模板目前正在开发中，即将推出。';
 
   @override
-  String get ok => 'OK';
+  String get ok => '确定';
 
   @override
-  String get defaultCompanyName => 'Company Name';
+  String get defaultCompanyName => '公司名称';
 
   @override
-  String get nameLabel => 'Name';
+  String get nameLabel => '姓名';
 
   @override
-  String get positionLabel => 'Position';
+  String get positionLabel => '职位';
 
   @override
-  String get divisionLabel => 'Division';
+  String get divisionLabel => '部门';
 
   @override
-  String get idLabel => 'ID';
+  String get idLabel => '编号';
 
   @override
-  String get emptyFieldPlaceholder => 'Not specified';
+  String get emptyFieldPlaceholder => '未指定';
 
   @override
-  String get productImage => 'Product Image';
+  String get productImage => '产品图片';
 
   @override
-  String get productName => 'Product Name';
+  String get productName => '产品名称';
 
   @override
-  String get sizeQuantity => 'Size/Quantity';
+  String get sizeQuantity => '尺寸/数量';
 
   @override
-  String get defaultCurrency => '\$';
+  String get defaultCurrency => '￥';
 
   @override
   String get defaultPrice => '0.00';
 
   @override
-  String get price => 'Price';
+  String get price => '价格';
 
   @override
-  String get quantitySize => 'Quantity/Size';
+  String get quantitySize => '数量/尺寸';
 
   @override
-  String get quantitySizeHint =>
-      'Enter size/quantity (e.g., 750ml, 2kg, Large)';
+  String get quantitySizeHint => '输入尺寸/数量（例如：750ml，2kg，大号）';
 
   @override
-  String get namePrefix => 'Name: ';
+  String get namePrefix => '姓名：';
 
   @override
-  String get positionPrefix => 'Position: ';
+  String get positionPrefix => '职位：';
 
   @override
-  String get divisionPrefix => 'Division: ';
+  String get divisionPrefix => '部门：';
 
   @override
-  String get idPrefix => 'ID: ';
+  String get idPrefix => '编号：';
 
   @override
-  String get employeeIdCard => 'Employee ID Card';
+  String get employeeIdCard => '员工工牌';
 
   @override
-  String get fillDetailsToCreateId =>
-      'Fill in the details below to create your employee ID card';
+  String get fillDetailsToCreateId => '填写以下信息以创建您的员工工牌';
 
   @override
-  String get idCardDetails => 'ID Card Details';
+  String get idCardDetails => '工牌详情';
 
   @override
-  String get companyName => 'Company Name';
+  String get companyName => '公司名称';
 
   @override
-  String get enterCompanyName => 'Enter company name';
+  String get enterCompanyName => '输入公司名称';
 
   @override
-  String get pleaseEnterCompanyName => 'Please enter company name';
+  String get pleaseEnterCompanyName => '请输入公司名称';
 
   @override
-  String get name => 'Name';
+  String get name => '姓名';
 
   @override
-  String get enterEmployeeName => 'Enter employee name';
+  String get enterEmployeeName => '输入员工姓名';
 
   @override
-  String get pleaseEnterName => 'Please enter name';
+  String get pleaseEnterName => '请输入姓名';
 
   @override
-  String get position => 'Position';
+  String get position => '职位';
 
   @override
-  String get enterJobPosition => 'Enter job position';
+  String get enterJobPosition => '输入工作职位';
 
   @override
-  String get pleaseEnterPosition => 'Please enter position';
+  String get pleaseEnterPosition => '请输入职位';
 
   @override
-  String get division => 'Division';
+  String get division => '部门';
 
   @override
-  String get enterDepartment => 'Enter department';
+  String get enterDepartment => '输入部门';
 
   @override
-  String get pleaseEnterDivision => 'Please enter division';
+  String get pleaseEnterDivision => '请输入部门';
 
   @override
-  String get idNumber => 'ID Number';
+  String get idNumber => '身份证/工号';
 
   @override
-  String get enterUniqueId => 'Enter unique ID';
+  String get enterUniqueId => '输入唯一编号';
 
   @override
-  String get pleaseEnterIdNumber => 'Please enter ID number';
+  String get pleaseEnterIdNumber => '请输入编号';
 
   @override
-  String get qrCodeData => 'QR Code Data';
+  String get qrCodeData => '二维码数据';
 
   @override
-  String get enterQrCodeData => 'Enter QR code data';
+  String get enterQrCodeData => '输入二维码数据';
 
   @override
-  String get pleaseEnterQrCodeData => 'Please enter QR code data';
+  String get pleaseEnterQrCodeData => '请输入二维码数据';
 
   @override
-  String get generatingIdCard => 'Generating ID Card...';
+  String get generatingIdCard => '正在生成工牌...';
 
   @override
-  String get generateIdCard => 'Generate ID Card';
+  String get generateIdCard => '生成工牌';
 
   @override
-  String get profilePhoto => 'Profile Photo';
+  String get profilePhoto => '个人照片';
 
   @override
-  String get selected => 'Selected';
+  String get selected => '已选择';
 
   @override
-  String get photoSelected => 'Photo selected';
+  String get photoSelected => '已选择照片';
 
   @override
-  String get selectProfilePhoto => 'Select Profile Photo';
+  String get selectProfilePhoto => '选择个人照片';
 
   @override
-  String get tapToChangePhoto => 'Tap to change photo';
+  String get tapToChangePhoto => '点击更改照片';
 
   @override
-  String get tapToSelectFromGallery => 'Tap to select from gallery';
+  String get tapToSelectFromGallery => '点击从相册中选择';
 
   @override
-  String get priceTagGenerator => 'Price Tag Generator';
+  String get priceTagGenerator => '价格标签生成器';
 
   @override
-  String get priceTagDescription =>
-      'Create professional price tags for your products';
+  String get priceTagDescription => '为您的产品创建专业的价格标签';
 
   @override
-  String get productDetails => 'Product Details';
+  String get productDetails => '产品详情';
 
   @override
-  String get productNameHint => 'Enter product name (e.g., iPhone 15 Pro)';
+  String get productNameHint => '输入产品名称（例如：iPhone 15 Pro）';
 
   @override
-  String get pleaseEnterProductName => 'Please enter a product name';
+  String get pleaseEnterProductName => '请输入产品名称';
 
   @override
-  String get currency => 'Currency';
+  String get currency => '货币';
 
   @override
-  String get currencyHint => '₹';
+  String get currencyHint => '￥';
 
   @override
-  String get required => 'Required';
+  String get required => '必填';
 
   @override
-  String get priceHint => '999.99';
+  String get priceHint => '99.99';
 
   @override
-  String get pleaseEnterPrice => 'Please enter price';
+  String get pleaseEnterPrice => '请输入价格';
 
   @override
-  String get pleaseEnterQuantitySize => 'Please enter quantity or size';
+  String get pleaseEnterQuantitySize => '请输入数量或尺寸';
 
   @override
-  String get pleaseEnterBarcodeData => 'Please enter barcode data';
+  String get pleaseEnterBarcodeData => '请输入条形码数据';
 
   @override
-  String get generatingPriceTag => 'Generating Price Tag...';
+  String get generatingPriceTag => '正在生成价格标签...';
 
   @override
-  String get generatePriceTag => 'Generate Price Tag';
+  String get generatePriceTag => '生成价格标签';
 
   @override
-  String get productImageIn => 'Product Image';
+  String get productImageIn => '产品图片';
 
   @override
-  String get productImageSelected => 'Product Image Selected';
+  String get productImageSelected => '已选择产品图片';
 
   @override
-  String get selectProductImage => 'Select Product Image';
+  String get selectProductImage => '选择产品图片';
 
   @override
-  String get tapToChangeImage => 'Tap to change image';
+  String get tapToChangeImage => '点击更改图片';
 
   @override
-  String get chooseImageFromGallery => 'Choose image from gallery';
-}
+  String get chooseImageFromGallery => '从相册中选择图片';
 
-/// The translations for Chinese, using the Han script (`zh_Hans`).
-class AppLocalizationsZhHans extends AppLocalizationsZh {
-  AppLocalizationsZhHans() : super('zh_Hans');
-}
+  @override
+  String get processingImages => '正在处理图像...';
 
-/// The translations for Chinese, using the Han script (`zh_Hant`).
-class AppLocalizationsZhHant extends AppLocalizationsZh {
-  AppLocalizationsZhHant() : super('zh_Hant');
+  @override
+  String get refreshModeInfo => '刷新模式信息';
+
+  @override
+  String get fullRefreshInfo => '全局刷新';
+
+  @override
+  String get fullRefreshDescription =>
+      '通过清除所有像素并重新绘制图像来完全刷新整个显示屏。这能提供最佳的图像质量和对比度，但需要较长的时间完成。';
+
+  @override
+  String get partialRefreshInfo => '局部刷新（波形）';
+
+  @override
+  String get partialRefreshDescription =>
+      '仅使用优化的波形更新更改的像素。这比全局刷新更快，但随着时间的推移可能会导致重影或对比度降低。';
+
+  @override
+  String get longPressForInfo => '长按获取更多信息';
 }

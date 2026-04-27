@@ -13,6 +13,7 @@ import 'app_localizations_he.dart';
 import 'app_localizations_hi.dart';
 import 'app_localizations_id.dart';
 import 'app_localizations_ja.dart';
+import 'app_localizations_kn.dart';
 import 'app_localizations_nb.dart';
 import 'app_localizations_pt.dart';
 import 'app_localizations_ru.dart';
@@ -114,16 +115,13 @@ abstract class AppLocalizations {
     Locale('hi'),
     Locale('id'),
     Locale('ja'),
+    Locale('kn'),
     Locale('nb'),
-    Locale('nb', 'NO'),
     Locale('pt'),
-    Locale('pt', 'BR'),
     Locale('ru'),
     Locale('uk'),
     Locale('vi'),
-    Locale('zh'),
-    Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
-    Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant')
+    Locale('zh')
   ];
 
   /// No description provided for @appName.
@@ -2597,6 +2595,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose image from gallery'**
   String get chooseImageFromGallery;
+
+  /// No description provided for @processingImages.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing images...'**
+  String get processingImages;
+
+  /// No description provided for @refreshModeInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Mode Information'**
+  String get refreshModeInfo;
+
+  /// No description provided for @fullRefreshInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Refresh'**
+  String get fullRefreshInfo;
+
+  /// No description provided for @fullRefreshDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Completely refreshes the entire display by clearing all pixels and redrawing the image. This provides the best image quality and contrast but takes longer to complete.'**
+  String get fullRefreshDescription;
+
+  /// No description provided for @partialRefreshInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Partial Refresh (Waveforms)'**
+  String get partialRefreshInfo;
+
+  /// No description provided for @partialRefreshDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates only the changed pixels using optimized waveforms. This is faster than full refresh but may result in ghosting or reduced contrast over time.'**
+  String get partialRefreshDescription;
+
+  /// No description provided for @longPressForInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Long press for more information'**
+  String get longPressForInfo;
 }
 
 class _AppLocalizationsDelegate
@@ -2618,6 +2658,7 @@ class _AppLocalizationsDelegate
         'hi',
         'id',
         'ja',
+        'kn',
         'nb',
         'pt',
         'ru',
@@ -2631,40 +2672,6 @@ class _AppLocalizationsDelegate
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-  // Lookup logic when language+script codes are specified.
-  switch (locale.languageCode) {
-    case 'zh':
-      {
-        switch (locale.scriptCode) {
-          case 'Hans':
-            return AppLocalizationsZhHans();
-          case 'Hant':
-            return AppLocalizationsZhHant();
-        }
-        break;
-      }
-  }
-
-  // Lookup logic when language+country codes are specified.
-  switch (locale.languageCode) {
-    case 'nb':
-      {
-        switch (locale.countryCode) {
-          case 'NO':
-            return AppLocalizationsNbNo();
-        }
-        break;
-      }
-    case 'pt':
-      {
-        switch (locale.countryCode) {
-          case 'BR':
-            return AppLocalizationsPtBr();
-        }
-        break;
-      }
-  }
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
     case 'de':
@@ -2683,6 +2690,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsId();
     case 'ja':
       return AppLocalizationsJa();
+    case 'kn':
+      return AppLocalizationsKn();
     case 'nb':
       return AppLocalizationsNb();
     case 'pt':

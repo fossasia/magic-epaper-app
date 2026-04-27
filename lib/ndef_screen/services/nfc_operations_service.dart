@@ -1,19 +1,17 @@
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 import 'package:magicepaperapp/ndef_screen/models/nfc_operation_result.dart';
 import 'package:magicepaperapp/ndef_screen/models/nfc_tag_info.dart';
 import 'package:magicepaperapp/ndef_screen/services/ndef_record_parser.dart';
 import 'package:magicepaperapp/ndef_screen/services/nfc_session_manager.dart';
 import 'package:ndef/ndef.dart' as ndef;
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCOperationsService {
   static Future<NFCOperationResult> readNDEF() async {
     try {
       final tag = await NFCSessionManager.pollForTag(
-        iosAlertMessage: appLocalizations.scanYourNfcTag,
+        iosAlertMessage: LocaleProvider.current!.scanYourNfcTag,
       );
 
       final tagInfo = NFCTagInfo(
@@ -25,9 +23,9 @@ class NFCOperationsService {
 
       if (tag.ndefAvailable != true) {
         await NFCSessionManager.finishSession(
-            iosMessage: appLocalizations.tagIsNotNdefCompatible);
+            iosMessage: LocaleProvider.current!.tagIsNotNdefCompatible);
         return NFCOperationResult.failure(
-          error: appLocalizations.tagIsNotNdefCompatible,
+          error: LocaleProvider.current!.tagIsNotNdefCompatible,
           operationType: NFCOperationType.read,
           tagInfo: tagInfo,
         );
@@ -35,21 +33,21 @@ class NFCOperationsService {
 
       final records = await FlutterNfcKit.readNDEFRecords();
       await NFCSessionManager.finishSession(
-          iosMessage: appLocalizations.readOperationCompleted);
+          iosMessage: LocaleProvider.current!.readOperationCompleted);
 
       String message = '${tagInfo.toString()}\n\n';
-      message += '${appLocalizations.ndefRecordsFound}${records.length}\n\n';
+      message += '${LocaleProvider.current!.ndefRecordsFound}${records.length}\n\n';
 
       if (records.isEmpty) {
-        message += appLocalizations.theTagIsEmpty;
+        message += LocaleProvider.current!.theTagIsEmpty;
       } else {
         for (int i = 0; i < records.length; i++) {
-          message += '${appLocalizations.record}${i + 1}:\n';
+          message += '${LocaleProvider.current!.record}${i + 1}:\n';
           message +=
-              '${appLocalizations.type}${NDEFRecordParser.getRecordTypeString(records[i])}\n';
-          message += '${appLocalizations.tnf}${records[i].tnf}\n';
+              '${LocaleProvider.current!.type}${NDEFRecordParser.getRecordTypeString(records[i])}\n';
+          message += '${LocaleProvider.current!.tnf}${records[i].tnf}\n';
           message +=
-              '${appLocalizations.content}${NDEFRecordParser.getRecordInfo(records[i])}\n\n';
+              '${LocaleProvider.current!.content}${NDEFRecordParser.getRecordInfo(records[i])}\n\n';
         }
       }
 
@@ -63,7 +61,7 @@ class NFCOperationsService {
       await NFCSessionManager.finishSession();
       return NFCOperationResult.failure(
         error:
-            '${appLocalizations.errorReadingTag}$e${appLocalizations.holdTagCloseAndTryAgain}',
+            '${LocaleProvider.current!.errorReadingTag}$e${LocaleProvider.current!.holdTagCloseAndTryAgain}',
         operationType: NFCOperationType.read,
       );
     }
@@ -73,14 +71,14 @@ class NFCOperationsService {
       List<ndef.NDEFRecord> records) async {
     if (records.isEmpty) {
       return NFCOperationResult.failure(
-        error: appLocalizations.noRecordsToWrite,
+        error: LocaleProvider.current!.noRecordsToWrite,
         operationType: NFCOperationType.write,
       );
     }
 
     try {
       final tag = await NFCSessionManager.pollForTag(
-        iosAlertMessage: appLocalizations.scanYourNfcTagToWrite,
+        iosAlertMessage: LocaleProvider.current!.scanYourNfcTagToWrite,
       );
 
       final tagInfo = NFCTagInfo(
@@ -92,9 +90,9 @@ class NFCOperationsService {
 
       if (tag.ndefAvailable != true) {
         await NFCSessionManager.finishSession(
-            iosMessage: appLocalizations.tagDoesNotSupportNdef);
+            iosMessage: LocaleProvider.current!.tagDoesNotSupportNdef);
         return NFCOperationResult.failure(
-          error: appLocalizations.tagDoesNotSupportNdef,
+          error: LocaleProvider.current!.tagDoesNotSupportNdef,
           operationType: NFCOperationType.write,
           tagInfo: tagInfo,
         );
@@ -102,9 +100,9 @@ class NFCOperationsService {
 
       if (tag.ndefWritable != true) {
         await NFCSessionManager.finishSession(
-            iosMessage: appLocalizations.tagIsNotWritable);
+            iosMessage: LocaleProvider.current!.tagIsNotWritable);
         return NFCOperationResult.failure(
-          error: appLocalizations.tagIsNotWritable,
+          error: LocaleProvider.current!.tagIsNotWritable,
           operationType: NFCOperationType.write,
           tagInfo: tagInfo,
         );
@@ -112,18 +110,18 @@ class NFCOperationsService {
 
       await FlutterNfcKit.writeNDEFRecords(records);
       await NFCSessionManager.finishSession(
-          iosMessage: appLocalizations.writeOperationCompleted);
+          iosMessage: LocaleProvider.current!.writeOperationCompleted);
 
       String message = '${tagInfo.toString()}\n\n';
-      message += '${appLocalizations.ndefRecordsWrittenSuccessfully}\n';
-      message += '${appLocalizations.recordsWritten}${records.length}\n\n';
+      message += '${LocaleProvider.current!.ndefRecordsWrittenSuccessfully}\n';
+      message += '${LocaleProvider.current!.recordsWritten}${records.length}\n\n';
 
       for (int i = 0; i < records.length; i++) {
-        message += '${appLocalizations.writtenRecord}${i + 1}:\n';
+        message += '${LocaleProvider.current!.writtenRecord}${i + 1}:\n';
         message +=
-            '${appLocalizations.type}${NDEFRecordParser.getRecordTypeString(records[i])}\n';
+            '${LocaleProvider.current!.type}${NDEFRecordParser.getRecordTypeString(records[i])}\n';
         message +=
-            '${appLocalizations.content}${NDEFRecordParser.getRecordInfo(records[i])}\n\n';
+            '${LocaleProvider.current!.content}${NDEFRecordParser.getRecordInfo(records[i])}\n\n';
       }
 
       return NFCOperationResult.success(
@@ -136,7 +134,7 @@ class NFCOperationsService {
       await NFCSessionManager.finishSession();
       return NFCOperationResult.failure(
         error:
-            '${appLocalizations.errorWritingToTag}$e${appLocalizations.tryHoldingTagCloser}',
+            '${LocaleProvider.current!.errorWritingToTag}$e${LocaleProvider.current!.tryHoldingTagCloser}',
         operationType: NFCOperationType.write,
       );
     }
@@ -145,7 +143,7 @@ class NFCOperationsService {
   static Future<NFCOperationResult> clearNDEF() async {
     try {
       final tag = await NFCSessionManager.pollForTag(
-        iosAlertMessage: appLocalizations.scanYourNfcTagToClear,
+        iosAlertMessage: LocaleProvider.current!.scanYourNfcTagToClear,
       );
 
       final tagInfo = NFCTagInfo(
@@ -157,9 +155,9 @@ class NFCOperationsService {
 
       if (tag.ndefAvailable != true) {
         await NFCSessionManager.finishSession(
-            iosMessage: appLocalizations.tagDoesNotSupportNdef);
+            iosMessage: LocaleProvider.current!.tagDoesNotSupportNdef);
         return NFCOperationResult.failure(
-          error: appLocalizations.tagDoesNotSupportNdefCannotClear,
+          error: LocaleProvider.current!.tagDoesNotSupportNdefCannotClear,
           operationType: NFCOperationType.clear,
           tagInfo: tagInfo,
         );
@@ -167,9 +165,9 @@ class NFCOperationsService {
 
       if (tag.ndefWritable != true) {
         await NFCSessionManager.finishSession(
-            iosMessage: appLocalizations.tagIsNotWritable);
+            iosMessage: LocaleProvider.current!.tagIsNotWritable);
         return NFCOperationResult.failure(
-          error: appLocalizations.tagIsNotWritableCannotClear,
+          error: LocaleProvider.current!.tagIsNotWritableCannotClear,
           operationType: NFCOperationType.clear,
           tagInfo: tagInfo,
         );
@@ -177,12 +175,12 @@ class NFCOperationsService {
 
       String clearMethod = await _attemptClearMethods();
       await NFCSessionManager.finishSession(
-          iosMessage: appLocalizations.clearOperationCompleted);
+          iosMessage: LocaleProvider.current!.clearOperationCompleted);
 
       String message = '${tagInfo.toString()}\n\n';
-      message += '${appLocalizations.tagClearedSuccessfully}\n';
-      message += '${appLocalizations.method}$clearMethod\n';
-      message += appLocalizations.tagIsNowReadyForNewData;
+      message += '${LocaleProvider.current!.tagClearedSuccessfully}\n';
+      message += '${LocaleProvider.current!.method}$clearMethod\n';
+      message += LocaleProvider.current!.tagIsNowReadyForNewData;
 
       return NFCOperationResult.success(
         message: message,
@@ -193,7 +191,7 @@ class NFCOperationsService {
       await NFCSessionManager.finishSession();
       return NFCOperationResult.failure(
         error:
-            '${appLocalizations.errorClearingTag}$e${appLocalizations.tryMovingTagCloser}',
+            '${LocaleProvider.current!.errorClearingTag}$e${LocaleProvider.current!.tryMovingTagCloser}',
         operationType: NFCOperationType.clear,
       );
     }
@@ -203,40 +201,40 @@ class NFCOperationsService {
     try {
       final emptyRecord = NDEFRecordFactory.createEmptyTextRecord();
       await FlutterNfcKit.writeNDEFRecords([emptyRecord]);
-      return appLocalizations.emptyTextRecord;
+      return LocaleProvider.current!.emptyTextRecord;
     } catch (e) {
-      print('${appLocalizations.method1EmptyTextRecordFailed}$e');
+      print('${LocaleProvider.current!.method1EmptyTextRecordFailed}$e');
     }
 
     try {
       final emptyRecord = NDEFRecordFactory.createEmptyRecord();
       await FlutterNfcKit.writeNDEFRecords([emptyRecord]);
-      return appLocalizations.emptyNdefRecord;
+      return LocaleProvider.current!.emptyNdefRecord;
     } catch (e) {
-      print('${appLocalizations.method2EmptyNdefRecordFailed}$e');
+      print('${LocaleProvider.current!.method2EmptyNdefRecordFailed}$e');
     }
 
     try {
       final minimalRecord = NDEFRecordFactory.createMinimalRecord();
       await FlutterNfcKit.writeNDEFRecords([minimalRecord]);
-      return appLocalizations.minimalSpaceCharacter;
+      return LocaleProvider.current!.minimalSpaceCharacter;
     } catch (e) {
-      print('${appLocalizations.method3MinimalRecordFailed}$e');
+      print('${LocaleProvider.current!.method3MinimalRecordFailed}$e');
     }
 
     try {
       await FlutterNfcKit.writeNDEFRecords([]);
-      return appLocalizations.emptyRecordList;
+      return LocaleProvider.current!.emptyRecordList;
     } catch (e) {
-      print('${appLocalizations.method4EmptyListFailed}$e');
-      throw Exception('${appLocalizations.allClearingMethodsFailed}$e');
+      print('${LocaleProvider.current!.method4EmptyListFailed}$e');
+      throw Exception('${LocaleProvider.current!.allClearingMethodsFailed}$e');
     }
   }
 
   static Future<NFCOperationResult> verifyTag() async {
     try {
       final tag = await NFCSessionManager.pollForTag(
-        iosAlertMessage: appLocalizations.scanTagToVerifyContent,
+        iosAlertMessage: LocaleProvider.current!.scanTagToVerifyContent,
       );
 
       final tagInfo = NFCTagInfo(
@@ -248,9 +246,9 @@ class NFCOperationsService {
 
       if (tag.ndefAvailable != true) {
         await NFCSessionManager.finishSession(
-            iosMessage: appLocalizations.tagDoesNotSupportNdef);
+            iosMessage: LocaleProvider.current!.tagDoesNotSupportNdef);
         return NFCOperationResult.failure(
-          error: appLocalizations.tagDoesNotSupportNdef,
+          error: LocaleProvider.current!.tagDoesNotSupportNdef,
           operationType: NFCOperationType.verify,
           tagInfo: tagInfo,
         );
@@ -259,13 +257,13 @@ class NFCOperationsService {
       final records = await FlutterNfcKit.readNDEFRecords();
       await NFCSessionManager.finishSession();
 
-      String message = '${appLocalizations.verificationResults}\n';
+      String message = '${LocaleProvider.current!.verificationResults}\n';
       message += '${tagInfo.toString()}\n';
-      message += '${appLocalizations.recordsFound}${records.length}\n\n';
+      message += '${LocaleProvider.current!.recordsFound}${records.length}\n\n';
 
       if (records.isEmpty) {
-        message += '${appLocalizations.noNdefRecordsFoundOnTag}\n';
-        message += appLocalizations.theTagIsEmptyCleared;
+        message += '${LocaleProvider.current!.noNdefRecordsFoundOnTag}\n';
+        message += LocaleProvider.current!.theTagIsEmptyCleared;
       } else {
         message += NDEFRecordParser.formatRecordsForDisplay(records);
       }
@@ -279,7 +277,7 @@ class NFCOperationsService {
     } catch (e) {
       await NFCSessionManager.finishSession();
       return NFCOperationResult.failure(
-        error: '${appLocalizations.verificationError}$e',
+        error: '${LocaleProvider.current!.verificationError}$e',
         operationType: NFCOperationType.verify,
       );
     }

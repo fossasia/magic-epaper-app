@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class SearchFieldWidget extends StatelessWidget {
   final TextEditingController controller;
@@ -22,7 +20,7 @@ class SearchFieldWidget extends StatelessWidget {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        hintText: appLocalizations.searchImages,
+        hintText: LocaleProvider.current!.searchImages,
         prefixIcon: const Icon(Icons.search, color: colorAccent),
         suffixIcon: controller.text.isNotEmpty
             ? IconButton(

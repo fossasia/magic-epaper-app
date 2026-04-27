@@ -1,6 +1,7 @@
 import 'package:image/image.dart' as img;
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/util/epd/driver/waveform.dart';
 import 'package:magicepaperapp/util/protocol.dart';
@@ -18,6 +19,7 @@ abstract class Epd extends DisplayDevice {
       {Waveform? waveform}) async {
     if (!context.mounted) return;
 
+    final l = AppLocalizations.of(context)!;
     final rotatedImage = img.copyRotate(image, angle: 90);
     await TransferProgressDialog.show(
       context: context,
@@ -25,7 +27,7 @@ abstract class Epd extends DisplayDevice {
       transferFunction: (img, onProgress, onTagDetected) async {
         if (!context.mounted) return;
         final currentEpdDevice = this;
-        return await Protocol(epd: currentEpdDevice).writeImages(
+        return await Protocol(epd: currentEpdDevice, l: l).writeImages(
           img,
           onProgress: onProgress,
           onTagDetected: onTagDetected,

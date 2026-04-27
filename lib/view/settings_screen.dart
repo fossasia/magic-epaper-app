@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/provider/locale_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:magicepaperapp/util/orientation_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -23,15 +19,23 @@ class SettingsScreenState extends State<SettingsScreen> {
     super.initState();
   }
 
-  String _getLanguageName(Locale locale) {
-    switch (locale.languageCode) {
-      case 'hi':
-        return 'हिंदी (Beta - Partial Translation)';
-      case 'en':
-      default:
-        return 'English';
-    }
-  }
+  static const List<Map<String, String>> _supportedLanguages = [
+    {'code': 'en', 'name': 'English'},
+    {'code': 'hi', 'name': 'हिंदी'},
+    {'code': 'he', 'name': 'עברית'},
+    {'code': 'kn', 'name': 'ಕನ್ನಡ'},
+    {'code': 'de', 'name': 'Deutsch'},
+    {'code': 'es', 'name': 'Español'},
+    {'code': 'fr', 'name': 'Français'},
+    {'code': 'id', 'name': 'Bahasa Indonesia'},
+    {'code': 'ja', 'name': '日本語'},
+    {'code': 'nb', 'name': 'Norsk Bokmål'},
+    {'code': 'pt', 'name': 'Português'},
+    {'code': 'ru', 'name': 'Русский'},
+    {'code': 'uk', 'name': 'Українська'},
+    {'code': 'vi', 'name': 'Tiếng Việt'},
+    {'code': 'zh', 'name': '中文'},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +49,7 @@ class SettingsScreenState extends State<SettingsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              appLocalizations.language,
+              LocaleProvider.current!.language,
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
@@ -56,38 +60,31 @@ class SettingsScreenState extends State<SettingsScreen> {
               ),
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: DropdownButtonHideUnderline(
-                child: DropdownButton<Locale>(
-                  value: localeProvider.locale,
+                child: DropdownButton<String>(
+                  value: localeProvider.locale.languageCode,
                   isExpanded: true,
                   icon: const Icon(Icons.arrow_drop_down, color: mdGrey400),
-                  onChanged: (Locale? newLocale) {
-                    if (newLocale != null) {
-                      localeProvider.setLocale(newLocale);
+                  onChanged: (String? newCode) {
+                    if (newCode != null) {
+                      localeProvider.setLocale(Locale(newCode));
                     }
                   },
-                  items: [
-                    DropdownMenuItem<Locale>(
-                      value: const Locale('en'),
+                  items: _supportedLanguages.map((lang) {
+                    return DropdownMenuItem<String>(
+                      value: lang['code'],
                       child: Text(
-                        _getLanguageName(const Locale('en')),
+                        lang['name']!,
                         style: const TextStyle(color: colorBlack),
                       ),
-                    ),
-                    DropdownMenuItem<Locale>(
-                      value: const Locale('hi'),
-                      child: Text(
-                        _getLanguageName(const Locale('hi')),
-                        style: const TextStyle(color: colorBlack),
-                      ),
-                    ),
-                  ],
+                    );
+                  }).toList(),
                 ),
               ),
             ),
           ],
         ),
       ),
-      title: appLocalizations.appName,
+      title: LocaleProvider.current!.appName,
     );
   }
 }

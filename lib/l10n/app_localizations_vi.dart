@@ -13,133 +13,132 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get aboutUsDescription =>
-      'Magic ePaper is an app designed to control and update ePaper displays. The goal is to provide tools for customizing and transferring images, text, and patterns to ePaper screens using NFC. Data transfer from the smartphone to the ePaper hardware is done wirelessly via NFC. The project is built on top of custom firmware and display drivers for seamless communication and efficient image rendering.';
+      'Magic ePaper là ứng dụng được thiết kế để điều khiển và cập nhật màn hình ePaper. Mục tiêu là cung cấp các công cụ để tùy chỉnh và truyền hình ảnh, văn bản và họa tiết sang màn hình ePaper bằng NFC. Việc truyền dữ liệu từ điện thoại thông minh sang phần cứng ePaper được thực hiện không dây qua NFC. Dự án được xây dựng dựa trên phần mềm cơ sở tùy chỉnh và trình điều khiển hiển thị để liên lạc liền mạch và hiển thị hình ảnh hiệu quả.';
 
   @override
-  String get developedBy => 'Developed by';
+  String get developedBy => 'Được phát triển bởi';
 
   @override
-  String get fossasiaContributors => 'FOSSASIA contributors';
+  String get fossasiaContributors => 'Những người đóng góp cho FOSSASIA';
 
   @override
-  String get contactWithUs => 'Contact With Us';
+  String get contactWithUs => 'Liên hệ với chúng tôi';
 
   @override
   String get github => 'GitHub';
 
   @override
   String get githubSubtitle =>
-      'Fork the repo and push changes or submit new issues.';
+      'Fork repo và đẩy các thay đổi hoặc gửi vấn đề mới.';
 
   @override
-  String get license => 'License';
+  String get license => 'Giấy phép';
 
   @override
   String get licenseSubtitle =>
-      'Check Apache License 2.0 terms used on Magic ePaper.';
+      'Kiểm tra các điều khoản Giấy phép Apache 2.0 được sử dụng trên Magic ePaper.';
 
   @override
-  String get createTransfer => 'Create & Transfer Images';
+  String get createTransfer => 'Tạo & Truyền Ảnh';
 
   @override
   String get ndefScreen => 'Ndef';
 
   @override
-  String get selectDisplayType => 'Select your ePaper display type';
+  String get selectDisplayType => 'Chọn loại màn hình ePaper của bạn';
 
   @override
-  String get settings => 'Settings';
+  String get settings => 'Cài đặt';
 
   @override
-  String get aboutUs => 'About Us';
+  String get aboutUs => 'Về chúng tôi';
 
   @override
-  String get other => 'Other';
+  String get other => 'Khác';
 
   @override
-  String get getBadge => 'Get Badge';
+  String get getBadge => 'Nhận huy hiệu';
 
   @override
-  String get feedbackBugReports => 'Feedback/Bug Reports';
+  String get feedbackBugReports => 'Phản hồi / Báo lỗi';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Tiếp tục';
 
   @override
-  String get noImageSelectedFeedback => 'Import an image first!';
+  String get noImageSelectedFeedback => 'Vui lòng nhập một hình ảnh trước!';
 
   @override
-  String get adjustButtonLabel => 'Adjust';
+  String get adjustButtonLabel => 'Điều chỉnh';
 
   @override
-  String get importImageButtonLabel => 'Import';
+  String get importImageButtonLabel => 'Nhập';
 
   @override
-  String get openEditor => 'Create';
+  String get openEditor => 'Tạo';
 
   @override
-  String get importStartingImageFeedback => 'Import an image to begin';
+  String get importStartingImageFeedback => 'Nhập một hình ảnh để bắt đầu';
 
   @override
-  String get transferButtonLabel => 'Transfer';
+  String get transferButtonLabel => 'Truyền';
 
   @override
-  String get filterScreenTitle => 'Select a Filter';
+  String get filterScreenTitle => 'Chọn một bộ lọc';
 
   @override
-  String get scanningForNfcTag => 'Scanning for NFC tag...';
+  String get scanningForNfcTag => 'Đang quét thẻ NFC...';
 
   @override
-  String get scanningForNfcTagToWrite => 'Scanning for NFC tag to write...';
+  String get scanningForNfcTagToWrite => 'Đang quét thẻ NFC để ghi...';
 
   @override
-  String get scanningForNfcTagToClear => 'Scanning for NFC tag to clear...';
+  String get scanningForNfcTagToClear => 'Đang quét thẻ NFC để xóa...';
 
   @override
-  String get scanningTagForVerification => 'Scanning tag for verification...';
+  String get scanningTagForVerification => 'Đang quét thẻ để xác minh...';
 
   @override
-  String get errorCreatingTextRecord => 'Error creating text record: ';
+  String get errorCreatingTextRecord => 'Lỗi khi tạo bản ghi văn bản: ';
 
   @override
-  String get errorCreatingUrlRecord => 'Error creating URL record: ';
+  String get errorCreatingUrlRecord => 'Lỗi khi tạo bản ghi URL: ';
 
   @override
-  String get errorCreatingWifiRecord => 'Error creating WiFi record: ';
+  String get errorCreatingWifiRecord => 'Lỗi khi tạo bản ghi WiFi: ';
 
   @override
-  String get errorCreatingMultipleRecords =>
-      'Error creating multiple records: ';
+  String get errorCreatingMultipleRecords => 'Lỗi khi tạo nhiều bản ghi: ';
 
   @override
-  String get pleaseEnterAtLeastOneRecord => 'Please enter at least one record';
+  String get pleaseEnterAtLeastOneRecord => 'Vui lòng nhập ít nhất một bản ghi';
 
   @override
-  String get tagType => 'Tag Type: ';
+  String get tagType => 'Loại thẻ: ';
 
   @override
-  String get tagId => 'Tag ID: ';
+  String get tagId => 'ID thẻ: ';
 
   @override
-  String get ndefAvailable => 'NDEF Available: ';
+  String get ndefAvailable => 'NDEF khả dụng: ';
 
   @override
-  String get ndefWritable => 'NDEF Writable: ';
+  String get ndefWritable => 'NDEF có thể ghi: ';
 
   @override
-  String get unknown => 'Unknown';
+  String get unknown => 'Không xác định';
 
   @override
-  String get textCannotBeEmpty => 'Text cannot be empty';
+  String get textCannotBeEmpty => 'Văn bản không được để trống';
 
   @override
-  String get urlCannotBeEmpty => 'URL cannot be empty';
+  String get urlCannotBeEmpty => 'URL không được để trống';
 
   @override
-  String get wifiSsidCannotBeEmpty => 'WiFi SSID cannot be empty';
+  String get wifiSsidCannotBeEmpty => 'SSID WiFi không được để trống';
 
   @override
-  String get defaultLanguage => 'en';
+  String get defaultLanguage => 'vi';
 
   @override
   String get httpsPrefix => 'https://';
@@ -160,16 +159,16 @@ class AppLocalizationsVi extends AppLocalizations {
   String get emptySpace => ' ';
 
   @override
-  String get unknownNull => 'Unknown (null)';
+  String get unknownNull => 'Không xác định (null)';
 
   @override
-  String get unknownType => 'Unknown type: ';
+  String get unknownType => 'Loại không xác định: ';
 
   @override
-  String get textPrefix => 'Text: ';
+  String get textPrefix => 'Văn bản: ';
 
   @override
-  String get textSuffix => ' (Language: ';
+  String get textSuffix => ' (Ngôn ngữ: ';
 
   @override
   String get uriPrefix => 'URI: ';
@@ -178,28 +177,28 @@ class AppLocalizationsVi extends AppLocalizations {
   String get mimePrefix => 'MIME: ';
 
   @override
-  String get absoluteUriPrefix => 'Absolute URI: ';
+  String get absoluteUriPrefix => 'URI tuyệt đối: ';
 
   @override
-  String get rawPrefix => 'Raw: ';
+  String get rawPrefix => 'Dữ liệu thô: ';
 
   @override
-  String get emptyPayload => 'Empty payload';
+  String get emptyPayload => 'Payload trống';
 
   @override
-  String get binaryDataPrefix => 'Binary data (';
+  String get binaryDataPrefix => 'Dữ liệu nhị phân (';
 
   @override
-  String get binaryDataSuffix => ' bytes): ';
+  String get binaryDataSuffix => ' byte): ';
 
   @override
-  String get errorDecodingRecord => 'Error decoding record: ';
+  String get errorDecodingRecord => 'Lỗi giải mã bản ghi: ';
 
   @override
-  String get noNdefRecordsFound => 'No NDEF records found';
+  String get noNdefRecordsFound => 'Không tìm thấy bản ghi NDEF nào';
 
   @override
-  String get recordPrefix => 'Record ';
+  String get recordPrefix => 'Bản ghi ';
 
   @override
   String get recordSuffix => ':';
@@ -208,19 +207,19 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tnfLabel => 'TNF: ';
 
   @override
-  String get typeLabel => 'Type: ';
+  String get typeLabel => 'Loại: ';
 
   @override
-  String get payloadSizeLabel => 'Payload Size: ';
+  String get payloadSizeLabel => 'Kích thước payload: ';
 
   @override
-  String get bytesLabel => ' bytes';
+  String get bytesLabel => ' byte';
 
   @override
-  String get contentLabel => 'Content: ';
+  String get contentLabel => 'Nội dung: ';
 
   @override
-  String get rawPayloadLabel => 'Raw Payload: ';
+  String get rawPayloadLabel => 'Payload thô: ';
 
   @override
   String get nullPayload => 'null';
@@ -232,1054 +231,1083 @@ class AppLocalizationsVi extends AppLocalizations {
   String get closingParenthesisNewline => ')\n';
 
   @override
-  String get scanYourNfcTag => 'Scan your NFC tag';
+  String get scanYourNfcTag => 'Quét thẻ NFC của bạn';
 
   @override
-  String get scanYourNfcTagToWrite => 'Scan your NFC tag to write';
+  String get scanYourNfcTagToWrite => 'Quét thẻ NFC của bạn để ghi';
 
   @override
-  String get scanYourNfcTagToClear => 'Scan your NFC tag to clear';
+  String get scanYourNfcTagToClear => 'Quét thẻ NFC của bạn để xóa';
 
   @override
-  String get scanTagToVerifyContent => 'Scan tag to verify content';
+  String get scanTagToVerifyContent => 'Quét thẻ để xác minh nội dung';
 
   @override
-  String get tagIsNotNdefCompatible => 'Tag is not NDEF compatible';
+  String get tagIsNotNdefCompatible => 'Thẻ không tương thích NDEF';
 
   @override
-  String get tagDoesNotSupportNdef => 'Tag does not support NDEF';
+  String get tagDoesNotSupportNdef => 'Thẻ không hỗ trợ NDEF';
 
   @override
-  String get tagIsNotWritable => 'Tag is not writable';
+  String get tagIsNotWritable => 'Thẻ không thể ghi';
 
   @override
   String get tagDoesNotSupportNdefCannotClear =>
-      'Tag does not support NDEF, cannot clear';
+      'Thẻ không hỗ trợ NDEF, không thể xóa';
 
   @override
-  String get tagIsNotWritableCannotClear => 'Tag is not writable, cannot clear';
+  String get tagIsNotWritableCannotClear => 'Thẻ không thể ghi, không thể xóa';
 
   @override
-  String get readOperationCompleted => 'Read operation completed';
+  String get readOperationCompleted => 'Hoàn tất thao tác đọc';
 
   @override
-  String get writeOperationCompleted => 'Write operation completed';
+  String get writeOperationCompleted => 'Hoàn tất thao tác ghi';
 
   @override
-  String get clearOperationCompleted => 'Clear operation completed';
+  String get clearOperationCompleted => 'Hoàn tất thao tác xóa';
 
   @override
-  String get ndefRecordsFound => 'NDEF records found: ';
+  String get ndefRecordsFound => 'Đã tìm thấy bản ghi NDEF: ';
 
   @override
-  String get theTagIsEmpty => 'The tag is empty';
+  String get theTagIsEmpty => 'Thẻ trống';
 
   @override
-  String get record => 'Record ';
+  String get record => 'Bản ghi ';
 
   @override
-  String get type => 'Type: ';
+  String get type => 'Loại: ';
 
   @override
   String get tnf => 'TNF: ';
 
   @override
-  String get content => 'Content: ';
+  String get content => 'Nội dung: ';
 
   @override
-  String get noRecordsToWrite => 'No records to write';
+  String get noRecordsToWrite => 'Không có bản ghi nào để ghi';
 
   @override
-  String get ndefRecordsWrittenSuccessfully =>
-      'NDEF records written successfully';
+  String get ndefRecordsWrittenSuccessfully => 'Ghi bản ghi NDEF thành công';
 
   @override
-  String get recordsWritten => 'Records written: ';
+  String get recordsWritten => 'Bản ghi đã ghi: ';
 
   @override
-  String get writtenRecord => 'Written record ';
+  String get writtenRecord => 'Bản ghi đã ghi ';
 
   @override
-  String get tagClearedSuccessfully => 'Tag cleared successfully';
+  String get tagClearedSuccessfully => 'Đã xóa thẻ thành công';
 
   @override
-  String get method => 'Method: ';
+  String get method => 'Phương pháp: ';
 
   @override
-  String get tagIsNowReadyForNewData => 'Tag is now ready for new data';
+  String get tagIsNowReadyForNewData => 'Thẻ hiện đã sẵn sàng cho dữ liệu mới';
 
   @override
-  String get emptyTextRecord => 'Empty text record';
+  String get emptyTextRecord => 'Bản ghi văn bản trống';
 
   @override
-  String get emptyNdefRecord => 'Empty NDEF record';
+  String get emptyNdefRecord => 'Bản ghi NDEF trống';
 
   @override
-  String get minimalSpaceCharacter => 'Minimal space character';
+  String get minimalSpaceCharacter => 'Ký tự khoảng trắng tối thiểu';
 
   @override
-  String get emptyRecordList => 'Empty record list';
+  String get emptyRecordList => 'Danh sách bản ghi trống';
 
   @override
-  String get allClearingMethodsFailed => 'All clearing methods failed: ';
+  String get allClearingMethodsFailed =>
+      'Tất cả các phương pháp xóa đều thất bại: ';
 
   @override
-  String get verificationResults => 'Verification Results:';
+  String get verificationResults => 'Kết quả xác minh:';
 
   @override
-  String get recordsFound => 'Records found: ';
+  String get recordsFound => 'Bản ghi được tìm thấy: ';
 
   @override
-  String get noNdefRecordsFoundOnTag => 'No NDEF records found on tag';
+  String get noNdefRecordsFoundOnTag =>
+      'Không tìm thấy bản ghi NDEF nào trên thẻ';
 
   @override
-  String get theTagIsEmptyCleared => 'The tag is empty/cleared';
+  String get theTagIsEmptyCleared => 'Thẻ đã trống/được xóa';
 
   @override
-  String get errorReadingTag => 'Error reading tag: ';
+  String get errorReadingTag => 'Lỗi khi đọc thẻ: ';
 
   @override
-  String get errorWritingToTag => 'Error writing to tag: ';
+  String get errorWritingToTag => 'Lỗi khi ghi vào thẻ: ';
 
   @override
-  String get errorClearingTag => 'Error clearing tag: ';
+  String get errorClearingTag => 'Lỗi khi xóa thẻ: ';
 
   @override
-  String get verificationError => 'Verification error: ';
+  String get verificationError => 'Lỗi xác minh: ';
 
   @override
-  String get holdTagCloseAndTryAgain => '. Hold tag close and try again';
+  String get holdTagCloseAndTryAgain => '. Giữ thẻ gần lại và thử lại';
 
   @override
-  String get tryHoldingTagCloser => '. Try holding tag closer';
+  String get tryHoldingTagCloser => '. Hãy thử giữ thẻ gần hơn';
 
   @override
-  String get tryMovingTagCloser => '. Try moving tag closer';
+  String get tryMovingTagCloser => '. Hãy thử di chuyển thẻ gần hơn';
 
   @override
   String get method1EmptyTextRecordFailed =>
-      'Method 1 (empty text record) failed: ';
+      'Phương pháp 1 (bản ghi văn bản trống) thất bại: ';
 
   @override
   String get method2EmptyNdefRecordFailed =>
-      'Method 2 (empty NDEF record) failed: ';
+      'Phương pháp 2 (bản ghi NDEF trống) thất bại: ';
 
   @override
-  String get method3MinimalRecordFailed => 'Method 3 (minimal record) failed: ';
+  String get method3MinimalRecordFailed =>
+      'Phương pháp 3 (bản ghi tối thiểu) thất bại: ';
 
   @override
-  String get method4EmptyListFailed => 'Method 4 (empty list) failed: ';
+  String get method4EmptyListFailed =>
+      'Phương pháp 4 (danh sách trống) thất bại: ';
 
   @override
-  String get errorFinishingNfcSession => 'Error finishing NFC session: ';
+  String get errorFinishingNfcSession => 'Lỗi khi kết thúc phiên NFC: ';
 
   @override
-  String get secondaryCleanupAlsoFailed => 'Secondary cleanup also failed: ';
+  String get secondaryCleanupAlsoFailed => 'Dọn dẹp phụ cũng thất bại: ';
 
   @override
   String get multipleTagsFoundPleaseSelectOne =>
-      'Multiple tags found, please select one';
+      'Tìm thấy nhiều thẻ, vui lòng chọn một';
 
   @override
-  String get scanYourNfcTagDefault => 'Scan your NFC tag';
+  String get scanYourNfcTagDefault => 'Quét thẻ NFC của bạn';
 
   @override
-  String get readNdefTags => 'Read NDEF Tags';
+  String get readNdefTags => 'Đọc thẻ NDEF';
 
   @override
-  String get reading => 'Reading...';
+  String get reading => 'Đang đọc...';
 
   @override
-  String get readNfcTag => 'Read NFC Tag';
+  String get readNfcTag => 'Đọc thẻ NFC';
 
   @override
-  String get verify => 'Verify';
+  String get verify => 'Xác minh';
 
   @override
-  String get clearing => 'Clearing...';
+  String get clearing => 'Đang xóa...';
 
   @override
-  String get clearNfcTag => 'Clear NFC Tag';
+  String get clearNfcTag => 'Xóa thẻ NFC';
 
   @override
   String get monospaceFontFamily => 'monospace';
 
   @override
-  String get nfcStatus => 'NFC Status';
+  String get nfcStatus => 'Trạng thái NFC';
 
   @override
-  String get refreshNfcStatus => 'Refresh NFC Status';
+  String get refreshNfcStatus => 'Làm mới trạng thái NFC';
 
   @override
-  String get writeNdefRecords => 'Write NDEF Records';
+  String get writeNdefRecords => 'Ghi bản ghi NDEF';
 
   @override
-  String get textRecord => 'Text Record';
+  String get textRecord => 'Bản ghi văn bản';
 
   @override
-  String get enterTextToWriteToNfcTag => 'Enter text to write to NFC tag';
+  String get enterTextToWriteToNfcTag => 'Nhập văn bản để ghi vào thẻ NFC';
 
   @override
-  String get writing => 'Writing...';
+  String get writing => 'Đang ghi...';
 
   @override
-  String get writeText => 'Write Text';
+  String get writeText => 'Ghi văn bản';
 
   @override
-  String get urlRecord => 'URL Record';
+  String get urlRecord => 'Bản ghi URL';
 
   @override
-  String get enterUrl => 'Enter URL';
+  String get enterUrl => 'Nhập URL';
 
   @override
-  String get writeUrl => 'Write URL';
+  String get writeUrl => 'Ghi URL';
 
   @override
-  String get wifiRecord => 'WiFi Record';
+  String get wifiRecord => 'Bản ghi WiFi';
 
   @override
-  String get wifiNetworkNameSsid => 'WiFi Network Name (SSID)';
+  String get wifiNetworkNameSsid => 'Tên mạng WiFi (SSID)';
 
   @override
-  String get wifiPassword => 'WiFi Password';
+  String get wifiPassword => 'Mật khẩu WiFi';
 
   @override
-  String get writeWifi => 'Write WiFi';
+  String get writeWifi => 'Ghi WiFi';
 
   @override
-  String get writeAllRecords => 'Write All Records';
+  String get writeAllRecords => 'Ghi tất cả bản ghi';
 
   @override
   String get writeAllNonEmptyFieldsDescription =>
-      'Write all non-empty fields to the NFC tag at once';
+      'Ghi tất cả các trường không trống vào thẻ NFC cùng một lúc';
 
   @override
-  String get writeMultipleRecords => 'Write Multiple Records';
+  String get writeMultipleRecords => 'Ghi nhiều bản ghi';
 
   @override
-  String get readOperationFailed => 'Read operation failed';
+  String get readOperationFailed => 'Thao tác đọc thất bại';
 
   @override
-  String get tagReadSuccessfully => 'Tag read successfully';
+  String get tagReadSuccessfully => 'Đọc thẻ thành công';
 
   @override
-  String get verificationFailed => 'Verification failed';
+  String get verificationFailed => 'Xác minh thất bại';
 
   @override
-  String get tagVerifiedSuccessfully => 'Tag verified successfully';
+  String get tagVerifiedSuccessfully => 'Xác minh thẻ thành công';
 
   @override
   String get clearNfcTagConfirmation =>
-      'Are you sure you want to clear this NFC tag? This action cannot be undone.';
+      'Bạn có chắc chắn muốn xóa thẻ NFC này không? Hành động này không thể hoàn tác.';
 
   @override
-  String get clearOperationFailed => 'Clear operation failed';
+  String get clearOperationFailed => 'Thao tác xóa thất bại';
 
   @override
-  String get writeOperationFailed => 'Write operation failed';
+  String get writeOperationFailed => 'Thao tác ghi thất bại';
 
   @override
-  String get dataWrittenSuccessfully => 'Data written successfully';
+  String get dataWrittenSuccessfully => 'Ghi dữ liệu thành công';
 
   @override
-  String get nfcNotAvailable => 'NFC Not Available';
+  String get nfcNotAvailable => 'NFC không khả dụng';
 
   @override
   String get enableNfcMessage =>
-      'Please enable NFC in your device settings to use this feature.';
+      'Vui lòng bật NFC trong cài đặt thiết bị của bạn để sử dụng tính năng này.';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'Hủy';
 
   @override
-  String get confirm => 'Confirm';
+  String get confirm => 'Xác nhận';
 
   @override
-  String get error => 'Error';
+  String get error => 'Lỗi';
 
   @override
-  String get successfully => 'successfully';
+  String get successfully => 'thành công';
 
   @override
-  String get language => 'Language';
+  String get language => 'Ngôn ngữ';
 
   @override
-  String get loading => 'Loading...';
+  String get loading => 'Đang tải...';
 
   @override
-  String get exportXbm => 'Export XBM';
+  String get exportXbm => 'Xuất XBM';
 
   @override
-  String get exportingXbm => 'Exporting XBM files...';
+  String get exportingXbm => 'Đang xuất tệp XBM...';
 
   @override
-  String get fullRefresh => 'Full Refresh';
+  String get fullRefresh => 'Làm mới toàn bộ';
 
   @override
-  String get fullRefreshSelected => 'Full Refresh Selected';
+  String get fullRefreshSelected => 'Đã chọn làm mới toàn bộ';
 
   @override
-  String get waveformSelected => 'Selected';
+  String get waveformSelected => 'Đã chọn';
 
   @override
-  String get barcode => 'Barcode';
+  String get barcode => 'Mã vạch';
 
   @override
-  String get library => 'Library';
+  String get library => 'Thư viện';
 
   @override
-  String get templates => 'Templates';
+  String get templates => 'Mẫu';
 
   @override
-  String get barcodeGenerator => 'Barcode Generator';
+  String get barcodeGenerator => 'Trình tạo mã vạch';
 
   @override
-  String get barcodeData => 'Barcode Data';
+  String get barcodeData => 'Dữ liệu mã vạch';
 
   @override
-  String get barcodeDataHint => 'Enter barcode number or SKU';
+  String get barcodeDataHint => 'Nhập số mã vạch hoặc SKU';
 
   @override
-  String get characters => 'Characters';
+  String get characters => 'Ký tự';
 
   @override
-  String get scanBarcode => 'Scan Barcode';
+  String get scanBarcode => 'Quét mã vạch';
 
   @override
-  String get barcodeFormat => 'Barcode Format';
+  String get barcodeFormat => 'Định dạng mã vạch';
 
   @override
-  String get enterOrScanBarcodeData => 'Enter or scan barcode data';
+  String get enterOrScanBarcodeData => 'Nhập hoặc quét dữ liệu mã vạch';
 
   @override
-  String get invalidBarcode => 'Invalid Barcode';
+  String get invalidBarcode => 'Mã vạch không hợp lệ';
 
   @override
-  String get invalidCharacter => 'Invalid character';
+  String get invalidCharacter => 'Ký tự không hợp lệ';
 
   @override
-  String get supportedCharacters => 'Supported characters are';
+  String get supportedCharacters => 'Các ký tự được hỗ trợ là';
 
   @override
-  String get pleaseCheckBarcodeRules => 'Please check the barcode rules.';
+  String get pleaseCheckBarcodeRules =>
+      'Vui lòng kiểm tra các quy tắc mã vạch.';
 
   @override
-  String get dataTooShort => 'Data is too short. Minimum length for';
+  String get dataTooShort => 'Dữ liệu quá ngắn. Độ dài tối thiểu cho';
 
   @override
-  String get dataTooLong => 'Data is too long. Maximum length for';
+  String get dataTooLong => 'Dữ liệu quá dài. Độ dài tối đa cho';
 
   @override
-  String get isText => 'is';
+  String get isText => 'là';
 
   @override
-  String get pointCameraAtBarcode => 'Point camera at barcode to scan';
+  String get pointCameraAtBarcode => 'Hướng camera vào mã vạch để quét';
 
   @override
-  String get generateImage => 'Generate Image';
+  String get generateImage => 'Tạo hình ảnh';
 
   @override
-  String get exportFailed => 'Export failed';
+  String get exportFailed => 'Xuất thất bại';
 
   @override
-  String get exportedXbmFiles => 'Exported XBM file(s) to MagicEpaper/XBM/';
+  String get exportedXbmFiles => 'Đã xuất (các) tệp XBM sang MagicEpaper/XBM/';
 
   @override
-  String get exported => 'Exported';
+  String get exported => 'Đã xuất';
 
   @override
-  String get xbmFilesToMagicEpaper => 'XBM file(s) to MagicEpaper/XBM/';
+  String get xbmFilesToMagicEpaper => '(Các) tệp XBM sang MagicEpaper/XBM/';
 
   @override
-  String get floydSteinberg => 'Classic';
+  String get floydSteinberg => 'Cổ điển';
 
   @override
-  String get stucki => 'Sharp';
+  String get stucki => 'Sắc nét';
 
   @override
-  String get atkinson => 'Vintage';
+  String get atkinson => 'Cổ điển';
 
   @override
-  String get falseFloydSteinberg => 'Simple';
+  String get falseFloydSteinberg => 'Đơn giản';
 
   @override
-  String get halftone => 'Newspaper';
+  String get halftone => 'Báo';
 
   @override
   String get threshold => 'Posterize';
 
   @override
-  String get colorHalftone => 'Color Newspaper';
+  String get colorHalftone => 'Báo màu';
 
   @override
-  String get searchingForDevice => 'Searching for Device';
+  String get searchingForDevice => 'Đang tìm kiếm thiết bị';
 
   @override
-  String get displayRefreshing => 'Display Refreshing';
+  String get displayRefreshing => 'Đang làm mới màn hình';
 
   @override
-  String get transferComplete => 'Transfer complete!';
+  String get transferComplete => 'Truyền hoàn tất!';
 
   @override
-  String get writingToEpaper => 'Writing to ePaper';
+  String get writingToEpaper => 'Đang ghi vào ePaper';
 
   @override
   String get pleaseBringPhoneClose =>
-      'Please bring your phone close to the Magic ePaper device';
+      'Vui lòng đưa điện thoại của bạn đến gần thiết bị Magic ePaper';
 
   @override
-  String get keepPhoneClose => 'Keep your phone close!';
+  String get keepPhoneClose => 'Giữ điện thoại của bạn ở gần!';
 
   @override
   String get displayRefreshingMessage =>
-      'The display is refreshing. Please keep your phone near the device until the image appears completely.';
+      'Màn hình đang làm mới. Vui lòng giữ điện thoại của bạn gần thiết bị cho đến khi hình ảnh xuất hiện hoàn toàn.';
 
   @override
-  String get transferFailed => 'Transfer Failed';
+  String get transferFailed => 'Truyền thất bại';
 
   @override
   String get deviceConnectionTimeout =>
-      'Device connection timed out. Please try bringing your phone closer to the device and try again.';
+      'Hết thời gian kết nối thiết bị. Vui lòng thử đưa điện thoại của bạn đến gần thiết bị hơn và thử lại.';
 
   @override
   String get connectionLostDuringTransfer =>
-      'Connection was lost during transfer. Please keep your phone close to the device and try again.';
+      'Mất kết nối trong quá trình truyền. Vui lòng giữ điện thoại của bạn gần thiết bị và thử lại.';
 
   @override
-  String get done => 'Done';
+  String get done => 'Xong';
 
   @override
-  String get close => 'Close';
+  String get close => 'Đóng';
 
   @override
-  String get processingImage => 'Processing Image...';
+  String get processingImage => 'Đang xử lý hình ảnh...';
 
   @override
-  String get readyToFlash => 'Ready to Flash';
+  String get readyToFlash => 'Sẵn sàng Flash';
 
   @override
-  String get imageProcessedSuccessfully => 'Image processed successfully.';
+  String get imageProcessedSuccessfully => 'Xử lý hình ảnh thành công.';
 
   @override
   String get tapBelowAndHold =>
-      'Tap below and hold your phone near the display.';
+      'Nhấn vào bên dưới và giữ điện thoại của bạn gần màn hình.';
 
   @override
-  String get startFlashing => 'Start Flashing';
+  String get startFlashing => 'Bắt đầu Flash';
 
   @override
-  String get flashing => 'Flashing...';
+  String get flashing => 'Đang Flash...';
 
   @override
-  String get keepPhoneStill => 'Keep your phone still.';
+  String get keepPhoneStill => 'Giữ yên điện thoại của bạn.';
 
   @override
-  String get success => 'Success!';
+  String get success => 'Thành công!';
 
   @override
-  String get transferCompleteMessage => 'Transfer complete!';
+  String get transferCompleteMessage => 'Truyền hoàn tất!';
 
   @override
-  String get unknownErrorOccurred => 'An unknown error occurred.';
+  String get unknownErrorOccurred => 'Đã xảy ra lỗi không xác định.';
 
   @override
-  String get resultsCleared => 'Results cleared';
+  String get resultsCleared => 'Đã xóa kết quả';
 
   @override
-  String get clearResults => 'Clear Results';
+  String get clearResults => 'Xóa kết quả';
 
   @override
-  String get vCardContact => 'vCard Contact';
+  String get vCardContact => 'Danh bạ vCard';
 
   @override
-  String get writingVCard => 'Writing vCard...';
+  String get writingVCard => 'Đang ghi vCard...';
 
   @override
-  String get writeVCard => 'Write vCard';
+  String get writeVCard => 'Ghi vCard';
 
   @override
-  String get firstName => 'First Name';
+  String get firstName => 'Tên';
 
   @override
-  String get lastName => 'Last Name';
+  String get lastName => 'Họ';
 
   @override
-  String get organization => 'Organization';
+  String get organization => 'Tổ chức';
 
   @override
-  String get title => 'Title';
+  String get title => 'Chức danh';
 
   @override
-  String get mobileNumber => 'Mobile Number';
+  String get mobileNumber => 'Số điện thoại di động';
 
   @override
-  String get emailAddress => 'Email Address';
+  String get emailAddress => 'Địa chỉ Email';
 
   @override
-  String get streetAddress => 'Street Address';
+  String get streetAddress => 'Địa chỉ đường';
 
   @override
-  String get city => 'City';
+  String get city => 'Thành phố';
 
   @override
-  String get zipCode => 'Zip Code';
+  String get zipCode => 'Mã bưu chính';
 
   @override
-  String get country => 'Country';
+  String get country => 'Quốc gia';
 
   @override
-  String get website => 'Website';
+  String get website => 'Trang web';
 
   @override
-  String get noSavedImagesYet => 'No saved images yet';
+  String get noSavedImagesYet => 'Chưa có hình ảnh nào được lưu';
 
   @override
   String get saveImagesFromEditor =>
-      'Save images from the editor or import new ones';
+      'Lưu hình ảnh từ trình chỉnh sửa hoặc nhập ảnh mới';
 
   @override
-  String get enterWifiSSID => 'Enter WiFi SSID';
+  String get enterWifiSSID => 'Nhập SSID WiFi';
 
   @override
-  String get enterWifiPassword => 'Enter WiFi password';
+  String get enterWifiPassword => 'Nhập mật khẩu WiFi';
 
   @override
-  String get writeMultiple => 'Write Multiple';
+  String get writeMultiple => 'Ghi nhiều mục';
 
   @override
-  String get searchImages => 'Search images...';
+  String get searchImages => 'Tìm kiếm hình ảnh...';
 
   @override
-  String get filter => 'Filter:';
+  String get filter => 'Bộ lọc:';
 
   @override
-  String get all => 'All';
+  String get all => 'Tất cả';
 
   @override
-  String get imported => 'Imported';
+  String get imported => 'Đã nhập';
 
   @override
-  String get editor => 'Editor';
+  String get editor => 'Trình chỉnh sửa';
 
   @override
-  String get imageLibrary => 'Image Library';
+  String get imageLibrary => 'Thư viện hình ảnh';
 
   @override
-  String get selectImagesToDelete => 'Select Images to Delete';
+  String get selectImagesToDelete => 'Chọn hình ảnh để xóa';
 
   @override
-  String get delete => 'Delete';
+  String get delete => 'Xóa';
 
   @override
-  String get deleteMode => 'Delete Mode';
+  String get deleteMode => 'Chế độ xóa';
 
   @override
-  String get deleteImage => 'Delete Image';
+  String get deleteImage => 'Xóa hình ảnh';
 
   @override
-  String get thisActionCannotBeUndone => 'This action cannot be undone';
+  String get thisActionCannotBeUndone => 'Hành động này không thể hoàn tác';
 
   @override
-  String get filterLabel => 'Filter:';
+  String get filterLabel => 'Bộ lọc:';
 
   @override
   String get areYouSureDeleteImage =>
-      'Are you sure you want to delete this image? This action cannot be undone.';
+      'Bạn có chắc chắn muốn xóa hình ảnh này không? Hành động này không thể hoàn tác.';
 
   @override
-  String get deleteMultipleImages => 'Delete Multiple Images';
+  String get deleteMultipleImages => 'Xóa nhiều hình ảnh';
 
   @override
-  String get imagesSelected => 'image(s) selected';
+  String get imagesSelected => 'hình ảnh đã chọn';
 
   @override
-  String get imagesSelectedForDeletion => 'image(s) selected for deletion';
+  String get imagesSelectedForDeletion => 'hình ảnh đã chọn để xóa';
 
   @override
   String areYouSureDeleteMultipleImages(Object count) {
-    return 'Are you sure you want to delete these $count images? This action cannot be undone.';
+    return 'Bạn có chắc chắn muốn xóa $count hình ảnh này không? Hành động này không thể hoàn tác.';
   }
 
   @override
   String get areYouSureDeleteSingleImage =>
-      'Are you sure you want to delete this image? This action cannot be undone.';
+      'Bạn có chắc chắn muốn xóa hình ảnh này không? Hành động này không thể hoàn tác.';
 
   @override
-  String get deleteAll => 'Delete All';
+  String get deleteAll => 'Xóa tất cả';
 
   @override
-  String get renameImage => 'Rename Image';
+  String get renameImage => 'Đổi tên hình ảnh';
 
   @override
-  String get enterNewNameForImage => 'Enter a new name for your image';
+  String get enterNewNameForImage => 'Nhập tên mới cho hình ảnh của bạn';
 
   @override
-  String get imageName => 'Image Name';
+  String get imageName => 'Tên hình ảnh';
 
   @override
-  String get enterImageName => 'Enter image name...';
+  String get enterImageName => 'Nhập tên hình ảnh...';
 
   @override
-  String get rename => 'Rename';
+  String get rename => 'Đổi tên';
 
   @override
-  String get imageProperties => 'Image Properties';
+  String get imageProperties => 'Thuộc tính hình ảnh';
 
   @override
-  String get created => 'Created';
+  String get created => 'Đã tạo';
 
   @override
-  String get source => 'Source:';
+  String get source => 'Nguồn:';
 
   @override
-  String get epdModel => 'EPD Model:';
+  String get epdModel => 'Mô hình EPD:';
 
   @override
-  String get transferToEpaper => 'Transfer to ePaper';
+  String get transferToEpaper => 'Truyền sang ePaper';
 
   @override
-  String get saveImage => 'Save Image';
+  String get saveImage => 'Lưu hình ảnh';
 
   @override
   String get saveFilteredImageToLibrary =>
-      'Save your filtered image to the library';
+      'Lưu hình ảnh đã lọc của bạn vào thư viện';
 
   @override
-  String get filterApplied => 'Filter Applied:';
+  String get filterApplied => 'Bộ lọc đã áp dụng:';
 
   @override
-  String get save => 'Save';
+  String get save => 'Lưu';
 
   @override
-  String get noImagesMatchSearch => 'No images match your search';
+  String get noImagesMatchSearch =>
+      'Không có hình ảnh nào khớp với tìm kiếm của bạn';
 
   @override
-  String get vCardDataCannotBeEmpty => 'VCard data cannot be empty';
+  String get vCardDataCannotBeEmpty => 'Dữ liệu VCard không được để trống';
 
   @override
-  String get renamingImage => 'Renaming image...';
+  String get renamingImage => 'Đang đổi tên hình ảnh...';
 
   @override
-  String get imageRenamedTo => 'Image renamed to \"';
+  String get imageRenamedTo => 'Hình ảnh đã được đổi tên thành \"';
 
   @override
-  String get failedToRenameImage => 'Failed to rename image: ';
+  String get failedToRenameImage => 'Không thể đổi tên hình ảnh: ';
 
   @override
-  String get deletingImage => 'Deleting image...';
+  String get deletingImage => 'Đang xóa hình ảnh...';
 
   @override
-  String get imageDeleted => 'Image \"';
+  String get imageDeleted => 'Đã xóa hình ảnh \"';
 
   @override
-  String get deleted => '\" deleted';
+  String get deleted => '\"';
 
   @override
-  String get failedToDeleteImage => 'Failed to delete image: ';
+  String get failedToDeleteImage => 'Không thể xóa hình ảnh: ';
 
   @override
-  String get deletingImages => 'Deleting ';
+  String get deletingImages => 'Đang xóa ';
 
   @override
-  String get images => ' image(s)...';
+  String get images => ' hình ảnh...';
 
   @override
-  String get failedToDeleteImages => 'Failed to delete images: ';
+  String get failedToDeleteImages => 'Không thể xóa hình ảnh: ';
 
   @override
-  String get imagesDeletedSuccessfully => ' images deleted successfully';
+  String get imagesDeletedSuccessfully => ' hình ảnh đã được xóa thành công';
 
   @override
-  String get imageDeletedSuccessfully => 'Image deleted successfully';
+  String get imageDeletedSuccessfully => 'Xóa hình ảnh thành công';
 
   @override
-  String get failedToLoadImageData => 'Failed to load image data for \"';
+  String get failedToLoadImageData => 'Không thể tải dữ liệu hình ảnh cho \"';
 
   @override
-  String get failedToDecodeImage => 'Failed to decode image \"';
+  String get failedToDecodeImage => 'Không thể giải mã hình ảnh \"';
 
   @override
-  String get failedToTransfer => 'Failed to transfer \"';
+  String get failedToTransfer => 'Không thể truyền \"';
 
   @override
-  String get savingImage => 'Saving image...';
+  String get savingImage => 'Đang lưu hình ảnh...';
 
   @override
-  String get imageSavedToLibrary => 'Image saved to library!';
+  String get imageSavedToLibrary => 'Đã lưu hình ảnh vào thư viện!';
 
   @override
-  String get failedToSaveImage => 'Failed to save image: ';
+  String get failedToSaveImage => 'Không thể lưu hình ảnh: ';
 
   @override
-  String get errorCreatingVCardRecord => 'Error creating vCard record: ';
+  String get errorCreatingVCardRecord => 'Lỗi khi tạo bản ghi vCard: ';
 
   @override
-  String get nfcIsDisabledPleaseEnableIt =>
-      'NFC is disabled. Please enable it.';
+  String get nfcIsDisabledPleaseEnableIt => 'NFC bị tắt. Vui lòng bật nó lên.';
 
   @override
-  String get thisDeviceDoesNotSupportNfc => 'This device does not support NFC.';
+  String get thisDeviceDoesNotSupportNfc => 'Thiết bị này không hỗ trợ NFC.';
 
   @override
   String get bringPhoneNearMagicEpaperHardware =>
-      'Bring your phone near to the Magic ePaper Hardware';
+      'Đưa điện thoại của bạn lại gần Phần cứng Magic ePaper';
 
   @override
-  String get tagDetectedInitializing => 'Tag detected! Initializing...';
+  String get tagDetectedInitializing => 'Đã phát hiện thẻ! Đang khởi tạo...';
 
   @override
-  String get enablingEnergyHarvesting => 'Enabling energy harvesting...';
+  String get enablingEnergyHarvesting => 'Đang bật thu thập năng lượng...';
 
   @override
-  String get processingImageData => 'Processing image data...';
+  String get processingImageData => 'Đang xử lý dữ liệu hình ảnh...';
 
   @override
-  String get refreshingDisplay => 'Refreshing display...';
+  String get refreshingDisplay => 'Đang làm mới màn hình...';
 
   @override
-  String get notMagicEpaperHardware => 'Not a Magic ePaper Hardware';
+  String get notMagicEpaperHardware => 'Không phải Phần cứng Magic ePaper';
 
   @override
-  String get errorCheckingMessage => 'Error checking message: ';
+  String get errorCheckingMessage => 'Lỗi khi kiểm tra tin nhắn: ';
 
   @override
-  String get timeoutWaitingForI2cMessage => 'Timeout waiting for I2C message';
+  String get timeoutWaitingForI2cMessage => 'Hết thời gian chờ tin nhắn I2C';
 
   @override
-  String get writingChunk => 'Writing chunk ';
+  String get writingChunk => 'Đang ghi đoạn (chunk) ';
 
   @override
-  String get transferredSuccessfully => 'Transferred successfully.';
+  String get transferredSuccessfully => 'Truyền thành công.';
 
   @override
-  String get waitingForNfcTag => 'Waiting for NFC tag...';
+  String get waitingForNfcTag => 'Đang đợi thẻ NFC...';
 
   @override
-  String get gotTag => 'Got a tag!';
+  String get gotTag => 'Đã nhận được thẻ!';
 
   @override
-  String get frame => 'Frame ';
+  String get frame => 'Khung hình ';
 
   @override
-  String get couldNotOpenLink => 'Could not open the link.';
+  String get couldNotOpenLink => 'Không thể mở liên kết.';
 
   @override
   String get errorOccurredWhileOpeningLink =>
-      'An error occurred while opening the link.';
+      'Đã xảy ra lỗi trong khi mở liên kết.';
 
   @override
-  String get errorCreatingAppRecord => 'Error creating app record: ';
+  String get errorCreatingAppRecord => 'Lỗi khi tạo bản ghi ứng dụng: ';
 
   @override
-  String get appCannotBeEmpty => 'App cannot be empty';
+  String get appCannotBeEmpty => 'Ứng dụng không được để trống';
 
   @override
-  String get invalidPackageName => 'Invalid package name';
+  String get invalidPackageName => 'Tên gói không hợp lệ';
 
   @override
-  String get writeAppLauncherData => 'Write App Launcher Data';
+  String get writeAppLauncherData => 'Ghi dữ liệu trình khởi chạy ứng dụng';
 
   @override
-  String get writeAppLauncher => 'Write App Launcher';
+  String get writeAppLauncher => 'Ghi trình khởi chạy ứng dụng';
 
   @override
-  String get searchApps => 'Search apps...';
+  String get searchApps => 'Tìm kiếm ứng dụng...';
 
   @override
-  String get customPackageName => 'Custom Package Name';
+  String get customPackageName => 'Tên gói tùy chỉnh';
 
   @override
-  String get enterPackageName => 'Enter package name...';
+  String get enterPackageName => 'Nhập tên gói...';
 
   @override
-  String get noAppsFound => 'No apps found';
+  String get noAppsFound => 'Không tìm thấy ứng dụng nào';
 
   @override
-  String get selectApplication => 'Select Application';
+  String get selectApplication => 'Chọn ứng dụng';
 
   @override
-  String get errorLoadingApps => 'Error loading apps: ';
+  String get errorLoadingApps => 'Lỗi khi tải ứng dụng: ';
 
   @override
-  String get add => 'Add';
+  String get add => 'Thêm';
 
   @override
-  String get readNfcTags => 'Read NFC Tags';
+  String get readNfcTags => 'Đọc thẻ NFC';
 
   @override
-  String get writeNfcTags => 'Write NFC Tags';
+  String get writeNfcTags => 'Ghi thẻ NFC';
 
   @override
   String get nfcIsReadyToUse =>
-      'NFC is ready to use. You can read and write NFC tags.';
+      'NFC đã sẵn sàng để sử dụng. Bạn có thể đọc và ghi thẻ NFC.';
 
   @override
   String get deviceDoesNotSupportNfc =>
-      'This device does not support NFC functionality.';
+      'Thiết bị này không hỗ trợ chức năng NFC.';
 
   @override
   String get pleaseEnableNfcInSettings =>
-      'Please enable NFC in your device settings to continue.';
+      'Vui lòng bật NFC trong cài đặt thiết bị của bạn để tiếp tục.';
 
   @override
-  String get nfcIsNowEnabledAndReady => 'NFC is now enabled and ready to use!';
+  String get nfcIsNowEnabledAndReady =>
+      'NFC hiện đã được bật và sẵn sàng sử dụng!';
 
   @override
   String get nfcHasBeenDisabled =>
-      'NFC has been disabled. Please enable it to continue using NFC features.';
+      'NFC đã bị tắt. Vui lòng bật để tiếp tục sử dụng các tính năng NFC.';
 
   @override
   String get nfcIsNotSupportedOnDevice =>
-      'NFC is not supported on this device.';
+      'NFC không được hỗ trợ trên thiết bị này.';
 
   @override
-  String get arduinoExport => 'Arduino Export';
+  String get arduinoExport => 'Xuất Arduino';
 
   @override
-  String get exportXmbFilesForArduino => 'Export XMB files for Arduino';
+  String get exportXmbFilesForArduino => 'Xuất tệp XMB cho Arduino';
 
   @override
-  String get cardTemplates => 'Card Templates';
+  String get cardTemplates => 'Mẫu thẻ';
 
   @override
-  String get chooseTemplateSubtitle => 'Choose a template to get started';
+  String get chooseTemplateSubtitle => 'Chọn một mẫu để bắt đầu';
 
   @override
-  String get employeeIdCardTitle => 'Employee ID Card';
+  String get employeeIdCardTitle => 'Thẻ ID nhân viên';
 
   @override
   String get employeeIdCardDescription =>
-      'Create professional employee identification cards';
+      'Tạo thẻ nhận dạng nhân viên chuyên nghiệp';
 
   @override
-  String get shopPriceTagTitle => 'Shop Price Tag';
+  String get shopPriceTagTitle => 'Thẻ giá cửa hàng';
 
   @override
   String get shopPriceTagDescription =>
-      'Design attractive price tags for your products';
+      'Thiết kế thẻ giá hấp dẫn cho sản phẩm của bạn';
 
   @override
-  String get entryPassTagTitle => 'Entry Pass Tag';
+  String get entryPassTagTitle => 'Thẻ vé vào cửa';
 
   @override
   String get entryPassTagDescription =>
-      'Generate entry passes for events and venues';
+      'Tạo vé vào cửa cho các sự kiện và địa điểm';
 
   @override
-  String get eventBadgeTitle => 'Event Badge';
+  String get eventBadgeTitle => 'Huy hiệu sự kiện';
 
   @override
   String get eventBadgeDescription =>
-      'Create personalized event badges and name tags';
+      'Tạo huy hiệu sự kiện và thẻ tên được cá nhân hóa';
 
   @override
-  String get comingSoon => 'Coming Soon';
+  String get comingSoon => 'Sắp ra mắt';
 
   @override
   String get comingSoonMessage =>
-      'This template is currently under development and will be available soon.';
+      'Mẫu này hiện đang được phát triển và sẽ sớm ra mắt.';
 
   @override
   String get ok => 'OK';
 
   @override
-  String get defaultCompanyName => 'Company Name';
+  String get defaultCompanyName => 'Tên công ty';
 
   @override
-  String get nameLabel => 'Name';
+  String get nameLabel => 'Tên';
 
   @override
-  String get positionLabel => 'Position';
+  String get positionLabel => 'Chức vụ';
 
   @override
-  String get divisionLabel => 'Division';
+  String get divisionLabel => 'Bộ phận';
 
   @override
   String get idLabel => 'ID';
 
   @override
-  String get emptyFieldPlaceholder => 'Not specified';
+  String get emptyFieldPlaceholder => 'Chưa chỉ định';
 
   @override
-  String get productImage => 'Product Image';
+  String get productImage => 'Hình ảnh sản phẩm';
 
   @override
-  String get productName => 'Product Name';
+  String get productName => 'Tên sản phẩm';
 
   @override
-  String get sizeQuantity => 'Size/Quantity';
+  String get sizeQuantity => 'Kích thước/Số lượng';
 
   @override
-  String get defaultCurrency => '\$';
+  String get defaultCurrency => '₫';
 
   @override
-  String get defaultPrice => '0.00';
+  String get defaultPrice => '0';
 
   @override
-  String get price => 'Price';
+  String get price => 'Giá';
 
   @override
-  String get quantitySize => 'Quantity/Size';
+  String get quantitySize => 'Số lượng/Kích thước';
 
   @override
   String get quantitySizeHint =>
-      'Enter size/quantity (e.g., 750ml, 2kg, Large)';
+      'Nhập kích thước/số lượng (ví dụ: 750ml, 2kg, Lớn)';
 
   @override
-  String get namePrefix => 'Name: ';
+  String get namePrefix => 'Tên: ';
 
   @override
-  String get positionPrefix => 'Position: ';
+  String get positionPrefix => 'Chức vụ: ';
 
   @override
-  String get divisionPrefix => 'Division: ';
+  String get divisionPrefix => 'Bộ phận: ';
 
   @override
   String get idPrefix => 'ID: ';
 
   @override
-  String get employeeIdCard => 'Employee ID Card';
+  String get employeeIdCard => 'Thẻ ID nhân viên';
 
   @override
   String get fillDetailsToCreateId =>
-      'Fill in the details below to create your employee ID card';
+      'Điền các chi tiết bên dưới để tạo thẻ ID nhân viên của bạn';
 
   @override
-  String get idCardDetails => 'ID Card Details';
+  String get idCardDetails => 'Chi tiết thẻ ID';
 
   @override
-  String get companyName => 'Company Name';
+  String get companyName => 'Tên công ty';
 
   @override
-  String get enterCompanyName => 'Enter company name';
+  String get enterCompanyName => 'Nhập tên công ty';
 
   @override
-  String get pleaseEnterCompanyName => 'Please enter company name';
+  String get pleaseEnterCompanyName => 'Vui lòng nhập tên công ty';
 
   @override
-  String get name => 'Name';
+  String get name => 'Tên';
 
   @override
-  String get enterEmployeeName => 'Enter employee name';
+  String get enterEmployeeName => 'Nhập tên nhân viên';
 
   @override
-  String get pleaseEnterName => 'Please enter name';
+  String get pleaseEnterName => 'Vui lòng nhập tên';
 
   @override
-  String get position => 'Position';
+  String get position => 'Chức vụ';
 
   @override
-  String get enterJobPosition => 'Enter job position';
+  String get enterJobPosition => 'Nhập vị trí công việc';
 
   @override
-  String get pleaseEnterPosition => 'Please enter position';
+  String get pleaseEnterPosition => 'Vui lòng nhập chức vụ';
 
   @override
-  String get division => 'Division';
+  String get division => 'Bộ phận';
 
   @override
-  String get enterDepartment => 'Enter department';
+  String get enterDepartment => 'Nhập phòng ban';
 
   @override
-  String get pleaseEnterDivision => 'Please enter division';
+  String get pleaseEnterDivision => 'Vui lòng nhập bộ phận';
 
   @override
-  String get idNumber => 'ID Number';
+  String get idNumber => 'Số ID';
 
   @override
-  String get enterUniqueId => 'Enter unique ID';
+  String get enterUniqueId => 'Nhập ID duy nhất';
 
   @override
-  String get pleaseEnterIdNumber => 'Please enter ID number';
+  String get pleaseEnterIdNumber => 'Vui lòng nhập số ID';
 
   @override
-  String get qrCodeData => 'QR Code Data';
+  String get qrCodeData => 'Dữ liệu mã QR';
 
   @override
-  String get enterQrCodeData => 'Enter QR code data';
+  String get enterQrCodeData => 'Nhập dữ liệu mã QR';
 
   @override
-  String get pleaseEnterQrCodeData => 'Please enter QR code data';
+  String get pleaseEnterQrCodeData => 'Vui lòng nhập dữ liệu mã QR';
 
   @override
-  String get generatingIdCard => 'Generating ID Card...';
+  String get generatingIdCard => 'Đang tạo thẻ ID...';
 
   @override
-  String get generateIdCard => 'Generate ID Card';
+  String get generateIdCard => 'Tạo thẻ ID';
 
   @override
-  String get profilePhoto => 'Profile Photo';
+  String get profilePhoto => 'Ảnh đại diện';
 
   @override
-  String get selected => 'Selected';
+  String get selected => 'Đã chọn';
 
   @override
-  String get photoSelected => 'Photo selected';
+  String get photoSelected => 'Ảnh đã chọn';
 
   @override
-  String get selectProfilePhoto => 'Select Profile Photo';
+  String get selectProfilePhoto => 'Chọn ảnh đại diện';
 
   @override
-  String get tapToChangePhoto => 'Tap to change photo';
+  String get tapToChangePhoto => 'Nhấn để thay đổi ảnh';
 
   @override
-  String get tapToSelectFromGallery => 'Tap to select from gallery';
+  String get tapToSelectFromGallery => 'Nhấn để chọn từ thư viện';
 
   @override
-  String get priceTagGenerator => 'Price Tag Generator';
+  String get priceTagGenerator => 'Trình tạo thẻ giá';
 
   @override
   String get priceTagDescription =>
-      'Create professional price tags for your products';
+      'Tạo thẻ giá chuyên nghiệp cho sản phẩm của bạn';
 
   @override
-  String get productDetails => 'Product Details';
+  String get productDetails => 'Chi tiết sản phẩm';
 
   @override
-  String get productNameHint => 'Enter product name (e.g., iPhone 15 Pro)';
+  String get productNameHint => 'Nhập tên sản phẩm (ví dụ: iPhone 15 Pro)';
 
   @override
-  String get pleaseEnterProductName => 'Please enter a product name';
+  String get pleaseEnterProductName => 'Vui lòng nhập tên sản phẩm';
 
   @override
-  String get currency => 'Currency';
+  String get currency => 'Tiền tệ';
 
   @override
-  String get currencyHint => '₹';
+  String get currencyHint => '₫';
 
   @override
-  String get required => 'Required';
+  String get required => 'Bắt buộc';
 
   @override
-  String get priceHint => '999.99';
+  String get priceHint => '999000';
 
   @override
-  String get pleaseEnterPrice => 'Please enter price';
+  String get pleaseEnterPrice => 'Vui lòng nhập giá';
 
   @override
-  String get pleaseEnterQuantitySize => 'Please enter quantity or size';
+  String get pleaseEnterQuantitySize =>
+      'Vui lòng nhập số lượng hoặc kích thước';
 
   @override
-  String get pleaseEnterBarcodeData => 'Please enter barcode data';
+  String get pleaseEnterBarcodeData => 'Vui lòng nhập dữ liệu mã vạch';
 
   @override
-  String get generatingPriceTag => 'Generating Price Tag...';
+  String get generatingPriceTag => 'Đang tạo thẻ giá...';
 
   @override
-  String get generatePriceTag => 'Generate Price Tag';
+  String get generatePriceTag => 'Tạo thẻ giá';
 
   @override
-  String get productImageIn => 'Product Image';
+  String get productImageIn => 'Hình ảnh sản phẩm';
 
   @override
-  String get productImageSelected => 'Product Image Selected';
+  String get productImageSelected => 'Hình ảnh sản phẩm đã được chọn';
 
   @override
-  String get selectProductImage => 'Select Product Image';
+  String get selectProductImage => 'Chọn hình ảnh sản phẩm';
 
   @override
-  String get tapToChangeImage => 'Tap to change image';
+  String get tapToChangeImage => 'Nhấn để thay đổi hình ảnh';
 
   @override
-  String get chooseImageFromGallery => 'Choose image from gallery';
+  String get chooseImageFromGallery => 'Chọn hình ảnh từ thư viện';
+
+  @override
+  String get processingImages => 'Đang xử lý hình ảnh...';
+
+  @override
+  String get refreshModeInfo => 'Thông tin chế độ làm mới';
+
+  @override
+  String get fullRefreshInfo => 'Làm mới toàn bộ';
+
+  @override
+  String get fullRefreshDescription =>
+      'Làm mới hoàn toàn toàn bộ màn hình bằng cách xóa tất cả các pixel và vẽ lại hình ảnh. Điều này mang lại chất lượng hình ảnh và độ tương phản tốt nhất nhưng mất nhiều thời gian hơn để hoàn thành.';
+
+  @override
+  String get partialRefreshInfo => 'Làm mới một phần (Dạng sóng)';
+
+  @override
+  String get partialRefreshDescription =>
+      'Chỉ cập nhật các pixel đã thay đổi bằng cách sử dụng các dạng sóng được tối ưu hóa. Tốc độ này nhanh hơn làm mới toàn bộ nhưng có thể dẫn đến bóng mờ hoặc giảm độ tương phản theo thời gian.';
+
+  @override
+  String get longPressForInfo => 'Nhấn và giữ để biết thêm thông tin';
 }

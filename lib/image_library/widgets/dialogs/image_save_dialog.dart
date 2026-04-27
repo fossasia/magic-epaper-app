@@ -1,10 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+import 'package:magicepaperapp/provider/locale_provider.dart';
 
 class ImageSaveDialog extends StatelessWidget {
   final Uint8List imageData;
@@ -82,7 +79,7 @@ class ImageSaveDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                appLocalizations.saveImage,
+                LocaleProvider.current!.saveImage,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -91,7 +88,7 @@ class ImageSaveDialog extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                appLocalizations.saveFilteredImageToLibrary,
+                LocaleProvider.current!.saveFilteredImageToLibrary,
                 style: const TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
@@ -129,7 +126,7 @@ class ImageSaveDialog extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          appLocalizations.imageName,
+          LocaleProvider.current!.imageName,
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -142,7 +139,7 @@ class ImageSaveDialog extends StatelessWidget {
           autofocus: true,
           maxLength: 50,
           decoration: InputDecoration(
-            hintText: appLocalizations.enterImageName,
+            hintText: LocaleProvider.current!.enterImageName,
             filled: true,
             fillColor: Colors.grey.shade50,
             border: OutlineInputBorder(
@@ -195,7 +192,7 @@ class ImageSaveDialog extends StatelessWidget {
           ),
           const SizedBox(width: 6),
           Text(
-            '${appLocalizations.filterApplied} $filterName',
+            '${LocaleProvider.current!.filterApplied} $filterName',
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
@@ -223,7 +220,7 @@ class ImageSaveDialog extends StatelessWidget {
               foregroundColor: Colors.grey.shade700,
             ),
             child: Text(
-              appLocalizations.cancel,
+              LocaleProvider.current!.cancel,
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -250,7 +247,7 @@ class ImageSaveDialog extends StatelessWidget {
                 const Icon(Icons.download, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                  appLocalizations.save,
+                  LocaleProvider.current!.save,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

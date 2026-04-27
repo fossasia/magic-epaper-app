@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/image_library/services/image_filter_helper.dart';
@@ -10,11 +10,9 @@ import 'package:magicepaperapp/image_library/utils/epd_utils.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:image/image.dart' as img;
 import 'dart:typed_data';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 import '../../util/app_logger.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class ImageOperationsService {
   final BuildContext context;
@@ -33,13 +31,13 @@ class ImageOperationsService {
     if (newName.trim().isEmpty) return;
 
     try {
-      _showLoadingSnackBar(appLocalizations.renamingImage);
+      _showLoadingSnackBar(LocaleProvider.current!.renamingImage);
       await provider.renameImage(image.id, newName.trim());
       _showSuccessSnackBar(
-          '${appLocalizations.imageRenamedTo}${newName.trim()}"');
+          '${LocaleProvider.current!.imageRenamedTo}${newName.trim()}"');
     } catch (e) {
       _showErrorSnackBar(
-          '${appLocalizations.failedToRenameImage}${e.toString()}');
+          '${LocaleProvider.current!.failedToRenameImage}${e.toString()}');
     }
   }
 
@@ -47,13 +45,13 @@ class ImageOperationsService {
       SavedImage image, ImageLibraryProvider provider) async {
     try {
       Navigator.pop(context);
-      _showLoadingSnackBar(appLocalizations.deletingImage);
+      _showLoadingSnackBar(LocaleProvider.current!.deletingImage);
       await provider.deleteImage(image.id);
       _showDeleteSuccessSnackBar(
-          '${appLocalizations.imageDeleted}${image.name}${appLocalizations.deleted}');
+          '${LocaleProvider.current!.imageDeleted}${image.name}${LocaleProvider.current!.deleted}');
     } catch (e) {
       _showErrorSnackBar(
-          '${appLocalizations.failedToDeleteImage}${e.toString()}');
+          '${LocaleProvider.current!.failedToDeleteImage}${e.toString()}');
     }
   }
 
@@ -125,7 +123,7 @@ class ImageOperationsService {
       _showBatchDeleteSuccessSnackBar(count);
     } catch (e) {
       _showErrorSnackBar(
-          '${appLocalizations.failedToDeleteImages}${e.toString()}');
+          '${LocaleProvider.current!.failedToDeleteImages}${e.toString()}');
     }
   }
 
@@ -172,7 +170,7 @@ class ImageOperationsService {
       final imageData = await image.getImageData();
       if (imageData == null) {
         _showErrorSnackBar(
-            '${appLocalizations.failedToLoadImageData}${image.name}"');
+            '${LocaleProvider.current!.failedToLoadImageData}${image.name}"');
         return;
       }
       final decodedImage = img.decodeImage(imageData);
@@ -183,11 +181,11 @@ class ImageOperationsService {
         );
       } else {
         _showErrorSnackBar(
-            '${appLocalizations.failedToDecodeImage}${image.name}"');
+            '${LocaleProvider.current!.failedToDecodeImage}${image.name}"');
       }
     } catch (e) {
       _showErrorSnackBar(
-          '${appLocalizations.failedToTransfer}${image.name}": ${e.toString()}');
+          '${LocaleProvider.current!.failedToTransfer}${image.name}": ${e.toString()}');
     }
   }
 
@@ -311,7 +309,7 @@ class ImageOperationsService {
             ),
             const SizedBox(width: 12),
             Text(
-                '${appLocalizations.deletingImages}$count${appLocalizations.images}'),
+                '${LocaleProvider.current!.deletingImages}$count${LocaleProvider.current!.images}'),
           ],
         ),
         backgroundColor: Colors.amber,
@@ -330,8 +328,8 @@ class ImageOperationsService {
             Expanded(
               child: Text(
                 count > 1
-                    ? '$count${appLocalizations.imagesDeletedSuccessfully}'
-                    : appLocalizations.imageDeletedSuccessfully,
+                    ? '$count${LocaleProvider.current!.imagesDeletedSuccessfully}'
+                    : LocaleProvider.current!.imageDeletedSuccessfully,
               ),
             ),
           ],
@@ -374,7 +372,7 @@ class ImageOperationsService {
               ),
             ),
             const SizedBox(width: 12),
-            Text(appLocalizations.savingImage),
+            Text(LocaleProvider.current!.savingImage),
           ],
         ),
         backgroundColor: colorAccent,
@@ -394,7 +392,7 @@ class ImageOperationsService {
               size: 20,
             ),
             const SizedBox(width: 12),
-            Text(appLocalizations.imageSavedToLibrary),
+            Text(LocaleProvider.current!.imageSavedToLibrary),
           ],
         ),
         backgroundColor: Colors.green,
@@ -418,7 +416,7 @@ class ImageOperationsService {
             ),
             const SizedBox(width: 12),
             Expanded(
-                child: Text('${appLocalizations.failedToSaveImage}$error')),
+                child: Text('${LocaleProvider.current!.failedToSaveImage}$error')),
           ],
         ),
         backgroundColor: Colors.red,

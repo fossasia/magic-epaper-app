@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+import 'package:magicepaperapp/provider/locale_provider.dart';
 
 class TransferProgressDialog extends StatefulWidget {
   final img.Image finalImg;
@@ -135,12 +132,12 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
     String errorString = error.toString().toLowerCase();
     if (errorString.contains('platformexception(408') &&
         errorString.contains('polling tag timeout')) {
-      return appLocalizations.deviceConnectionTimeout;
+      return LocaleProvider.current!.deviceConnectionTimeout;
     }
     if (errorString.contains('platformexception(500') &&
         errorString.contains('communication error') &&
         errorString.contains('tag was lost')) {
-      return appLocalizations.connectionLostDuringTransfer;
+      return LocaleProvider.current!.connectionLostDuringTransfer;
     }
     return error.toString();
   }
@@ -218,7 +215,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
         ),
         const SizedBox(height: 24),
         Text(
-          appLocalizations.pleaseBringPhoneClose,
+          LocaleProvider.current!.pleaseBringPhoneClose,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 16,
@@ -321,7 +318,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
         ),
         const SizedBox(height: 16),
         Text(
-          appLocalizations.transferComplete,
+          LocaleProvider.current!.transferComplete,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -372,7 +369,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
         ),
         const SizedBox(height: 24),
         Text(
-          appLocalizations.keepPhoneClose,
+          LocaleProvider.current!.keepPhoneClose,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 18,
@@ -382,7 +379,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
         ),
         const SizedBox(height: 12),
         Text(
-          appLocalizations.displayRefreshingMessage,
+          LocaleProvider.current!.displayRefreshingMessage,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 14,
@@ -412,7 +409,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
           ),
           const SizedBox(height: 12),
           Text(
-            appLocalizations.transferFailed,
+            LocaleProvider.current!.transferFailed,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -485,12 +482,12 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                       duration: const Duration(milliseconds: 300),
                       child: Text(
                         !tagDetected
-                            ? appLocalizations.searchingForDevice
+                            ? LocaleProvider.current!.searchingForDevice
                             : showRefreshingMessage
-                                ? appLocalizations.displayRefreshing
+                                ? LocaleProvider.current!.displayRefreshing
                                 : transferComplete
-                                    ? appLocalizations.transferComplete
-                                    : appLocalizations.writingToEpaper,
+                                    ? LocaleProvider.current!.transferComplete
+                                    : LocaleProvider.current!.writingToEpaper,
                         key: ValueKey(!tagDetected
                             ? 'search'
                             : showRefreshingMessage
@@ -539,8 +536,8 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                     ),
                     child: Text(
                       showRefreshingMessage
-                          ? appLocalizations.done
-                          : appLocalizations.close,
+                          ? LocaleProvider.current!.done
+                          : LocaleProvider.current!.close,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,

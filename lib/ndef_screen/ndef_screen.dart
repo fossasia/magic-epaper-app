@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 import 'package:magicepaperapp/ndef_screen/app_nfc/app_data_model.dart';
 import 'package:magicepaperapp/ndef_screen/controller/nfc_controller.dart';
 import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
@@ -13,7 +12,6 @@ import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'dart:async';
 import '../util/app_logger.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NDEFScreen extends StatefulWidget {
   const NDEFScreen({super.key});
@@ -166,7 +164,7 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
     if (_selectedApp != null) {
       await _nfcController.writeAppLauncherRecord(_selectedApp!.packageName);
       _handleWriteResult();
-      if (_nfcController.result.contains(appLocalizations.successfully)) {
+      if (_nfcController.result.contains(LocaleProvider.current!.successfully)) {
         setState(() {
           _selectedApp = null;
         });
@@ -177,7 +175,7 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      title: appLocalizations.appName,
+      title: LocaleProvider.current!.appName,
       index: 1,
       actions: [
         IconButton(
@@ -188,10 +186,10 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
           onPressed: _nfcController.result.isNotEmpty
               ? () {
                   _nfcController.clearResult();
-                  _showSnackBar(appLocalizations.resultsCleared);
+                  _showSnackBar(LocaleProvider.current!.resultsCleared);
                 }
               : null,
-          tooltip: appLocalizations.clearResults,
+          tooltip: LocaleProvider.current!.clearResults,
         ),
       ],
       body: SafeArea(
@@ -213,36 +211,36 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                   onRead: () async {
                     await _nfcController.readNDEF();
                     if (_nfcController.result
-                        .contains(appLocalizations.error)) {
-                      _showSnackBar(appLocalizations.readOperationFailed,
+                        .contains(LocaleProvider.current!.error)) {
+                      _showSnackBar(LocaleProvider.current!.readOperationFailed,
                           isError: true);
                     } else {
-                      _showSnackBar(appLocalizations.tagReadSuccessfully);
+                      _showSnackBar(LocaleProvider.current!.tagReadSuccessfully);
                     }
                   },
                   onVerify: () async {
                     await _nfcController.verifyWrite();
                     if (_nfcController.result
-                        .contains(appLocalizations.error)) {
-                      _showSnackBar(appLocalizations.verificationFailed,
+                        .contains(LocaleProvider.current!.error)) {
+                      _showSnackBar(LocaleProvider.current!.verificationFailed,
                           isError: true);
                     } else {
-                      _showSnackBar(appLocalizations.tagVerifiedSuccessfully);
+                      _showSnackBar(LocaleProvider.current!.tagVerifiedSuccessfully);
                     }
                   },
                   onClear: () async {
                     bool confirmed = await _showConfirmDialog(
-                      appLocalizations.clearNfcTag,
-                      appLocalizations.clearNfcTagConfirmation,
+                      LocaleProvider.current!.clearNfcTag,
+                      LocaleProvider.current!.clearNfcTagConfirmation,
                     );
                     if (confirmed) {
                       await _nfcController.clearNDEF();
                       if (_nfcController.result
-                          .contains(appLocalizations.error)) {
-                        _showSnackBar(appLocalizations.clearOperationFailed,
+                          .contains(LocaleProvider.current!.error)) {
+                        _showSnackBar(LocaleProvider.current!.clearOperationFailed,
                             isError: true);
                       } else {
-                        _showSnackBar(appLocalizations.tagClearedSuccessfully);
+                        _showSnackBar(LocaleProvider.current!.tagClearedSuccessfully);
                       }
                     }
                   },
@@ -333,7 +331,7 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                         ),
                         const SizedBox(height: 24),
                         Text(
-                          appLocalizations.nfcNotAvailable,
+                          LocaleProvider.current!.nfcNotAvailable,
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -343,7 +341,7 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          appLocalizations.enableNfcMessage,
+                          LocaleProvider.current!.enableNfcMessage,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,
@@ -365,10 +363,10 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
   }
 
   void _handleWriteResult() {
-    if (_nfcController.result.contains(appLocalizations.error)) {
-      _showSnackBar(appLocalizations.writeOperationFailed, isError: true);
-    } else if (_nfcController.result.contains(appLocalizations.successfully)) {
-      _showSnackBar(appLocalizations.dataWrittenSuccessfully);
+    if (_nfcController.result.contains(LocaleProvider.current!.error)) {
+      _showSnackBar(LocaleProvider.current!.writeOperationFailed, isError: true);
+    } else if (_nfcController.result.contains(LocaleProvider.current!.successfully)) {
+      _showSnackBar(LocaleProvider.current!.dataWrittenSuccessfully);
       setState(() {
         _textValue = '';
         _urlValue = '';
@@ -401,12 +399,12 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(appLocalizations.cancel),
+                  child: Text(LocaleProvider.current!.cancel),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   style: TextButton.styleFrom(foregroundColor: Colors.red),
-                  child: Text(appLocalizations.confirm),
+                  child: Text(LocaleProvider.current!.confirm),
                 ),
               ],
             );

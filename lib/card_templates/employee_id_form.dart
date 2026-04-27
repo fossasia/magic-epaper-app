@@ -1,19 +1,16 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:magicepaperapp/card_templates/employee_id_card_widget.dart';
 import 'package:magicepaperapp/card_templates/employee_id_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:magicepaperapp/util/template_util.dart';
 import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class EmployeeIdForm extends StatefulWidget {
   final int width;
@@ -143,7 +140,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
 
       if (_employeeData.name.isNotEmpty) {
         layers.add(LayerSpec.text(
-          text: '${appLocalizations.namePrefix}${_employeeData.name}',
+          text: '${LocaleProvider.current!.namePrefix}${_employeeData.name}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
           textColor: Colors.black,
           backgroundColor: Colors.white,
@@ -155,7 +152,8 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
 
       if (_employeeData.position.isNotEmpty) {
         layers.add(LayerSpec.text(
-          text: '${appLocalizations.positionPrefix}${_employeeData.position}',
+          text:
+              '${LocaleProvider.current!.positionPrefix}${_employeeData.position}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
           textColor: Colors.black,
           backgroundColor: Colors.white,
@@ -167,7 +165,8 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
 
       if (_employeeData.division.isNotEmpty) {
         layers.add(LayerSpec.text(
-          text: '${appLocalizations.divisionPrefix}${_employeeData.division}',
+          text:
+              '${LocaleProvider.current!.divisionPrefix}${_employeeData.division}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
           textColor: Colors.black,
           backgroundColor: Colors.white,
@@ -179,7 +178,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
 
       if (_employeeData.idNumber.isNotEmpty) {
         layers.add(LayerSpec.text(
-          text: '${appLocalizations.idPrefix}${_employeeData.idNumber}',
+          text: '${LocaleProvider.current!.idPrefix}${_employeeData.idNumber}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
           textColor: Colors.black,
           backgroundColor: Colors.white,
@@ -237,7 +236,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              appLocalizations.employeeIdCard,
+              LocaleProvider.current!.employeeIdCard,
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -246,7 +245,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
             ),
             const SizedBox(height: 8),
             Text(
-              appLocalizations.fillDetailsToCreateId,
+              LocaleProvider.current!.fillDetailsToCreateId,
               style: const TextStyle(fontSize: 16, color: Colors.white),
             ),
           ],
@@ -283,7 +282,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                                 color: colorAccent, size: 20),
                             const SizedBox(width: 8),
                             Text(
-                              appLocalizations.idCardDetails,
+                              LocaleProvider.current!.idCardDetails,
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -297,43 +296,43 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         const SizedBox(height: 20),
                         _buildTextFormField(
                           controller: _companyNameController,
-                          label: appLocalizations.companyName,
-                          hint: appLocalizations.enterCompanyName,
+                          label: LocaleProvider.current!.companyName,
+                          hint: LocaleProvider.current!.enterCompanyName,
                           icon: Icons.business_outlined,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _nameController,
-                          label: appLocalizations.name,
-                          hint: appLocalizations.enterEmployeeName,
+                          label: LocaleProvider.current!.name,
+                          hint: LocaleProvider.current!.enterEmployeeName,
                           icon: Icons.person_outline,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _positionController,
-                          label: appLocalizations.position,
-                          hint: appLocalizations.enterJobPosition,
+                          label: LocaleProvider.current!.position,
+                          hint: LocaleProvider.current!.enterJobPosition,
                           icon: Icons.work_outline,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _divisionController,
-                          label: appLocalizations.division,
-                          hint: appLocalizations.enterDepartment,
+                          label: LocaleProvider.current!.division,
+                          hint: LocaleProvider.current!.enterDepartment,
                           icon: Icons.groups_outlined,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _idNumberController,
-                          label: appLocalizations.idNumber,
-                          hint: appLocalizations.enterUniqueId,
+                          label: LocaleProvider.current!.idNumber,
+                          hint: LocaleProvider.current!.enterUniqueId,
                           icon: Icons.badge_outlined,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _qrDataController,
-                          label: appLocalizations.qrCodeData,
-                          hint: appLocalizations.enterQrCodeData,
+                          label: LocaleProvider.current!.qrCodeData,
+                          hint: LocaleProvider.current!.enterQrCodeData,
                           icon: Icons.qr_code_outlined,
                           maxLines: 2,
                         ),
@@ -374,7 +373,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                             ),
                             const SizedBox(width: 12),
                             Text(
-                              appLocalizations.generatingIdCard,
+                              LocaleProvider.current!.generatingIdCard,
                               style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
@@ -386,7 +385,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                             const Icon(Icons.credit_card, size: 18),
                             const SizedBox(width: 8),
                             Text(
-                              appLocalizations.generateIdCard,
+                              LocaleProvider.current!.generateIdCard,
                               style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
@@ -498,7 +497,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                     color: colorAccent, size: 18),
                 const SizedBox(width: 8),
                 Text(
-                  appLocalizations.profilePhoto,
+                  LocaleProvider.current!.profilePhoto,
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -515,7 +514,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      appLocalizations.selected,
+                      LocaleProvider.current!.selected,
                       style: TextStyle(
                         fontSize: 12,
                         color: colorPrimary,
@@ -601,8 +600,8 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         children: [
                           Text(
                             _profileImage != null
-                                ? appLocalizations.photoSelected
-                                : appLocalizations.selectProfilePhoto,
+                                ? LocaleProvider.current!.photoSelected
+                                : LocaleProvider.current!.selectProfilePhoto,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -614,8 +613,9 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                           const SizedBox(height: 4),
                           Text(
                             _profileImage != null
-                                ? appLocalizations.tapToChangePhoto
-                                : appLocalizations.tapToSelectFromGallery,
+                                ? LocaleProvider.current!.tapToChangePhoto
+                                : LocaleProvider
+                                    .current!.tapToSelectFromGallery,
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey.shade600,

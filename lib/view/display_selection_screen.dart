@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/util/epd/gdeq031t10.dart';
@@ -11,8 +11,6 @@ import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/view/widget/display_card.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class DisplaySelectionScreen extends StatefulWidget {
   const DisplaySelectionScreen({super.key});
@@ -48,7 +46,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  appLocalizations.appName,
+                  LocaleProvider.current!.appName,
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -57,7 +55,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  appLocalizations.selectDisplayType,
+                  LocaleProvider.current!.selectDisplayType,
                   style: const TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ],

@@ -1,10 +1,7 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+import 'package:magicepaperapp/provider/locale_provider.dart';
 
 class BatchDeleteConfirmationDialog extends StatelessWidget {
   final List<SavedImage> selectedImages;
@@ -71,7 +68,7 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                appLocalizations.deleteMultipleImages,
+                LocaleProvider.current!.deleteMultipleImages,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -80,7 +77,7 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '${selectedImages.length} ${appLocalizations.imagesSelected}',
+                '${selectedImages.length} ${LocaleProvider.current!.imagesSelected}',
                 style: const TextStyle(
                   fontSize: 14,
                   color: Colors.red,
@@ -153,7 +150,7 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
             ),
           const SizedBox(height: 12),
           Text(
-            '${selectedImages.length} ${appLocalizations.imagesSelectedForDeletion}',
+            '${selectedImages.length} ${LocaleProvider.current!.imagesSelectedForDeletion}',
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -183,7 +180,7 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
             child: Text(
               selectedImages.length > 1
                   ? 'Are you sure you want to delete these ${selectedImages.length} images? This action cannot be undone.'
-                  : appLocalizations.areYouSureDeleteSingleImage,
+                  : LocaleProvider.current!.areYouSureDeleteSingleImage,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.amber.shade800,
@@ -210,7 +207,7 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
               foregroundColor: Colors.grey.shade700,
             ),
             child: Text(
-              appLocalizations.cancel,
+              LocaleProvider.current!.cancel,
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
           ),
@@ -233,7 +230,7 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
                 const Icon(Icons.delete_forever, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                  '${appLocalizations.delete} ${selectedImages.length > 1 ? appLocalizations.deleteAll : ''}',
+                  '${LocaleProvider.current!.delete} ${selectedImages.length > 1 ? LocaleProvider.current!.deleteAll : ''}',
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.w600),
                 ),

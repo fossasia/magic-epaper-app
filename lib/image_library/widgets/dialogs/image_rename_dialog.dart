@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+import 'package:magicepaperapp/provider/locale_provider.dart';
 
 class ImageRenameDialog extends StatelessWidget {
   final String currentName;
@@ -70,7 +67,7 @@ class ImageRenameDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                appLocalizations.renameImage,
+                LocaleProvider.current!.renameImage,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -79,7 +76,7 @@ class ImageRenameDialog extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                appLocalizations.enterNewNameForImage,
+                LocaleProvider.current!.enterNewNameForImage,
                 style: const TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
@@ -98,7 +95,7 @@ class ImageRenameDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            appLocalizations.imageName,
+            LocaleProvider.current!.imageName,
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
@@ -111,7 +108,7 @@ class ImageRenameDialog extends StatelessWidget {
             autofocus: true,
             maxLength: 50,
             decoration: InputDecoration(
-              hintText: appLocalizations.enterImageName,
+              hintText: LocaleProvider.current!.enterImageName,
               filled: true,
               fillColor: Colors.grey.shade50,
               border: OutlineInputBorder(
@@ -163,7 +160,7 @@ class ImageRenameDialog extends StatelessWidget {
               foregroundColor: Colors.grey.shade700,
             ),
             child: Text(
-              appLocalizations.cancel,
+              LocaleProvider.current!.cancel,
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -190,7 +187,7 @@ class ImageRenameDialog extends StatelessWidget {
                 const Icon(Icons.check, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                  appLocalizations.rename,
+                  LocaleProvider.current!.rename,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

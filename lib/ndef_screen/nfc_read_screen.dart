@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 import 'package:magicepaperapp/ndef_screen/controller/nfc_controller.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_status_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_read_card.dart';
@@ -9,7 +8,6 @@ import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'dart:async';
 import '../util/app_logger.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCReadScreen extends StatefulWidget {
   const NFCReadScreen({super.key});
@@ -95,14 +93,14 @@ class _NFCReadScreenState extends State<NFCReadScreen>
 
     switch (to) {
       case NFCAvailability.available:
-        message = appLocalizations.nfcIsNowEnabledAndReady;
+        message = LocaleProvider.current!.nfcIsNowEnabledAndReady;
         break;
       case NFCAvailability.disabled:
-        message = appLocalizations.nfcHasBeenDisabled;
+        message = LocaleProvider.current!.nfcHasBeenDisabled;
         isError = true;
         break;
       case NFCAvailability.not_supported:
-        message = appLocalizations.nfcIsNotSupportedOnDevice;
+        message = LocaleProvider.current!.nfcIsNotSupportedOnDevice;
         isError = true;
         break;
     }
@@ -143,12 +141,12 @@ class _NFCReadScreenState extends State<NFCReadScreen>
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(appLocalizations.cancel),
+                  child: Text(LocaleProvider.current!.cancel),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   style: TextButton.styleFrom(foregroundColor: Colors.red),
-                  child: Text(appLocalizations.confirm),
+                  child: Text(LocaleProvider.current!.confirm),
                 ),
               ],
             );
@@ -160,7 +158,7 @@ class _NFCReadScreenState extends State<NFCReadScreen>
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      title: appLocalizations.readNfcTags,
+      title: LocaleProvider.current!.readNfcTags,
       index: 1,
       actions: [
         IconButton(
@@ -168,10 +166,10 @@ class _NFCReadScreenState extends State<NFCReadScreen>
           onPressed: _nfcController.result.isNotEmpty
               ? () {
                   _nfcController.clearResult();
-                  _showSnackBar(appLocalizations.resultsCleared);
+                  _showSnackBar(LocaleProvider.current!.resultsCleared);
                 }
               : null,
-          tooltip: appLocalizations.clearResults,
+          tooltip: LocaleProvider.current!.clearResults,
         ),
       ],
       body: SafeArea(
@@ -193,43 +191,43 @@ class _NFCReadScreenState extends State<NFCReadScreen>
                   onRead: () async {
                     await _nfcController.readNDEF();
                     if (_nfcController.result
-                        .contains(appLocalizations.error)) {
+                        .contains(LocaleProvider.current!.error)) {
                       _showSnackBar(
-                        appLocalizations.readOperationFailed,
+                        LocaleProvider.current!.readOperationFailed,
                         isError: true,
                       );
                     } else {
-                      _showSnackBar(appLocalizations.tagReadSuccessfully);
+                      _showSnackBar(LocaleProvider.current!.tagReadSuccessfully);
                     }
                   },
                   onVerify: () async {
                     await _nfcController.verifyWrite();
                     if (_nfcController.result
-                        .contains(appLocalizations.error)) {
+                        .contains(LocaleProvider.current!.error)) {
                       _showSnackBar(
-                        appLocalizations.verificationFailed,
+                        LocaleProvider.current!.verificationFailed,
                         isError: true,
                       );
                     } else {
-                      _showSnackBar(appLocalizations.tagVerifiedSuccessfully);
+                      _showSnackBar(LocaleProvider.current!.tagVerifiedSuccessfully);
                     }
                   },
                   onClear: () async {
                     bool confirmed = await _showConfirmDialog(
-                      appLocalizations.clearNfcTag,
-                      appLocalizations.clearNfcTagConfirmation,
+                      LocaleProvider.current!.clearNfcTag,
+                      LocaleProvider.current!.clearNfcTagConfirmation,
                     );
                     if (confirmed) {
                       await _nfcController.clearNDEF();
                       if (_nfcController.result.contains(
-                        appLocalizations.error,
+                        LocaleProvider.current!.error,
                       )) {
                         _showSnackBar(
-                          appLocalizations.clearOperationFailed,
+                          LocaleProvider.current!.clearOperationFailed,
                           isError: true,
                         );
                       } else {
-                        _showSnackBar(appLocalizations.tagClearedSuccessfully);
+                        _showSnackBar(LocaleProvider.current!.tagClearedSuccessfully);
                       }
                     }
                   },
@@ -268,7 +266,7 @@ class _NFCReadScreenState extends State<NFCReadScreen>
                         ),
                         const SizedBox(height: 24),
                         Text(
-                          appLocalizations.nfcNotAvailable,
+                          LocaleProvider.current!.nfcNotAvailable,
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -278,7 +276,7 @@ class _NFCReadScreenState extends State<NFCReadScreen>
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          appLocalizations.enableNfcMessage,
+                          LocaleProvider.current!.enableNfcMessage,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,

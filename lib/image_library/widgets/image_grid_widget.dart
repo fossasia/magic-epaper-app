@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
 import 'package:magicepaperapp/image_library/widgets/image_card_widget.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class ImageGridWidget extends StatelessWidget {
   final List<SavedImage> images;
@@ -25,7 +23,7 @@ class ImageGridWidget extends StatelessWidget {
     if (images.isEmpty) {
       return Center(
         child: Text(
-          appLocalizations.noImagesMatchSearch,
+          LocaleProvider.current!.noImagesMatchSearch,
           style: const TextStyle(color: Colors.grey, fontSize: 16),
         ),
       );

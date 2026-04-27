@@ -13,133 +13,135 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get aboutUsDescription =>
-      'Magic ePaper is an app designed to control and update ePaper displays. The goal is to provide tools for customizing and transferring images, text, and patterns to ePaper screens using NFC. Data transfer from the smartphone to the ePaper hardware is done wirelessly via NFC. The project is built on top of custom firmware and display drivers for seamless communication and efficient image rendering.';
+      'Magic ePaper er en app designet for å kontrollere og oppdatere ePaper-skjermer. Målet er å tilby verktøy for å tilpasse og overføre bilder, tekst og mønstre til ePaper-skjermer ved hjelp av NFC. Dataoverføring fra smarttelefonen til ePaper-maskinvaren gjøres trådløst via NFC. Prosjektet bygger på tilpasset fastvare og skjermdrivere for sømløs kommunikasjon og effektiv bildegjengivelse.';
 
   @override
-  String get developedBy => 'Developed by';
+  String get developedBy => 'Utviklet av';
 
   @override
-  String get fossasiaContributors => 'FOSSASIA contributors';
+  String get fossasiaContributors => 'FOSSASIA-bidragsytere';
 
   @override
-  String get contactWithUs => 'Contact With Us';
+  String get contactWithUs => 'Kontakt oss';
 
   @override
   String get github => 'GitHub';
 
   @override
   String get githubSubtitle =>
-      'Fork the repo and push changes or submit new issues.';
+      'Fork repoet og push endringer eller send inn nye problemer (issues).';
 
   @override
-  String get license => 'License';
+  String get license => 'Lisens';
 
   @override
   String get licenseSubtitle =>
-      'Check Apache License 2.0 terms used on Magic ePaper.';
+      'Sjekk vilkårene for Apache License 2.0 som brukes på Magic ePaper.';
 
   @override
-  String get createTransfer => 'Create & Transfer Images';
+  String get createTransfer => 'Opprett og overfør bilder';
 
   @override
   String get ndefScreen => 'Ndef';
 
   @override
-  String get selectDisplayType => 'Select your ePaper display type';
+  String get selectDisplayType => 'Velg din ePaper-skjermtype';
 
   @override
-  String get settings => 'Settings';
+  String get settings => 'Innstillinger';
 
   @override
-  String get aboutUs => 'About Us';
+  String get aboutUs => 'Om oss';
 
   @override
-  String get other => 'Other';
+  String get other => 'Annet';
 
   @override
-  String get getBadge => 'Get Badge';
+  String get getBadge => 'Få merke';
 
   @override
-  String get feedbackBugReports => 'Feedback/Bug Reports';
+  String get feedbackBugReports => 'Tilbakemelding/Feilrapporter';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Fortsett';
 
   @override
-  String get noImageSelectedFeedback => 'Import an image first!';
+  String get noImageSelectedFeedback => 'Importer et bilde først!';
 
   @override
-  String get adjustButtonLabel => 'Adjust';
+  String get adjustButtonLabel => 'Juster';
 
   @override
-  String get importImageButtonLabel => 'Import';
+  String get importImageButtonLabel => 'Importer';
 
   @override
-  String get openEditor => 'Create';
+  String get openEditor => 'Opprett';
 
   @override
-  String get importStartingImageFeedback => 'Import an image to begin';
+  String get importStartingImageFeedback => 'Importer et bilde for å begynne';
 
   @override
-  String get transferButtonLabel => 'Transfer';
+  String get transferButtonLabel => 'Overfør';
 
   @override
-  String get filterScreenTitle => 'Select a Filter';
+  String get filterScreenTitle => 'Velg et filter';
 
   @override
-  String get scanningForNfcTag => 'Scanning for NFC tag...';
+  String get scanningForNfcTag => 'Søker etter NFC-brikke...';
 
   @override
-  String get scanningForNfcTagToWrite => 'Scanning for NFC tag to write...';
+  String get scanningForNfcTagToWrite =>
+      'Søker etter NFC-brikke for skriving...';
 
   @override
-  String get scanningForNfcTagToClear => 'Scanning for NFC tag to clear...';
+  String get scanningForNfcTagToClear =>
+      'Søker etter NFC-brikke for sletting...';
 
   @override
-  String get scanningTagForVerification => 'Scanning tag for verification...';
+  String get scanningTagForVerification => 'Skanner brikke for verifisering...';
 
   @override
-  String get errorCreatingTextRecord => 'Error creating text record: ';
+  String get errorCreatingTextRecord => 'Feil ved oppretting av tekstpost: ';
 
   @override
-  String get errorCreatingUrlRecord => 'Error creating URL record: ';
+  String get errorCreatingUrlRecord => 'Feil ved oppretting av URL-post: ';
 
   @override
-  String get errorCreatingWifiRecord => 'Error creating WiFi record: ';
+  String get errorCreatingWifiRecord => 'Feil ved oppretting av WiFi-post: ';
 
   @override
   String get errorCreatingMultipleRecords =>
-      'Error creating multiple records: ';
+      'Feil ved oppretting av flere poster: ';
 
   @override
-  String get pleaseEnterAtLeastOneRecord => 'Please enter at least one record';
+  String get pleaseEnterAtLeastOneRecord => 'Vennligst skriv inn minst én post';
 
   @override
-  String get tagType => 'Tag Type: ';
+  String get tagType => 'Brikketype: ';
 
   @override
-  String get tagId => 'Tag ID: ';
+  String get tagId => 'Brikke-ID: ';
 
   @override
-  String get ndefAvailable => 'NDEF Available: ';
+  String get ndefAvailable => 'NDEF tilgjengelig: ';
 
   @override
-  String get ndefWritable => 'NDEF Writable: ';
+  String get ndefWritable => 'NDEF skrivbar: ';
 
   @override
-  String get unknown => 'Unknown';
+  String get unknown => 'Ukjent';
 
   @override
-  String get textCannotBeEmpty => 'Text cannot be empty';
+  String get textCannotBeEmpty => 'Tekst kan ikke være tom';
 
   @override
-  String get urlCannotBeEmpty => 'URL cannot be empty';
+  String get urlCannotBeEmpty => 'URL kan ikke være tom';
 
   @override
-  String get wifiSsidCannotBeEmpty => 'WiFi SSID cannot be empty';
+  String get wifiSsidCannotBeEmpty => 'WiFi SSID kan ikke være tom';
 
   @override
-  String get defaultLanguage => 'en';
+  String get defaultLanguage => 'nb';
 
   @override
   String get httpsPrefix => 'https://';
@@ -160,16 +162,16 @@ class AppLocalizationsNb extends AppLocalizations {
   String get emptySpace => ' ';
 
   @override
-  String get unknownNull => 'Unknown (null)';
+  String get unknownNull => 'Ukjent (null)';
 
   @override
-  String get unknownType => 'Unknown type: ';
+  String get unknownType => 'Ukjent type: ';
 
   @override
-  String get textPrefix => 'Text: ';
+  String get textPrefix => 'Tekst: ';
 
   @override
-  String get textSuffix => ' (Language: ';
+  String get textSuffix => ' (Språk: ';
 
   @override
   String get uriPrefix => 'URI: ';
@@ -178,28 +180,28 @@ class AppLocalizationsNb extends AppLocalizations {
   String get mimePrefix => 'MIME: ';
 
   @override
-  String get absoluteUriPrefix => 'Absolute URI: ';
+  String get absoluteUriPrefix => 'Absolutt URI: ';
 
   @override
-  String get rawPrefix => 'Raw: ';
+  String get rawPrefix => 'Rådata: ';
 
   @override
-  String get emptyPayload => 'Empty payload';
+  String get emptyPayload => 'Tom nyttelast (payload)';
 
   @override
-  String get binaryDataPrefix => 'Binary data (';
+  String get binaryDataPrefix => 'Binærdata (';
 
   @override
-  String get binaryDataSuffix => ' bytes): ';
+  String get binaryDataSuffix => ' byte): ';
 
   @override
-  String get errorDecodingRecord => 'Error decoding record: ';
+  String get errorDecodingRecord => 'Feil ved dekoding av post: ';
 
   @override
-  String get noNdefRecordsFound => 'No NDEF records found';
+  String get noNdefRecordsFound => 'Ingen NDEF-poster funnet';
 
   @override
-  String get recordPrefix => 'Record ';
+  String get recordPrefix => 'Post ';
 
   @override
   String get recordSuffix => ':';
@@ -211,16 +213,16 @@ class AppLocalizationsNb extends AppLocalizations {
   String get typeLabel => 'Type: ';
 
   @override
-  String get payloadSizeLabel => 'Payload Size: ';
+  String get payloadSizeLabel => 'Størrelse på nyttelast: ';
 
   @override
-  String get bytesLabel => ' bytes';
+  String get bytesLabel => ' byte';
 
   @override
-  String get contentLabel => 'Content: ';
+  String get contentLabel => 'Innhold: ';
 
   @override
-  String get rawPayloadLabel => 'Raw Payload: ';
+  String get rawPayloadLabel => 'Rå nyttelast: ';
 
   @override
   String get nullPayload => 'null';
@@ -232,50 +234,52 @@ class AppLocalizationsNb extends AppLocalizations {
   String get closingParenthesisNewline => ')\n';
 
   @override
-  String get scanYourNfcTag => 'Scan your NFC tag';
+  String get scanYourNfcTag => 'Skann NFC-brikken din';
 
   @override
-  String get scanYourNfcTagToWrite => 'Scan your NFC tag to write';
+  String get scanYourNfcTagToWrite => 'Skann NFC-brikken din for å skrive';
 
   @override
-  String get scanYourNfcTagToClear => 'Scan your NFC tag to clear';
+  String get scanYourNfcTagToClear => 'Skann NFC-brikken din for å slette';
 
   @override
-  String get scanTagToVerifyContent => 'Scan tag to verify content';
+  String get scanTagToVerifyContent =>
+      'Skann brikken for å verifisere innholdet';
 
   @override
-  String get tagIsNotNdefCompatible => 'Tag is not NDEF compatible';
+  String get tagIsNotNdefCompatible => 'Brikken er ikke NDEF-kompatibel';
 
   @override
-  String get tagDoesNotSupportNdef => 'Tag does not support NDEF';
+  String get tagDoesNotSupportNdef => 'Brikken støtter ikke NDEF';
 
   @override
-  String get tagIsNotWritable => 'Tag is not writable';
+  String get tagIsNotWritable => 'Brikken er ikke skrivbar';
 
   @override
   String get tagDoesNotSupportNdefCannotClear =>
-      'Tag does not support NDEF, cannot clear';
+      'Brikken støtter ikke NDEF, kan ikke slette';
 
   @override
-  String get tagIsNotWritableCannotClear => 'Tag is not writable, cannot clear';
+  String get tagIsNotWritableCannotClear =>
+      'Brikken er ikke skrivbar, kan ikke slette';
 
   @override
-  String get readOperationCompleted => 'Read operation completed';
+  String get readOperationCompleted => 'Leseoperasjon fullført';
 
   @override
-  String get writeOperationCompleted => 'Write operation completed';
+  String get writeOperationCompleted => 'Skriveoperasjon fullført';
 
   @override
-  String get clearOperationCompleted => 'Clear operation completed';
+  String get clearOperationCompleted => 'Sletteoperasjon fullført';
 
   @override
-  String get ndefRecordsFound => 'NDEF records found: ';
+  String get ndefRecordsFound => 'NDEF-poster funnet: ';
 
   @override
-  String get theTagIsEmpty => 'The tag is empty';
+  String get theTagIsEmpty => 'Brikken er tom';
 
   @override
-  String get record => 'Record ';
+  String get record => 'Post ';
 
   @override
   String get type => 'Type: ';
@@ -284,1007 +288,1029 @@ class AppLocalizationsNb extends AppLocalizations {
   String get tnf => 'TNF: ';
 
   @override
-  String get content => 'Content: ';
+  String get content => 'Innhold: ';
 
   @override
-  String get noRecordsToWrite => 'No records to write';
+  String get noRecordsToWrite => 'Ingen poster å skrive';
 
   @override
-  String get ndefRecordsWrittenSuccessfully =>
-      'NDEF records written successfully';
+  String get ndefRecordsWrittenSuccessfully => 'NDEF-poster skrevet vellykket';
 
   @override
-  String get recordsWritten => 'Records written: ';
+  String get recordsWritten => 'Poster skrevet: ';
 
   @override
-  String get writtenRecord => 'Written record ';
+  String get writtenRecord => 'Skrevet post ';
 
   @override
-  String get tagClearedSuccessfully => 'Tag cleared successfully';
+  String get tagClearedSuccessfully => 'Brikken ble slettet';
 
   @override
-  String get method => 'Method: ';
+  String get method => 'Metode: ';
 
   @override
-  String get tagIsNowReadyForNewData => 'Tag is now ready for new data';
+  String get tagIsNowReadyForNewData => 'Brikken er nå klar for nye data';
 
   @override
-  String get emptyTextRecord => 'Empty text record';
+  String get emptyTextRecord => 'Tom tekstpost';
 
   @override
-  String get emptyNdefRecord => 'Empty NDEF record';
+  String get emptyNdefRecord => 'Tom NDEF-post';
 
   @override
-  String get minimalSpaceCharacter => 'Minimal space character';
+  String get minimalSpaceCharacter => 'Minimalt mellomromstegn';
 
   @override
-  String get emptyRecordList => 'Empty record list';
+  String get emptyRecordList => 'Tom postliste';
 
   @override
-  String get allClearingMethodsFailed => 'All clearing methods failed: ';
+  String get allClearingMethodsFailed => 'Alle slettemetoder mislyktes: ';
 
   @override
-  String get verificationResults => 'Verification Results:';
+  String get verificationResults => 'Verifiseringsresultater:';
 
   @override
-  String get recordsFound => 'Records found: ';
+  String get recordsFound => 'Poster funnet: ';
 
   @override
-  String get noNdefRecordsFoundOnTag => 'No NDEF records found on tag';
+  String get noNdefRecordsFoundOnTag => 'Ingen NDEF-poster funnet på brikken';
 
   @override
-  String get theTagIsEmptyCleared => 'The tag is empty/cleared';
+  String get theTagIsEmptyCleared => 'Brikken er tom/slettet';
 
   @override
-  String get errorReadingTag => 'Error reading tag: ';
+  String get errorReadingTag => 'Feil ved lesing av brikke: ';
 
   @override
-  String get errorWritingToTag => 'Error writing to tag: ';
+  String get errorWritingToTag => 'Feil ved skriving til brikke: ';
 
   @override
-  String get errorClearingTag => 'Error clearing tag: ';
+  String get errorClearingTag => 'Feil ved sletting av brikke: ';
 
   @override
-  String get verificationError => 'Verification error: ';
+  String get verificationError => 'Verifiseringsfeil: ';
 
   @override
-  String get holdTagCloseAndTryAgain => '. Hold tag close and try again';
+  String get holdTagCloseAndTryAgain => '. Hold brikken nær og prøv igjen';
 
   @override
-  String get tryHoldingTagCloser => '. Try holding tag closer';
+  String get tryHoldingTagCloser => '. Prøv å holde brikken nærmere';
 
   @override
-  String get tryMovingTagCloser => '. Try moving tag closer';
+  String get tryMovingTagCloser => '. Prøv å flytte brikken nærmere';
 
   @override
   String get method1EmptyTextRecordFailed =>
-      'Method 1 (empty text record) failed: ';
+      'Metode 1 (tom tekstpost) mislyktes: ';
 
   @override
   String get method2EmptyNdefRecordFailed =>
-      'Method 2 (empty NDEF record) failed: ';
+      'Metode 2 (tom NDEF-post) mislyktes: ';
 
   @override
-  String get method3MinimalRecordFailed => 'Method 3 (minimal record) failed: ';
+  String get method3MinimalRecordFailed =>
+      'Metode 3 (minimal post) mislyktes: ';
 
   @override
-  String get method4EmptyListFailed => 'Method 4 (empty list) failed: ';
+  String get method4EmptyListFailed => 'Metode 4 (tom liste) mislyktes: ';
 
   @override
-  String get errorFinishingNfcSession => 'Error finishing NFC session: ';
+  String get errorFinishingNfcSession => 'Feil ved avslutning av NFC-økt: ';
 
   @override
-  String get secondaryCleanupAlsoFailed => 'Secondary cleanup also failed: ';
+  String get secondaryCleanupAlsoFailed =>
+      'Sekundær opprydding mislyktes også: ';
 
   @override
   String get multipleTagsFoundPleaseSelectOne =>
-      'Multiple tags found, please select one';
+      'Flere brikker funnet, vennligst velg én';
 
   @override
-  String get scanYourNfcTagDefault => 'Scan your NFC tag';
+  String get scanYourNfcTagDefault => 'Skann NFC-brikken din';
 
   @override
-  String get readNdefTags => 'Read NDEF Tags';
+  String get readNdefTags => 'Les NDEF-brikker';
 
   @override
-  String get reading => 'Reading...';
+  String get reading => 'Leser...';
 
   @override
-  String get readNfcTag => 'Read NFC Tag';
+  String get readNfcTag => 'Les NFC-brikke';
 
   @override
-  String get verify => 'Verify';
+  String get verify => 'Verifiser';
 
   @override
-  String get clearing => 'Clearing...';
+  String get clearing => 'Sletter...';
 
   @override
-  String get clearNfcTag => 'Clear NFC Tag';
+  String get clearNfcTag => 'Slett NFC-brikke';
 
   @override
   String get monospaceFontFamily => 'monospace';
 
   @override
-  String get nfcStatus => 'NFC Status';
+  String get nfcStatus => 'NFC-status';
 
   @override
-  String get refreshNfcStatus => 'Refresh NFC Status';
+  String get refreshNfcStatus => 'Oppdater NFC-status';
 
   @override
-  String get writeNdefRecords => 'Write NDEF Records';
+  String get writeNdefRecords => 'Skriv NDEF-poster';
 
   @override
-  String get textRecord => 'Text Record';
+  String get textRecord => 'Tekstpost';
 
   @override
-  String get enterTextToWriteToNfcTag => 'Enter text to write to NFC tag';
+  String get enterTextToWriteToNfcTag =>
+      'Skriv inn tekst for å skrive til NFC-brikken';
 
   @override
-  String get writing => 'Writing...';
+  String get writing => 'Skriver...';
 
   @override
-  String get writeText => 'Write Text';
+  String get writeText => 'Skriv tekst';
 
   @override
-  String get urlRecord => 'URL Record';
+  String get urlRecord => 'URL-post';
 
   @override
-  String get enterUrl => 'Enter URL';
+  String get enterUrl => 'Skriv inn URL';
 
   @override
-  String get writeUrl => 'Write URL';
+  String get writeUrl => 'Skriv URL';
 
   @override
-  String get wifiRecord => 'WiFi Record';
+  String get wifiRecord => 'WiFi-post';
 
   @override
-  String get wifiNetworkNameSsid => 'WiFi Network Name (SSID)';
+  String get wifiNetworkNameSsid => 'WiFi-nettverksnavn (SSID)';
 
   @override
-  String get wifiPassword => 'WiFi Password';
+  String get wifiPassword => 'WiFi-passord';
 
   @override
-  String get writeWifi => 'Write WiFi';
+  String get writeWifi => 'Skriv WiFi';
 
   @override
-  String get writeAllRecords => 'Write All Records';
+  String get writeAllRecords => 'Skriv alle poster';
 
   @override
   String get writeAllNonEmptyFieldsDescription =>
-      'Write all non-empty fields to the NFC tag at once';
+      'Skriv alle felt som ikke er tomme til NFC-brikken på én gang';
 
   @override
-  String get writeMultipleRecords => 'Write Multiple Records';
+  String get writeMultipleRecords => 'Skriv flere poster';
 
   @override
-  String get readOperationFailed => 'Read operation failed';
+  String get readOperationFailed => 'Leseoperasjon mislyktes';
 
   @override
-  String get tagReadSuccessfully => 'Tag read successfully';
+  String get tagReadSuccessfully => 'Brikke lest vellykket';
 
   @override
-  String get verificationFailed => 'Verification failed';
+  String get verificationFailed => 'Verifisering mislyktes';
 
   @override
-  String get tagVerifiedSuccessfully => 'Tag verified successfully';
+  String get tagVerifiedSuccessfully => 'Brikke verifisert vellykket';
 
   @override
   String get clearNfcTagConfirmation =>
-      'Are you sure you want to clear this NFC tag? This action cannot be undone.';
+      'Er du sikker på at du vil slette denne NFC-brikken? Denne handlingen kan ikke angres.';
 
   @override
-  String get clearOperationFailed => 'Clear operation failed';
+  String get clearOperationFailed => 'Sletteoperasjon mislyktes';
 
   @override
-  String get writeOperationFailed => 'Write operation failed';
+  String get writeOperationFailed => 'Skriveoperasjon mislyktes';
 
   @override
-  String get dataWrittenSuccessfully => 'Data written successfully';
+  String get dataWrittenSuccessfully => 'Data skrevet vellykket';
 
   @override
-  String get nfcNotAvailable => 'NFC Not Available';
+  String get nfcNotAvailable => 'NFC ikke tilgjengelig';
 
   @override
   String get enableNfcMessage =>
-      'Please enable NFC in your device settings to use this feature.';
+      'Vennligst aktiver NFC i enhetsinnstillingene dine for å bruke denne funksjonen.';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'Avbryt';
 
   @override
-  String get confirm => 'Confirm';
+  String get confirm => 'Bekreft';
 
   @override
-  String get error => 'Error';
+  String get error => 'Feil';
 
   @override
-  String get successfully => 'successfully';
+  String get successfully => 'vellykket';
 
   @override
-  String get language => 'Language';
+  String get language => 'Språk';
 
   @override
-  String get loading => 'Loading...';
+  String get loading => 'Laster inn...';
 
   @override
-  String get exportXbm => 'Export XBM';
+  String get exportXbm => 'Eksporter XBM';
 
   @override
-  String get exportingXbm => 'Exporting XBM files...';
+  String get exportingXbm => 'Eksporterer XBM-filer...';
 
   @override
-  String get fullRefresh => 'Full Refresh';
+  String get fullRefresh => 'Full oppdatering';
 
   @override
-  String get fullRefreshSelected => 'Full Refresh Selected';
+  String get fullRefreshSelected => 'Full oppdatering valgt';
 
   @override
-  String get waveformSelected => 'Selected';
+  String get waveformSelected => 'Valgt';
 
   @override
-  String get barcode => 'Barcode';
+  String get barcode => 'Strekkode';
 
   @override
-  String get library => 'Library';
+  String get library => 'Bibliotek';
 
   @override
-  String get templates => 'Templates';
+  String get templates => 'Maler';
 
   @override
-  String get barcodeGenerator => 'Barcode Generator';
+  String get barcodeGenerator => 'Strekkodegenerator';
 
   @override
-  String get barcodeData => 'Barcode Data';
+  String get barcodeData => 'Strekkodedata';
 
   @override
-  String get barcodeDataHint => 'Enter barcode number or SKU';
+  String get barcodeDataHint => 'Skriv inn strekkodenummer eller SKU';
 
   @override
-  String get characters => 'Characters';
+  String get characters => 'Tegn';
 
   @override
-  String get scanBarcode => 'Scan Barcode';
+  String get scanBarcode => 'Skann strekkode';
 
   @override
-  String get barcodeFormat => 'Barcode Format';
+  String get barcodeFormat => 'Strekkodeformat';
 
   @override
-  String get enterOrScanBarcodeData => 'Enter or scan barcode data';
+  String get enterOrScanBarcodeData => 'Skriv inn eller skann strekkodedata';
 
   @override
-  String get invalidBarcode => 'Invalid Barcode';
+  String get invalidBarcode => 'Ugyldig strekkode';
 
   @override
-  String get invalidCharacter => 'Invalid character';
+  String get invalidCharacter => 'Ugyldig tegn';
 
   @override
-  String get supportedCharacters => 'Supported characters are';
+  String get supportedCharacters => 'Støttede tegn er';
 
   @override
-  String get pleaseCheckBarcodeRules => 'Please check the barcode rules.';
+  String get pleaseCheckBarcodeRules => 'Vennligst sjekk strekkodereglene.';
 
   @override
-  String get dataTooShort => 'Data is too short. Minimum length for';
+  String get dataTooShort => 'Dataene er for korte. Minimumslengde for';
 
   @override
-  String get dataTooLong => 'Data is too long. Maximum length for';
+  String get dataTooLong => 'Dataene er for lange. Maksimumslengde for';
 
   @override
-  String get isText => 'is';
+  String get isText => 'er';
 
   @override
-  String get pointCameraAtBarcode => 'Point camera at barcode to scan';
+  String get pointCameraAtBarcode => 'Pek kameraet mot strekkoden for å skanne';
 
   @override
-  String get generateImage => 'Generate Image';
+  String get generateImage => 'Generer bilde';
 
   @override
-  String get exportFailed => 'Export failed';
+  String get exportFailed => 'Eksport mislyktes';
 
   @override
-  String get exportedXbmFiles => 'Exported XBM file(s) to MagicEpaper/XBM/';
+  String get exportedXbmFiles => 'Eksporterte XBM-fil(er) til MagicEpaper/XBM/';
 
   @override
-  String get exported => 'Exported';
+  String get exported => 'Eksportert';
 
   @override
-  String get xbmFilesToMagicEpaper => 'XBM file(s) to MagicEpaper/XBM/';
+  String get xbmFilesToMagicEpaper => 'XBM-fil(er) til MagicEpaper/XBM/';
 
   @override
-  String get floydSteinberg => 'Classic';
+  String get floydSteinberg => 'Klassisk';
 
   @override
-  String get stucki => 'Sharp';
+  String get stucki => 'Skarp';
 
   @override
   String get atkinson => 'Vintage';
 
   @override
-  String get falseFloydSteinberg => 'Simple';
+  String get falseFloydSteinberg => 'Enkel';
 
   @override
-  String get halftone => 'Newspaper';
+  String get halftone => 'Avis';
 
   @override
-  String get threshold => 'Posterize';
+  String get threshold => 'Plakat';
 
   @override
-  String get colorHalftone => 'Color Newspaper';
+  String get colorHalftone => 'Fargeavis';
 
   @override
-  String get searchingForDevice => 'Searching for Device';
+  String get searchingForDevice => 'Søker etter enhet';
 
   @override
-  String get displayRefreshing => 'Display Refreshing';
+  String get displayRefreshing => 'Skjermen oppdateres';
 
   @override
-  String get transferComplete => 'Transfer complete!';
+  String get transferComplete => 'Overføring fullført!';
 
   @override
-  String get writingToEpaper => 'Writing to ePaper';
+  String get writingToEpaper => 'Skriver til ePaper';
 
   @override
   String get pleaseBringPhoneClose =>
-      'Please bring your phone close to the Magic ePaper device';
+      'Vennligst hold telefonen din nær Magic ePaper-enheten';
 
   @override
-  String get keepPhoneClose => 'Keep your phone close!';
+  String get keepPhoneClose => 'Hold telefonen i nærheten!';
 
   @override
   String get displayRefreshingMessage =>
-      'The display is refreshing. Please keep your phone near the device until the image appears completely.';
+      'Skjermen oppdateres. Vennligst hold telefonen i nærheten av enheten til bildet vises helt.';
 
   @override
-  String get transferFailed => 'Transfer Failed';
+  String get transferFailed => 'Overføring mislyktes';
 
   @override
   String get deviceConnectionTimeout =>
-      'Device connection timed out. Please try bringing your phone closer to the device and try again.';
+      'Tidsavbrudd for enhetstilkobling. Prøv å holde telefonen nærmere enheten og prøv igjen.';
 
   @override
   String get connectionLostDuringTransfer =>
-      'Connection was lost during transfer. Please keep your phone close to the device and try again.';
+      'Tilkoblingen ble brutt under overføringen. Hold telefonen nær enheten og prøv igjen.';
 
   @override
-  String get done => 'Done';
+  String get done => 'Ferdig';
 
   @override
-  String get close => 'Close';
+  String get close => 'Lukk';
 
   @override
-  String get processingImage => 'Processing Image...';
+  String get processingImage => 'Behandler bilde...';
 
   @override
-  String get readyToFlash => 'Ready to Flash';
+  String get readyToFlash => 'Klar til å overføre';
 
   @override
-  String get imageProcessedSuccessfully => 'Image processed successfully.';
+  String get imageProcessedSuccessfully => 'Bildet ble behandlet vellykket.';
 
   @override
   String get tapBelowAndHold =>
-      'Tap below and hold your phone near the display.';
+      'Trykk nedenfor og hold telefonen nær skjermen.';
 
   @override
-  String get startFlashing => 'Start Flashing';
+  String get startFlashing => 'Start overføring (Flashing)';
 
   @override
-  String get flashing => 'Flashing...';
+  String get flashing => 'Overfører...';
 
   @override
-  String get keepPhoneStill => 'Keep your phone still.';
+  String get keepPhoneStill => 'Hold telefonen i ro.';
 
   @override
-  String get success => 'Success!';
+  String get success => 'Suksess!';
 
   @override
-  String get transferCompleteMessage => 'Transfer complete!';
+  String get transferCompleteMessage => 'Overføring fullført!';
 
   @override
-  String get unknownErrorOccurred => 'An unknown error occurred.';
+  String get unknownErrorOccurred => 'En ukjent feil oppstod.';
 
   @override
-  String get resultsCleared => 'Results cleared';
+  String get resultsCleared => 'Resultater slettet';
 
   @override
-  String get clearResults => 'Clear Results';
+  String get clearResults => 'Slett resultater';
 
   @override
-  String get vCardContact => 'vCard Contact';
+  String get vCardContact => 'vCard-kontakt';
 
   @override
-  String get writingVCard => 'Writing vCard...';
+  String get writingVCard => 'Skriver vCard...';
 
   @override
-  String get writeVCard => 'Write vCard';
+  String get writeVCard => 'Skriv vCard';
 
   @override
-  String get firstName => 'First Name';
+  String get firstName => 'Fornavn';
 
   @override
-  String get lastName => 'Last Name';
+  String get lastName => 'Etternavn';
 
   @override
-  String get organization => 'Organization';
+  String get organization => 'Organisasjon';
 
   @override
-  String get title => 'Title';
+  String get title => 'Tittel';
 
   @override
-  String get mobileNumber => 'Mobile Number';
+  String get mobileNumber => 'Mobilnummer';
 
   @override
-  String get emailAddress => 'Email Address';
+  String get emailAddress => 'E-postadresse';
 
   @override
-  String get streetAddress => 'Street Address';
+  String get streetAddress => 'Gateadresse';
 
   @override
-  String get city => 'City';
+  String get city => 'By';
 
   @override
-  String get zipCode => 'Zip Code';
+  String get zipCode => 'Postnummer';
 
   @override
-  String get country => 'Country';
+  String get country => 'Land';
 
   @override
-  String get website => 'Website';
+  String get website => 'Nettsted';
 
   @override
-  String get noSavedImagesYet => 'No saved images yet';
+  String get noSavedImagesYet => 'Ingen lagrede bilder ennå';
 
   @override
   String get saveImagesFromEditor =>
-      'Save images from the editor or import new ones';
+      'Lagre bilder fra redigeringsprogrammet eller importer nye';
 
   @override
-  String get enterWifiSSID => 'Enter WiFi SSID';
+  String get enterWifiSSID => 'Skriv inn WiFi SSID';
 
   @override
-  String get enterWifiPassword => 'Enter WiFi password';
+  String get enterWifiPassword => 'Skriv inn WiFi-passord';
 
   @override
-  String get writeMultiple => 'Write Multiple';
+  String get writeMultiple => 'Skriv flere';
 
   @override
-  String get searchImages => 'Search images...';
+  String get searchImages => 'Søk i bilder...';
 
   @override
   String get filter => 'Filter:';
 
   @override
-  String get all => 'All';
+  String get all => 'Alle';
 
   @override
-  String get imported => 'Imported';
+  String get imported => 'Importert';
 
   @override
-  String get editor => 'Editor';
+  String get editor => 'Redigering';
 
   @override
-  String get imageLibrary => 'Image Library';
+  String get imageLibrary => 'Bildebibliotek';
 
   @override
-  String get selectImagesToDelete => 'Select Images to Delete';
+  String get selectImagesToDelete => 'Velg bilder som skal slettes';
 
   @override
-  String get delete => 'Delete';
+  String get delete => 'Slett';
 
   @override
-  String get deleteMode => 'Delete Mode';
+  String get deleteMode => 'Slettemodus';
 
   @override
-  String get deleteImage => 'Delete Image';
+  String get deleteImage => 'Slett bilde';
 
   @override
-  String get thisActionCannotBeUndone => 'This action cannot be undone';
+  String get thisActionCannotBeUndone => 'Denne handlingen kan ikke angres';
 
   @override
   String get filterLabel => 'Filter:';
 
   @override
   String get areYouSureDeleteImage =>
-      'Are you sure you want to delete this image? This action cannot be undone.';
+      'Er du sikker på at du vil slette dette bildet? Denne handlingen kan ikke angres.';
 
   @override
-  String get deleteMultipleImages => 'Delete Multiple Images';
+  String get deleteMultipleImages => 'Slett flere bilder';
 
   @override
-  String get imagesSelected => 'image(s) selected';
+  String get imagesSelected => 'bilde(r) valgt';
 
   @override
-  String get imagesSelectedForDeletion => 'image(s) selected for deletion';
+  String get imagesSelectedForDeletion => 'bilde(r) valgt for sletting';
 
   @override
   String areYouSureDeleteMultipleImages(Object count) {
-    return 'Are you sure you want to delete these $count images? This action cannot be undone.';
+    return 'Er du sikker på at du vil slette disse $count bildene? Denne handlingen kan ikke angres.';
   }
 
   @override
   String get areYouSureDeleteSingleImage =>
-      'Are you sure you want to delete this image? This action cannot be undone.';
+      'Er du sikker på at du vil slette dette bildet? Denne handlingen kan ikke angres.';
 
   @override
-  String get deleteAll => 'Delete All';
+  String get deleteAll => 'Slett alle';
 
   @override
-  String get renameImage => 'Rename Image';
+  String get renameImage => 'Gi bildet nytt navn';
 
   @override
-  String get enterNewNameForImage => 'Enter a new name for your image';
+  String get enterNewNameForImage => 'Skriv inn et nytt navn for bildet ditt';
 
   @override
-  String get imageName => 'Image Name';
+  String get imageName => 'Bildenavn';
 
   @override
-  String get enterImageName => 'Enter image name...';
+  String get enterImageName => 'Skriv inn bildenavn...';
 
   @override
-  String get rename => 'Rename';
+  String get rename => 'Gi nytt navn';
 
   @override
-  String get imageProperties => 'Image Properties';
+  String get imageProperties => 'Bildeegenskaper';
 
   @override
-  String get created => 'Created';
+  String get created => 'Opprettet';
 
   @override
-  String get source => 'Source:';
+  String get source => 'Kilde:';
 
   @override
-  String get epdModel => 'EPD Model:';
+  String get epdModel => 'EPD-modell:';
 
   @override
-  String get transferToEpaper => 'Transfer to ePaper';
+  String get transferToEpaper => 'Overfør til ePaper';
 
   @override
-  String get saveImage => 'Save Image';
+  String get saveImage => 'Lagre bilde';
 
   @override
   String get saveFilteredImageToLibrary =>
-      'Save your filtered image to the library';
+      'Lagre det filtrerte bildet ditt i biblioteket';
 
   @override
-  String get filterApplied => 'Filter Applied:';
+  String get filterApplied => 'Filter brukt:';
 
   @override
-  String get save => 'Save';
+  String get save => 'Lagre';
 
   @override
-  String get noImagesMatchSearch => 'No images match your search';
+  String get noImagesMatchSearch => 'Ingen bilder samsvarer med søket ditt';
 
   @override
-  String get vCardDataCannotBeEmpty => 'VCard data cannot be empty';
+  String get vCardDataCannotBeEmpty => 'VCard-data kan ikke være tomme';
 
   @override
-  String get renamingImage => 'Renaming image...';
+  String get renamingImage => 'Gir bildet nytt navn...';
 
   @override
-  String get imageRenamedTo => 'Image renamed to \"';
+  String get imageRenamedTo => 'Bildet har fått nytt navn til \"';
 
   @override
-  String get failedToRenameImage => 'Failed to rename image: ';
+  String get failedToRenameImage => 'Kunne ikke gi bildet nytt navn: ';
 
   @override
-  String get deletingImage => 'Deleting image...';
+  String get deletingImage => 'Sletter bilde...';
 
   @override
-  String get imageDeleted => 'Image \"';
+  String get imageDeleted => 'Bildet \"';
 
   @override
-  String get deleted => '\" deleted';
+  String get deleted => '\" ble slettet';
 
   @override
-  String get failedToDeleteImage => 'Failed to delete image: ';
+  String get failedToDeleteImage => 'Kunne ikke slette bilde: ';
 
   @override
-  String get deletingImages => 'Deleting ';
+  String get deletingImages => 'Sletter ';
 
   @override
-  String get images => ' image(s)...';
+  String get images => ' bilde(r)...';
 
   @override
-  String get failedToDeleteImages => 'Failed to delete images: ';
+  String get failedToDeleteImages => 'Kunne ikke slette bilder: ';
 
   @override
-  String get imagesDeletedSuccessfully => ' images deleted successfully';
+  String get imagesDeletedSuccessfully => ' bilder ble slettet';
 
   @override
-  String get imageDeletedSuccessfully => 'Image deleted successfully';
+  String get imageDeletedSuccessfully => 'Bildet ble slettet';
 
   @override
-  String get failedToLoadImageData => 'Failed to load image data for \"';
+  String get failedToLoadImageData => 'Kunne ikke laste inn bildedata for \"';
 
   @override
-  String get failedToDecodeImage => 'Failed to decode image \"';
+  String get failedToDecodeImage => 'Kunne ikke dekode bilde \"';
 
   @override
-  String get failedToTransfer => 'Failed to transfer \"';
+  String get failedToTransfer => 'Kunne ikke overføre \"';
 
   @override
-  String get savingImage => 'Saving image...';
+  String get savingImage => 'Lagrer bilde...';
 
   @override
-  String get imageSavedToLibrary => 'Image saved to library!';
+  String get imageSavedToLibrary => 'Bildet ble lagret i biblioteket!';
 
   @override
-  String get failedToSaveImage => 'Failed to save image: ';
+  String get failedToSaveImage => 'Kunne ikke lagre bildet: ';
 
   @override
-  String get errorCreatingVCardRecord => 'Error creating vCard record: ';
+  String get errorCreatingVCardRecord => 'Feil ved oppretting av vCard-post: ';
 
   @override
   String get nfcIsDisabledPleaseEnableIt =>
-      'NFC is disabled. Please enable it.';
+      'NFC er deaktivert. Vennligst aktiver det.';
 
   @override
-  String get thisDeviceDoesNotSupportNfc => 'This device does not support NFC.';
+  String get thisDeviceDoesNotSupportNfc => 'Denne enheten støtter ikke NFC.';
 
   @override
   String get bringPhoneNearMagicEpaperHardware =>
-      'Bring your phone near to the Magic ePaper Hardware';
+      'Hold telefonen nær Magic ePaper-maskinvaren';
 
   @override
-  String get tagDetectedInitializing => 'Tag detected! Initializing...';
+  String get tagDetectedInitializing => 'Brikke oppdaget! Initialiserer...';
 
   @override
-  String get enablingEnergyHarvesting => 'Enabling energy harvesting...';
+  String get enablingEnergyHarvesting =>
+      'Aktiverer energihøsting (Energy Harvesting)...';
 
   @override
-  String get processingImageData => 'Processing image data...';
+  String get processingImageData => 'Behandler bildedata...';
 
   @override
-  String get refreshingDisplay => 'Refreshing display...';
+  String get refreshingDisplay => 'Oppdaterer skjermen...';
 
   @override
-  String get notMagicEpaperHardware => 'Not a Magic ePaper Hardware';
+  String get notMagicEpaperHardware => 'Ikke Magic ePaper-maskinvare';
 
   @override
-  String get errorCheckingMessage => 'Error checking message: ';
+  String get errorCheckingMessage => 'Feil ved sjekking av melding: ';
 
   @override
-  String get timeoutWaitingForI2cMessage => 'Timeout waiting for I2C message';
+  String get timeoutWaitingForI2cMessage =>
+      'Tidsavbrudd under venting på I2C-melding';
 
   @override
-  String get writingChunk => 'Writing chunk ';
+  String get writingChunk => 'Skriver blokk (chunk) ';
 
   @override
-  String get transferredSuccessfully => 'Transferred successfully.';
+  String get transferredSuccessfully => 'Overført vellykket.';
 
   @override
-  String get waitingForNfcTag => 'Waiting for NFC tag...';
+  String get waitingForNfcTag => 'Venter på NFC-brikke...';
 
   @override
-  String get gotTag => 'Got a tag!';
+  String get gotTag => 'Fikk en brikke!';
 
   @override
-  String get frame => 'Frame ';
+  String get frame => 'Ramme ';
 
   @override
-  String get couldNotOpenLink => 'Could not open the link.';
+  String get couldNotOpenLink => 'Kunne ikke åpne lenken.';
 
   @override
   String get errorOccurredWhileOpeningLink =>
-      'An error occurred while opening the link.';
+      'Det oppstod en feil under åpning av lenken.';
 
   @override
-  String get errorCreatingAppRecord => 'Error creating app record: ';
+  String get errorCreatingAppRecord => 'Feil ved oppretting av app-post: ';
 
   @override
-  String get appCannotBeEmpty => 'App cannot be empty';
+  String get appCannotBeEmpty => 'Appen kan ikke være tom';
 
   @override
-  String get invalidPackageName => 'Invalid package name';
+  String get invalidPackageName => 'Ugyldig pakkenavn';
 
   @override
-  String get writeAppLauncherData => 'Write App Launcher Data';
+  String get writeAppLauncherData => 'Skriv app-starter data';
 
   @override
-  String get writeAppLauncher => 'Write App Launcher';
+  String get writeAppLauncher => 'Skriv app-starter';
 
   @override
-  String get searchApps => 'Search apps...';
+  String get searchApps => 'Søk i apper...';
 
   @override
-  String get customPackageName => 'Custom Package Name';
+  String get customPackageName => 'Tilpasset pakkenavn';
 
   @override
-  String get enterPackageName => 'Enter package name...';
+  String get enterPackageName => 'Skriv inn pakkenavn...';
 
   @override
-  String get noAppsFound => 'No apps found';
+  String get noAppsFound => 'Ingen apper funnet';
 
   @override
-  String get selectApplication => 'Select Application';
+  String get selectApplication => 'Velg applikasjon';
 
   @override
-  String get errorLoadingApps => 'Error loading apps: ';
+  String get errorLoadingApps => 'Feil ved innlasting av apper: ';
 
   @override
-  String get add => 'Add';
+  String get add => 'Legg til';
 
   @override
-  String get readNfcTags => 'Read NFC Tags';
+  String get readNfcTags => 'Les NFC-brikker';
 
   @override
-  String get writeNfcTags => 'Write NFC Tags';
+  String get writeNfcTags => 'Skriv NFC-brikker';
 
   @override
   String get nfcIsReadyToUse =>
-      'NFC is ready to use. You can read and write NFC tags.';
+      'NFC er klar til bruk. Du kan lese og skrive NFC-brikker.';
 
   @override
   String get deviceDoesNotSupportNfc =>
-      'This device does not support NFC functionality.';
+      'Denne enheten støtter ikke NFC-funksjonalitet.';
 
   @override
   String get pleaseEnableNfcInSettings =>
-      'Please enable NFC in your device settings to continue.';
+      'Vennligst aktiver NFC i enhetsinnstillingene dine for å fortsette.';
 
   @override
-  String get nfcIsNowEnabledAndReady => 'NFC is now enabled and ready to use!';
+  String get nfcIsNowEnabledAndReady => 'NFC er nå aktivert og klar til bruk!';
 
   @override
   String get nfcHasBeenDisabled =>
-      'NFC has been disabled. Please enable it to continue using NFC features.';
+      'NFC har blitt deaktivert. Vennligst aktiver det for å fortsette å bruke NFC-funksjoner.';
 
   @override
-  String get nfcIsNotSupportedOnDevice =>
-      'NFC is not supported on this device.';
+  String get nfcIsNotSupportedOnDevice => 'NFC støttes ikke på denne enheten.';
 
   @override
-  String get arduinoExport => 'Arduino Export';
+  String get arduinoExport => 'Arduino-eksport';
 
   @override
-  String get exportXmbFilesForArduino => 'Export XMB files for Arduino';
+  String get exportXmbFilesForArduino => 'Eksporter XMB-filer for Arduino';
 
   @override
-  String get cardTemplates => 'Card Templates';
+  String get cardTemplates => 'Kortmaler';
 
   @override
-  String get chooseTemplateSubtitle => 'Choose a template to get started';
+  String get chooseTemplateSubtitle => 'Velg en mal for å komme i gang';
 
   @override
-  String get employeeIdCardTitle => 'Employee ID Card';
+  String get employeeIdCardTitle => 'Ansatt ID-kort';
 
   @override
   String get employeeIdCardDescription =>
-      'Create professional employee identification cards';
+      'Lag profesjonelle ID-kort for ansatte';
 
   @override
-  String get shopPriceTagTitle => 'Shop Price Tag';
+  String get shopPriceTagTitle => 'Butikkprislapp';
 
   @override
   String get shopPriceTagDescription =>
-      'Design attractive price tags for your products';
+      'Design attraktive prislapper for produktene dine';
 
   @override
-  String get entryPassTagTitle => 'Entry Pass Tag';
+  String get entryPassTagTitle => 'Inngangspass-brikke';
 
   @override
   String get entryPassTagDescription =>
-      'Generate entry passes for events and venues';
+      'Generer inngangspass for arrangementer og arenaer';
 
   @override
-  String get eventBadgeTitle => 'Event Badge';
+  String get eventBadgeTitle => 'Arrangementsmerke';
 
   @override
   String get eventBadgeDescription =>
-      'Create personalized event badges and name tags';
+      'Lag personlige arrangementsmerker og navneskilt';
 
   @override
-  String get comingSoon => 'Coming Soon';
+  String get comingSoon => 'Kommer snart';
 
   @override
   String get comingSoonMessage =>
-      'This template is currently under development and will be available soon.';
+      'Denne malen er under utvikling og vil snart være tilgjengelig.';
 
   @override
   String get ok => 'OK';
 
   @override
-  String get defaultCompanyName => 'Company Name';
+  String get defaultCompanyName => 'Firmanavn';
 
   @override
-  String get nameLabel => 'Name';
+  String get nameLabel => 'Navn';
 
   @override
-  String get positionLabel => 'Position';
+  String get positionLabel => 'Stilling';
 
   @override
-  String get divisionLabel => 'Division';
+  String get divisionLabel => 'Avdeling';
 
   @override
   String get idLabel => 'ID';
 
   @override
-  String get emptyFieldPlaceholder => 'Not specified';
+  String get emptyFieldPlaceholder => 'Ikke spesifisert';
 
   @override
-  String get productImage => 'Product Image';
+  String get productImage => 'Produktbilde';
 
   @override
-  String get productName => 'Product Name';
+  String get productName => 'Produktnavn';
 
   @override
-  String get sizeQuantity => 'Size/Quantity';
+  String get sizeQuantity => 'Størrelse/Antall';
 
   @override
-  String get defaultCurrency => '\$';
+  String get defaultCurrency => 'kr';
 
   @override
-  String get defaultPrice => '0.00';
+  String get defaultPrice => '0,00';
 
   @override
-  String get price => 'Price';
+  String get price => 'Pris';
 
   @override
-  String get quantitySize => 'Quantity/Size';
+  String get quantitySize => 'Antall/Størrelse';
 
   @override
   String get quantitySizeHint =>
-      'Enter size/quantity (e.g., 750ml, 2kg, Large)';
+      'Angi størrelse/antall (f.eks. 750ml, 2kg, Stor)';
 
   @override
-  String get namePrefix => 'Name: ';
+  String get namePrefix => 'Navn: ';
 
   @override
-  String get positionPrefix => 'Position: ';
+  String get positionPrefix => 'Stilling: ';
 
   @override
-  String get divisionPrefix => 'Division: ';
+  String get divisionPrefix => 'Avdeling: ';
 
   @override
   String get idPrefix => 'ID: ';
 
   @override
-  String get employeeIdCard => 'Employee ID Card';
+  String get employeeIdCard => 'Ansatt ID-kort';
 
   @override
   String get fillDetailsToCreateId =>
-      'Fill in the details below to create your employee ID card';
+      'Fyll inn detaljene nedenfor for å lage ansatt-ID-kortet';
 
   @override
-  String get idCardDetails => 'ID Card Details';
+  String get idCardDetails => 'ID-kortdetaljer';
 
   @override
-  String get companyName => 'Company Name';
+  String get companyName => 'Firmanavn';
 
   @override
-  String get enterCompanyName => 'Enter company name';
+  String get enterCompanyName => 'Skriv inn firmanavn';
 
   @override
-  String get pleaseEnterCompanyName => 'Please enter company name';
+  String get pleaseEnterCompanyName => 'Vennligst skriv inn firmanavn';
 
   @override
-  String get name => 'Name';
+  String get name => 'Navn';
 
   @override
-  String get enterEmployeeName => 'Enter employee name';
+  String get enterEmployeeName => 'Skriv inn ansattnavn';
 
   @override
-  String get pleaseEnterName => 'Please enter name';
+  String get pleaseEnterName => 'Vennligst skriv inn navn';
 
   @override
-  String get position => 'Position';
+  String get position => 'Stilling';
 
   @override
-  String get enterJobPosition => 'Enter job position';
+  String get enterJobPosition => 'Skriv inn stillingstittel';
 
   @override
-  String get pleaseEnterPosition => 'Please enter position';
+  String get pleaseEnterPosition => 'Vennligst skriv inn stilling';
 
   @override
-  String get division => 'Division';
+  String get division => 'Avdeling';
 
   @override
-  String get enterDepartment => 'Enter department';
+  String get enterDepartment => 'Skriv inn avdeling';
 
   @override
-  String get pleaseEnterDivision => 'Please enter division';
+  String get pleaseEnterDivision => 'Vennligst skriv inn avdeling';
 
   @override
-  String get idNumber => 'ID Number';
+  String get idNumber => 'ID-nummer';
 
   @override
-  String get enterUniqueId => 'Enter unique ID';
+  String get enterUniqueId => 'Skriv inn unik ID';
 
   @override
-  String get pleaseEnterIdNumber => 'Please enter ID number';
+  String get pleaseEnterIdNumber => 'Vennligst skriv inn ID-nummer';
 
   @override
-  String get qrCodeData => 'QR Code Data';
+  String get qrCodeData => 'QR-kodedata';
 
   @override
-  String get enterQrCodeData => 'Enter QR code data';
+  String get enterQrCodeData => 'Skriv inn QR-kodedata';
 
   @override
-  String get pleaseEnterQrCodeData => 'Please enter QR code data';
+  String get pleaseEnterQrCodeData => 'Vennligst skriv inn QR-kodedata';
 
   @override
-  String get generatingIdCard => 'Generating ID Card...';
+  String get generatingIdCard => 'Genererer ID-kort...';
 
   @override
-  String get generateIdCard => 'Generate ID Card';
+  String get generateIdCard => 'Generer ID-kort';
 
   @override
-  String get profilePhoto => 'Profile Photo';
+  String get profilePhoto => 'Profilbilde';
 
   @override
-  String get selected => 'Selected';
+  String get selected => 'Valgt';
 
   @override
-  String get photoSelected => 'Photo selected';
+  String get photoSelected => 'Bilde valgt';
 
   @override
-  String get selectProfilePhoto => 'Select Profile Photo';
+  String get selectProfilePhoto => 'Velg profilbilde';
 
   @override
-  String get tapToChangePhoto => 'Tap to change photo';
+  String get tapToChangePhoto => 'Trykk for å endre bilde';
 
   @override
-  String get tapToSelectFromGallery => 'Tap to select from gallery';
+  String get tapToSelectFromGallery => 'Trykk for å velge fra galleri';
 
   @override
-  String get priceTagGenerator => 'Price Tag Generator';
+  String get priceTagGenerator => 'Prislappgenerator';
 
   @override
   String get priceTagDescription =>
-      'Create professional price tags for your products';
+      'Lag profesjonelle prislapper for produktene dine';
 
   @override
-  String get productDetails => 'Product Details';
+  String get productDetails => 'Produktdetaljer';
 
   @override
-  String get productNameHint => 'Enter product name (e.g., iPhone 15 Pro)';
+  String get productNameHint => 'Skriv inn produktnavn (f.eks. iPhone 15 Pro)';
 
   @override
-  String get pleaseEnterProductName => 'Please enter a product name';
+  String get pleaseEnterProductName => 'Vennligst skriv inn et produktnavn';
 
   @override
-  String get currency => 'Currency';
+  String get currency => 'Valuta';
 
   @override
-  String get currencyHint => '₹';
+  String get currencyHint => 'kr';
 
   @override
-  String get required => 'Required';
+  String get required => 'Påkrevd';
 
   @override
-  String get priceHint => '999.99';
+  String get priceHint => '999,00';
 
   @override
-  String get pleaseEnterPrice => 'Please enter price';
+  String get pleaseEnterPrice => 'Vennligst skriv inn pris';
 
   @override
-  String get pleaseEnterQuantitySize => 'Please enter quantity or size';
+  String get pleaseEnterQuantitySize =>
+      'Vennligst skriv inn antall eller størrelse';
 
   @override
-  String get pleaseEnterBarcodeData => 'Please enter barcode data';
+  String get pleaseEnterBarcodeData => 'Vennligst skriv inn strekkodedata';
 
   @override
-  String get generatingPriceTag => 'Generating Price Tag...';
+  String get generatingPriceTag => 'Genererer prislapp...';
 
   @override
-  String get generatePriceTag => 'Generate Price Tag';
+  String get generatePriceTag => 'Generer prislapp';
 
   @override
-  String get productImageIn => 'Product Image';
+  String get productImageIn => 'Produktbilde';
 
   @override
-  String get productImageSelected => 'Product Image Selected';
+  String get productImageSelected => 'Produktbilde valgt';
 
   @override
-  String get selectProductImage => 'Select Product Image';
+  String get selectProductImage => 'Velg produktbilde';
 
   @override
-  String get tapToChangeImage => 'Tap to change image';
+  String get tapToChangeImage => 'Trykk for å endre bilde';
 
   @override
-  String get chooseImageFromGallery => 'Choose image from gallery';
-}
+  String get chooseImageFromGallery => 'Velg bilde fra galleri';
 
-/// The translations for Norwegian Bokmål, as used in Norway (`nb_NO`).
-class AppLocalizationsNbNo extends AppLocalizationsNb {
-  AppLocalizationsNbNo() : super('nb_NO');
+  @override
+  String get processingImages => 'Behandler bilder...';
+
+  @override
+  String get refreshModeInfo => 'Informasjon om oppdateringsmodus';
+
+  @override
+  String get fullRefreshInfo => 'Full oppdatering';
+
+  @override
+  String get fullRefreshDescription =>
+      'Oppdaterer hele skjermen fullstendig ved å fjerne alle piksler og tegne bildet på nytt. Dette gir best bildekvalitet og kontrast, men tar lengre tid å fullføre.';
+
+  @override
+  String get partialRefreshInfo => 'Delvis oppdatering (Bølgeformer)';
+
+  @override
+  String get partialRefreshDescription =>
+      'Oppdaterer bare endrede piksler ved bruk av optimaliserte bølgeformer (waveforms). Dette er raskere enn full oppdatering, men kan føre til innbrenning (ghosting) eller redusert kontrast over tid.';
+
+  @override
+  String get longPressForInfo => 'Langt trykk for mer informasjon';
 }

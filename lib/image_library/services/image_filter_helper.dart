@@ -1,26 +1,25 @@
-import 'package:magicepaperapp/util/image_processing/image_processing.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+﻿import 'package:magicepaperapp/util/image_processing/image_processing.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+
 
 class ImageFilterHelper {
   static Map<Function, String> get filterMap => {
-        ImageProcessing.bwFloydSteinbergDither: appLocalizations.floydSteinberg,
+        ImageProcessing.bwFloydSteinbergDither: LocaleProvider.current!.floydSteinberg,
         ImageProcessing.bwFalseFloydSteinbergDither:
-            appLocalizations.falseFloydSteinberg,
-        ImageProcessing.bwStuckiDither: appLocalizations.stucki,
-        ImageProcessing.bwAtkinsonDither: appLocalizations.atkinson,
-        ImageProcessing.bwThreshold: appLocalizations.threshold,
-        ImageProcessing.bwHalftoneDither: appLocalizations.halftone,
-        ImageProcessing.bwrHalftone: appLocalizations.colorHalftone,
+            LocaleProvider.current!.falseFloydSteinberg,
+        ImageProcessing.bwStuckiDither: LocaleProvider.current!.stucki,
+        ImageProcessing.bwAtkinsonDither: LocaleProvider.current!.atkinson,
+        ImageProcessing.bwThreshold: LocaleProvider.current!.threshold,
+        ImageProcessing.bwHalftoneDither: LocaleProvider.current!.halftone,
+        ImageProcessing.bwrHalftone: LocaleProvider.current!.colorHalftone,
         ImageProcessing.bwrFloydSteinbergDither:
-            appLocalizations.floydSteinberg,
+            LocaleProvider.current!.floydSteinberg,
         ImageProcessing.bwrFalseFloydSteinbergDither:
-            appLocalizations.falseFloydSteinberg,
-        ImageProcessing.bwrStuckiDither: appLocalizations.stucki,
-        ImageProcessing.bwrTriColorAtkinsonDither: appLocalizations.atkinson,
-        ImageProcessing.bwrThreshold: appLocalizations.threshold,
+            LocaleProvider.current!.falseFloydSteinberg,
+        ImageProcessing.bwrStuckiDither: LocaleProvider.current!.stucki,
+        ImageProcessing.bwrTriColorAtkinsonDither: LocaleProvider.current!.atkinson,
+        ImageProcessing.bwrThreshold: LocaleProvider.current!.threshold,
       };
 
   static String getFilterNameByIndex(

@@ -1,10 +1,7 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+import 'package:magicepaperapp/provider/locale_provider.dart';
 
 class DeleteConfirmationDialog extends StatelessWidget {
   final SavedImage image;
@@ -70,7 +67,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                appLocalizations.deleteImage,
+                LocaleProvider.current!.deleteImage,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -79,7 +76,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                appLocalizations.thisActionCannotBeUndone,
+                LocaleProvider.current!.thisActionCannotBeUndone,
                 style: const TextStyle(
                   fontSize: 14,
                   color: Colors.red,
@@ -137,7 +134,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                '${appLocalizations.filterLabel} ${image.metadata!['filter']}',
+                '${LocaleProvider.current!.filterLabel} ${image.metadata!['filter']}',
                 style: const TextStyle(
                   fontSize: 12,
                   color: Colors.grey,
@@ -165,7 +162,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              appLocalizations.areYouSureDeleteImage,
+              LocaleProvider.current!.areYouSureDeleteImage,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.amber.shade800,
@@ -192,7 +189,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
               foregroundColor: Colors.grey.shade700,
             ),
             child: Text(
-              appLocalizations.cancel,
+              LocaleProvider.current!.cancel,
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
           ),
@@ -215,7 +212,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
                 const Icon(Icons.delete_forever, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                  appLocalizations.delete,
+                  LocaleProvider.current!.delete,
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.w600),
                 ),

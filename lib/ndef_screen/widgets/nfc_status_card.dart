@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 
 import 'package:magicepaperapp/constants/color_constants.dart';
 
 import 'package:magicepaperapp/ndef_screen/services/nfc_availability_service.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCStatusCard extends StatelessWidget {
   final NFCAvailability availability;
@@ -53,7 +51,7 @@ class NFCStatusCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      appLocalizations.nfcStatus,
+                      LocaleProvider.current!.nfcStatus,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -82,7 +80,7 @@ class NFCStatusCard extends StatelessWidget {
                       size: 20,
                     ),
                     onPressed: onRefresh,
-                    tooltip: appLocalizations.refreshNfcStatus,
+                    tooltip: LocaleProvider.current!.refreshNfcStatus,
                     padding: const EdgeInsets.all(8),
                     constraints: const BoxConstraints(
                       minWidth: 36,
@@ -176,11 +174,11 @@ class NFCStatusCard extends StatelessWidget {
   String _getStatusDescription() {
     switch (availability) {
       case NFCAvailability.available:
-        return appLocalizations.nfcIsReadyToUse;
+        return LocaleProvider.current!.nfcIsReadyToUse;
       case NFCAvailability.not_supported:
-        return appLocalizations.deviceDoesNotSupportNfc;
+        return LocaleProvider.current!.deviceDoesNotSupportNfc;
       case NFCAvailability.disabled:
-        return appLocalizations.pleaseEnableNfcInSettings;
+        return LocaleProvider.current!.pleaseEnableNfcInSettings;
     }
   }
 }

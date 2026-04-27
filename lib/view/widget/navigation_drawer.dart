@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
-//import 'package:share_plus/share_plus.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 import 'package:magicepaperapp/util/url_util.dart';
 import 'package:magicepaperapp/view/widget/configurable_epd_dialog.dart';
 import 'package:magicepaperapp/util/epd/configurable_editor.dart';
@@ -10,8 +8,6 @@ import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:provider/provider.dart';
 import '../../util/app_logger.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class AppDrawer extends StatefulWidget {
   final int selectedIndex;
@@ -123,7 +119,7 @@ class _AppDrawerState extends State<AppDrawer> {
               decoration: BoxDecoration(color: colorAccent),
               child: Center(
                 child: Text(
-                  appLocalizations.appName,
+                  LocaleProvider.current!.appName,
                   style: const TextStyle(
                     color: drawerHeaderTitle,
                     fontSize: 25,
@@ -136,25 +132,25 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTile(
             index: 0,
             icon: Icons.edit,
-            title: appLocalizations.createTransfer,
+            title: LocaleProvider.current!.createTransfer,
             routeName: '/',
           ),
           _buildListTile(
             index: 1,
             icon: Icons.nfc,
-            title: appLocalizations.readNfcTags,
+            title: LocaleProvider.current!.readNfcTags,
             routeName: '/nfcReadScreen',
           ),
           _buildListTile(
             index: 2,
             icon: Icons.nfc_outlined,
-            title: appLocalizations.writeNfcTags,
+            title: LocaleProvider.current!.writeNfcTags,
             routeName: '/nfcWriteScreen',
           ),
           _buildListTileWithTooltip(
             index: 3,
             icon: Icons.code,
-            title: appLocalizations.arduinoExport,
+            title: LocaleProvider.current!.arduinoExport,
             routeName: '/arduinoExport',
             isCustomAction: true,
             showHelp: true,
@@ -162,20 +158,20 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTile(
             index: 4,
             icon: Icons.settings,
-            title: appLocalizations.settings,
+            title: LocaleProvider.current!.settings,
             routeName: '/settings',
           ),
           _buildListTile(
             index: 5,
             icon: Icons.people,
-            title: appLocalizations.aboutUs,
+            title: LocaleProvider.current!.aboutUs,
             routeName: '/aboutUs',
           ),
           const Divider(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
             child: Text(
-              appLocalizations.other,
+              LocaleProvider.current!.other,
               style: const TextStyle(
                 color: Colors.black54,
                 fontWeight: FontWeight.bold,
@@ -186,7 +182,7 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTile(
             index: 6,
             icon: Icons.shopping_cart,
-            title: appLocalizations.getBadge,
+            title: LocaleProvider.current!.getBadge,
             routeName: '/buyBadge',
           ),
           //TODO after adding app to the appstore
@@ -210,7 +206,7 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTile(
             index: 7,
             icon: Icons.bug_report,
-            title: appLocalizations.feedbackBugReports,
+            title: LocaleProvider.current!.feedbackBugReports,
             routeName: '/feedback',
             externalLink: 'https://github.com/fossasia/magic-epaper-app/issues',
           ),

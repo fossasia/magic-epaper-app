@@ -1,7 +1,5 @@
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCTagInfo {
   final String? type;
@@ -18,9 +16,9 @@ class NFCTagInfo {
 
   @override
   String toString() {
-    return '${appLocalizations.tagType}${type ?? appLocalizations.unknown}\n'
-        '${appLocalizations.tagId}${id ?? appLocalizations.unknown}\n'
-        '${appLocalizations.ndefAvailable}${ndefAvailable ?? false}\n'
-        '${appLocalizations.ndefWritable}${ndefWritable ?? false}';
+    return '${LocaleProvider.current!.tagType}${type ?? LocaleProvider.current!.unknown}\n'
+        '${LocaleProvider.current!.tagId}${id ?? LocaleProvider.current!.unknown}\n'
+        '${LocaleProvider.current!.ndefAvailable}${ndefAvailable ?? false}\n'
+        '${LocaleProvider.current!.ndefWritable}${ndefWritable ?? false}';
   }
 }

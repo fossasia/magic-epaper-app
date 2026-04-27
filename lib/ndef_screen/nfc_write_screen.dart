@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 import 'package:magicepaperapp/ndef_screen/app_launcher_card.dart';
 import 'package:magicepaperapp/ndef_screen/app_nfc/app_data_model.dart';
 import 'package:magicepaperapp/ndef_screen/controller/nfc_controller.dart';
@@ -12,7 +11,6 @@ import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'dart:async';
 import '../util/app_logger.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCWriteScreen extends StatefulWidget {
   const NFCWriteScreen({super.key});
@@ -118,14 +116,14 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
 
     switch (to) {
       case NFCAvailability.available:
-        message = appLocalizations.nfcIsNowEnabledAndReady;
+        message = LocaleProvider.current!.nfcIsNowEnabledAndReady;
         break;
       case NFCAvailability.disabled:
-        message = appLocalizations.nfcHasBeenDisabled;
+        message = LocaleProvider.current!.nfcHasBeenDisabled;
         isError = true;
         break;
       case NFCAvailability.not_supported:
-        message = appLocalizations.nfcIsNotSupportedOnDevice;
+        message = LocaleProvider.current!.nfcIsNotSupportedOnDevice;
         isError = true;
         break;
     }
@@ -166,7 +164,7 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
     if (_selectedApp != null) {
       await _nfcController.writeAppLauncherRecord(_selectedApp!.packageName);
       _handleWriteResult();
-      if (_nfcController.result.contains(appLocalizations.successfully)) {
+      if (_nfcController.result.contains(LocaleProvider.current!.successfully)) {
         setState(() {
           _selectedApp = null;
         });
@@ -175,10 +173,10 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
   }
 
   void _handleWriteResult() {
-    if (_nfcController.result.contains(appLocalizations.error)) {
-      _showSnackBar(appLocalizations.writeOperationFailed, isError: true);
-    } else if (_nfcController.result.contains(appLocalizations.successfully)) {
-      _showSnackBar(appLocalizations.dataWrittenSuccessfully);
+    if (_nfcController.result.contains(LocaleProvider.current!.error)) {
+      _showSnackBar(LocaleProvider.current!.writeOperationFailed, isError: true);
+    } else if (_nfcController.result.contains(LocaleProvider.current!.successfully)) {
+      _showSnackBar(LocaleProvider.current!.dataWrittenSuccessfully);
       setState(() {
         _textValue = '';
         _urlValue = '';
@@ -204,7 +202,7 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      title: appLocalizations.writeNfcTags,
+      title: LocaleProvider.current!.writeNfcTags,
       index: 2,
       actions: [
         IconButton(
@@ -212,10 +210,10 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
           onPressed: _nfcController.result.isNotEmpty
               ? () {
                   _nfcController.clearResult();
-                  _showSnackBar(appLocalizations.resultsCleared);
+                  _showSnackBar(LocaleProvider.current!.resultsCleared);
                 }
               : null,
-          tooltip: appLocalizations.clearResults,
+          tooltip: LocaleProvider.current!.clearResults,
         ),
       ],
       body: SafeArea(
@@ -317,7 +315,7 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
                         ),
                         const SizedBox(height: 24),
                         Text(
-                          appLocalizations.nfcNotAvailable,
+                          LocaleProvider.current!.nfcNotAvailable,
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -327,7 +325,7 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          appLocalizations.enableNfcMessage,
+                          LocaleProvider.current!.enableNfcMessage,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,

@@ -1,17 +1,15 @@
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
 import 'package:ndef/ndef.dart' as ndef;
 import 'dart:typed_data';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NDEFRecordFactory {
   static ndef.NDEFRecord createVCardRecord(VCardData vCardData) {
     String vCardString = vCardData.toVCardString();
 
     if (vCardString.trim().isEmpty) {
-      throw ArgumentError(appLocalizations.vCardDataCannotBeEmpty);
+      throw ArgumentError(LocaleProvider.current!.vCardDataCannotBeEmpty);
     }
 
     return ndef.MimeRecord(
@@ -23,7 +21,7 @@ class NDEFRecordFactory {
   static ndef.NDEFRecord createTextRecord(String text,
       {String language = 'en'}) {
     if (text.trim().isEmpty) {
-      throw ArgumentError(appLocalizations.textCannotBeEmpty);
+      throw ArgumentError(LocaleProvider.current!.textCannotBeEmpty);
     }
     return ndef.TextRecord(
       text: text.trim(),
@@ -35,7 +33,7 @@ class NDEFRecordFactory {
   static List<ndef.NDEFRecord> createAppLauncherRecords(String packageName,
       {String? appUri}) {
     if (packageName.trim().isEmpty) {
-      throw ArgumentError(appLocalizations.appCannotBeEmpty);
+      throw ArgumentError(LocaleProvider.current!.appCannotBeEmpty);
     }
     List<ndef.NDEFRecord> records = [];
     if (appUri != null && appUri.trim().isNotEmpty) {
@@ -57,13 +55,13 @@ class NDEFRecordFactory {
 
   static ndef.NDEFRecord createUrlRecord(String url) {
     if (url.trim().isEmpty) {
-      throw ArgumentError(appLocalizations.urlCannotBeEmpty);
+      throw ArgumentError(LocaleProvider.current!.urlCannotBeEmpty);
     }
 
     String formattedUrl = url.trim();
-    if (!formattedUrl.startsWith(appLocalizations.httpPrefix) &&
-        !formattedUrl.startsWith(appLocalizations.httpsPrefix)) {
-      formattedUrl = '${appLocalizations.httpsPrefix}$formattedUrl';
+    if (!formattedUrl.startsWith(LocaleProvider.current!.httpPrefix) &&
+        !formattedUrl.startsWith(LocaleProvider.current!.httpsPrefix)) {
+      formattedUrl = '${LocaleProvider.current!.httpsPrefix}$formattedUrl';
     }
 
     return ndef.UriRecord.fromString(formattedUrl);
@@ -71,14 +69,14 @@ class NDEFRecordFactory {
 
   static ndef.NDEFRecord createWifiRecord(String ssid, String password) {
     if (ssid.trim().isEmpty) {
-      throw ArgumentError(appLocalizations.wifiSsidCannotBeEmpty);
+      throw ArgumentError(LocaleProvider.current!.wifiSsidCannotBeEmpty);
     }
 
     String wifiConfig =
-        '${appLocalizations.wifiConfigFormat}${ssid.trim()}${appLocalizations.wifiPasswordPrefix}${password.trim()}${appLocalizations.wifiConfigSuffix}';
+        '${LocaleProvider.current!.wifiConfigFormat}${ssid.trim()}${LocaleProvider.current!.wifiPasswordPrefix}${password.trim()}${LocaleProvider.current!.wifiConfigSuffix}';
     return ndef.TextRecord(
       text: wifiConfig,
-      language: appLocalizations.defaultLanguage,
+      language: LocaleProvider.current!.defaultLanguage,
       encoding: ndef.TextEncoding.UTF8,
     );
   }
@@ -102,7 +100,7 @@ class NDEFRecordFactory {
 
   static ndef.NDEFRecord createMinimalRecord() {
     return ndef.TextRecord(
-      text: appLocalizations.emptySpace,
+      text: LocaleProvider.current!.emptySpace,
       language: 'en',
       encoding: ndef.TextEncoding.UTF8,
     );
@@ -115,10 +113,10 @@ class NDEFRecordParser {
       if (record.type != null) {
         return String.fromCharCodes(record.type!);
       } else {
-        return appLocalizations.unknownNull;
+        return LocaleProvider.current!.unknownNull;
       }
     } catch (e) {
-      return '${appLocalizations.unknownType}${record.type}${appLocalizations.closingParenthesis}';
+      return '${LocaleProvider.current!.unknownType}${record.type}${LocaleProvider.current!.closingParenthesis}';
     }
   }
 
@@ -128,22 +126,22 @@ class NDEFRecordParser {
         if (record.text!.startsWith('BEGIN:VCARD')) {
           return 'vCard: ${_extractVCardName(record.text!)}';
         }
-        return '${appLocalizations.textPrefix}${record.text}${appLocalizations.textSuffix}${record.language}${appLocalizations.closingParenthesis}';
+        return '${LocaleProvider.current!.textPrefix}${record.text}${LocaleProvider.current!.textSuffix}${record.language}${LocaleProvider.current!.closingParenthesis}';
       } else if (record is ndef.UriRecord) {
-        return '${appLocalizations.uriPrefix}${record.content}';
+        return '${LocaleProvider.current!.uriPrefix}${record.content}';
       } else if (record is ndef.MimeRecord) {
         if (record.decodedType == 'text/vcard') {
           String vCardContent = String.fromCharCodes(record.payload!);
           return 'vCard: ${_extractVCardName(vCardContent)}';
         }
-        return '${appLocalizations.mimePrefix}${record.decodedType}';
+        return '${LocaleProvider.current!.mimePrefix}${record.decodedType}';
       } else if (record is ndef.AbsoluteUriRecord) {
-        return '${appLocalizations.absoluteUriPrefix}${record.decodedType}';
+        return '${LocaleProvider.current!.absoluteUriPrefix}${record.decodedType}';
       } else {
         return _parseRawRecord(record);
       }
     } catch (e) {
-      return '${appLocalizations.errorDecodingRecord}$e';
+      return '${LocaleProvider.current!.errorDecodingRecord}$e';
     }
   }
 
@@ -174,42 +172,42 @@ class NDEFRecordParser {
       if (record.payload != null && record.payload!.isNotEmpty) {
         List<int> payloadList = record.payload!.toList();
         String decoded = String.fromCharCodes(payloadList);
-        return '${appLocalizations.rawPrefix}$decoded';
+        return '${LocaleProvider.current!.rawPrefix}$decoded';
       } else {
-        return appLocalizations.emptyPayload;
+        return LocaleProvider.current!.emptyPayload;
       }
     } catch (e) {
       int payloadLength = record.payload?.length ?? 0;
-      return '${appLocalizations.binaryDataPrefix}$payloadLength${appLocalizations.binaryDataSuffix}${record.decodedType}';
+      return '${LocaleProvider.current!.binaryDataPrefix}$payloadLength${LocaleProvider.current!.binaryDataSuffix}${record.decodedType}';
     }
   }
 
   static String formatRecordsForDisplay(List<ndef.NDEFRecord> records) {
     if (records.isEmpty) {
-      return appLocalizations.noNdefRecordsFound;
+      return LocaleProvider.current!.noNdefRecordsFound;
     }
 
     StringBuffer buffer = StringBuffer();
     for (int i = 0; i < records.length; i++) {
       var record = records[i];
       buffer.writeln(
-          '${appLocalizations.recordPrefix}${i + 1}${appLocalizations.recordSuffix}');
-      buffer.writeln('${appLocalizations.tnfLabel}${record.tnf}');
+          '${LocaleProvider.current!.recordPrefix}${i + 1}${LocaleProvider.current!.recordSuffix}');
+      buffer.writeln('${LocaleProvider.current!.tnfLabel}${record.tnf}');
       buffer.writeln(
-          '${appLocalizations.typeLabel}${getRecordTypeString(record)}');
+          '${LocaleProvider.current!.typeLabel}${getRecordTypeString(record)}');
       buffer.writeln(
-          '${appLocalizations.payloadSizeLabel}${record.payload?.length ?? 0}${appLocalizations.bytesLabel}');
+          '${LocaleProvider.current!.payloadSizeLabel}${record.payload?.length ?? 0}${LocaleProvider.current!.bytesLabel}');
       buffer
-          .writeln('${appLocalizations.contentLabel}${getRecordInfo(record)}');
+          .writeln('${LocaleProvider.current!.contentLabel}${getRecordInfo(record)}');
 
       if (record.payload != null) {
         String hexPayload = record.payload!
             .map((b) => b.toRadixString(16).padLeft(2, '0'))
             .join(' ');
-        buffer.writeln('${appLocalizations.rawPayloadLabel}$hexPayload');
+        buffer.writeln('${LocaleProvider.current!.rawPayloadLabel}$hexPayload');
       } else {
         buffer.writeln(
-            '${appLocalizations.rawPayloadLabel}${appLocalizations.nullPayload}');
+            '${LocaleProvider.current!.rawPayloadLabel}${LocaleProvider.current!.nullPayload}');
       }
       buffer.writeln();
     }

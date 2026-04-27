@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/v_card_form.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCVCardWriteCard extends StatefulWidget {
   final bool isWriting;
@@ -35,7 +33,7 @@ class _NFCVCardWriteCardState extends State<NFCVCardWriteCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              appLocalizations.vCardContact,
+              LocaleProvider.current!.vCardContact,
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 16),
@@ -56,8 +54,8 @@ class _NFCVCardWriteCardState extends State<NFCVCardWriteCard> {
                       )
                     : const Icon(Icons.contact_page),
                 label: Text(widget.isWriting
-                    ? appLocalizations.writingVCard
-                    : appLocalizations.writeVCard),
+                    ? LocaleProvider.current!.writingVCard
+                    : LocaleProvider.current!.writeVCard),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   backgroundColor: Colors.blue,

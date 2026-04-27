@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 import 'package:magicepaperapp/util/epd/driver/driver.dart';
 import 'package:magicepaperapp/util/epd/driver/uc8253.dart';
 import 'package:magicepaperapp/util/image_processing/image_processing.dart';
 import 'package:image/image.dart' as img;
 import 'epd.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 /// Represents a named image filter for use in e-paper image processing.
 ///
@@ -106,30 +104,30 @@ class ConfigurableEpd extends Epd {
       namedProcessingMethods.add(
         NamedImageFilter(
           ImageProcessing.bwFloydSteinbergDither,
-          appLocalizations.floydSteinberg,
+          LocaleProvider.current!.floydSteinberg,
         ),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
           ImageProcessing.bwFalseFloydSteinbergDither,
-          appLocalizations.falseFloydSteinberg,
+          LocaleProvider.current!.falseFloydSteinberg,
         ),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
-            ImageProcessing.bwStuckiDither, appLocalizations.stucki),
+            ImageProcessing.bwStuckiDither, LocaleProvider.current!.stucki),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
-            ImageProcessing.bwAtkinsonDither, appLocalizations.atkinson),
+            ImageProcessing.bwAtkinsonDither, LocaleProvider.current!.atkinson),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
-            ImageProcessing.bwHalftoneDither, appLocalizations.halftone),
+            ImageProcessing.bwHalftoneDither, LocaleProvider.current!.halftone),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
-            ImageProcessing.bwThreshold, appLocalizations.threshold),
+            ImageProcessing.bwThreshold, LocaleProvider.current!.threshold),
       );
     } else {
       final dynamicPalette = _createDynamicPalette();
@@ -139,7 +137,7 @@ class ConfigurableEpd extends Epd {
             orgImg,
             dynamicPalette,
           ),
-          appLocalizations.floydSteinberg,
+          LocaleProvider.current!.floydSteinberg,
         ),
       );
       namedProcessingMethods.add(
@@ -148,35 +146,35 @@ class ConfigurableEpd extends Epd {
             orgImg,
             dynamicPalette,
           ),
-          appLocalizations.falseFloydSteinberg,
+          LocaleProvider.current!.falseFloydSteinberg,
         ),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
           (img.Image orgImg) =>
               ImageProcessing.customStuckiDither(orgImg, dynamicPalette),
-          appLocalizations.stucki,
+          LocaleProvider.current!.stucki,
         ),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
           (img.Image orgImg) =>
               ImageProcessing.customAtkinsonDither(orgImg, dynamicPalette),
-          appLocalizations.atkinson,
+          LocaleProvider.current!.atkinson,
         ),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
           (img.Image orgImg) =>
               ImageProcessing.customHalftoneDither(orgImg, dynamicPalette),
-          appLocalizations.halftone,
+          LocaleProvider.current!.halftone,
         ),
       );
       namedProcessingMethods.add(
         NamedImageFilter(
           (img.Image orgImg) =>
               ImageProcessing.customThreshold(orgImg, dynamicPalette),
-          appLocalizations.threshold,
+          LocaleProvider.current!.threshold,
         ),
       );
     }

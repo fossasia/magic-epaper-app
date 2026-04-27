@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 import 'package:magicepaperapp/waveshare/services/waveshare_nfc_services.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 enum _TransferState { processing, waitingForNfc, flashing, complete, error }
 
@@ -110,7 +108,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
       final result = await services.flashImage(
           _processedImageBytes!, widget.ePaperSizeEnum);
       setState(() {
-        _message = result ?? appLocalizations.transferCompleteMessage;
+        _message = result ?? LocaleProvider.current!.transferCompleteMessage;
         _currentState = _TransferState.complete;
       });
     } on PlatformException catch (e) {
@@ -144,7 +142,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
             key: 'processing',
             icon: Icons.hourglass_empty,
             color: Colors.blue,
-            title: appLocalizations.processingImage,
+            title: LocaleProvider.current!.processingImage,
             child: const CircularProgressIndicator());
 
       case _TransferState.waitingForNfc:
@@ -175,7 +173,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
             key: 'flashing',
             icon: Icons.nfc,
             color: colorPrimary,
-            title: appLocalizations.flashing,
+            title: LocaleProvider.current!.flashing,
             child: Column(
               children: [
                 LinearProgressIndicator(
@@ -188,7 +186,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
                 Text("${(_progress * 100).toInt()}%"),
                 const SizedBox(height: 20),
                 Text(
-                  appLocalizations.keepPhoneStill,
+                  LocaleProvider.current!.keepPhoneStill,
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 16),
                 ),
@@ -199,15 +197,15 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
           key: 'complete',
           icon: Icons.check_circle,
           color: Colors.green,
-          title: appLocalizations.success,
+          title: LocaleProvider.current!.success,
           child: Column(
             children: [
-              Text(_message ?? appLocalizations.transferCompleteMessage,
+              Text(_message ?? LocaleProvider.current!.transferCompleteMessage,
                   textAlign: TextAlign.center),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text(appLocalizations.done),
+                child: Text(LocaleProvider.current!.done),
               )
             ],
           ),
@@ -217,15 +215,15 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
           key: 'error',
           icon: Icons.error,
           color: Colors.red,
-          title: appLocalizations.error,
+          title: LocaleProvider.current!.error,
           child: Column(
             children: [
-              Text(_message ?? appLocalizations.unknownErrorOccurred,
+              Text(_message ?? LocaleProvider.current!.unknownErrorOccurred,
                   textAlign: TextAlign.center),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text(appLocalizations.close),
+                child: Text(LocaleProvider.current!.close),
               )
             ],
           ),

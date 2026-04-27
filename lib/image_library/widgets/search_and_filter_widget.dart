@@ -3,10 +3,7 @@ import 'package:magicepaperapp/image_library/provider/image_library_provider.dar
 import 'package:magicepaperapp/image_library/widgets/filter_chip_widget.dart';
 import 'package:magicepaperapp/image_library/widgets/search_field_widget.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+import 'package:magicepaperapp/provider/locale_provider.dart';
 
 class SearchAndFilterWidget extends StatelessWidget {
   final TextEditingController searchController;
@@ -45,7 +42,7 @@ class SearchAndFilterWidget extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              Text(appLocalizations.filter,
+              Text(LocaleProvider.current!.filter,
                   style: const TextStyle(fontWeight: FontWeight.w500)),
               Expanded(
                 child: SingleChildScrollView(
@@ -53,19 +50,19 @@ class SearchAndFilterWidget extends StatelessWidget {
                   child: Row(
                     children: [
                       FilterChipWidget(
-                        label: appLocalizations.all,
+                        label: LocaleProvider.current!.all,
                         value: 'all',
                         isSelected: provider.selectedSource == 'all',
                         onSelected: provider.updateSourceFilter,
                       ),
                       FilterChipWidget(
-                        label: appLocalizations.imported,
+                        label: LocaleProvider.current!.imported,
                         value: 'imported',
                         isSelected: provider.selectedSource == 'imported',
                         onSelected: provider.updateSourceFilter,
                       ),
                       FilterChipWidget(
-                        label: appLocalizations.editor,
+                        label: LocaleProvider.current!.editor,
                         value: 'editor',
                         isSelected: provider.selectedSource == 'editor',
                         onSelected: provider.updateSourceFilter,

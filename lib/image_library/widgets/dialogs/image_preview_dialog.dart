@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
 import 'package:magicepaperapp/image_library/utils/date_utils.dart' as dt;
@@ -8,10 +8,8 @@ import 'package:magicepaperapp/image_library/widgets/dialogs/image_properties_di
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_rename_dialog.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class ImagePreviewDialog extends StatelessWidget {
   final SavedImage image;
@@ -75,7 +73,7 @@ class ImagePreviewDialog extends StatelessWidget {
           IconButton(
             onPressed: () => _showPropertiesDialog(context),
             icon: const Icon(Icons.info_outline, color: Colors.white),
-            tooltip: appLocalizations.imageProperties,
+            tooltip: LocaleProvider.current!.imageProperties,
           ),
           IconButton(
             onPressed: () => Navigator.pop(context),
@@ -124,22 +122,22 @@ class ImagePreviewDialog extends StatelessWidget {
       children: [
         _buildInfoRow(
           Icons.access_time,
-          '${appLocalizations.created} ${dt.DateUtils.formatFullDate(image.createdAt)}',
+          '${LocaleProvider.current!.created} ${dt.DateUtils.formatFullDate(image.createdAt)}',
         ),
         const SizedBox(height: 8),
         _buildInfoRow(
           Icons.source,
-          '${appLocalizations.source} ${SourceUtils.getSourceName(image.source)}',
+          '${LocaleProvider.current!.source} ${SourceUtils.getSourceName(image.source)}',
         ),
         const SizedBox(height: 8),
         _buildInfoRow(
           Icons.filter_alt,
-          '${appLocalizations.filter} ${FilterUtils.getFilterName(image.metadata)}',
+          '${LocaleProvider.current!.filter} ${FilterUtils.getFilterName(image.metadata)}',
         ),
         const SizedBox(height: 8),
         _buildInfoRow(
           Icons.display_settings,
-          '${appLocalizations.epdModel} ${epd.modelId}',
+          '${LocaleProvider.current!.epdModel} ${epd.modelId}',
         ),
       ],
     );
@@ -171,7 +169,7 @@ class ImagePreviewDialog extends StatelessWidget {
                 },
                 icon: const Icon(Icons.delete_outline, color: Colors.red),
                 label: Text(
-                  appLocalizations.delete,
+                  LocaleProvider.current!.delete,
                   style: TextStyle(fontSize: 12),
                 ),
                 style: OutlinedButton.styleFrom(
@@ -186,7 +184,7 @@ class ImagePreviewDialog extends StatelessWidget {
                 onPressed: () => _showRenameDialog(context),
                 icon: const Icon(Icons.edit_outlined),
                 label: Text(
-                  appLocalizations.rename,
+                  LocaleProvider.current!.rename,
                   style: TextStyle(fontSize: 12),
                 ),
               ),
@@ -202,7 +200,7 @@ class ImagePreviewDialog extends StatelessWidget {
               onTransfer();
             },
             icon: const Icon(Icons.send),
-            label: Text(appLocalizations.transferToEpaper),
+            label: Text(LocaleProvider.current!.transferToEpaper),
             style: ElevatedButton.styleFrom(
               backgroundColor: colorAccent,
               foregroundColor: Colors.white,

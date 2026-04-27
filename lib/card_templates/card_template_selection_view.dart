@@ -1,13 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:magicepaperapp/card_templates/template_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 import 'package:magicepaperapp/card_templates/employee_id_form.dart';
 import 'package:magicepaperapp/card_templates/price_tag_form.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class CardTemplateSelectionView extends StatelessWidget {
   final int width;
@@ -30,7 +28,7 @@ class CardTemplateSelectionView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              appLocalizations.cardTemplates,
+              LocaleProvider.current!.cardTemplates,
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -39,7 +37,7 @@ class CardTemplateSelectionView extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              appLocalizations.chooseTemplateSubtitle,
+              LocaleProvider.current!.chooseTemplateSubtitle,
               style: const TextStyle(fontSize: 16, color: Colors.white),
             ),
           ],
@@ -71,8 +69,8 @@ class CardTemplateSelectionView extends StatelessWidget {
   List<TemplateItem> _getTemplates() {
     return [
       TemplateItem(
-        title: appLocalizations.employeeIdCardTitle,
-        description: appLocalizations.employeeIdCardDescription,
+        title: LocaleProvider.current!.employeeIdCardTitle,
+        description: LocaleProvider.current!.employeeIdCardDescription,
         icon: Icons.badge_outlined,
         color: Colors.blue,
         isEnabled: true,
@@ -86,8 +84,8 @@ class CardTemplateSelectionView extends StatelessWidget {
         },
       ),
       TemplateItem(
-        title: appLocalizations.shopPriceTagTitle,
-        description: appLocalizations.shopPriceTagDescription,
+        title: LocaleProvider.current!.shopPriceTagTitle,
+        description: LocaleProvider.current!.shopPriceTagDescription,
         icon: Icons.local_offer_outlined,
         color: Colors.green,
         isEnabled: true,
@@ -100,16 +98,16 @@ class CardTemplateSelectionView extends StatelessWidget {
         },
       ),
       TemplateItem(
-        title: appLocalizations.entryPassTagTitle,
-        description: appLocalizations.entryPassTagDescription,
+        title: LocaleProvider.current!.entryPassTagTitle,
+        description: LocaleProvider.current!.entryPassTagDescription,
         icon: Icons.card_membership_outlined,
         color: Colors.orange,
         isEnabled: false,
         onTap: (context) => _showComingSoonDialog(context),
       ),
       TemplateItem(
-        title: appLocalizations.eventBadgeTitle,
-        description: appLocalizations.eventBadgeDescription,
+        title: LocaleProvider.current!.eventBadgeTitle,
+        description: LocaleProvider.current!.eventBadgeDescription,
         icon: Icons.person_outline,
         color: Colors.purple,
         isEnabled: false,
@@ -228,7 +226,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                               ),
                             ),
                             child: Text(
-                              appLocalizations.comingSoon,
+                              LocaleProvider.current!.comingSoon,
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
@@ -262,7 +260,7 @@ class CardTemplateSelectionView extends StatelessWidget {
               const Icon(Icons.info_outline, color: colorAccent, size: 24),
               const SizedBox(width: 12),
               Text(
-                appLocalizations.comingSoon,
+                LocaleProvider.current!.comingSoon,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -271,7 +269,7 @@ class CardTemplateSelectionView extends StatelessWidget {
             ],
           ),
           content: Text(
-            appLocalizations.comingSoonMessage,
+            LocaleProvider.current!.comingSoonMessage,
             style: const TextStyle(fontSize: 14, height: 1.4),
           ),
           actions: [
@@ -284,7 +282,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: Text(appLocalizations.ok),
+              child: Text(LocaleProvider.current!.ok),
             ),
           ],
         );

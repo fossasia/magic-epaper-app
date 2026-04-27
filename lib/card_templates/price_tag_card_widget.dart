@@ -1,12 +1,9 @@
-import 'dart:io';
+﻿import 'dart:io';
 
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/card_templates/price_tag_model.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+import 'package:magicepaperapp/provider/locale_provider.dart';
 
 class PriceTagCardWidget extends StatelessWidget {
   final PriceTagModel data;
@@ -76,7 +73,7 @@ class PriceTagCardWidget extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  appLocalizations.productImage,
+                                  LocaleProvider.current!.productImage,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 10,
@@ -114,7 +111,7 @@ class PriceTagCardWidget extends StatelessWidget {
                                 : Container(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      appLocalizations.productName,
+                                      LocaleProvider.current!.productName,
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey.shade400,
@@ -191,7 +188,7 @@ class PriceTagCardWidget extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  appLocalizations.barcode,
+                                  LocaleProvider.current!.barcode,
                                   style: TextStyle(
                                     fontSize: 9,
                                     color: Colors.grey.shade500,
@@ -214,7 +211,7 @@ class PriceTagCardWidget extends StatelessWidget {
                         children: [
                           (data.currency.isNotEmpty || data.price.isNotEmpty)
                               ? Text(
-                                  '${data.currency.isNotEmpty ? data.currency : appLocalizations.defaultCurrency}${data.price.isNotEmpty ? ' ${data.price}' : ' ${appLocalizations.defaultPrice}'}',
+                                  '${data.currency.isNotEmpty ? data.currency : LocaleProvider.current!.defaultCurrency}${data.price.isNotEmpty ? ' ${data.price}' : ' ${LocaleProvider.current!.defaultPrice}'}',
                                   style: const TextStyle(
                                     fontSize: 22,
                                     fontWeight: FontWeight.bold,
@@ -230,7 +227,7 @@ class PriceTagCardWidget extends StatelessWidget {
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
-                                      appLocalizations.price,
+                                      LocaleProvider.current!.price,
                                       style: TextStyle(
                                         fontSize: 11,
                                         color: Colors.grey.shade500,
@@ -250,7 +247,7 @@ class PriceTagCardWidget extends StatelessWidget {
                                   ),
                                 )
                               : Text(
-                                  appLocalizations.sizeQuantity,
+                                  LocaleProvider.current!.sizeQuantity,
                                   style: TextStyle(
                                     fontSize: 11,
                                     color: Colors.grey.shade400,

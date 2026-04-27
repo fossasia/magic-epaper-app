@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/locale_provider.dart';
 
 import 'package:magicepaperapp/constants/color_constants.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCReadCard extends StatelessWidget {
   final bool isReading;
@@ -51,7 +49,7 @@ class NFCReadCard extends StatelessWidget {
                 const Icon(Icons.nfc, color: colorAccent, size: 22),
                 const SizedBox(width: 8),
                 Text(
-                  appLocalizations.readNdefTags,
+                  LocaleProvider.current!.readNdefTags,
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -87,8 +85,8 @@ class NFCReadCard extends StatelessWidget {
                                 )
                               : const Icon(Icons.nfc, color: colorWhite),
                           label: isReading
-                              ? appLocalizations.reading
-                              : appLocalizations.readNfcTag,
+                              ? LocaleProvider.current!.reading
+                              : LocaleProvider.current!.readNfcTag,
                           backgroundColor: colorAccent,
                         ),
                       ),
@@ -96,7 +94,7 @@ class NFCReadCard extends StatelessWidget {
                       _buildActionButton(
                         onPressed: onVerify,
                         icon: const Icon(Icons.search, color: colorWhite),
-                        label: appLocalizations.verify,
+                        label: LocaleProvider.current!.verify,
                         backgroundColor: Colors.orange,
                         isCompact: true,
                       ),
@@ -119,8 +117,8 @@ class NFCReadCard extends StatelessWidget {
                             )
                           : const Icon(Icons.delete_forever, color: colorWhite),
                       label: isClearing
-                          ? appLocalizations.clearing
-                          : appLocalizations.clearNfcTag,
+                          ? LocaleProvider.current!.clearing
+                          : LocaleProvider.current!.clearNfcTag,
                       backgroundColor: Colors.red[700]!,
                     ),
                   ),
@@ -157,7 +155,7 @@ class NFCReadCard extends StatelessWidget {
                   child: SelectableText(
                     result,
                     style: TextStyle(
-                      fontFamily: appLocalizations.monospaceFontFamily,
+                      fontFamily: LocaleProvider.current!.monospaceFontFamily,
                       fontSize: 12,
                       color: colorBlack,
                       height: 1.4,

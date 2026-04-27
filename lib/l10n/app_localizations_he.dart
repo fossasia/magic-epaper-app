@@ -13,133 +13,132 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get aboutUsDescription =>
-      'Magic ePaper is an app designed to control and update ePaper displays. The goal is to provide tools for customizing and transferring images, text, and patterns to ePaper screens using NFC. Data transfer from the smartphone to the ePaper hardware is done wirelessly via NFC. The project is built on top of custom firmware and display drivers for seamless communication and efficient image rendering.';
+      'Magic ePaper היא אפליקציה שנועדה לשלוט ולעדכן תצוגות ePaper. המטרה היא לספק כלים להתאמה אישית והעברת תמונות, טקסט ותבניות למסכי ePaper באמצעות NFC. העברת הנתונים מהסמארטפון לחומרת ה-ePaper נעשית באופן אלחוטי דרך NFC. הפרויקט בנוי על קושחה מותאמת אישית ומנהלי התקן תצוגה לתקשורת חלקה ועיבוד תמונה יעיל.';
 
   @override
-  String get developedBy => 'Developed by';
+  String get developedBy => 'פותח על ידי';
 
   @override
-  String get fossasiaContributors => 'FOSSASIA contributors';
+  String get fossasiaContributors => 'תורמי FOSSASIA';
 
   @override
-  String get contactWithUs => 'Contact With Us';
+  String get contactWithUs => 'צור איתנו קשר';
 
   @override
   String get github => 'GitHub';
 
   @override
   String get githubSubtitle =>
-      'Fork the repo and push changes or submit new issues.';
+      'פצל (Fork) את המאגר ודחף שינויים או הגש בעיות (issues) חדשות.';
 
   @override
-  String get license => 'License';
+  String get license => 'רישיון';
 
   @override
   String get licenseSubtitle =>
-      'Check Apache License 2.0 terms used on Magic ePaper.';
+      'בדוק את תנאי רישיון Apache 2.0 המשמשים ב-Magic ePaper.';
 
   @override
-  String get createTransfer => 'Create & Transfer Images';
+  String get createTransfer => 'יצירה והעברת תמונות';
 
   @override
   String get ndefScreen => 'Ndef';
 
   @override
-  String get selectDisplayType => 'Select your ePaper display type';
+  String get selectDisplayType => 'בחר את סוג תצוגת ה-ePaper שלך';
 
   @override
-  String get settings => 'Settings';
+  String get settings => 'הגדרות';
 
   @override
-  String get aboutUs => 'About Us';
+  String get aboutUs => 'עלינו';
 
   @override
-  String get other => 'Other';
+  String get other => 'אחר';
 
   @override
-  String get getBadge => 'Get Badge';
+  String get getBadge => 'קבל תג';
 
   @override
-  String get feedbackBugReports => 'Feedback/Bug Reports';
+  String get feedbackBugReports => 'משוב / דיווח על באגים';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'המשך';
 
   @override
-  String get noImageSelectedFeedback => 'Import an image first!';
+  String get noImageSelectedFeedback => 'ייבא תמונה תחילה!';
 
   @override
-  String get adjustButtonLabel => 'Adjust';
+  String get adjustButtonLabel => 'התאם';
 
   @override
-  String get importImageButtonLabel => 'Import';
+  String get importImageButtonLabel => 'ייבוא';
 
   @override
-  String get openEditor => 'Create';
+  String get openEditor => 'צור';
 
   @override
-  String get importStartingImageFeedback => 'Import an image to begin';
+  String get importStartingImageFeedback => 'ייבא תמונה כדי להתחיל';
 
   @override
-  String get transferButtonLabel => 'Transfer';
+  String get transferButtonLabel => 'העבר';
 
   @override
-  String get filterScreenTitle => 'Select a Filter';
+  String get filterScreenTitle => 'בחר מסנן';
 
   @override
-  String get scanningForNfcTag => 'Scanning for NFC tag...';
+  String get scanningForNfcTag => 'סורק עבור תג NFC...';
 
   @override
-  String get scanningForNfcTagToWrite => 'Scanning for NFC tag to write...';
+  String get scanningForNfcTagToWrite => 'סורק תג NFC לכתיבה...';
 
   @override
-  String get scanningForNfcTagToClear => 'Scanning for NFC tag to clear...';
+  String get scanningForNfcTagToClear => 'סורק תג NFC למחיקה...';
 
   @override
-  String get scanningTagForVerification => 'Scanning tag for verification...';
+  String get scanningTagForVerification => 'סורק תג לאימות...';
 
   @override
-  String get errorCreatingTextRecord => 'Error creating text record: ';
+  String get errorCreatingTextRecord => 'שגיאה ביצירת רשומת טקסט: ';
 
   @override
-  String get errorCreatingUrlRecord => 'Error creating URL record: ';
+  String get errorCreatingUrlRecord => 'שגיאה ביצירת רשומת URL: ';
 
   @override
-  String get errorCreatingWifiRecord => 'Error creating WiFi record: ';
+  String get errorCreatingWifiRecord => 'שגיאה ביצירת רשומת WiFi: ';
 
   @override
-  String get errorCreatingMultipleRecords =>
-      'Error creating multiple records: ';
+  String get errorCreatingMultipleRecords => 'שגיאה ביצירת רשומות מרובות: ';
 
   @override
-  String get pleaseEnterAtLeastOneRecord => 'Please enter at least one record';
+  String get pleaseEnterAtLeastOneRecord => 'אנא הזן לפחות רשומה אחת לכתיבה';
 
   @override
-  String get tagType => 'Tag Type: ';
+  String get tagType => 'סוג תג: ';
 
   @override
-  String get tagId => 'Tag ID: ';
+  String get tagId => 'מזהה תג: ';
 
   @override
-  String get ndefAvailable => 'NDEF Available: ';
+  String get ndefAvailable => 'NDEF זמין: ';
 
   @override
-  String get ndefWritable => 'NDEF Writable: ';
+  String get ndefWritable => 'NDEF ניתן לכתיבה: ';
 
   @override
-  String get unknown => 'Unknown';
+  String get unknown => 'לא ידוע';
 
   @override
-  String get textCannotBeEmpty => 'Text cannot be empty';
+  String get textCannotBeEmpty => 'הטקסט אינו יכול להיות ריק';
 
   @override
-  String get urlCannotBeEmpty => 'URL cannot be empty';
+  String get urlCannotBeEmpty => 'ה-URL אינו יכול להיות ריק';
 
   @override
-  String get wifiSsidCannotBeEmpty => 'WiFi SSID cannot be empty';
+  String get wifiSsidCannotBeEmpty => 'ה-SSID של ה-WiFi אינו יכול להיות ריק';
 
   @override
-  String get defaultLanguage => 'en';
+  String get defaultLanguage => 'he';
 
   @override
   String get httpsPrefix => 'https://';
@@ -148,28 +147,28 @@ class AppLocalizationsHe extends AppLocalizations {
   String get httpPrefix => 'http://';
 
   @override
-  String get wifiConfigFormat => 'WIFI:S:';
+  String get wifiConfigFormat => 'WIFI:T:WPA;S:';
 
   @override
   String get wifiConfigSuffix => ';;';
 
   @override
-  String get wifiPasswordPrefix => ';T:WPA;P:';
+  String get wifiPasswordPrefix => ';P:';
 
   @override
   String get emptySpace => ' ';
 
   @override
-  String get unknownNull => 'Unknown (null)';
+  String get unknownNull => 'לא ידוע (null)';
 
   @override
-  String get unknownType => 'Unknown type: ';
+  String get unknownType => 'סוג לא ידוע (';
 
   @override
-  String get textPrefix => 'Text: ';
+  String get textPrefix => 'טקסט: \"';
 
   @override
-  String get textSuffix => ' (Language: ';
+  String get textSuffix => '\" (שפה: ';
 
   @override
   String get uriPrefix => 'URI: ';
@@ -178,49 +177,49 @@ class AppLocalizationsHe extends AppLocalizations {
   String get mimePrefix => 'MIME: ';
 
   @override
-  String get absoluteUriPrefix => 'Absolute URI: ';
+  String get absoluteUriPrefix => 'URI מוחלט: ';
 
   @override
-  String get rawPrefix => 'Raw: ';
+  String get rawPrefix => 'גולמי: ';
 
   @override
-  String get emptyPayload => 'Empty payload';
+  String get emptyPayload => 'מטען (Payload) ריק';
 
   @override
-  String get binaryDataPrefix => 'Binary data (';
+  String get binaryDataPrefix => 'נתונים בינאריים (';
 
   @override
-  String get binaryDataSuffix => ' bytes): ';
+  String get binaryDataSuffix => ' בתים): ';
 
   @override
-  String get errorDecodingRecord => 'Error decoding record: ';
+  String get errorDecodingRecord => 'שגיאה בפענוח רשומה: ';
 
   @override
-  String get noNdefRecordsFound => 'No NDEF records found';
+  String get noNdefRecordsFound => 'לא נמצאו רשומות NDEF על התג\nהתג ריק.';
 
   @override
-  String get recordPrefix => 'Record ';
+  String get recordPrefix => '📄 רשומה ';
 
   @override
   String get recordSuffix => ':';
 
   @override
-  String get tnfLabel => 'TNF: ';
+  String get tnfLabel => '  TNF: ';
 
   @override
-  String get typeLabel => 'Type: ';
+  String get typeLabel => '  סוג: ';
 
   @override
-  String get payloadSizeLabel => 'Payload Size: ';
+  String get payloadSizeLabel => '  גודל מטען: ';
 
   @override
-  String get bytesLabel => ' bytes';
+  String get bytesLabel => ' בתים';
 
   @override
-  String get contentLabel => 'Content: ';
+  String get contentLabel => '  תוכן: ';
 
   @override
-  String get rawPayloadLabel => 'Raw Payload: ';
+  String get rawPayloadLabel => '  מטען גולמי: ';
 
   @override
   String get nullPayload => 'null';
@@ -232,1054 +231,1065 @@ class AppLocalizationsHe extends AppLocalizations {
   String get closingParenthesisNewline => ')\n';
 
   @override
-  String get scanYourNfcTag => 'Scan your NFC tag';
+  String get scanYourNfcTag => 'סרוק את תג ה-NFC שלך';
 
   @override
-  String get scanYourNfcTagToWrite => 'Scan your NFC tag to write';
+  String get scanYourNfcTagToWrite => 'סרוק את תג ה-NFC שלך לכתיבה';
 
   @override
-  String get scanYourNfcTagToClear => 'Scan your NFC tag to clear';
+  String get scanYourNfcTagToClear => 'סרוק את תג ה-NFC שלך למחיקה';
 
   @override
-  String get scanTagToVerifyContent => 'Scan tag to verify content';
+  String get scanTagToVerifyContent => 'סרוק תג לאימות תוכן';
 
   @override
-  String get tagIsNotNdefCompatible => 'Tag is not NDEF compatible';
+  String get tagIsNotNdefCompatible => 'התג אינו תואם NDEF';
 
   @override
-  String get tagDoesNotSupportNdef => 'Tag does not support NDEF';
+  String get tagDoesNotSupportNdef => 'התג אינו תומך ב-NDEF';
 
   @override
-  String get tagIsNotWritable => 'Tag is not writable';
+  String get tagIsNotWritable => 'התג אינו ניתן לכתיבה';
 
   @override
   String get tagDoesNotSupportNdefCannotClear =>
-      'Tag does not support NDEF, cannot clear';
+      'התג אינו תומך ב-NDEF - לא ניתן למחוק';
 
   @override
-  String get tagIsNotWritableCannotClear => 'Tag is not writable, cannot clear';
+  String get tagIsNotWritableCannotClear =>
+      'התג אינו ניתן לכתיבה - לא ניתן למחוק';
 
   @override
-  String get readOperationCompleted => 'Read operation completed';
+  String get readOperationCompleted => 'פעולת הקריאה הושלמה';
 
   @override
-  String get writeOperationCompleted => 'Write operation completed';
+  String get writeOperationCompleted => 'פעולת הכתיבה הושלמה';
 
   @override
-  String get clearOperationCompleted => 'Clear operation completed';
+  String get clearOperationCompleted => 'פעולת המחיקה הושלמה';
 
   @override
-  String get ndefRecordsFound => 'NDEF records found: ';
+  String get ndefRecordsFound => 'רשומות NDEF שנמצאו: ';
 
   @override
-  String get theTagIsEmpty => 'The tag is empty';
+  String get theTagIsEmpty => 'התג ריק (אין רשומות NDEF).';
 
   @override
-  String get record => 'Record ';
+  String get record => 'רשומה ';
 
   @override
-  String get type => 'Type: ';
+  String get type => '  סוג: ';
 
   @override
-  String get tnf => 'TNF: ';
+  String get tnf => '  TNF: ';
 
   @override
-  String get content => 'Content: ';
+  String get content => '  תוכן: ';
 
   @override
-  String get noRecordsToWrite => 'No records to write';
+  String get noRecordsToWrite => 'אין רשומות לכתיבה';
 
   @override
-  String get ndefRecordsWrittenSuccessfully =>
-      'NDEF records written successfully';
+  String get ndefRecordsWrittenSuccessfully => '✅ רשומות NDEF נכתבו בהצלחה!';
 
   @override
-  String get recordsWritten => 'Records written: ';
+  String get recordsWritten => 'רשומות שנכתבו: ';
 
   @override
-  String get writtenRecord => 'Written record ';
+  String get writtenRecord => 'רשומה שנכתבה ';
 
   @override
-  String get tagClearedSuccessfully => 'Tag cleared successfully';
+  String get tagClearedSuccessfully => '🗑️ התג נמחק בהצלחה!';
 
   @override
-  String get method => 'Method: ';
+  String get method => 'שיטה: ';
 
   @override
-  String get tagIsNowReadyForNewData => 'Tag is now ready for new data';
+  String get tagIsNowReadyForNewData => 'התג מוכן כעת לנתונים חדשים.';
 
   @override
-  String get emptyTextRecord => 'Empty text record';
+  String get emptyTextRecord => 'רשומת טקסט ריקה';
 
   @override
-  String get emptyNdefRecord => 'Empty NDEF record';
+  String get emptyNdefRecord => 'רשומת NDEF ריקה';
 
   @override
-  String get minimalSpaceCharacter => 'Minimal space character';
+  String get minimalSpaceCharacter => 'תו רווח מינימלי';
 
   @override
-  String get emptyRecordList => 'Empty record list';
+  String get emptyRecordList => 'רשימת רשומות ריקה';
 
   @override
-  String get allClearingMethodsFailed => 'All clearing methods failed: ';
+  String get allClearingMethodsFailed => 'כל שיטות המחיקה נכשלו: ';
 
   @override
-  String get verificationResults => 'Verification Results:';
+  String get verificationResults => '🔍 תוצאות אימות:';
 
   @override
-  String get recordsFound => 'Records found: ';
+  String get recordsFound => 'רשומות שנמצאו: ';
 
   @override
-  String get noNdefRecordsFoundOnTag => 'No NDEF records found on tag';
+  String get noNdefRecordsFoundOnTag => '✅ לא נמצאו רשומות NDEF על התג';
 
   @override
-  String get theTagIsEmptyCleared => 'The tag is empty/cleared';
+  String get theTagIsEmptyCleared => 'התג ריק (נמחק בהצלחה).';
 
   @override
-  String get errorReadingTag => 'Error reading tag: ';
+  String get errorReadingTag => 'שגיאה בקריאת התג: ';
 
   @override
-  String get errorWritingToTag => 'Error writing to tag: ';
+  String get errorWritingToTag => 'שגיאה בכתיבה לתג: ';
 
   @override
-  String get errorClearingTag => 'Error clearing tag: ';
+  String get errorClearingTag => 'שגיאה במחיקת התג: ';
 
   @override
-  String get verificationError => 'Verification error: ';
+  String get verificationError => 'שגיאת אימות: ';
 
   @override
-  String get holdTagCloseAndTryAgain => '. Hold tag close and try again';
+  String get holdTagCloseAndTryAgain =>
+      '\n\nהחזק את התג קרוב לאנטנת ה-NFC ונסה שוב.';
 
   @override
-  String get tryHoldingTagCloser => '. Try holding tag closer';
+  String get tryHoldingTagCloser =>
+      '\n\nנסה להחזיק את התג קרוב יותר לאנטנת ה-NFC.';
 
   @override
-  String get tryMovingTagCloser => '. Try moving tag closer';
+  String get tryMovingTagCloser => '\n\nנסה לקרב את התג לאנטנת ה-NFC.';
 
   @override
-  String get method1EmptyTextRecordFailed =>
-      'Method 1 (empty text record) failed: ';
+  String get method1EmptyTextRecordFailed => 'שיטה 1 (רשומת טקסט ריקה) נכשלה: ';
 
   @override
-  String get method2EmptyNdefRecordFailed =>
-      'Method 2 (empty NDEF record) failed: ';
+  String get method2EmptyNdefRecordFailed => 'שיטה 2 (רשומת NDEF ריקה) נכשלה: ';
 
   @override
-  String get method3MinimalRecordFailed => 'Method 3 (minimal record) failed: ';
+  String get method3MinimalRecordFailed => 'שיטה 3 (רשומה מינימלית) נכשלה: ';
 
   @override
-  String get method4EmptyListFailed => 'Method 4 (empty list) failed: ';
+  String get method4EmptyListFailed => 'שיטה 4 (רשימה ריקה) נכשלה: ';
 
   @override
-  String get errorFinishingNfcSession => 'Error finishing NFC session: ';
+  String get errorFinishingNfcSession => 'שגיאה בסיום הפעלת NFC: ';
 
   @override
-  String get secondaryCleanupAlsoFailed => 'Secondary cleanup also failed: ';
+  String get secondaryCleanupAlsoFailed => 'גם הניקוי המשני נכשל: ';
 
   @override
-  String get multipleTagsFoundPleaseSelectOne =>
-      'Multiple tags found, please select one';
+  String get multipleTagsFoundPleaseSelectOne => 'נמצאו מספר תגים, אנא בחר אחד';
 
   @override
-  String get scanYourNfcTagDefault => 'Scan your NFC tag';
+  String get scanYourNfcTagDefault => 'סרוק את תג ה-NFC שלך';
 
   @override
-  String get readNdefTags => 'Read NDEF Tags';
+  String get readNdefTags => 'קרא תגי NDEF';
 
   @override
-  String get reading => 'Reading...';
+  String get reading => 'קורא...';
 
   @override
-  String get readNfcTag => 'Read NFC Tag';
+  String get readNfcTag => 'קרא תג NFC';
 
   @override
-  String get verify => 'Verify';
+  String get verify => 'אמת';
 
   @override
-  String get clearing => 'Clearing...';
+  String get clearing => 'מוחק...';
 
   @override
-  String get clearNfcTag => 'Clear NFC Tag';
+  String get clearNfcTag => 'מחק תג NFC';
 
   @override
   String get monospaceFontFamily => 'monospace';
 
   @override
-  String get nfcStatus => 'NFC Status';
+  String get nfcStatus => 'מצב NFC';
 
   @override
-  String get refreshNfcStatus => 'Refresh NFC Status';
+  String get refreshNfcStatus => 'רענן מצב NFC';
 
   @override
-  String get writeNdefRecords => 'Write NDEF Records';
+  String get writeNdefRecords => 'כתוב רשומות NDEF';
 
   @override
-  String get textRecord => 'Text Record';
+  String get textRecord => 'רשומת טקסט';
 
   @override
-  String get enterTextToWriteToNfcTag => 'Enter text to write to NFC tag';
+  String get enterTextToWriteToNfcTag => 'הזן טקסט לכתיבה בתג ה-NFC';
 
   @override
-  String get writing => 'Writing...';
+  String get writing => 'כותב...';
 
   @override
-  String get writeText => 'Write Text';
+  String get writeText => 'כתוב טקסט';
 
   @override
-  String get urlRecord => 'URL Record';
+  String get urlRecord => 'רשומת URL';
 
   @override
-  String get enterUrl => 'Enter URL';
+  String get enterUrl => 'הזן URL (לדוגמה, google.com';
 
   @override
-  String get writeUrl => 'Write URL';
+  String get writeUrl => 'כתוב URL';
 
   @override
-  String get wifiRecord => 'WiFi Record';
+  String get wifiRecord => 'רשומת WiFi';
 
   @override
-  String get wifiNetworkNameSsid => 'WiFi Network Name (SSID)';
+  String get wifiNetworkNameSsid => 'שם רשת WiFi (SSID)';
 
   @override
-  String get wifiPassword => 'WiFi Password';
+  String get wifiPassword => 'סיסמת WiFi';
 
   @override
-  String get writeWifi => 'Write WiFi';
+  String get writeWifi => 'כתוב WiFi';
 
   @override
-  String get writeAllRecords => 'Write All Records';
+  String get writeAllRecords => 'כתוב את כל הרשומות';
 
   @override
   String get writeAllNonEmptyFieldsDescription =>
-      'Write all non-empty fields to the NFC tag at once';
+      'כתוב את כל השדות שאינם ריקים לתג ה-NFC בבת אחת';
 
   @override
-  String get writeMultipleRecords => 'Write Multiple Records';
+  String get writeMultipleRecords => 'כתוב מספר רשומות';
 
   @override
-  String get readOperationFailed => 'Read operation failed';
+  String get readOperationFailed => 'פעולת הקריאה נכשלה';
 
   @override
-  String get tagReadSuccessfully => 'Tag read successfully';
+  String get tagReadSuccessfully => 'התג נקרא בהצלחה';
 
   @override
-  String get verificationFailed => 'Verification failed';
+  String get verificationFailed => 'האימות נכשל';
 
   @override
-  String get tagVerifiedSuccessfully => 'Tag verified successfully';
+  String get tagVerifiedSuccessfully => 'התג אומת בהצלחה';
 
   @override
   String get clearNfcTagConfirmation =>
-      'Are you sure you want to clear this NFC tag? This action cannot be undone.';
+      'האם אתה בטוח שברצונך למחוק תג NFC זה? לא ניתן לבטל פעולה זו.';
 
   @override
-  String get clearOperationFailed => 'Clear operation failed';
+  String get clearOperationFailed => 'פעולת המחיקה נכשלה';
 
   @override
-  String get writeOperationFailed => 'Write operation failed';
+  String get writeOperationFailed => 'פעולת הכתיבה נכשלה';
 
   @override
-  String get dataWrittenSuccessfully => 'Data written successfully';
+  String get dataWrittenSuccessfully => 'הנתונים נכתבו בהצלחה לתג ה-NFC';
 
   @override
-  String get nfcNotAvailable => 'NFC Not Available';
+  String get nfcNotAvailable => 'NFC אינו זמין';
 
   @override
   String get enableNfcMessage =>
-      'Please enable NFC in your device settings to use this feature.';
+      'אנא הפעל NFC בהגדרות המכשיר שלך כדי להשתמש בתכונות הכתיבה.';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'ביטול';
 
   @override
-  String get confirm => 'Confirm';
+  String get confirm => 'אישור';
 
   @override
-  String get error => 'Error';
+  String get error => 'שגיאה';
 
   @override
-  String get successfully => 'successfully';
+  String get successfully => 'בהצלחה';
 
   @override
-  String get language => 'Language';
+  String get language => 'שפה';
 
   @override
-  String get loading => 'Loading...';
+  String get loading => 'טוען...';
 
   @override
-  String get exportXbm => 'Export XBM';
+  String get exportXbm => 'ייצא XBM';
 
   @override
-  String get exportingXbm => 'Exporting XBM files...';
+  String get exportingXbm => 'מייצא קובצי XBM...';
 
   @override
-  String get fullRefresh => 'Full Refresh';
+  String get fullRefresh => 'רענון מלא';
 
   @override
-  String get fullRefreshSelected => 'Full Refresh Selected';
+  String get fullRefreshSelected => 'נבחר רענון מלא';
 
   @override
-  String get waveformSelected => 'Selected';
+  String get waveformSelected => 'נבחר';
 
   @override
-  String get barcode => 'Barcode';
+  String get barcode => 'ברקוד';
 
   @override
-  String get library => 'Library';
+  String get library => 'ספרייה';
 
   @override
-  String get templates => 'Templates';
+  String get templates => 'תבניות';
 
   @override
-  String get barcodeGenerator => 'Barcode Generator';
+  String get barcodeGenerator => 'מחולל ברקודים';
 
   @override
-  String get barcodeData => 'Barcode Data';
+  String get barcodeData => 'נתוני ברקוד';
 
   @override
-  String get barcodeDataHint => 'Enter barcode number or SKU';
+  String get barcodeDataHint => 'הזן נתוני ברקוד או סרוק';
 
   @override
-  String get characters => 'Characters';
+  String get characters => 'תווים';
 
   @override
-  String get scanBarcode => 'Scan Barcode';
+  String get scanBarcode => 'סרוק ברקוד';
 
   @override
-  String get barcodeFormat => 'Barcode Format';
+  String get barcodeFormat => 'פורמט ברקוד';
 
   @override
-  String get enterOrScanBarcodeData => 'Enter or scan barcode data';
+  String get enterOrScanBarcodeData => 'הזן או סרוק נתוני ברקוד';
 
   @override
-  String get invalidBarcode => 'Invalid Barcode';
+  String get invalidBarcode => 'ברקוד לא תקין';
 
   @override
-  String get invalidCharacter => 'Invalid character';
+  String get invalidCharacter => 'תו לא תקין';
 
   @override
-  String get supportedCharacters => 'Supported characters are';
+  String get supportedCharacters => 'התווים הנתמכים הם';
 
   @override
-  String get pleaseCheckBarcodeRules => 'Please check the barcode rules.';
+  String get pleaseCheckBarcodeRules => 'אנא בדוק את חוקי הברקוד.';
 
   @override
-  String get dataTooShort => 'Data is too short. Minimum length for';
+  String get dataTooShort => 'הנתונים קצרים מדי. האורך המינימלי עבור';
 
   @override
-  String get dataTooLong => 'Data is too long. Maximum length for';
+  String get dataTooLong => 'הנתונים ארוכים מדי. האורך המקסימלי עבור';
 
   @override
-  String get isText => 'is';
+  String get isText => 'הוא';
 
   @override
-  String get pointCameraAtBarcode => 'Point camera at barcode to scan';
+  String get pointCameraAtBarcode => 'כוון את המצלמה לברקוד כדי לסרוק';
 
   @override
-  String get generateImage => 'Generate Image';
+  String get generateImage => 'צור תמונה';
 
   @override
-  String get exportFailed => 'Export failed';
+  String get exportFailed => 'הייצוא נכשל';
 
   @override
-  String get exportedXbmFiles => 'Exported XBM file(s) to MagicEpaper/XBM/';
+  String get exportedXbmFiles => 'קובצי XBM יוצאו אל MagicEpaper/XBM/';
 
   @override
-  String get exported => 'Exported';
+  String get exported => 'יוצא';
 
   @override
-  String get xbmFilesToMagicEpaper => 'XBM file(s) to MagicEpaper/XBM/';
+  String get xbmFilesToMagicEpaper => 'קובצי XBM אל MagicEpaper/XBM/';
 
   @override
-  String get floydSteinberg => 'Classic';
+  String get floydSteinberg => 'קלאסי';
 
   @override
-  String get stucki => 'Sharp';
+  String get stucki => 'חד';
 
   @override
-  String get atkinson => 'Vintage';
+  String get atkinson => 'וינטג\'';
 
   @override
-  String get falseFloydSteinberg => 'Simple';
+  String get falseFloydSteinberg => 'פשוט';
 
   @override
-  String get halftone => 'Newspaper';
+  String get halftone => 'עיתון';
 
   @override
-  String get threshold => 'Posterize';
+  String get threshold => 'פוסטר';
 
   @override
-  String get colorHalftone => 'Color Newspaper';
+  String get colorHalftone => 'עיתון צבעוני';
 
   @override
-  String get searchingForDevice => 'Searching for Device';
+  String get searchingForDevice => 'מחפש מכשיר';
 
   @override
-  String get displayRefreshing => 'Display Refreshing';
+  String get displayRefreshing => 'התצוגה מתרעננת';
 
   @override
-  String get transferComplete => 'Transfer complete!';
+  String get transferComplete => 'ההעברה הושלמה';
 
   @override
-  String get writingToEpaper => 'Writing to ePaper';
+  String get writingToEpaper => 'כותב ל-ePaper';
 
   @override
   String get pleaseBringPhoneClose =>
-      'Please bring your phone close to the Magic ePaper device';
+      'אנא קרב את הטלפון שלך למכשיר ה-Magic ePaper';
 
   @override
-  String get keepPhoneClose => 'Keep your phone close!';
+  String get keepPhoneClose => 'השאר את הטלפון שלך קרוב!';
 
   @override
   String get displayRefreshingMessage =>
-      'The display is refreshing. Please keep your phone near the device until the image appears completely.';
+      'התצוגה מתרעננת. אנא השאר את הטלפון קרוב למכשיר עד שהתמונה תופיע במלואה.';
 
   @override
-  String get transferFailed => 'Transfer Failed';
+  String get transferFailed => 'ההעברה נכשלה';
 
   @override
   String get deviceConnectionTimeout =>
-      'Device connection timed out. Please try bringing your phone closer to the device and try again.';
+      'זמן החיבור למכשיר פג. אנא נסה לקרב את הטלפון שלך למכשיר ונסה שוב.';
 
   @override
   String get connectionLostDuringTransfer =>
-      'Connection was lost during transfer. Please keep your phone close to the device and try again.';
+      'החיבור אבד במהלך ההעברה. אנא השאר את הטלפון קרוב למכשיר ונסה שוב.';
 
   @override
-  String get done => 'Done';
+  String get done => 'סיום';
 
   @override
-  String get close => 'Close';
+  String get close => 'סגור';
 
   @override
-  String get processingImage => 'Processing Image...';
+  String get processingImage => 'מעבד תמונה...';
 
   @override
-  String get readyToFlash => 'Ready to Flash';
+  String get readyToFlash => 'מוכן לצריבה';
 
   @override
-  String get imageProcessedSuccessfully => 'Image processed successfully.';
+  String get imageProcessedSuccessfully => 'התמונה עובדה בהצלחה.';
 
   @override
-  String get tapBelowAndHold =>
-      'Tap below and hold your phone near the display.';
+  String get tapBelowAndHold => 'הקש למטה והחזק את הטלפון קרוב לתצוגה.';
 
   @override
-  String get startFlashing => 'Start Flashing';
+  String get startFlashing => 'התחל לצרוב';
 
   @override
-  String get flashing => 'Flashing...';
+  String get flashing => 'צורב...';
 
   @override
-  String get keepPhoneStill => 'Keep your phone still.';
+  String get keepPhoneStill => 'החזק את הטלפון יציב.';
 
   @override
-  String get success => 'Success!';
+  String get success => 'הצלחה!';
 
   @override
-  String get transferCompleteMessage => 'Transfer complete!';
+  String get transferCompleteMessage => 'ההעברה הושלמה!';
 
   @override
-  String get unknownErrorOccurred => 'An unknown error occurred.';
+  String get unknownErrorOccurred => 'אירעה שגיאה לא ידועה.';
 
   @override
-  String get resultsCleared => 'Results cleared';
+  String get resultsCleared => 'התוצאות נוקו';
 
   @override
-  String get clearResults => 'Clear Results';
+  String get clearResults => 'נקה תוצאות';
 
   @override
-  String get vCardContact => 'vCard Contact';
+  String get vCardContact => 'איש קשר vCard';
 
   @override
-  String get writingVCard => 'Writing vCard...';
+  String get writingVCard => 'כותב vCard...';
 
   @override
-  String get writeVCard => 'Write vCard';
+  String get writeVCard => 'כתוב vCard';
 
   @override
-  String get firstName => 'First Name';
+  String get firstName => 'שם פרטי';
 
   @override
-  String get lastName => 'Last Name';
+  String get lastName => 'שם משפחה';
 
   @override
-  String get organization => 'Organization';
+  String get organization => 'ארגון';
 
   @override
-  String get title => 'Title';
+  String get title => 'תואר';
 
   @override
-  String get mobileNumber => 'Mobile Number';
+  String get mobileNumber => 'מספר נייד';
 
   @override
-  String get emailAddress => 'Email Address';
+  String get emailAddress => 'כתובת דוא\"ל';
 
   @override
-  String get streetAddress => 'Street Address';
+  String get streetAddress => 'כתובת רחוב';
 
   @override
-  String get city => 'City';
+  String get city => 'עיר';
 
   @override
-  String get zipCode => 'Zip Code';
+  String get zipCode => 'מיקוד';
 
   @override
-  String get country => 'Country';
+  String get country => 'מדינה';
 
   @override
-  String get website => 'Website';
+  String get website => 'אתר אינטרנט';
 
   @override
-  String get noSavedImagesYet => 'No saved images yet';
+  String get noSavedImagesYet => 'עדיין אין תמונות שמורות';
 
   @override
-  String get saveImagesFromEditor =>
-      'Save images from the editor or import new ones';
+  String get saveImagesFromEditor => 'שמור תמונות מהעורך או ייבא חדשות';
 
   @override
-  String get enterWifiSSID => 'Enter WiFi SSID';
+  String get enterWifiSSID => 'הזן SSID של WiFi';
 
   @override
-  String get enterWifiPassword => 'Enter WiFi password';
+  String get enterWifiPassword => 'הזן סיסמת WiFi';
 
   @override
-  String get writeMultiple => 'Write Multiple';
+  String get writeMultiple => 'כתוב מרובים';
 
   @override
-  String get searchImages => 'Search images...';
+  String get searchImages => 'חפש תמונות...';
 
   @override
-  String get filter => 'Filter:';
+  String get filter => 'מסנן: ';
 
   @override
-  String get all => 'All';
+  String get all => 'הכל';
 
   @override
-  String get imported => 'Imported';
+  String get imported => 'מיובא';
 
   @override
-  String get editor => 'Editor';
+  String get editor => 'עורך';
 
   @override
-  String get imageLibrary => 'Image Library';
+  String get imageLibrary => 'ספריית תמונות';
 
   @override
-  String get selectImagesToDelete => 'Select Images to Delete';
+  String get selectImagesToDelete => 'בחר תמונות למחיקה';
 
   @override
-  String get delete => 'Delete';
+  String get delete => 'מחק';
 
   @override
-  String get deleteMode => 'Delete Mode';
+  String get deleteMode => 'מצב מחיקה';
 
   @override
-  String get deleteImage => 'Delete Image';
+  String get deleteImage => 'מחק תמונה';
 
   @override
-  String get thisActionCannotBeUndone => 'This action cannot be undone';
+  String get thisActionCannotBeUndone => 'לא ניתן לבטל פעולה זו';
 
   @override
-  String get filterLabel => 'Filter:';
+  String get filterLabel => 'מסנן:';
 
   @override
   String get areYouSureDeleteImage =>
-      'Are you sure you want to delete this image? This action cannot be undone.';
+      'האם אתה בטוח שברצונך למחוק תמונה זו? לא ניתן לבטל פעולה זו.';
 
   @override
-  String get deleteMultipleImages => 'Delete Multiple Images';
+  String get deleteMultipleImages => 'מחק מספר תמונות';
 
   @override
-  String get imagesSelected => 'image(s) selected';
+  String get imagesSelected => 'תמונות נבחרו';
 
   @override
-  String get imagesSelectedForDeletion => 'image(s) selected for deletion';
+  String get imagesSelectedForDeletion => 'תמונות נבחרו למחיקה';
 
   @override
   String areYouSureDeleteMultipleImages(Object count) {
-    return 'Are you sure you want to delete these $count images? This action cannot be undone.';
+    return 'האם אתה בטוח שברצונך למחוק את $count התמונות הללו? לא ניתן לבטל פעולה זו.';
   }
 
   @override
   String get areYouSureDeleteSingleImage =>
-      'Are you sure you want to delete this image? This action cannot be undone.';
+      'האם אתה בטוח שברצונך למחוק תמונה זו? לא ניתן לבטל פעולה זו.';
 
   @override
-  String get deleteAll => 'Delete All';
+  String get deleteAll => 'מחק הכל';
 
   @override
-  String get renameImage => 'Rename Image';
+  String get renameImage => 'שנה שם תמונה';
 
   @override
-  String get enterNewNameForImage => 'Enter a new name for your image';
+  String get enterNewNameForImage => 'הזן שם חדש לתמונה שלך';
 
   @override
-  String get imageName => 'Image Name';
+  String get imageName => 'שם התמונה';
 
   @override
-  String get enterImageName => 'Enter image name...';
+  String get enterImageName => 'הזן שם תמונה...';
 
   @override
-  String get rename => 'Rename';
+  String get rename => 'שנה שם';
 
   @override
-  String get imageProperties => 'Image Properties';
+  String get imageProperties => 'מאפייני תמונה';
 
   @override
-  String get created => 'Created';
+  String get created => 'נוצר';
 
   @override
-  String get source => 'Source:';
+  String get source => 'מקור:';
 
   @override
-  String get epdModel => 'EPD Model:';
+  String get epdModel => 'דגם EPD:';
 
   @override
-  String get transferToEpaper => 'Transfer to ePaper';
+  String get transferToEpaper => 'העבר ל-ePaper';
 
   @override
-  String get saveImage => 'Save Image';
+  String get saveImage => 'שמור תמונה';
 
   @override
-  String get saveFilteredImageToLibrary =>
-      'Save your filtered image to the library';
+  String get saveFilteredImageToLibrary => 'שמור את התמונה המסוננת שלך לספרייה';
 
   @override
-  String get filterApplied => 'Filter Applied:';
+  String get filterApplied => 'מסנן הופעל:';
 
   @override
-  String get save => 'Save';
+  String get save => 'שמור';
 
   @override
-  String get noImagesMatchSearch => 'No images match your search';
+  String get noImagesMatchSearch => 'אין תמונות התואמות לחיפוש שלך';
 
   @override
-  String get vCardDataCannotBeEmpty => 'VCard data cannot be empty';
+  String get vCardDataCannotBeEmpty => 'נתוני ה-vCard אינם יכולים להיות ריקים';
 
   @override
-  String get renamingImage => 'Renaming image...';
+  String get renamingImage => 'משנה שם תמונה...';
 
   @override
-  String get imageRenamedTo => 'Image renamed to \"';
+  String get imageRenamedTo => 'שם התמונה שונה ל-\"';
 
   @override
-  String get failedToRenameImage => 'Failed to rename image: ';
+  String get failedToRenameImage => 'שינוי שם התמונה נכשל: ';
 
   @override
-  String get deletingImage => 'Deleting image...';
+  String get deletingImage => 'מוחק תמונה...';
 
   @override
-  String get imageDeleted => 'Image \"';
+  String get imageDeleted => 'תמונה \"';
 
   @override
-  String get deleted => '\" deleted';
+  String get deleted => '\" נמחקה';
 
   @override
-  String get failedToDeleteImage => 'Failed to delete image: ';
+  String get failedToDeleteImage => 'מחיקת התמונה נכשלה: ';
 
   @override
-  String get deletingImages => 'Deleting ';
+  String get deletingImages => 'מוחק ';
 
   @override
-  String get images => ' image(s)...';
+  String get images => ' תמונות...';
 
   @override
-  String get failedToDeleteImages => 'Failed to delete images: ';
+  String get failedToDeleteImages => 'מחיקת התמונות נכשלה: ';
 
   @override
-  String get imagesDeletedSuccessfully => ' images deleted successfully';
+  String get imagesDeletedSuccessfully => ' תמונות נמחקו בהצלחה';
 
   @override
-  String get imageDeletedSuccessfully => 'Image deleted successfully';
+  String get imageDeletedSuccessfully => 'התמונה נמחקה בהצלחה';
 
   @override
-  String get failedToLoadImageData => 'Failed to load image data for \"';
+  String get failedToLoadImageData => 'טעינת נתוני התמונה נכשלה עבור \"';
 
   @override
-  String get failedToDecodeImage => 'Failed to decode image \"';
+  String get failedToDecodeImage => 'פענוח התמונה נכשל \"';
 
   @override
-  String get failedToTransfer => 'Failed to transfer \"';
+  String get failedToTransfer => 'ההעברה נכשלה עבור \"';
 
   @override
-  String get savingImage => 'Saving image...';
+  String get savingImage => 'שומר תמונה...';
 
   @override
-  String get imageSavedToLibrary => 'Image saved to library!';
+  String get imageSavedToLibrary => 'התמונה נשמרה בספרייה!';
 
   @override
-  String get failedToSaveImage => 'Failed to save image: ';
+  String get failedToSaveImage => 'שמירת התמונה נכשלה: ';
 
   @override
-  String get errorCreatingVCardRecord => 'Error creating vCard record: ';
+  String get errorCreatingVCardRecord => 'שגיאה ביצירת רשומת vCard: ';
 
   @override
-  String get nfcIsDisabledPleaseEnableIt =>
-      'NFC is disabled. Please enable it.';
+  String get nfcIsDisabledPleaseEnableIt => 'NFC מושבת. אנא הפעל אותו.';
 
   @override
-  String get thisDeviceDoesNotSupportNfc => 'This device does not support NFC.';
+  String get thisDeviceDoesNotSupportNfc => 'מכשיר זה אינו תומך ב-NFC.';
 
   @override
   String get bringPhoneNearMagicEpaperHardware =>
-      'Bring your phone near to the Magic ePaper Hardware';
+      'קרב את הטלפון לחומרת ה-Magic ePaper';
 
   @override
-  String get tagDetectedInitializing => 'Tag detected! Initializing...';
+  String get tagDetectedInitializing => 'התג זוהה! מאתחל...';
 
   @override
-  String get enablingEnergyHarvesting => 'Enabling energy harvesting...';
+  String get enablingEnergyHarvesting =>
+      'מפעיל קצירת אנרגיה (Energy Harvesting)...';
 
   @override
-  String get processingImageData => 'Processing image data...';
+  String get processingImageData => 'מעבד נתוני תמונה...';
 
   @override
-  String get refreshingDisplay => 'Refreshing display...';
+  String get refreshingDisplay => 'התצוגה מתרעננת...';
 
   @override
-  String get notMagicEpaperHardware => 'Not a Magic ePaper Hardware';
+  String get notMagicEpaperHardware => 'זוהי לא חומרת Magic ePaper';
 
   @override
-  String get errorCheckingMessage => 'Error checking message: ';
+  String get errorCheckingMessage => 'שגיאה בבדיקת ההודעה: ';
 
   @override
-  String get timeoutWaitingForI2cMessage => 'Timeout waiting for I2C message';
+  String get timeoutWaitingForI2cMessage => 'פסק זמן בהמתנה להודעת I2C';
 
   @override
-  String get writingChunk => 'Writing chunk ';
+  String get writingChunk => 'כותב מקטע ';
 
   @override
-  String get transferredSuccessfully => 'Transferred successfully.';
+  String get transferredSuccessfully => 'הועבר בהצלחה.';
 
   @override
-  String get waitingForNfcTag => 'Waiting for NFC tag...';
+  String get waitingForNfcTag => 'ממתין לתג NFC...';
 
   @override
-  String get gotTag => 'Got a tag!';
+  String get gotTag => 'נמצא תג!';
 
   @override
-  String get frame => 'Frame ';
+  String get frame => 'מסגרת ';
 
   @override
-  String get couldNotOpenLink => 'Could not open the link.';
+  String get couldNotOpenLink => 'לא ניתן לפתוח את הקישור.';
 
   @override
-  String get errorOccurredWhileOpeningLink =>
-      'An error occurred while opening the link.';
+  String get errorOccurredWhileOpeningLink => 'אירעה שגיאה בעת פתיחת הקישור.';
 
   @override
-  String get errorCreatingAppRecord => 'Error creating app record: ';
+  String get errorCreatingAppRecord => 'שגיאה ביצירת רשומת אפליקציה: ';
 
   @override
-  String get appCannotBeEmpty => 'App cannot be empty';
+  String get appCannotBeEmpty => 'האפליקציה אינה יכולה להיות ריקה';
 
   @override
-  String get invalidPackageName => 'Invalid package name';
+  String get invalidPackageName => 'שם חבילה לא תקין';
 
   @override
-  String get writeAppLauncherData => 'Write App Launcher Data';
+  String get writeAppLauncherData => 'כתוב נתוני מפעיל אפליקציות';
 
   @override
-  String get writeAppLauncher => 'Write App Launcher';
+  String get writeAppLauncher => 'כתוב מפעיל אפליקציות';
 
   @override
-  String get searchApps => 'Search apps...';
+  String get searchApps => 'חפש אפליקציות...';
 
   @override
-  String get customPackageName => 'Custom Package Name';
+  String get customPackageName => 'שם חבילה מותאם אישית';
 
   @override
-  String get enterPackageName => 'Enter package name...';
+  String get enterPackageName => 'הזן שם חבילה...';
 
   @override
-  String get noAppsFound => 'No apps found';
+  String get noAppsFound => 'לא נמצאו אפליקציות';
 
   @override
-  String get selectApplication => 'Select Application';
+  String get selectApplication => 'בחר אפליקציה';
 
   @override
-  String get errorLoadingApps => 'Error loading apps: ';
+  String get errorLoadingApps => 'שגיאה בטעינת אפליקציות: ';
 
   @override
-  String get add => 'Add';
+  String get add => 'הוסף';
 
   @override
-  String get readNfcTags => 'Read NFC Tags';
+  String get readNfcTags => 'קרא תגי NFC';
 
   @override
-  String get writeNfcTags => 'Write NFC Tags';
+  String get writeNfcTags => 'כתוב תגי NFC';
 
   @override
   String get nfcIsReadyToUse =>
-      'NFC is ready to use. You can read and write NFC tags.';
+      'NFC מוכן לשימוש. אתה יכול לקרוא ולכתוב תגי NFC.';
 
   @override
-  String get deviceDoesNotSupportNfc =>
-      'This device does not support NFC functionality.';
+  String get deviceDoesNotSupportNfc => 'מכשיר זה אינו תומך בפונקציונליות NFC.';
 
   @override
   String get pleaseEnableNfcInSettings =>
-      'Please enable NFC in your device settings to continue.';
+      'אנא הפעל NFC בהגדרות המכשיר שלך כדי להמשיך.';
 
   @override
-  String get nfcIsNowEnabledAndReady => 'NFC is now enabled and ready to use!';
+  String get nfcIsNowEnabledAndReady => 'NFC מופעל כעת ומוכן לשימוש!';
 
   @override
   String get nfcHasBeenDisabled =>
-      'NFC has been disabled. Please enable it to continue using NFC features.';
+      'NFC הושבת. אנא הפעל אותו כדי להמשיך להשתמש בתכונות NFC.';
 
   @override
-  String get nfcIsNotSupportedOnDevice =>
-      'NFC is not supported on this device.';
+  String get nfcIsNotSupportedOnDevice => 'NFC אינו נתמך במכשיר זה.';
 
   @override
-  String get arduinoExport => 'Arduino Export';
+  String get arduinoExport => 'ייצוא Arduino';
 
   @override
-  String get exportXmbFilesForArduino => 'Export XMB files for Arduino';
+  String get exportXmbFilesForArduino => 'ייצא קובצי XMB עבור Arduino';
 
   @override
-  String get cardTemplates => 'Card Templates';
+  String get cardTemplates => 'תבניות כרטיסים';
 
   @override
-  String get chooseTemplateSubtitle => 'Choose a template to get started';
+  String get chooseTemplateSubtitle => 'בחר תבנית כדי להתחיל';
 
   @override
-  String get employeeIdCardTitle => 'Employee ID Card';
+  String get employeeIdCardTitle => 'כרטיס זיהוי עובד';
 
   @override
-  String get employeeIdCardDescription =>
-      'Create professional employee identification cards';
+  String get employeeIdCardDescription => 'צור כרטיסי זיהוי מקצועיים לעובדים';
 
   @override
-  String get shopPriceTagTitle => 'Shop Price Tag';
+  String get shopPriceTagTitle => 'תג מחיר לחנות';
 
   @override
-  String get shopPriceTagDescription =>
-      'Design attractive price tags for your products';
+  String get shopPriceTagDescription => 'עצב תגי מחיר אטרקטיביים למוצרים שלך';
 
   @override
-  String get entryPassTagTitle => 'Entry Pass Tag';
+  String get entryPassTagTitle => 'תג אישור כניסה';
 
   @override
-  String get entryPassTagDescription =>
-      'Generate entry passes for events and venues';
+  String get entryPassTagDescription => 'הפק אישורי כניסה לאירועים ומקומות';
 
   @override
-  String get eventBadgeTitle => 'Event Badge';
+  String get eventBadgeTitle => 'תג אירוע';
 
   @override
-  String get eventBadgeDescription =>
-      'Create personalized event badges and name tags';
+  String get eventBadgeDescription => 'צור תגי אירוע ותגי שם מותאמים אישית';
 
   @override
-  String get comingSoon => 'Coming Soon';
+  String get comingSoon => 'בקרוב';
 
   @override
   String get comingSoonMessage =>
-      'This template is currently under development and will be available soon.';
+      'תבנית זו נמצאת כעת בפיתוח ותהיה זמינה בקרוב.';
 
   @override
-  String get ok => 'OK';
+  String get ok => 'אישור';
 
   @override
-  String get defaultCompanyName => 'Company Name';
+  String get defaultCompanyName => 'שם החברה';
 
   @override
-  String get nameLabel => 'Name';
+  String get nameLabel => 'שם';
 
   @override
-  String get positionLabel => 'Position';
+  String get positionLabel => 'תפקיד';
 
   @override
-  String get divisionLabel => 'Division';
+  String get divisionLabel => 'מחלקה';
 
   @override
-  String get idLabel => 'ID';
+  String get idLabel => 'מזהה';
 
   @override
-  String get emptyFieldPlaceholder => 'Not specified';
+  String get emptyFieldPlaceholder => 'לא צוין';
 
   @override
-  String get productImage => 'Product Image';
+  String get productImage => 'תמונת מוצר';
 
   @override
   String get productName => 'Product Name';
 
   @override
-  String get sizeQuantity => 'Size/Quantity';
+  String get sizeQuantity => 'גודל/כמות';
 
   @override
-  String get defaultCurrency => '\$';
+  String get defaultCurrency => '₪';
 
   @override
   String get defaultPrice => '0.00';
 
   @override
-  String get price => 'Price';
+  String get price => 'מחיר';
 
   @override
   String get quantitySize => 'Quantity/Size';
 
   @override
   String get quantitySizeHint =>
-      'Enter size/quantity (e.g., 750ml, 2kg, Large)';
+      'הזן גודל/כמות (לדוגמה, 750 מ\"ל, 2 ק\"ג, גדול)';
 
   @override
-  String get namePrefix => 'Name: ';
+  String get namePrefix => 'שם: ';
 
   @override
-  String get positionPrefix => 'Position: ';
+  String get positionPrefix => 'תפקיד: ';
 
   @override
-  String get divisionPrefix => 'Division: ';
+  String get divisionPrefix => 'מחלקה: ';
 
   @override
-  String get idPrefix => 'ID: ';
+  String get idPrefix => 'מזהה: ';
 
   @override
-  String get employeeIdCard => 'Employee ID Card';
+  String get employeeIdCard => 'כרטיס זיהוי עובד';
 
   @override
   String get fillDetailsToCreateId =>
-      'Fill in the details below to create your employee ID card';
+      'מלא את הפרטים להלן כדי ליצור את כרטיס זיהוי העובד שלך';
 
   @override
-  String get idCardDetails => 'ID Card Details';
+  String get idCardDetails => 'פרטי כרטיס זיהוי';
 
   @override
   String get companyName => 'Company Name';
 
   @override
-  String get enterCompanyName => 'Enter company name';
+  String get enterCompanyName => 'הזן שם חברה';
 
   @override
-  String get pleaseEnterCompanyName => 'Please enter company name';
+  String get pleaseEnterCompanyName => 'אנא הזן שם חברה';
 
   @override
   String get name => 'Name';
 
   @override
-  String get enterEmployeeName => 'Enter employee name';
+  String get enterEmployeeName => 'הזן שם עובד';
 
   @override
-  String get pleaseEnterName => 'Please enter name';
+  String get pleaseEnterName => 'אנא הזן שם';
 
   @override
   String get position => 'Position';
 
   @override
-  String get enterJobPosition => 'Enter job position';
+  String get enterJobPosition => 'הזן תפקיד';
 
   @override
-  String get pleaseEnterPosition => 'Please enter position';
+  String get pleaseEnterPosition => 'אנא הזן תפקיד';
 
   @override
   String get division => 'Division';
 
   @override
-  String get enterDepartment => 'Enter department';
+  String get enterDepartment => 'הזן מחלקה';
 
   @override
-  String get pleaseEnterDivision => 'Please enter division';
+  String get pleaseEnterDivision => 'אנא הזן מחלקה';
 
   @override
   String get idNumber => 'ID Number';
 
   @override
-  String get enterUniqueId => 'Enter unique ID';
+  String get enterUniqueId => 'הזן מזהה ייחודי';
 
   @override
-  String get pleaseEnterIdNumber => 'Please enter ID number';
+  String get pleaseEnterIdNumber => 'אנא הזן מספר מזהה';
 
   @override
   String get qrCodeData => 'QR Code Data';
 
   @override
-  String get enterQrCodeData => 'Enter QR code data';
+  String get enterQrCodeData => 'הזן נתוני קוד QR';
 
   @override
-  String get pleaseEnterQrCodeData => 'Please enter QR code data';
+  String get pleaseEnterQrCodeData => 'אנא הזן נתוני קוד QR';
 
   @override
-  String get generatingIdCard => 'Generating ID Card...';
+  String get generatingIdCard => 'מייצר כרטיס זיהוי...';
 
   @override
-  String get generateIdCard => 'Generate ID Card';
+  String get generateIdCard => 'צור כרטיס זיהוי';
 
   @override
   String get profilePhoto => 'Profile Photo';
 
   @override
-  String get selected => 'Selected';
+  String get selected => 'נבחר';
 
   @override
-  String get photoSelected => 'Photo selected';
+  String get photoSelected => 'תמונה נבחרה';
 
   @override
-  String get selectProfilePhoto => 'Select Profile Photo';
+  String get selectProfilePhoto => 'בחר תמונת פרופיל';
 
   @override
-  String get tapToChangePhoto => 'Tap to change photo';
+  String get tapToChangePhoto => 'הקש כדי לשנות תמונה';
 
   @override
-  String get tapToSelectFromGallery => 'Tap to select from gallery';
+  String get tapToSelectFromGallery => 'הקש כדי לבחור מהגלריה';
 
   @override
-  String get priceTagGenerator => 'Price Tag Generator';
+  String get priceTagGenerator => 'מחולל תגי מחיר';
 
   @override
-  String get priceTagDescription =>
-      'Create professional price tags for your products';
+  String get priceTagDescription => 'צור תגי מחיר מקצועיים למוצרים שלך';
 
   @override
   String get productDetails => 'Product Details';
 
   @override
-  String get productNameHint => 'Enter product name (e.g., iPhone 15 Pro)';
+  String get productNameHint => 'הזן שם מוצר (לדוגמה, iPhone 15 Pro)';
 
   @override
-  String get pleaseEnterProductName => 'Please enter a product name';
+  String get pleaseEnterProductName => 'אנא הזן שם מוצר';
 
   @override
-  String get currency => 'Currency';
+  String get currency => 'מטבע';
 
   @override
-  String get currencyHint => '₹';
+  String get currencyHint => '₪';
 
   @override
-  String get required => 'Required';
+  String get required => 'חובה';
 
   @override
   String get priceHint => '999.99';
 
   @override
-  String get pleaseEnterPrice => 'Please enter price';
+  String get pleaseEnterPrice => 'אנא הזן מחיר';
 
   @override
-  String get pleaseEnterQuantitySize => 'Please enter quantity or size';
+  String get pleaseEnterQuantitySize => 'אנא הזן כמות או גודל';
 
   @override
-  String get pleaseEnterBarcodeData => 'Please enter barcode data';
+  String get pleaseEnterBarcodeData => 'אנא הזן נתוני ברקוד';
 
   @override
-  String get generatingPriceTag => 'Generating Price Tag...';
+  String get generatingPriceTag => 'מייצר תג מחיר...';
 
   @override
-  String get generatePriceTag => 'Generate Price Tag';
+  String get generatePriceTag => 'צור תג מחיר';
 
   @override
-  String get productImageIn => 'Product Image';
+  String get productImageIn => 'תמונת מוצר';
 
   @override
-  String get productImageSelected => 'Product Image Selected';
+  String get productImageSelected => 'תמונת מוצר נבחרה';
 
   @override
-  String get selectProductImage => 'Select Product Image';
+  String get selectProductImage => 'בחר תמונת מוצר';
 
   @override
-  String get tapToChangeImage => 'Tap to change image';
+  String get tapToChangeImage => 'הקש כדי לשנות תמונה';
 
   @override
-  String get chooseImageFromGallery => 'Choose image from gallery';
+  String get chooseImageFromGallery => 'בחר תמונה מהגלריה';
+
+  @override
+  String get processingImages => 'מעבד תמונות...';
+
+  @override
+  String get refreshModeInfo => 'מידע על מצב רענון';
+
+  @override
+  String get fullRefreshInfo => 'רענון מלא';
+
+  @override
+  String get fullRefreshDescription =>
+      'מרענן לחלוטין את כל התצוגה על ידי ניקוי כל הפיקסלים וציור מחדש של התמונה. פעולה זו מספקת את איכות התמונה והניגודיות הטובות ביותר, אך אורכת יותר זמן.';
+
+  @override
+  String get partialRefreshInfo => 'רענון חלקי (צורות גל)';
+
+  @override
+  String get partialRefreshDescription =>
+      'מעדכן רק את הפיקסלים שהשתנו באמצעות צורות גל ממוטבות. זה מהיר יותר מרענון מלא, אך עלול לגרום לצלליות (Ghosting) או להפחתת הניגודיות לאורך זמן.';
+
+  @override
+  String get longPressForInfo => 'לחיצה ארוכה למידע נוסף';
 }
