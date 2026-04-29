@@ -16,6 +16,10 @@ void main() {
     }
   });
 
+  tearDown(() async {
+    await getIt.reset();
+  });
+
   testWidgets('TextFitEditor AppBar title should be localized', (WidgetTester tester) async {
     await tester.pumpWidget(
       const MaterialApp(
@@ -33,8 +37,11 @@ void main() {
     // Wait for the UI to settle
     await tester.pumpAndSettle();
 
-    // Verify that the AppBar title 'Text Editor' is present
-    expect(find.text('Text Editor'), findsOneWidget);
+    final BuildContext context = tester.element(find.byType(TextFitEditor));
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+    // Verify that the AppBar title matches the localized value
+    expect(find.text(localizations.textEditorTitle), findsOneWidget);
     
     // Verify it is inside an AppBar
     expect(find.byType(AppBar), findsOneWidget);

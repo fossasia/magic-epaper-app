@@ -1309,3 +1309,8 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get textEditorTitle => 'Text Editor';
 }
+
+/// The translations for Norwegian Bokmål, as used in Norway (`nb_NO`).
+class AppLocalizationsNbNo extends AppLocalizationsNb {
+  AppLocalizationsNbNo([String locale = 'nb_NO']) : super(locale);
+}
