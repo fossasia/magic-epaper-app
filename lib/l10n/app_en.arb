@@ -180,6 +180,9 @@
   "barcode": "Barcode",
   "library": "Library",
   "text": "Text",
+  "@text": {
+    "description": "Label for the text section or tool in the user interface."
+  },
   "templates": "Templates",
   "barcodeGenerator": "Barcode Generator",
   "barcodeData": "Barcode Data",

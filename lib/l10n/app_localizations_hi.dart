@@ -13,7 +13,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get aboutUsDescription =>
-      'मैजिक ईपेपर एक ऐसा ऐप है जिसे ईपेपर डिस्प्ले को नियंत्रित और अपडेट करने के लिए डिज़ाइन किया गया है। इसका उद्देश्य एनएफसी का उपयोग करके ईपेपर स्क्रीन पर छवियों, टेक्स्ट और पैटर्न को अनुकूलित और स्थानांतरित करने के लिए उपकरण प्रदान करना है। स्मार्टफोन से ईपेपर हार्डवेयर में डेटा ट्रांसफर एनएफसी के माध्यम से वायरलेस तरीके से किया जाता है। यह प्रोजेक्ट निर्באध संचार और कुशल इमेज रेंडरिंग के लिए कस्टम फ़र्मवेयर और डिस्प्ले ड्राइवरों पर आधारित है।';
+      'मैजिक ईपेपर एक ऐसा ऐप है जिसे ईपेपर डिस्प्ले को नियंत्रित और अपडेट करने के लिए डिज़ाइन किया गया है। इसका उद्देश्य एनएफसी का उपयोग करके ईपेपर स्क्रीन पर छवियों, टेक्स्ट और पैटर्न को अनुकूलित और स्थानांतरित करने के लिए उपकरण प्रदान करना है। स्मार्टफोन से ईपेपर हार्डवेयर में डेटा ट्रांसफर एनएफसी के माध्यम से वायरलेस तरीके से किया जाता है। यह प्रोजेक्ट निर्बाध संचार और कुशल इमेज रेंडरिंग के लिए कस्टम फ़र्मवेयर और डिस्प्ले ड्राइवरों पर आधारित है।';
 
   @override
   String get developedBy => 'Developed by';
@@ -519,7 +519,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get fullRefreshSelected => 'Full Refresh Selected';
 
   @override
-  String get waveformSelected => 'Selected';
+  String waveformSelected(String waveformName) {
+    return '$waveformName Selected';
+  }
 
   @override
   String get barcode => 'Barcode';
@@ -528,7 +530,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get library => 'Library';
 
   @override
-  String get text => 'टेक्स्ट';
+  String get text => 'Text';
 
   @override
   String get templates => 'Templates';

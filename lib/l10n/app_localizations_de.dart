@@ -516,10 +516,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get fullRefresh => 'Full Refresh';
 
   @override
-  String get fullRefreshSelected => 'Full Refresh Selected';
+  String get fullRefreshSelected => 'Vollständige Aktualisierung ausgewählt';
 
   @override
-  String get waveformSelected => 'Selected';
+  String waveformSelected(String waveformName) {
+    return '$waveformName ausgewählt';
+  }
 
   @override
   String get barcode => 'Barcode';
@@ -1287,25 +1289,25 @@ class AppLocalizationsDe extends AppLocalizations {
   String get chooseImageFromGallery => 'Choose image from gallery';
 
   @override
-  String get processingImages => 'Processing images...';
+  String get processingImages => 'Bilder werden verarbeitet...';
 
   @override
-  String get refreshModeInfo => 'Refresh Mode Information';
+  String get refreshModeInfo => 'Informationen zum Aktualisierungsmodus';
 
   @override
-  String get fullRefreshInfo => 'Full Refresh';
+  String get fullRefreshInfo => 'Vollständige Aktualisierung';
 
   @override
   String get fullRefreshDescription =>
-      'Completely refreshes the entire display by clearing all pixels and redrawing the image. This provides the best image quality and contrast but takes longer to complete.';
+      'Aktualisiert das gesamte Display vollständig, indem alle Pixel gelöscht und das Bild neu gezeichnet wird. Dies bietet die beste Bildqualität und den besten Kontrast, dauert aber länger.';
 
   @override
-  String get partialRefreshInfo => 'Partial Refresh (Waveforms)';
+  String get partialRefreshInfo => 'Teilweise Aktualisierung (Waveforms)';
 
   @override
   String get partialRefreshDescription =>
-      'Updates only the changed pixels using optimized waveforms. This is faster than full refresh but may result in ghosting or reduced contrast over time.';
+      'Aktualisiert nur die geänderten Pixel mithilfe optimierter Waveforms. Dies ist schneller als eine vollständige Aktualisierung, kann aber mit der Zeit zu Ghosting oder verringertem Kontrast führen.';
 
   @override
-  String get longPressForInfo => 'Long press for more information';
+  String get longPressForInfo => 'Lange drücken für weitere Informationen';
 }

@@ -519,7 +519,9 @@ class AppLocalizationsHe extends AppLocalizations {
   String get fullRefreshSelected => 'Full Refresh Selected';
 
   @override
-  String get waveformSelected => 'Selected';
+  String waveformSelected(String waveformName) {
+    return '$waveformName Selected';
+  }
 
   @override
   String get barcode => 'Barcode';
@@ -528,7 +530,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get library => 'Library';
 
   @override
-  String get text => 'טקסט';
+  String get text => 'Text';
 
   @override
   String get templates => 'Templates';

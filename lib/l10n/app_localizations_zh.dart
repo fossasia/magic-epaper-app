@@ -519,7 +519,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fullRefreshSelected => 'Full Refresh Selected';
 
   @override
-  String get waveformSelected => 'Selected';
+  String waveformSelected(String waveformName) {
+    return '$waveformName Selected';
+  }
 
   @override
   String get barcode => 'Barcode';
