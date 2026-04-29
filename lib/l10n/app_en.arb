@@ -526,7 +526,7 @@
   "divisionPrefix": "Division: ",
   "idPrefix": "ID: ",
   "employeeIdCard": "Employee ID Card",
-  "fillDetailsToCreateId": "Fill in the details below to create your employee ID card",
+  "fillDetailsToCreateId": "Fill in the details below to create your ID",
   "idCardDetails": "ID Card Details",
   "companyName": "Company Name",
   "enterCompanyName": "Enter company name",
@@ -556,7 +556,7 @@
   "tapToSelectFromGallery": "Tap to select from gallery",
   
   "priceTagGenerator": "Price Tag Generator",
-  "priceTagDescription": "Create professional price tags for your products",
+  "priceTagDescription": "Design professional product tags",
   "productDetails": "Product Details",
   "productNameHint": "Enter product name (e.g., iPhone 15 Pro)",
   "pleaseEnterProductName": "Please enter a product name",
