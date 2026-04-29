@@ -435,7 +435,7 @@ class _ImageEditorState extends State<ImageEditor> {
                                         _selectedWaveform == null
                                             ? appLocalizations
                                                 .fullRefreshSelected
-                                            : "${appLocalizations.waveformSelected} ${_selectedWaveform!.name}",
+                                            : appLocalizations.waveformSelected(_selectedWaveform!.name),
                                       ),
                                       backgroundColor: colorPrimary,
                                     ),

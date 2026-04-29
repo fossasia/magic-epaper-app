@@ -419,7 +419,7 @@ class _MovableBackgroundImageExampleState
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+
     _calculateCanvasDimensions(MediaQuery.sizeOf(context));
     return LayoutBuilder(builder: (context, constraints) {
       return CustomPaint(
