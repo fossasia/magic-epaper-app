@@ -91,8 +91,6 @@ class NFCController extends ChangeNotifier {
     }
   }
 
-
-
   Future<void> writeMultipleRecords(String text, String url, String wifiSSID,
       String wifiPassword, VCardData? vCardData) async {
     if (_availability != NFCAvailability.available) return;
