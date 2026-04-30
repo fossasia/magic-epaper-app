@@ -164,7 +164,7 @@ class _NFCReadScreenState extends State<NFCReadScreen>
       index: 1,
       actions: [
         IconButton(
-          icon: const Icon(Icons.clear_all, color: Colors.white),
+          icon: const Icon(Icons.delete_sweep, color: Colors.white),
           onPressed: () {
             if (_nfcController.result.isNotEmpty) {
               _nfcController.clearResult();

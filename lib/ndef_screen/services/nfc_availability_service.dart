@@ -1,13 +1,8 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 
 class NFCAvailabilityService {
   static Future<NFCAvailability> checkAvailability() async {
-    if (kIsWeb) {
-      return NFCAvailability.not_supported;
-    }
-
     try {
       return await FlutterNfcKit.nfcAvailability;
     } catch (e) {
