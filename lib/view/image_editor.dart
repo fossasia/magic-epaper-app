@@ -22,7 +22,6 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import '../util/app_logger.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-
 class ImageEditor extends StatefulWidget {
   final DisplayDevice device;
   final bool isExportOnly;
@@ -578,7 +577,7 @@ class BottomActionMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context)!;
     return SafeArea(
       top: false,
       bottom: true,
@@ -603,7 +602,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.add_photo_alternate_outlined,
-                label: appLocalizations.import,
+                label: appLocalizations.importImageButtonLabel,
                 onTap: () async {
                   final success = await imgLoader.pickImage(
                     width: epd.width,
@@ -647,7 +646,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.text_fields,
-                label: appLocalizations.text,
+                label: appLocalizations.textRecord,
                 onTap: () async {
                   final bytes = await Navigator.of(context).push<Uint8List>(
                     MaterialPageRoute(
