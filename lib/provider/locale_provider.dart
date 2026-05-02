@@ -7,8 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// changes in the locale and rebuild accordingly.
 class LocaleProvider with ChangeNotifier {
   static const String _localeKey = 'selected_locale';
+  static const Locale defaultLocale = Locale('en');
 
-  Locale _locale = const Locale('en');
+  Locale _locale = defaultLocale;
 
   Locale get locale => _locale;
 
@@ -44,10 +45,9 @@ class LocaleProvider with ChangeNotifier {
     }
   }
 
-  /// Resets the locale to the app's default locale (English)
-  /// and clears any saved locale preference.
+  /// Resets the locale to the app's default locale and clears any saved locale preference.
   Future<void> clearLocale() async {
-    _locale = const Locale('en');
+    _locale = defaultLocale;
     notifyListeners();
 
     try {
@@ -62,7 +62,7 @@ class LocaleProvider with ChangeNotifier {
     final parts = languageTag.split('-');
 
     if (parts.isEmpty || parts.first.isEmpty) {
-      return const Locale('en');
+      return defaultLocale;
     }
 
     if (parts.length == 1) {
