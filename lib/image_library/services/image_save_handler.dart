@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
@@ -61,6 +62,11 @@ class ImageSaveHandler {
   }
 
   Future<bool> requestStoragePermission() async {
+    if (Platform.isLinux || Platform.isMacOS) {
+      _hasStoragePermission = true;
+      return true;
+    }
+
     try {
       var status = await Permission.storage.status;
       if (status.isGranted) {
