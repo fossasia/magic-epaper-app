@@ -22,15 +22,10 @@ class LocaleProvider with ChangeNotifier {
 
       if (savedLocale == null || savedLocale.isEmpty) return;
 
-      final parts = savedLocale.split('_');
-
-      _locale = parts.length > 1 && parts[1].isNotEmpty
-          ? Locale(parts[0], parts[1])
-          : Locale(parts[0]);
-
+      _locale = _localeFromLanguageTag(savedLocale);
       notifyListeners();
-    } catch (e) {
-      debugPrint('Error loading saved locale: $e');
+    } catch (error) {
+      debugPrint('Error loading saved locale: $error');
     }
   }
 
@@ -38,35 +33,53 @@ class LocaleProvider with ChangeNotifier {
   ///
   /// When the locale is changed, it notifies all listening widgets to rebuild.
   Future<void> setLocale(Locale newLocale) async {
+    _locale = newLocale;
+    notifyListeners();
+
     try {
-      _locale = newLocale;
-
       final prefs = await SharedPreferences.getInstance();
-      final localeString = newLocale.countryCode != null &&
-              newLocale.countryCode!.isNotEmpty
-          ? '${newLocale.languageCode}_${newLocale.countryCode}'
-          : newLocale.languageCode;
-
-      await prefs.setString(_localeKey, localeString);
-
-      notifyListeners();
-    } catch (e) {
-      debugPrint('Error saving locale: $e');
+      await prefs.setString(_localeKey, newLocale.toLanguageTag());
+    } catch (error) {
+      debugPrint('Error saving locale: $error');
     }
   }
 
   /// Resets the locale to the app's default locale (English)
   /// and clears any saved locale preference.
   Future<void> clearLocale() async {
-    try {
-      _locale = const Locale('en');
+    _locale = const Locale('en');
+    notifyListeners();
 
+    try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_localeKey);
-
-      notifyListeners();
-    } catch (e) {
-      debugPrint('Error clearing locale: $e');
+    } catch (error) {
+      debugPrint('Error clearing locale: $error');
     }
+  }
+
+  Locale _localeFromLanguageTag(String languageTag) {
+    final parts = languageTag.split('-');
+
+    if (parts.isEmpty || parts.first.isEmpty) {
+      return const Locale('en');
+    }
+
+    if (parts.length == 1) {
+      return Locale(parts[0]);
+    }
+
+    if (parts.length == 2) {
+      return Locale.fromSubtags(
+        languageCode: parts[0],
+        countryCode: parts[1],
+      );
+    }
+
+    return Locale.fromSubtags(
+      languageCode: parts[0],
+      scriptCode: parts[1],
+      countryCode: parts[2],
+    );
   }
 }
