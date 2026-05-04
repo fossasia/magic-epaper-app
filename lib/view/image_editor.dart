@@ -603,7 +603,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.add_photo_alternate_outlined,
-                label: appLocalizations.import,
+                label: appLocalizations.importImageButtonLabel,
                 onTap: () async {
                   final success = await imgLoader.pickImage(
                     width: epd.width,
