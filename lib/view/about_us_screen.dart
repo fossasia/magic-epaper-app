@@ -26,7 +26,10 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
 
     return CommonScaffold(
       index: 5,
-      title: appLocalizations.appName,
+      titleWidget: Text(
+        AppLocalizations.of(context)!.appName,
+        style: const TextStyle(color: Colors.white),
+      ),
       body: SafeArea(
         top: false,
         bottom: true,
