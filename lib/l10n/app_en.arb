@@ -380,7 +380,6 @@
       "reason": { "type": "String" }
     }
   },
-  "deletingImages": "Deleting ",
   "images": " image(s)...",
   "failedToDeleteImages": "Failed to delete images: {reason}.",
   "@failedToDeleteImages": {
@@ -388,7 +387,6 @@
     "placeholders": { "reason": { "type": "String" } }
   },
   "imagesDeletedSuccessfully": " images deleted successfully",
-  "imageDeletedSuccessfully": "Image deleted successfully",
   "failedToLoadImageData": "Failed to load image data for \"",
   "failedToDecodeImage": "Failed to decode image \"",
   "failedToTransfer": "Failed to transfer \"",
