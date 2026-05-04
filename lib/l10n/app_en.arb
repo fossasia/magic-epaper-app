@@ -30,14 +30,26 @@
   "scanningForNfcTagToWrite": "Scanning for NFC tag to write...",
   "scanningForNfcTagToClear": "Scanning for NFC tag to clear...",
   "scanningTagForVerification": "Scanning tag for verification...",
-  "errorCreatingTextRecord": "Error creating text record: ",
-  "errorCreatingUrlRecord": "Error creating URL record: ",
+  "errorCreatingTextRecord": "Error creating text record: {reason}.",
+  "@errorCreatingTextRecord": {
+    "description": "Shown when a text NDEF record cannot be created",
+    "placeholders": { "reason": { "type": "String" } }
+  },
+  "errorCreatingUrlRecord": "Error creating URL record: {reason}.",
+  "@errorCreatingUrlRecord": {
+    "description": "Shown when a URL NDEF record cannot be created",
+    "placeholders": { "reason": { "type": "String" } }
+  },
   "errorCreatingWifiRecord": "Error creating Wi-Fi record: {reason}.",
   "@errorCreatingWifiRecord": {
     "description": "Shown when a Wi-Fi NDEF record cannot be created",
     "placeholders": { "reason": { "type": "String" } }
   },
-  "errorCreatingMultipleRecords": "Error creating multiple records: ",
+  "errorCreatingMultipleRecords": "Error creating multiple records: {reason}.",
+  "@errorCreatingMultipleRecords": {
+    "description": "Shown when multiple NDEF records cannot be created",
+    "placeholders": { "reason": { "type": "String" } }
+  },
   "tagType": "Tag Type: ",
   "tagId": "Tag ID: ",
   "ndefAvailable": "NDEF Available: ",
@@ -64,7 +76,11 @@
   "emptyPayload": "Empty payload",
   "binaryDataPrefix": "Binary data (",
   "binaryDataSuffix": " bytes): ",
-  "errorDecodingRecord": "Error decoding record: ",
+  "errorDecodingRecord": "Error decoding record: {reason}.",
+  "@errorDecodingRecord": {
+    "description": "Shown when a record cannot be decoded",
+    "placeholders": { "reason": { "type": "String" } }
+  },
   "recordPrefix": "Record ",
   "recordSuffix": ":",
   "tnfLabel": "  TNF: ",
@@ -100,23 +116,68 @@
   "emptyNdefRecord": "empty NDEF record",
   "minimalSpaceCharacter": "minimal space character",
   "emptyRecordList": "empty record list",
-  "allClearingMethodsFailed": "All clearing methods failed: ",
+  "allClearingMethodsFailed": "All clearing methods failed: {reason}.",
+  "@allClearingMethodsFailed": {
+    "description": "Shown when all clearing methods fail on an NFC tag",
+    "placeholders": { "reason": { "type": "String" } }
+  },
   "verificationResults": "VERIFICATION RESULTS:",
   "recordsFound": "Records Found: ",
   "noNdefRecordsFoundOnTag": "No NDEF records found on tag",
-  "errorReadingTag": "Error reading tag: ",
-  "errorWritingToTag": "Error writing to tag: ",
-  "errorClearingTag": "Error clearing tag: ",
-  "verificationError": "Verification Error: ",
+  "errorReadingTag": "Error reading tag: {reason}.",
+  "@errorReadingTag": {
+    "description": "Shown when there is an error reading an NFC tag",
+    "placeholders": { "reason": { "type": "String" } }
+  },
+  "errorWritingToTag": "Error writing to tag: {reason}.",
+  "@errorWritingToTag": {
+    "description": "Shown when there is an error writing to an NFC tag",
+    "placeholders": { "reason": { "type": "String" } }
+  },
+  "errorClearingTag": "Error clearing tag: {reason}.",
+  "@errorClearingTag": {
+    "description": "Shown when there is an error clearing an NFC tag",
+    "placeholders": { "reason": { "type": "String" } }
+  },
+  "verificationError": "Verification Error: {reason}.",
+  "@verificationError": {
+    "description": "Shown when there is a verification error",
+    "placeholders": { "reason": { "type": "String" } }
+  },
+  "holdTagToVerifyContent": "Scan tag to verify content",
   "holdTagCloseAndTryAgain": "\n\nHold the tag close to the NFC antenna and try again.",
   "tryHoldingTagCloser": "\n\nTry holding the tag closer to the NFC antenna.",
   "tryMovingTagCloser": "\n\nTry moving the tag closer to the NFC antenna.",
-  "method1EmptyTextRecordFailed": "Method 1 (empty text record) failed: ",
-  "method2EmptyNdefRecordFailed": "Method 2 (empty NDEF record) failed: ",
-  "method3MinimalRecordFailed": "Method 3 (minimal record) failed: ",
-  "method4EmptyListFailed": "Method 4 (empty list) failed: ",
-  "errorFinishingNfcSession": "Error finishing NFC session: ",
-  "secondaryCleanupAlsoFailed": "Secondary cleanup also failed: ",
+  "method1EmptyTextRecordFailed": "Method 1 (empty text record) failed: {reason}.",
+  "@method1EmptyTextRecordFailed": {
+    "description": "Shown when method 1 (empty text record) fails during clearing",
+    "placeholders": { "reason": { "type": "String" } }
+  },
+  "method2EmptyNdefRecordFailed": "Method 2 (empty NDEF record) failed: {reason}.",
+  "@method2EmptyNdefRecordFailed": {
+    "description": "Shown when method 2 (empty NDEF record) fails during clearing",
+    "placeholders": { "reason": { "type": "String" } }
+  },
+  "method3MinimalRecordFailed": "Method 3 (minimal record) failed: {reason}.",
+  "@method3MinimalRecordFailed": {
+    "description": "Shown when method 3 (minimal record) fails during clearing",
+    "placeholders": { "reason": { "type": "String" } }
+  },
+  "method4EmptyListFailed": "Method 4 (empty list) failed: {reason}.",
+  "@method4EmptyListFailed": {
+    "description": "Shown when method 4 (empty list) fails during clearing",
+    "placeholders": { "reason": { "type": "String" } }
+  },
+  "errorFinishingNfcSession": "Error finishing NFC session: {reason}.",
+  "@errorFinishingNfcSession": {
+    "description": "Shown when an error occurs while finishing the NFC session",
+    "placeholders": { "reason": { "type": "String" } }
+  },
+  "secondaryCleanupAlsoFailed": "Secondary cleanup also failed: {reason}.",
+  "@secondaryCleanupAlsoFailed": {
+    "description": "Shown when secondary cleanup fails during an operation",
+    "placeholders": { "reason": { "type": "String" } }
+  },
   "multipleTagsFoundPleaseSelectOne": "Multiple tags found, please select one",
   "scanYourNfcTagDefault": "Scan your NFC tag",
   "readNdefTags": "Read NDEF Tags",
@@ -292,14 +353,26 @@
   "theTagIsEmptyCleared": "The tag is empty/cleared",
   "renamingImage": "Renaming image...",
   "imageRenamedTo": "Image renamed to \"",
-  "failedToRenameImage": "Failed to rename image: ",
+  "failedToRenameImage": "Failed to rename image: {reason}.",
+  "@failedToRenameImage": {
+    "description": "Shown when an image fails to rename",
+    "placeholders": { "reason": { "type": "String" } }
+  },
   "deletingImage": "Deleting image...",
   "imageDeleted": "Image \"",
   "deleted": "\" deleted",
-  "failedToDeleteImage": "Failed to delete image: ",
+  "failedToDeleteImage": "Failed to delete image: {reason}.",
+  "@failedToDeleteImage": {
+    "description": "Shown when an image fails to delete",
+    "placeholders": { "reason": { "type": "String" } }
+  },
   "deletingImages": "Deleting ",
   "images": " image(s)...",
-  "failedToDeleteImages": "Failed to delete images: ",
+  "failedToDeleteImages": "Failed to delete images: {reason}.",
+  "@failedToDeleteImages": {
+    "description": "Shown when multiple images fail to delete",
+    "placeholders": { "reason": { "type": "String" } }
+  },
   "imagesDeletedSuccessfully": " images deleted successfully",
   "imageDeletedSuccessfully": "Image deleted successfully",
   "failedToLoadImageData": "Failed to load image data for \"",
@@ -307,9 +380,16 @@
   "failedToTransfer": "Failed to transfer \"",
   "savingImage": "Saving image...",
   "imageSavedToLibrary": "Image saved to library!",
-  "failedToSaveImage": "Failed to save image: ",
-
-  "errorCreatingVCardRecord": "Error creating vCard record: ",
+  "failedToSaveImage": "Failed to save image: {reason}.",
+  "@failedToSaveImage": {
+    "description": "Shown when an image fails to save",
+    "placeholders": { "reason": { "type": "String" } }
+  },
+  "errorCreatingVCardRecord": "Error creating vCard record: {reason}.",
+  "@errorCreatingVCardRecord": {
+    "description": "Shown when a vCard NDEF record cannot be created",
+    "placeholders": { "reason": { "type": "String" } }
+  },
   "pleaseEnterAtLeastOneRecord": "Please enter at least one record",
 
   "nfcIsDisabledPleaseEnableIt": "NFC is disabled. Please enable it.",
@@ -320,7 +400,11 @@
   "processingImageData": "Processing image data...",
   "refreshingDisplay": "Refreshing display...",
   "notMagicEpaperHardware": "Not a Magic ePaper device",
-  "errorCheckingMessage": "Error checking message: ",
+  "errorCheckingMessage": "Error checking message: {reason}.",
+  "@errorCheckingMessage": {
+    "description": "Shown when there is an error checking a message",
+    "placeholders": { "reason": { "type": "String" } }
+  },
   "timeoutWaitingForI2cMessage": "Timeout waiting for I2C message",
   "writingChunk": "Writing chunk ",
   "transferredSuccessfully": "Transferred successfully.",
@@ -329,8 +413,11 @@
   "frame": "Frame ",
   "couldNotOpenLink": "Could not open the link.",
   "errorOccurredWhileOpeningLink": "An error occurred while opening the link.",
-
-  "errorCreatingAppRecord": "Error creating app record: ",
+  "errorCreatingAppRecord": "Error creating app record: {reason}.",
+  "@errorCreatingAppRecord": {
+    "description": "Shown when an app record cannot be created",
+    "placeholders": { "reason": { "type": "String" } }
+  },
   "appCannotBeEmpty": "App cannot be empty",
   "invalidPackageName": "Invalid package name",
   "writeAppLauncherData": "Write App Launcher Data",
