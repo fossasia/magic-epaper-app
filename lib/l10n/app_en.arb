@@ -358,23 +358,25 @@
     "description": "Shown when an image fails to rename",
     "placeholders": { "reason": { "type": "String" } }
   },
-  "deletingImage": "Deleting image...",
+  "deletingImage": "{count, plural, one {Deleting image...} other {Deleting # images...}}",
+  "@deletingImage": {
+    "description": "Shown when deleting images",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "imageDeleted": "Image \"",
   "deleted": "\" deleted",
-  "failedToDeleteImage": "Failed to delete image: {reason}.",
+  "failedToDeleteImage": "{count, plural, one {Failed to delete image: {reason}.} other {Failed to delete {count} images: {reason}.}}",
   "@failedToDeleteImage": {
-    "description": "Shown when an image fails to delete",
-    "placeholders": { "reason": { "type": "String" } }
+    "description": "Error shown when image(s) fail to delete",
+    "placeholders": {
+      "count": { "type": "int" },
+      "reason": { "type": "String" }
+    }
   },
-  "deletingImages": "Deleting ",
   "images": " image(s)...",
-  "failedToDeleteImages": "Failed to delete images: {reason}.",
-  "@failedToDeleteImages": {
-    "description": "Shown when multiple images fail to delete",
-    "placeholders": { "reason": { "type": "String" } }
-  },
-  "imagesDeletedSuccessfully": " images deleted successfully",
-  "imageDeletedSuccessfully": "Image deleted successfully",
+  "imageDeletedSuccessfully": "{count, plural, one {Image deleted successfully} other {{count} images deleted successfully}}",
   "failedToLoadImageData": "Failed to load image data for \"",
   "failedToDecodeImage": "Failed to decode image \"",
   "failedToTransfer": "Failed to transfer \"",

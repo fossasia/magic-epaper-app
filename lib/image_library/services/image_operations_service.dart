@@ -47,13 +47,14 @@ class ImageOperationsService {
       SavedImage image, ImageLibraryProvider provider) async {
     try {
       Navigator.pop(context);
-      _showLoadingSnackBar(appLocalizations.deletingImage);
+      _showLoadingSnackBar(appLocalizations.deletingImage(1));
       await provider.deleteImage(image.id);
       _showDeleteSuccessSnackBar(
           '${appLocalizations.imageDeleted}${image.name}${appLocalizations.deleted}');
     } catch (e) {
       _showErrorSnackBar(
-          '${appLocalizations.failedToDeleteImage}${e.toString()}');
+        appLocalizations.failedToDeleteImage(1, e.toString()),
+      );
     }
   }
 
@@ -125,7 +126,8 @@ class ImageOperationsService {
       _showBatchDeleteSuccessSnackBar(count);
     } catch (e) {
       _showErrorSnackBar(
-          '${appLocalizations.failedToDeleteImages}${e.toString()}');
+          appLocalizations.failedToDeleteImage(selectedImages.length, e.toString()),
+      );
     }
   }
 
@@ -311,7 +313,8 @@ class ImageOperationsService {
             ),
             const SizedBox(width: 12),
             Text(
-                '${appLocalizations.deletingImages}$count${appLocalizations.images}'),
+              appLocalizations.deletingImage(count),
+            )
           ],
         ),
         backgroundColor: Colors.amber,
@@ -329,9 +332,7 @@ class ImageOperationsService {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                count > 1
-                    ? '$count${appLocalizations.imagesDeletedSuccessfully}'
-                    : appLocalizations.imageDeletedSuccessfully,
+                appLocalizations.imageDeletedSuccessfully(count),
               ),
             ),
           ],
