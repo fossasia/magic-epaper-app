@@ -315,8 +315,20 @@
   "areYouSureDeleteImage": "Are you sure you want to delete this image? This action cannot be undone.",
   "cancel": "Cancel",
   "deleteMultipleImages": "Delete Multiple Images",
-  "imagesSelected": "image(s) selected",
-  "imagesSelectedForDeletion": "image(s) selected for deletion",
+  "imagesSelected": "{count, plural, one {1 image selected} other {# images selected}}",
+  "@imagesSelected": {
+    "description": "Number of images selected",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "imagesSelectedForDeletion": "{count, plural, one {1 image selected for deletion} other{# images selected for deletion} }",
+  "@imagesSelectedForDeletion": {
+    "description": "Number of images selected for deletion",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "areYouSureDeleteMultipleImages": "{count, plural, one {Are you sure you want to delete this image? This action cannot be undone.} other {Are you sure you want to delete these # images? This action cannot be undone.}}",
   "@areYouSureDeleteMultipleImages": {
     "description": "Confirmation dialog when deleting images",
@@ -375,7 +387,6 @@
       "reason": { "type": "String" }
     }
   },
-  "images": " image(s)...",
   "imageDeletedSuccessfully": "{count, plural, one {Image deleted successfully} other {{count} images deleted successfully}}",
   "failedToLoadImageData": "Failed to load image data for \"",
   "failedToDecodeImage": "Failed to decode image \"",
@@ -473,7 +484,7 @@
   "defaultPrice": "0.00",
   "price": "Price",
   "quantitySize": "Quantity/Size",
-  "quantitySizeHint": "Enter size/quantity (e.g., 750ml, 2kg, Large)",
+  "quantitySizeHint": "Enter size/quantity (e.g. 750ml, 2kg, Large)",
 
   "namePrefix": "Name: ",
   "positionPrefix": "Position: ",
@@ -512,7 +523,7 @@
   "priceTagGenerator": "Price Tag Generator",
   "priceTagDescription": "Create professional price tags for your products",
   "productDetails": "Product Details",
-  "productNameHint": "Enter product name (e.g., iPhone 15 Pro)",
+  "productNameHint": "Enter product name (e.g. iPhone 15 Pro)",
   "pleaseEnterProductName": "Please enter a product name",
   "currency": "Currency",
   "currencyHint": "₹",
