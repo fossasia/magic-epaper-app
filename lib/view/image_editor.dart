@@ -22,7 +22,6 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import '../util/app_logger.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-
 class ImageEditor extends StatefulWidget {
   final DisplayDevice device;
   final bool isExportOnly;
@@ -578,7 +577,7 @@ class BottomActionMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context)!;
     return SafeArea(
       top: false,
       bottom: true,

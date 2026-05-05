@@ -126,7 +126,8 @@ class ImageOperationsService {
       _showBatchDeleteSuccessSnackBar(count);
     } catch (e) {
       _showErrorSnackBar(
-          appLocalizations.failedToDeleteImage(selectedImages.length, e.toString()),
+        appLocalizations.failedToDeleteImage(
+            selectedImages.length, e.toString()),
       );
     }
   }
