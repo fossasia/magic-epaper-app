@@ -38,20 +38,21 @@ class ImageLibraryProvider extends ChangeNotifier {
 
   Future<void> _initializeDirectories() async {
     if (_magicEpaperDirectory == null) {
-      String path;
-      try {
         if (Platform.isAndroid) {
           final externalDir = await getExternalStorageDirectory();
-          path = externalDir?.path ??
-              (await getApplicationDocumentsDirectory()).path;
-        } else {
-          path = (await getApplicationDocumentsDirectory()).path;
+          if (externalDir != null) {
+            final storageRoot = Directory('/storage/emulated/0');
+            _magicEpaperDirectory =
+                Directory('${storageRoot.path}/MagicEpaper');
+          } else {
+            final fallbackDir = await getApplicationDocumentsDirectory();
+            _magicEpaperDirectory =
+                Directory('${fallbackDir.path}/MagicEpaper');
+          }
+        }else{
+          String path = (await getApplicationDocumentsDirectory()).path;
+          _magicEpaperDirectory = Directory('$path/MagicEpaper');
         }
-      } catch (e) {
-        AppLogger.error('Error initializing directory path: $e');
-        path = (await getApplicationDocumentsDirectory()).path;
-      }
-      _magicEpaperDirectory = Directory('$path/MagicEpaper');
       if (!await _magicEpaperDirectory!.exists()) {
         await _magicEpaperDirectory!.create(recursive: true);
       }
