@@ -12,14 +12,19 @@ import 'package:magicepaperapp/ndef_screen/nfc_read_screen.dart';
 import 'package:magicepaperapp/ndef_screen/nfc_write_screen.dart';
 import 'package:magicepaperapp/view/display_selection_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
+
+  final localeProvider = LocaleProvider();
+  await localeProvider.loadSavedLocale();
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ImageLoader()),
+        ChangeNotifierProvider(create: (_) => ImageLoader()),
         ChangeNotifierProvider(create: (_) => ImageLibraryProvider()),
-        ChangeNotifierProvider(create: (_) => LocaleProvider()),
+        ChangeNotifierProvider<LocaleProvider>.value(value: localeProvider),
       ],
       child: const MyApp(),
     ),

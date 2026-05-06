@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/orientation_util.dart';
 import 'package:magicepaperapp/util/url_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class AboutUsScreen extends StatefulWidget {
   const AboutUsScreen({super.key});
@@ -25,8 +22,14 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return CommonScaffold(
       index: 5,
+      titleWidget: Text(
+        AppLocalizations.of(context)!.appName,
+        style: const TextStyle(color: Colors.white),
+      ),
       body: SafeArea(
         top: false,
         bottom: true,
@@ -52,9 +55,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       children: [
-                        const SizedBox(
-                          height: 25,
-                        ),
+                        const SizedBox(height: 25),
                         Center(
                           child: Image.asset(
                             ImageAssets.tempIcon,
@@ -92,8 +93,10 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                             const SizedBox(width: 10),
                             Flexible(
                               child: GestureDetector(
-                                onTap: () => openUrl(context,
-                                    'https://github.com/fossasia/magic-epaper-app/graphs/contributors'),
+                                onTap: () => openUrl(
+                                  context,
+                                  'https://github.com/fossasia/magic-epaper-app/graphs/contributors',
+                                ),
                                 child: Text(
                                   appLocalizations.fossasiaContributors,
                                   style: GoogleFonts.sora(
@@ -121,7 +124,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         blurRadius: 1,
                         color: Colors.grey,
                         offset: Offset(0, 1),
-                      )
+                      ),
                     ],
                     borderRadius: BorderRadius.circular(6),
                   ),
@@ -162,8 +165,10 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           ),
                           softWrap: true,
                         ),
-                        onTap: () => openUrl(context,
-                            'https://github.com/fossasia/magic-epaper-app'),
+                        onTap: () => openUrl(
+                          context,
+                          'https://github.com/fossasia/magic-epaper-app',
+                        ),
                       ),
                     ],
                   ),
@@ -177,7 +182,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         blurRadius: 1,
                         color: Colors.grey,
                         offset: Offset(0, 1),
-                      )
+                      ),
                     ],
                     borderRadius: BorderRadius.circular(6),
                   ),
@@ -218,27 +223,11 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           ),
                           softWrap: true,
                         ),
-                        onTap: () => openUrl(context,
-                            'https://github.com/fossasia/magic-epaper-app/blob/main/LICENSE.md'),
+                        onTap: () => openUrl(
+                          context,
+                          'https://github.com/fossasia/magic-epaper-app/blob/main/LICENSE.md',
+                        ),
                       ),
-                      // ListTile(
-                      //   leading: Image.asset('assets/icons/book.png', height: 40),
-                      //   title: Text(
-                      //     'Library Licenses',
-                      //     style: GoogleFonts.sora(
-                      //         fontSize: 16,
-                      //         fontWeight: FontWeight.w500,
-                      //         color: Colors.black),
-                      //   ),
-                      //   subtitle: Text(
-                      //     'Check third-party libs used on Badge Magic.',
-                      //     style: GoogleFonts.sora(
-                      //         fontSize: 12,
-                      //         fontWeight: FontWeight.w500,
-                      //         color: Colors.grey),
-                      //   ),
-                      //   onTap: () => showLicenseDialog(context),
-                      // ),
                     ],
                   ),
                 ),
@@ -247,7 +236,6 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
           ),
         ),
       ),
-      title: appLocalizations.appName,
     );
   }
 }
