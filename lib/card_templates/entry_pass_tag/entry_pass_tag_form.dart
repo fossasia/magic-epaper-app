@@ -2,90 +2,90 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:magicepaperapp/card_templates/employee_id_card_widget.dart';
-import 'package:magicepaperapp/card_templates/employee_id_model.dart';
+import 'entry_pass_tag_card_widget.dart';
+import 'entry_pass_tag_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:magicepaperapp/util/template_util.dart';
-import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
+import '../util/responsive_layout_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
-class EmployeeIdForm extends StatefulWidget {
+class EntryPassTagForm extends StatefulWidget {
   final int width;
   final int height;
 
-  const EmployeeIdForm({super.key, required this.width, required this.height});
+  const EntryPassTagForm(
+      {super.key, required this.width, required this.height});
 
   @override
-  State<EmployeeIdForm> createState() => _EmployeeIdFormState();
+  State<EntryPassTagForm> createState() => _EntryPassTagFormState();
 }
 
-class _EmployeeIdFormState extends State<EmployeeIdForm> {
-  final _formKey = GlobalKey<FormState>();
-  final _companyNameController = TextEditingController();
-  final _nameController = TextEditingController();
-  final _idNumberController = TextEditingController();
-  final _divisionController = TextEditingController();
-  final _positionController = TextEditingController();
+class _EntryPassTagFormState extends State<EntryPassTagForm> {
+  final _venueNameController = TextEditingController();
+  final _visitorNameController = TextEditingController();
+  final _passTypeController = TextEditingController();
+  final _validDateController = TextEditingController();
+  final _passIdController = TextEditingController();
   final _qrDataController = TextEditingController();
 
   File? _profileImage;
   final ImagePicker _picker = ImagePicker();
   bool _isGenerating = false;
 
-  late EmployeeIdModel _employeeData;
+  late EntryPassTagModel _passData;
 
   @override
   void initState() {
     super.initState();
-    _employeeData = EmployeeIdModel(
-      companyName: '',
-      name: '',
-      idNumber: '',
-      division: '',
-      position: '',
+    _passData = EntryPassTagModel(
+      venueName: '',
+      visitorName: '',
+      passType: '',
+      validDate: '',
+      passId: '',
       qrData: '',
     );
 
-    _companyNameController.addListener(_updatePreview);
-    _nameController.addListener(_updatePreview);
-    _idNumberController.addListener(_updatePreview);
-    _divisionController.addListener(_updatePreview);
-    _positionController.addListener(_updatePreview);
+    _venueNameController.addListener(_updatePreview);
+    _visitorNameController.addListener(_updatePreview);
+    _passTypeController.addListener(_updatePreview);
+    _validDateController.addListener(_updatePreview);
+    _passIdController.addListener(_updatePreview);
     _qrDataController.addListener(_updatePreview);
   }
 
   @override
   void dispose() {
-    _companyNameController.removeListener(_updatePreview);
-    _nameController.removeListener(_updatePreview);
-    _idNumberController.removeListener(_updatePreview);
-    _divisionController.removeListener(_updatePreview);
-    _positionController.removeListener(_updatePreview);
+    _venueNameController.removeListener(_updatePreview);
+    _visitorNameController.removeListener(_updatePreview);
+    _passTypeController.removeListener(_updatePreview);
+    _validDateController.removeListener(_updatePreview);
+    _passIdController.removeListener(_updatePreview);
     _qrDataController.removeListener(_updatePreview);
 
-    _companyNameController.dispose();
-    _nameController.dispose();
-    _idNumberController.dispose();
-    _divisionController.dispose();
-    _positionController.dispose();
+    _venueNameController.dispose();
+    _visitorNameController.dispose();
+    _passTypeController.dispose();
+    _validDateController.dispose();
+    _passIdController.dispose();
     _qrDataController.dispose();
     super.dispose();
   }
 
   void _updatePreview() {
     setState(() {
-      _employeeData = EmployeeIdModel(
-        companyName: _companyNameController.text,
-        name: _nameController.text,
-        idNumber: _idNumberController.text,
-        division: _divisionController.text,
-        position: _positionController.text,
+      _passData = EntryPassTagModel(
+        venueName: _venueNameController.text,
+        visitorName: _visitorNameController.text,
+        passType: _passTypeController.text,
+        validDate: _validDateController.text,
+        passId: _passIdController.text,
         qrData: _qrDataController.text,
         profileImage: _profileImage,
       );
@@ -110,92 +110,102 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
     try {
       final List<LayerSpec> layers = [];
 
-      final layoutParams =
-          ResponsiveLayoutUtil.getEmployeeIdLayout(widget.width, widget.height);
+      final layoutParams = ResponsiveLayoutUtil.getEntryPassTagLayout(
+          widget.width, widget.height);
 
       if (_profileImage != null) {
         layers.add(LayerSpec.widget(
-          widget: ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: Image.file(_profileImage!,
-                width: 200, height: 200, fit: BoxFit.cover),
+          widget: Container(
+            width: 200,
+            height: 200,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+            ),
+            child: ClipOval(
+              child: Image.file(
+                _profileImage!,
+                width: 200,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
           offset: layoutParams.profileImageOffset,
           scale: layoutParams.profileImageScale,
         ));
       }
 
-      if (_employeeData.companyName.isNotEmpty) {
+      if (_passData.venueName.isNotEmpty) {
         layers.add(LayerSpec.text(
           textStyle: TextStyle(
-            fontSize: layoutParams.companyNameFontSize,
+            fontSize: layoutParams.venueNameFontSize,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
-          text: _employeeData.companyName,
+          text: _passData.venueName,
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.center,
-          offset: layoutParams.companyNameOffset,
-          scale: layoutParams.companyNameScale,
+          offset: layoutParams.venueNameOffset,
+          scale: layoutParams.venueNameScale,
         ));
       }
 
-      if (_employeeData.name.isNotEmpty) {
+      if (_passData.visitorName.isNotEmpty) {
         layers.add(LayerSpec.text(
-          text: '${appLocalizations.namePrefix}${_employeeData.name}',
+          text: '${appLocalizations.visitorPrefix}${_passData.visitorName}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['name']!,
+          offset: layoutParams.textOffsets['visitorName']!,
           scale: layoutParams.textFieldScale,
         ));
       }
 
-      if (_employeeData.position.isNotEmpty) {
+      if (_passData.passType.isNotEmpty) {
         layers.add(LayerSpec.text(
-          text: '${appLocalizations.positionPrefix}${_employeeData.position}',
+          text: '${appLocalizations.passTypePrefix}${_passData.passType}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['position']!,
+          offset: layoutParams.textOffsets['passType']!,
           scale: layoutParams.textFieldScale,
         ));
       }
 
-      if (_employeeData.division.isNotEmpty) {
+      if (_passData.validDate.isNotEmpty) {
         layers.add(LayerSpec.text(
-          text: '${appLocalizations.divisionPrefix}${_employeeData.division}',
+          text: '${appLocalizations.validDatePrefix}${_passData.validDate}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['division']!,
+          offset: layoutParams.textOffsets['validDate']!,
           scale: layoutParams.textFieldScale,
         ));
       }
 
-      if (_employeeData.idNumber.isNotEmpty) {
+      if (_passData.passId.isNotEmpty) {
         layers.add(LayerSpec.text(
-          text: '${appLocalizations.idPrefix}${_employeeData.idNumber}',
+          text: '${appLocalizations.passIdPrefix}${_passData.passId}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['idNumber']!,
+          offset: layoutParams.textOffsets['passId']!,
           scale: layoutParams.textFieldScale,
         ));
       }
 
-      if (_employeeData.qrData.isNotEmpty) {
+      if (_passData.qrData.isNotEmpty) {
         layers.add(LayerSpec.widget(
           widget: BarcodeWidget(
             padding: const EdgeInsets.all(2),
             backgroundColor: colorWhite,
             barcode: Barcode.qrCode(),
-            data: _employeeData.qrData,
+            data: _passData.qrData,
             width: layoutParams.qrCodeSize.width,
             height: layoutParams.qrCodeSize.height,
           ),
@@ -203,7 +213,6 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
           scale: layoutParams.qrCodeScale,
         ));
       }
-
       final result = await Navigator.of(context).push<Uint8List>(
         MaterialPageRoute(
           builder: (context) => MovableBackgroundImageExample(
@@ -215,6 +224,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
       );
 
       if (result != null) {
+        if (!mounted) return;
         Navigator.of(context)
           ..pop()
           ..pop(result);
@@ -237,7 +247,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              appLocalizations.employeeIdCard,
+              appLocalizations.entryPassTagTitle,
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -246,7 +256,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
             ),
             const SizedBox(height: 8),
             Text(
-              appLocalizations.fillDetailsToCreateId,
+              appLocalizations.fillDetailsToCreatePass,
               style: const TextStyle(fontSize: 16, color: Colors.white),
             ),
           ],
@@ -259,7 +269,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
           padding: const EdgeInsets.fromLTRB(16.0, 14, 16.0, 16.0),
           child: Column(
             children: [
-              EmployeeIdCardWidget(data: _employeeData),
+              EntryPassTagCardWidget(data: _passData),
               const SizedBox(height: 20),
               const Divider(height: 1, color: Colors.grey),
               const SizedBox(height: 20),
@@ -272,126 +282,127 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(Icons.edit_outlined,
-                                color: colorAccent, size: 20),
-                            const SizedBox(width: 8),
-                            Text(
-                              appLocalizations.idCardDetails,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: colorBlack,
-                              ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.edit_outlined,
+                              color: colorAccent, size: 20),
+                          const SizedBox(width: 8),
+                          Text(
+                            appLocalizations.passDetails,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: colorBlack,
                             ),
-                          ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      _buildPhotoSection(),
+                      const SizedBox(height: 20),
+                      _buildTextFormField(
+                        controller: _venueNameController,
+                        label: appLocalizations.venueName,
+                        hint: appLocalizations.enterVenueName,
+                        icon: Icons.location_on_outlined,
+                      ),
+                      const SizedBox(height: 16),
+                      _buildTextFormField(
+                        controller: _visitorNameController,
+                        label: appLocalizations.visitorName,
+                        hint: appLocalizations.enterVisitorName,
+                        icon: Icons.person_outline,
+                      ),
+                      const SizedBox(height: 16),
+                      _buildTextFormField(
+                        controller: _passTypeController,
+                        label: appLocalizations.passType,
+                        hint: appLocalizations.enterPassType,
+                        icon: Icons.label_outline,
+                      ),
+                      const SizedBox(height: 16),
+                      _buildTextFormField(
+                        controller: _validDateController,
+                        label: appLocalizations.validDate,
+                        hint: appLocalizations.enterValidDate,
+                        icon: Icons.event_available_outlined,
+                      ),
+                      const SizedBox(height: 16),
+                      _buildTextFormField(
+                        controller: _passIdController,
+                        label: appLocalizations.passId,
+                        hint: appLocalizations.enterPassId,
+                        icon: Icons.badge_outlined,
+                      ),
+                      const SizedBox(height: 16),
+                      _buildTextFormField(
+                        controller: _qrDataController,
+                        label: appLocalizations.qrCodeData,
+                        hint: appLocalizations.enterQrCodeData,
+                        icon: Icons.qr_code_outlined,
+                        maxLines: 2,
+                      ),
+                      const SizedBox(height: 16),
+                      const SizedBox(height: 24),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: _isGenerating ? null : _submitForm,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: colorPrimary
+                                .withAlpha(_isGenerating ? 125 : 255),
+                            foregroundColor: Colors.white
+                                .withAlpha(_isGenerating ? 178 : 255),
+                            elevation: _isGenerating ? 0 : 2,
+                            shadowColor: colorPrimary.withValues(alpha: 0.3),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          child: _isGenerating
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.white),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Text(
+                                      appLocalizations.generatingPass,
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.card_membership, size: 18),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      appLocalizations.generatePass,
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
                         ),
-                        const SizedBox(height: 20),
-                        _buildPhotoSection(),
-                        const SizedBox(height: 20),
-                        _buildTextFormField(
-                          controller: _companyNameController,
-                          label: appLocalizations.companyName,
-                          hint: appLocalizations.enterCompanyName,
-                          icon: Icons.business_outlined,
-                        ),
-                        const SizedBox(height: 16),
-                        _buildTextFormField(
-                          controller: _nameController,
-                          label: appLocalizations.name,
-                          hint: appLocalizations.enterEmployeeName,
-                          icon: Icons.person_outline,
-                        ),
-                        const SizedBox(height: 16),
-                        _buildTextFormField(
-                          controller: _positionController,
-                          label: appLocalizations.position,
-                          hint: appLocalizations.enterJobPosition,
-                          icon: Icons.work_outline,
-                        ),
-                        const SizedBox(height: 16),
-                        _buildTextFormField(
-                          controller: _divisionController,
-                          label: appLocalizations.division,
-                          hint: appLocalizations.enterDepartment,
-                          icon: Icons.groups_outlined,
-                        ),
-                        const SizedBox(height: 16),
-                        _buildTextFormField(
-                          controller: _idNumberController,
-                          label: appLocalizations.idNumber,
-                          hint: appLocalizations.enterUniqueId,
-                          icon: Icons.badge_outlined,
-                        ),
-                        const SizedBox(height: 16),
-                        _buildTextFormField(
-                          controller: _qrDataController,
-                          label: appLocalizations.qrCodeData,
-                          hint: appLocalizations.enterQrCodeData,
-                          icon: Icons.qr_code_outlined,
-                          maxLines: 2,
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: _isGenerating ? null : _submitForm,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        colorPrimary.withAlpha(_isGenerating ? 125 : 255),
-                    foregroundColor:
-                        Colors.white.withAlpha(_isGenerating ? 178 : 255),
-                    elevation: _isGenerating ? 0 : 2,
-                    shadowColor: colorPrimary.withOpacity(0.3),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  child: _isGenerating
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              appLocalizations.generatingIdCard,
-                              style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.credit_card, size: 18),
-                            const SizedBox(width: 8),
-                            Text(
-                              appLocalizations.generateIdCard,
-                              style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
                 ),
               ),
             ],
@@ -406,24 +417,22 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
     required String label,
     required String hint,
     required IconData icon,
-    String? Function(String?)? validator,
     int maxLines = 1,
   }) {
     return Theme(
       data: Theme.of(context).copyWith(
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: colorPrimary,
-          selectionColor: colorPrimary.withOpacity(0.2),
+          selectionColor: colorPrimary.withValues(alpha: 0.2),
           selectionHandleColor: colorPrimary,
         ),
         inputDecorationTheme: InputDecorationTheme(
           focusColor: colorPrimary,
-          hoverColor: colorPrimary.withOpacity(0.1),
+          hoverColor: colorPrimary.withValues(alpha: 0.1),
         ),
       ),
-      child: TextFormField(
+      child: TextField(
         controller: controller,
-        validator: validator,
         maxLines: maxLines,
         style: const TextStyle(
           fontSize: 16,
@@ -436,7 +445,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
           hintText: hint,
           prefixIcon: Icon(icon, color: colorAccent, size: 20),
           labelStyle: TextStyle(
-            color: colorBlack.withOpacity(0.7),
+            color: colorBlack.withValues(alpha: 0.7),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -511,7 +520,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: colorPrimary.withOpacity(0.1),
+                      color: colorPrimary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -529,8 +538,8 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
             InkWell(
               onTap: _pickImage,
               borderRadius: BorderRadius.circular(8),
-              splashColor: colorAccent.withOpacity(0.1),
-              highlightColor: colorAccent.withOpacity(0.05),
+              splashColor: colorAccent.withValues(alpha: 0.1),
+              highlightColor: colorAccent.withValues(alpha: 0.05),
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
@@ -554,7 +563,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: _profileImage != null
-                              ? colorPrimary.withOpacity(0.3)
+                              ? colorPrimary.withValues(alpha: 0.3)
                               : Colors.grey.shade300,
                         ),
                       ),
@@ -601,45 +610,27 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         children: [
                           Text(
                             _profileImage != null
-                                ? appLocalizations.photoSelected
-                                : appLocalizations.selectProfilePhoto,
+                                ? appLocalizations.photoSelectedMessage
+                                : appLocalizations.tapToSelectPhoto,
                             style: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w500,
                               color: _profileImage != null
                                   ? colorPrimary
-                                  : colorBlack,
+                                  : colorBlack.withValues(alpha: 0.8),
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             _profileImage != null
                                 ? appLocalizations.tapToChangePhoto
-                                : appLocalizations.tapToSelectFromGallery,
+                                : appLocalizations.recommendedSquareImage,
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey.shade600,
                             ),
                           ),
                         ],
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: _profileImage != null
-                            ? colorPrimary.withOpacity(0.1)
-                            : Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Icon(
-                        _profileImage != null
-                            ? Icons.edit
-                            : Icons.arrow_forward_ios,
-                        color: _profileImage != null
-                            ? colorPrimary
-                            : Colors.grey.shade400,
-                        size: _profileImage != null ? 16 : 14,
                       ),
                     ),
                   ],
