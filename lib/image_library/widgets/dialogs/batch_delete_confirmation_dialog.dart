@@ -233,9 +233,7 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
                 const Icon(Icons.delete_forever, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                  selectedImages.length > 1
-                      ? appLocalizations.deleteAll
-                      : appLocalizations.delete,
+                  '${appLocalizations.delete} ${selectedImages.length > 1 ? appLocalizations.deleteAll : ''}',
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.w600),
                 ),
