@@ -23,7 +23,7 @@ class FilterChipWidget extends StatelessWidget {
         label: Text(label),
         selected: isSelected,
         onSelected: (_) => onSelected(value),
-        selectedColor: colorAccent.withOpacity(0.2),
+        selectedColor: colorAccent.withValues(alpha: 0.2),
         checkmarkColor: colorAccent,
         backgroundColor: Colors.grey.shade100,
         shape: RoundedRectangleBorder(
