@@ -47,6 +47,7 @@ class SearchAndFilterWidget extends StatelessWidget {
             children: [
               Text(appLocalizations.filter,
                   style: const TextStyle(fontWeight: FontWeight.w500)),
+              const SizedBox(width: 8),
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
