@@ -348,8 +348,8 @@ class _MovableBackgroundImageExampleState
               child: frame != null
                   ? child
                   : const Center(
-                child: CircularProgressIndicator(),
-              ),
+                      child: CircularProgressIndicator(),
+                    ),
             );
           },
         ),
@@ -358,13 +358,13 @@ class _MovableBackgroundImageExampleState
   }
 
   Size get _editorSize => Size(
-    MediaQuery.sizeOf(context).width -
-        MediaQuery.paddingOf(context).horizontal,
-    MediaQuery.sizeOf(context).height -
-        kToolbarHeight -
-        kBottomNavigationBarHeight -
-        MediaQuery.paddingOf(context).vertical,
-  );
+        MediaQuery.sizeOf(context).width -
+            MediaQuery.paddingOf(context).horizontal,
+        MediaQuery.sizeOf(context).height -
+            kToolbarHeight -
+            kBottomNavigationBarHeight -
+            MediaQuery.paddingOf(context).vertical,
+      );
 
   void _openReorderSheet(ProImageEditorState editor) {
     showModalBottomSheet(
@@ -410,7 +410,7 @@ class _MovableBackgroundImageExampleState
     final ui.FrameInfo frameInfo = await codec.getNextFrame();
     final ui.Image image = frameInfo.image;
     final ByteData? pngBytes =
-    await image.toByteData(format: ui.ImageByteFormat.png);
+        await image.toByteData(format: ui.ImageByteFormat.png);
     return pngBytes!.buffer.asUint8List();
   }
 
@@ -490,8 +490,8 @@ class _MovableBackgroundImageExampleState
                               child: frame != null
                                   ? child
                                   : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
+                                      child: CircularProgressIndicator(),
+                                    ),
                             );
                           },
                         ),
@@ -534,26 +534,26 @@ class _MovableBackgroundImageExampleState
                           builder: (_) => editor.isSubEditorOpen
                               ? const SizedBox.shrink()
                               : Positioned(
-                            bottom: 20,
-                            left: 0,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.lightBlue.shade200,
-                                borderRadius: const BorderRadius.only(
-                                  topRight: Radius.circular(100),
-                                  bottomRight: Radius.circular(100),
+                                  bottom: 20,
+                                  left: 0,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.lightBlue.shade200,
+                                      borderRadius: const BorderRadius.only(
+                                        topRight: Radius.circular(100),
+                                        bottomRight: Radius.circular(100),
+                                      ),
+                                    ),
+                                    child: IconButton(
+                                      onPressed: () =>
+                                          _openReorderSheet(editor),
+                                      icon: const Icon(
+                                        Icons.reorder,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              child: IconButton(
-                                onPressed: () =>
-                                    _openReorderSheet(editor),
-                                icon: const Icon(
-                                  Icons.reorder,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
                         ),
                       ];
                     },
@@ -617,10 +617,10 @@ class _MovableBackgroundImageExampleState
                 blurEditor: const BlurEditorConfigs(),
                 stickerEditor: StickerEditorConfigs(
                   initWidth:
-                  (_editorSize.aspectRatio > (widget.width / widget.height)
-                      ? _editorSize.height
-                      : _editorSize.width) /
-                      _initScale,
+                      (_editorSize.aspectRatio > (widget.width / widget.height)
+                              ? _editorSize.height
+                              : _editorSize.width) /
+                          _initScale,
                   builder: (setLayer, scrollController) {
                     return const SizedBox();
                   },
@@ -634,9 +634,9 @@ class _MovableBackgroundImageExampleState
   }
 
   Widget _bottomNavigationBar(
-      ProImageEditorState editor,
-      BoxConstraints constraints,
-      ) {
+    ProImageEditorState editor,
+    BoxConstraints constraints,
+  ) {
     return Scrollbar(
       controller: _bottomBarScrollCtrl,
       scrollbarOrientation: ScrollbarOrientation.top,
@@ -731,9 +731,9 @@ class _MovableBackgroundImageExampleState
 }
 
 List<ReactiveWidget> _buildPaintEditorBody(
-    PaintEditorState paintEditor,
-    Stream<dynamic> rebuildStream,
-    ) {
+  PaintEditorState paintEditor,
+  Stream<dynamic> rebuildStream,
+) {
   return [
     ReactiveWidget(
       stream: rebuildStream,
@@ -756,9 +756,9 @@ List<ReactiveWidget> _buildPaintEditorBody(
 }
 
 List<ReactiveWidget> _buildTextEditorBody(
-    TextEditorState textEditor,
-    Stream<dynamic> rebuildStream,
-    ) {
+  TextEditorState textEditor,
+  Stream<dynamic> rebuildStream,
+) {
   return [
     /// Color-Picker
     if (_useMaterialDesign)
