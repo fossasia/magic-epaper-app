@@ -9,7 +9,7 @@ class ImageAssets {
   static const String yellowBoard = 'assets/canvas/yellow.png';
   static const String epaper37Bwr =
       'assets/images/displays/epaper_3.7_bwr.webp';
-  static const String GDEQ031T10Display =
+  static const String gdeq031t10Display =
       'assets/images/displays/GDEQ031T10_display.png';
   static const String epaper37Bw = 'assets/images/displays/epaper_3.7_bw.webp';
   static const String customExport = 'assets/images/displays/export_image.webp';
