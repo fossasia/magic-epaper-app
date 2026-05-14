@@ -26,6 +26,7 @@ import '../core/mixin/example_helper.dart';
 import '../shared/widgets/material_icon_button.dart';
 import '../shared/widgets/pixel_transparent_painter.dart';
 import 'reorder_layer_example.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
 
 final bool _useMaterialDesign =
     platformDesignMode == ImageEditorDesignMode.material;
@@ -440,8 +441,9 @@ class _MovableBackgroundImageExampleState
                   if (editor == null || editor.activeLayers.length <= 1) {
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Cannot save an empty canvas'),
+                        SnackBar(
+                          content: Text(AppLocalizations.of(context)!
+                              .cannotSaveEmptyCanvas),
                         ),
                       );
                     }
