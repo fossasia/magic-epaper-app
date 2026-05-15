@@ -418,8 +418,11 @@ class _MovableBackgroundImageExampleState
   Widget build(BuildContext context) {
     _calculateCanvasDimensions(MediaQuery.sizeOf(context));
     return LayoutBuilder(builder: (context, constraints) {
-      return CustomPaint(
-        size: Size(constraints.maxWidth, constraints.maxHeight),
+      return Container(
+          color: Colors.black,
+          child: SafeArea(
+              child: CustomPaint(
+                          size: Size(constraints.maxWidth, constraints.maxHeight),
         painter: const PixelTransparentPainter(
           primary: Colors.white,
           secondary: Color(0xFFE2E2E2),
@@ -616,6 +619,8 @@ class _MovableBackgroundImageExampleState
             );
           },
         ),
+      )
+          )
       );
     });
   }
@@ -624,7 +629,22 @@ class _MovableBackgroundImageExampleState
     ProImageEditorState editor,
     BoxConstraints constraints,
   ) {
-    return Scrollbar(
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+      Positioned(
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: -50,
+      // Estende il nero 50 pixel più in basso rispetto alla barra
+      child: Container(color: Colors.black),
+    ),
+
+    // 2. La tua barra originale (non si muove e non si alza)
+    SizedBox(
+    height: kBottomNavigationBarHeight,
+    child: Scrollbar(
       controller: _bottomBarScrollCtrl,
       scrollbarOrientation: ScrollbarOrientation.top,
       thickness: isDesktop ? null : 0,
@@ -713,6 +733,9 @@ class _MovableBackgroundImageExampleState
           ),
         ),
       ),
+    )
+    )
+    ]
     );
   }
 }
