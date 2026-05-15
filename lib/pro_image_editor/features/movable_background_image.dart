@@ -639,11 +639,8 @@ class _MovableBackgroundImageExampleState
         left: 0,
         right: 0,
         bottom: -50,
-        // Estende il nero 50 pixel più in basso rispetto alla barra
         child: Container(color: Colors.black),
       ),
-
-      // 2. La tua barra originale (non si muove e non si alza)
       SizedBox(
           height: kBottomNavigationBarHeight,
           child: Scrollbar(
