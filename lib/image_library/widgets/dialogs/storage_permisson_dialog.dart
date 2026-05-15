@@ -1,4 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class StoragePermissionDialog extends StatelessWidget {
   final VoidCallback? onGrantPermission;
@@ -69,7 +72,6 @@ class StoragePermissionDialog extends StatelessWidget {
                 Expanded(
                   child: TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
                       onCancel?.call();
                     },
                     style: TextButton.styleFrom(
@@ -93,7 +95,6 @@ class StoragePermissionDialog extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
                       onGrantPermission?.call();
                     },
                     style: ElevatedButton.styleFrom(
@@ -123,24 +124,87 @@ class StoragePermissionDialog extends StatelessWidget {
     );
   }
 
-  static Future<void> show(
+  static Future<bool> checkAndRequestPermission(
     BuildContext context, {
-    VoidCallback? onGrantPermission,
-    VoidCallback? onCancel,
     Color colorAccent = Colors.blue,
     Color colorBlack = Colors.black,
-  }) {
-    return showDialog(
+  }) async {
+    Permission permission;
+
+    if (Platform.isAndroid) {
+      final androidInfo = await DeviceInfoPlugin().androidInfo;
+      if (androidInfo.version.sdkInt >= 33) {
+        permission = Permission.photos;
+      } else {
+        permission = Permission.storage;
+      }
+    } else if (Platform.isIOS) {
+      permission = Permission.photos;
+    } else {
+      return false;
+    }
+
+    var status = await permission.status;
+    if (status.isGranted) return true;
+
+    if (status.isDenied || status.isPermanentlyDenied) {
+      if (!context.mounted) return false;
+
+      bool? userAgreed = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext dialogContext) {
+          return StoragePermissionDialog(
+            colorAccent: colorAccent,
+            colorBlack: colorBlack,
+            onGrantPermission: () {
+              Navigator.of(dialogContext).pop(true);
+            },
+            onCancel: () {
+              Navigator.of(dialogContext).pop(false);
+            },
+          );
+        },
+      );
+
+      if (userAgreed == true) {
+        status = await permission.request();
+
+        if (status.isGranted) {
+          return true;
+        }
+
+        if (status.isPermanentlyDenied && context.mounted) {
+          _showSettingsRedirectDialog(context);
+        }
+      }
+    }
+
+    return false;
+  }
+
+  static void _showSettingsRedirectDialog(BuildContext context) {
+    showDialog(
       context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return StoragePermissionDialog(
-          onGrantPermission: onGrantPermission,
-          onCancel: onCancel,
-          colorAccent: colorAccent,
-          colorBlack: colorBlack,
-        );
-      },
+      builder: (context) => AlertDialog(
+        title: const Text('Permission Required'),
+        content: const Text(
+          'Storage permission is permanently denied. Please enable it in the app settings to continue.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              openAppSettings();
+            },
+            child: const Text('Open Settings'),
+          ),
+        ],
+      ),
     );
   }
 }
