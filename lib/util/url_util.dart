@@ -11,11 +11,13 @@ Future<void> openUrl(BuildContext context, String url) async {
     if (uri != null && await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(appLocalizations.couldNotOpenLink)),
       );
     }
   } catch (e) {
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(appLocalizations.errorOccurredWhileOpeningLink)),
     );
