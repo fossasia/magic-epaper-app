@@ -11,6 +11,7 @@ class LayerSpec {
   final Offset offset;
   final double scale;
   final double rotation;
+  final bool followCanvasTheme;
 
   const LayerSpec({
     this.widget,
@@ -22,18 +23,20 @@ class LayerSpec {
     this.offset = Offset.zero,
     this.scale = 1.0,
     this.rotation = 0.0,
+    this.followCanvasTheme = false
   });
 
   /// Constructor for text layers
   const LayerSpec.text({
     required this.text,
     this.textStyle,
-    this.textColor = Colors.black,
-    this.backgroundColor = Colors.white,
+    this.textColor,
+    this.backgroundColor,
     this.textAlign = TextAlign.left,
     this.offset = Offset.zero,
     this.scale = 1.0,
     this.rotation = 0.0,
+    this.followCanvasTheme = true,
   }) : widget = null;
 
   /// Constructor for widget layers
@@ -46,5 +49,25 @@ class LayerSpec {
         textStyle = null,
         textColor = null,
         backgroundColor = null,
-        textAlign = null;
+        textAlign = null,
+        followCanvasTheme = false;      
+
+  LayerSpec copyWith({
+    Color? textColor,
+    Color? backgroundColor,
+    bool? followCanvasTheme,
+  }) {
+    if (text == null) return this;
+    return LayerSpec.text(
+      text: text!,
+      textStyle: textStyle,
+      textColor: textColor ?? this.textColor,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      textAlign: textAlign,
+      offset: offset,
+      scale: scale,
+      rotation: rotation,
+      followCanvasTheme: followCanvasTheme ?? this.followCanvasTheme,
+    );
+  }
 }

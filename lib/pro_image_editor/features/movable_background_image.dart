@@ -301,6 +301,33 @@ class _MovableBackgroundImageExampleState
     return 'white';
   }
 
+  bool _isDark(Color c) => c.computeLuminance() < 0.5;
+
+  void _updateTextLayersForCanvas(Color canvasColor) {
+    final editor = editorKey.currentState;
+    if (editor == null) return;
+
+    final isDark = _isDark(canvasColor);
+    final textBg = isDark ? Colors.black : Colors.white;
+    final textFg = isDark ? Colors.white : Colors.black;
+
+    final layers = editor.activeLayers;
+
+    for (int i = 0; i < layers.length; i++) {
+      final layer = layers[i];
+
+      if (layer is TextLayer) {
+        editor.replaceLayer(
+          index: i,
+          layer: layer.copyWith(
+            background: textBg,
+            color: textFg,
+          ),
+        );
+      }
+    }
+  }
+
   void _changeCanvasColor() {
     setState(() {
       currentCanvasColorIndex =
@@ -309,6 +336,8 @@ class _MovableBackgroundImageExampleState
       _currentCanvasColor =
           _getCanvasColorName(availableCanvasColors[currentCanvasColorIndex]);
     });
+
+     final Color canvasColor = availableCanvasColors[currentCanvasColorIndex];
 
     // Update the canvas by replacing the first layer
     editorKey.currentState?.replaceLayer(
@@ -355,6 +384,7 @@ class _MovableBackgroundImageExampleState
         ),
       ),
     );
+    _updateTextLayersForCanvas(canvasColor);
   }
 
   Size get _editorSize => Size(
