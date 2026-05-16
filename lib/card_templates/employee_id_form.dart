@@ -232,6 +232,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
     return CommonScaffold(
       index: -1,
       toolbarHeight: 85,
+      showBackButton: true,
       titleWidget: Padding(
         padding: const EdgeInsets.fromLTRB(5, 16, 16, 5),
         child: Column(

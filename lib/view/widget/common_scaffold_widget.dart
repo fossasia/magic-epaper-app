@@ -9,6 +9,7 @@ class CommonScaffold extends StatelessWidget {
   final int index;
   final List<Widget>? actions;
   final double? toolbarHeight;
+  final bool showBackButton;
 
   const CommonScaffold({
     super.key,
@@ -18,7 +19,9 @@ class CommonScaffold extends StatelessWidget {
     required this.index,
     this.actions,
     this.toolbarHeight,
-  });
+    this.showBackButton = false,
+  }) : assert(!showBackButton || index == -1,
+            'When showBackButton is true, index must be -1 to prevent configuring a drawer index with a back button.');
 
   @override
   Widget build(BuildContext context) {
@@ -26,17 +29,19 @@ class CommonScaffold extends StatelessWidget {
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        leading: Builder(builder: (context) {
-          return IconButton(
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-            icon: const Icon(
-              Icons.menu,
-              color: Colors.white,
-            ),
-          );
-        }),
+        leading: showBackButton
+            ? const BackButton(color: Colors.white)
+            : Builder(builder: (context) {
+                return IconButton(
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                  icon: const Icon(
+                    Icons.menu,
+                    color: Colors.white,
+                  ),
+                );
+              }),
         backgroundColor: colorAccent,
         elevation: 0,
         title: titleWidget ??
@@ -47,9 +52,11 @@ class CommonScaffold extends StatelessWidget {
         toolbarHeight: toolbarHeight,
         actions: actions,
       ),
-      drawer: AppDrawer(
-        selectedIndex: index,
-      ),
+      drawer: showBackButton
+          ? null
+          : AppDrawer(
+              selectedIndex: index,
+            ),
       body: body,
     );
   }
