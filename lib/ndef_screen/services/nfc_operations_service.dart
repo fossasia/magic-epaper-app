@@ -7,6 +7,8 @@ import 'package:magicepaperapp/ndef_screen/services/ndef_record_parser.dart';
 import 'package:magicepaperapp/ndef_screen/services/nfc_session_manager.dart';
 import 'package:ndef/ndef.dart' as ndef;
 
+import '../../util/app_logger.dart';
+
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class NFCOperationsService {
@@ -205,7 +207,7 @@ class NFCOperationsService {
       await FlutterNfcKit.writeNDEFRecords([emptyRecord]);
       return appLocalizations.emptyTextRecord;
     } catch (e) {
-      print('${appLocalizations.method1EmptyTextRecordFailed}$e');
+      AppLogger.error('${appLocalizations.method1EmptyTextRecordFailed}$e');
     }
 
     try {
@@ -213,7 +215,7 @@ class NFCOperationsService {
       await FlutterNfcKit.writeNDEFRecords([emptyRecord]);
       return appLocalizations.emptyNdefRecord;
     } catch (e) {
-      print('${appLocalizations.method2EmptyNdefRecordFailed}$e');
+      AppLogger.error('${appLocalizations.method2EmptyNdefRecordFailed}$e');
     }
 
     try {
@@ -221,14 +223,14 @@ class NFCOperationsService {
       await FlutterNfcKit.writeNDEFRecords([minimalRecord]);
       return appLocalizations.minimalSpaceCharacter;
     } catch (e) {
-      print('${appLocalizations.method3MinimalRecordFailed}$e');
+      AppLogger.error('${appLocalizations.method3MinimalRecordFailed}$e');
     }
 
     try {
       await FlutterNfcKit.writeNDEFRecords([]);
       return appLocalizations.emptyRecordList;
     } catch (e) {
-      print('${appLocalizations.method4EmptyListFailed}$e');
+      AppLogger.error('${appLocalizations.method4EmptyListFailed}$e');
       throw Exception('${appLocalizations.allClearingMethodsFailed}$e');
     }
   }
