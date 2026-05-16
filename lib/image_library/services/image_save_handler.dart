@@ -164,7 +164,7 @@ class ImageSaveHandler {
     }
 
     var status = await permission.status;
-    if (status.isGranted) return true;
+    if (status.isGranted || status.isLimited) return true;
 
     if (status.isDenied || status.isPermanentlyDenied) {
       if (!context.mounted) return false;
