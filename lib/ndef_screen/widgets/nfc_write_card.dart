@@ -332,6 +332,7 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
     return TextField(
       onChanged: onChanged,
       maxLines: maxLines,
+      minLines: 1,
       obscureText: obscureText,
       style: const TextStyle(fontSize: 14),
       decoration: InputDecoration(
