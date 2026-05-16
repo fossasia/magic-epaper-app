@@ -18,7 +18,7 @@ class GDEQ031T10 extends Epd {
   @override
   String get modelId => 'GDEQ031T10';
   @override
-  String get imgPath => ImageAssets.GDEQ031T10Display;
+  String get imgPath => ImageAssets.gdeq031t10Display;
 
   @override
   get colors => [Colors.white, Colors.black];
