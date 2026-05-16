@@ -416,11 +416,6 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
                   onPressed: _startScanning,
                   icon: const Icon(Icons.qr_code_scanner),
                   label: const Text('Scan Barcode'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colorAccent,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
                 ),
               ),
             ],
