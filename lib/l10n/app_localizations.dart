@@ -138,6 +138,66 @@ abstract class AppLocalizations {
   /// **'Magic ePaper is an app designed to control and update ePaper displays. The goal is to provide tools for customizing and transferring images, text, and patterns to ePaper screens using NFC. Data transfer from the smartphone to the ePaper hardware is done wirelessly via NFC. The project is built on top of custom firmware and display drivers for seamless communication and efficient image rendering.'**
   String get aboutUsDescription;
 
+  /// No description provided for @shareAppMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Magic ePaper is an app to control and update ePaper displays. This app provides tools for customizing and transferring images, text, and patterns to ePaper screens using NFC. You can download it from GitHub: https://github.com/fossasia/magic-epaper-app'**
+  String get shareAppMessage;
+
+  /// No description provided for @canvasColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Canvas Color'**
+  String get canvasColor;
+
+  /// No description provided for @addImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Image'**
+  String get addImage;
+
+  /// No description provided for @paint.
+  ///
+  /// In en, this message translates to:
+  /// **'Paint'**
+  String get paint;
+
+  /// No description provided for @text.
+  ///
+  /// In en, this message translates to:
+  /// **'Text'**
+  String get text;
+
+  /// No description provided for @barcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Barcode'**
+  String get barcode;
+
+  /// No description provided for @emoji.
+  ///
+  /// In en, this message translates to:
+  /// **'Emoji'**
+  String get emoji;
+
+  /// No description provided for @camera.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get camera;
+
+  /// No description provided for @gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get gallery;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
   /// No description provided for @developedBy.
   ///
   /// In en, this message translates to:
@@ -1062,12 +1122,6 @@ abstract class AppLocalizations {
   /// **'Please enable NFC in your device settings to use this feature.'**
   String get enableNfcMessage;
 
-  /// No description provided for @cancel.
-  ///
-  /// In en, this message translates to:
-  /// **'Cancel'**
-  String get cancel;
-
   /// No description provided for @confirm.
   ///
   /// In en, this message translates to:
@@ -1125,14 +1179,8 @@ abstract class AppLocalizations {
   /// No description provided for @waveformSelected.
   ///
   /// In en, this message translates to:
-  /// **'Selected'**
-  String get waveformSelected;
-
-  /// No description provided for @barcode.
-  ///
-  /// In en, this message translates to:
-  /// **'Barcode'**
-  String get barcode;
+  /// **'{waveformName} Selected'**
+  String waveformSelected(String waveformName);
 
   /// No description provided for @library.
   ///
@@ -2597,6 +2645,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose image from gallery'**
   String get chooseImageFromGallery;
+
+  /// No description provided for @processingImages.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing images...'**
+  String get processingImages;
+
+  /// No description provided for @refreshModeInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Mode Information'**
+  String get refreshModeInfo;
+
+  /// No description provided for @fullRefreshInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Refresh'**
+  String get fullRefreshInfo;
+
+  /// No description provided for @fullRefreshDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Completely refreshes the entire display by clearing all pixels and redrawing the image. This provides the best image quality and contrast but takes longer to complete.'**
+  String get fullRefreshDescription;
+
+  /// No description provided for @partialRefreshInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Partial Refresh (Waveforms)'**
+  String get partialRefreshInfo;
+
+  /// No description provided for @partialRefreshDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates only the changed pixels using optimized waveforms. This is faster than full refresh but may result in ghosting or reduced contrast over time.'**
+  String get partialRefreshDescription;
+
+  /// No description provided for @longPressForInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Long press for more information'**
+  String get longPressForInfo;
+
+  /// No description provided for @textEditorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Text Editor'**
+  String get textEditorTitle;
 }
 
 class _AppLocalizationsDelegate
