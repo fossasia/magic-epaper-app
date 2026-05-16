@@ -633,12 +633,14 @@ class _MovableBackgroundImageExampleState
     ProImageEditorState editor,
     BoxConstraints constraints,
   ) {
+    final double bottomPadding = MediaQuery.paddingOf(context).bottom;
+
     return Stack(clipBehavior: Clip.none, children: [
       Positioned(
         top: 0,
         left: 0,
         right: 0,
-        bottom: -50,
+        bottom: -bottomPadding,
         child: Container(color: Colors.black),
       ),
       SizedBox(
