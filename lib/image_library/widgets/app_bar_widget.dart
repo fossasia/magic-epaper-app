@@ -78,7 +78,7 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             color: Colors.white,
             elevation: 8,
-            shadowColor: Colors.black.withOpacity(0.1),
+            shadowColor: Colors.black.withValues(alpha: 0.1),
             offset: const Offset(0, 10),
             itemBuilder: (context) => [
               PopupMenuItem(
@@ -89,15 +89,16 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: Colors.red.withOpacity(0.05),
-                    border: Border.all(color: Colors.red.withOpacity(0.1)),
+                    color: Colors.red.withValues(alpha: 0.05),
+                    border:
+                        Border.all(color: Colors.red.withValues(alpha: 0.1)),
                   ),
                   child: Row(
                     children: [
                       Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.1),
+                          color: Colors.red.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: const Icon(
