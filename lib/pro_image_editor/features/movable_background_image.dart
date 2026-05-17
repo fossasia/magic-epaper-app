@@ -26,6 +26,7 @@ import '../core/mixin/example_helper.dart';
 import '../shared/widgets/material_icon_button.dart';
 import '../shared/widgets/pixel_transparent_painter.dart';
 import 'reorder_layer_example.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
 
 final bool _useMaterialDesign =
     platformDesignMode == ImageEditorDesignMode.material;
@@ -435,6 +436,20 @@ class _MovableBackgroundImageExampleState
               key: editorKey,
               callbacks: ProImageEditorCallbacks(
                 onImageEditingComplete: (Uint8List bytes) async {
+                  final editor = editorKey.currentState;
+
+                  if (editor == null || editor.activeLayers.length <= 1) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(AppLocalizations.of(context)!
+                              .cannotSaveEmptyCanvas),
+                        ),
+                      );
+                    }
+                    return;
+                  }
+
                   Navigator.pop(context, bytes);
                 },
                 mainEditorCallbacks: MainEditorCallbacks(
