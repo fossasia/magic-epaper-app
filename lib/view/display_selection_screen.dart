@@ -8,11 +8,10 @@ import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
 import 'package:magicepaperapp/util/epd/waveshare_displays.dart';
 import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
-import 'package:provider/provider.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/view/widget/display_card.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+import 'package:magicepaperapp/util/epd/custom_display.dart';
+import 'package:magicepaperapp/view/custom_display_configuration_screen.dart';
 
 class DisplaySelectionScreen extends StatefulWidget {
   const DisplaySelectionScreen({super.key});
@@ -36,10 +35,8 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   ];
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ColorPaletteProvider>(
-      create: (_) => getIt<ColorPaletteProvider>(),
-      builder: (context, child) {
-        return CommonScaffold(
+    final appLocalizations = AppLocalizations.of(context)!;
+    return CommonScaffold(
           index: 0,
           toolbarHeight: 85,
           titleWidget: Padding(
@@ -75,14 +72,29 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                   mainAxisSpacing: 8,
                   crossAxisSpacing: 8,
                 ),
-                itemCount: displays.length,
+                itemCount: displays.length + 1,
                 itemBuilder: (context, index) {
+                  if (index == displays.length) {
+                    return DisplayCard(
+                      display: CustomPlaceholder(appLocalizations),
+                      isSelected: false,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const CustomDisplayConfigurationScreen(),
+                          ),
+                        );
+                      },
+                    );
+                  }
                   return DisplayCard(
                     key: Key(displays[index].modelId),
                     display: displays[index],
                     isSelected: false,
                     onTap: () {
-                      context.read<ColorPaletteProvider>().updateColors(
+                      getIt<ColorPaletteProvider>().updateColors(
                             displays[index].colors,
                           );
 
@@ -114,8 +126,6 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
             ),
           ),
         );
-      },
-    );
   }
 }
 

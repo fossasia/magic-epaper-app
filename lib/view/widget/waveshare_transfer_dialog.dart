@@ -7,8 +7,6 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/waveshare/services/waveshare_nfc_services.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
-
 enum _TransferState { processing, waitingForNfc, flashing, complete, error }
 
 class WaveshareTransferDialog extends StatefulWidget {
@@ -109,11 +107,13 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
     try {
       final result = await services.flashImage(
           _processedImageBytes!, widget.ePaperSizeEnum);
+      if (!mounted) return;
       setState(() {
-        _message = result ?? appLocalizations.transferCompleteMessage;
+        _message = result ?? AppLocalizations.of(context)!.transferCompleteMessage;
         _currentState = _TransferState.complete;
       });
     } on PlatformException catch (e) {
+      if (!mounted) return;
       setState(() {
         _message = "Transfer failed: ${e.message}";
         _currentState = _TransferState.error;
@@ -125,19 +125,20 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
-          child: _buildContent(),
+          child: _buildContent(appLocalizations),
         ),
       ),
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(AppLocalizations appLocalizations) {
     switch (_currentState) {
       case _TransferState.processing:
         return _buildStateColumn(
@@ -152,7 +153,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
           key: 'waiting',
           icon: Icons.nfc,
           color: colorPrimary,
-          title: "Ready to Transfer",
+          title: appLocalizations.readyToTransfer,
           child: Column(
             children: [
               AnimatedBuilder(
@@ -162,10 +163,10 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
                 child: const Icon(Icons.nfc, size: 60, color: colorPrimary),
               ),
               const SizedBox(height: 24),
-              const Text(
-                "Hold your phone near the display to begin.",
+              Text(
+                appLocalizations.holdPhoneNearDisplay,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
             ],
           ),

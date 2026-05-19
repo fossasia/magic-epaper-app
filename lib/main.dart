@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
+import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/provider/image_loader.dart';
@@ -20,6 +21,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => ImageLoader()),
         ChangeNotifierProvider(create: (_) => ImageLibraryProvider()),
         ChangeNotifierProvider(create: (_) => LocaleProvider()),
+        ChangeNotifierProvider.value(value: getIt<ColorPaletteProvider>()),
       ],
       child: const MyApp(),
     ),
