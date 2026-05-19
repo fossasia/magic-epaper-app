@@ -1,4 +1,5 @@
 import 'package:file_saver/file_saver.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
@@ -159,37 +160,28 @@ class _ImageEditorState extends State<ImageEditor> {
 
   Future<void> _processImagesAsync(img.Image sourceImage) async {
     if (_isProcessingImages) return;
-    setState(() {
-      _isProcessingImages = true;
-    });
+    setState(() => _isProcessingImages = true);
+
     try {
-      await Future.delayed(const Duration(milliseconds: 50));
-      final rawImages =
-          processImages(originalImage: sourceImage, epd: widget.device);
-      final processedPngs = <Uint8List>[];
-      for (int i = 0; i < rawImages.length; i++) {
-        processedPngs.add(img.encodePng(rawImages[i]));
-        if (i % 2 == 0) {
-          await Future.delayed(const Duration(milliseconds: 1));
-        }
-      }
+      final result = await compute(_processImagesWorker, {
+        'source': sourceImage,
+        'device': widget.device,
+      });
+
       if (mounted) {
         setState(() {
-          _rawImages = rawImages;
-          _processedPngs = processedPngs;
+          _rawImages = result['raw'];
+          _processedPngs = result['pngs'];
+
           _processedSourceImage = sourceImage;
           _selectedFilterIndex = 0;
+          _isProcessingImages = false;
           flipHorizontal = false;
           flipVertical = false;
-          _isProcessingImages = false;
         });
       }
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isProcessingImages = false;
-        });
-      }
+      if (mounted) setState(() => _isProcessingImages = false);
     }
   }
 
@@ -790,4 +782,22 @@ class BottomActionMenu extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<Map<String, dynamic>> _processImagesWorker(
+    Map<String, dynamic> data) async {
+  final img.Image source = data['source'];
+  final dynamic device = data['device'];
+
+  final raw = processImages(originalImage: source, epd: device);
+
+  List<Uint8List> pngs = [];
+  for (int i = 0; i < raw.length; i++) {
+    pngs.add(img.encodePng(raw[i]));
+  }
+
+  return {
+    'raw': raw,
+    'pngs': pngs,
+  };
 }
