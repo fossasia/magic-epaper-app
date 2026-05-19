@@ -433,7 +433,7 @@ class _ImageEditorState extends State<ImageEditor> {
                                         _selectedWaveform == null
                                             ? appLocalizations
                                                 .fullRefreshSelected
-                                            : "${appLocalizations.waveformSelected} ${_selectedWaveform!.name}",
+                                            : appLocalizations.waveformSelected(_selectedWaveform!.name),
                                       ),
                                       backgroundColor: colorPrimary,
                                     ),
@@ -601,7 +601,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.add_photo_alternate_outlined,
-                label: appLocalizations.import,
+                label: appLocalizations.importImageButtonLabel,
                 onTap: () async {
                   final success = await imgLoader.pickImage(
                     width: epd.width,

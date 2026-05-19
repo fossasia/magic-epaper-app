@@ -519,13 +519,18 @@ class AppLocalizationsNb extends AppLocalizations {
   String get fullRefreshSelected => 'Full Refresh Selected';
 
   @override
-  String get waveformSelected => 'Selected';
+  String waveformSelected(String waveformName) {
+    return '$waveformName Selected';
+  }
 
   @override
   String get barcode => 'Barcode';
 
   @override
   String get library => 'Library';
+
+  @override
+  String get text => 'Text';
 
   @override
   String get templates => 'Templates';
@@ -1282,9 +1287,27 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get chooseImageFromGallery => 'Choose image from gallery';
-}
 
-/// The translations for Norwegian Bokmål, as used in Norway (`nb_NO`).
-class AppLocalizationsNbNo extends AppLocalizationsNb {
-  AppLocalizationsNbNo() : super('nb_NO');
+  @override
+  String get processingImages => 'Processing images...';
+
+  @override
+  String get refreshModeInfo => 'Refresh Mode Information';
+
+  @override
+  String get fullRefreshInfo => 'Full Refresh';
+
+  @override
+  String get fullRefreshDescription =>
+      'Completely refreshes the entire display by clearing all pixels and redrawing the image. This provides the best image quality and contrast but takes longer to complete.';
+
+  @override
+  String get partialRefreshInfo => 'Partial Refresh (Waveforms)';
+
+  @override
+  String get partialRefreshDescription =>
+      'Updates only the changed pixels using optimized waveforms. This is faster than full refresh but may result in ghosting or reduced contrast over time.';
+
+  @override
+  String get longPressForInfo => 'Long press for more information';
 }

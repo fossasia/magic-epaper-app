@@ -516,16 +516,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get fullRefresh => 'Full Refresh';
 
   @override
-  String get fullRefreshSelected => 'Full Refresh Selected';
+  String get fullRefreshSelected => 'Vollständige Aktualisierung ausgewählt';
 
   @override
-  String get waveformSelected => 'Selected';
+  String waveformSelected(String waveformName) {
+    return '$waveformName ausgewählt';
+  }
 
   @override
   String get barcode => 'Barcode';
 
   @override
   String get library => 'Library';
+
+  @override
+  String get text => 'Text';
 
   @override
   String get templates => 'Templates';
@@ -1282,4 +1287,27 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get chooseImageFromGallery => 'Choose image from gallery';
+
+  @override
+  String get processingImages => 'Bilder werden verarbeitet...';
+
+  @override
+  String get refreshModeInfo => 'Informationen zum Aktualisierungsmodus';
+
+  @override
+  String get fullRefreshInfo => 'Vollständige Aktualisierung';
+
+  @override
+  String get fullRefreshDescription =>
+      'Aktualisiert das gesamte Display vollständig, indem alle Pixel gelöscht und das Bild neu gezeichnet wird. Dies bietet die beste Bildqualität und den besten Kontrast, dauert aber länger.';
+
+  @override
+  String get partialRefreshInfo => 'Teilweise Aktualisierung (Waveforms)';
+
+  @override
+  String get partialRefreshDescription =>
+      'Aktualisiert nur die geänderten Pixel mithilfe optimierter Waveforms. Dies ist schneller als eine vollständige Aktualisierung, kann aber mit der Zeit zu Ghosting oder verringertem Kontrast führen.';
+
+  @override
+  String get longPressForInfo => 'Lange drücken für weitere Informationen';
 }

@@ -169,9 +169,21 @@
   "exportingXbm": "Exporting XBM files...",
   "fullRefresh": "Full Refresh",
   "fullRefreshSelected": "Full Refresh Selected",
-  "waveformSelected": "Selected",
+  "waveformSelected": "{waveformName} Selected",
+  "@waveformSelected": {
+    "placeholders": {
+      "waveformName": {
+        "type": "String",
+        "example": "A2"
+      }
+    }
+  },
   "barcode": "Barcode",
   "library": "Library",
+  "text": "Text",
+  "@text": {
+    "description": "Label for the text section or tool in the user interface."
+  },
   "templates": "Templates",
   "barcodeGenerator": "Barcode Generator",
   "barcodeData": "Barcode Data",
