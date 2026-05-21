@@ -112,7 +112,7 @@ class TextFitEditorState extends State<TextFitEditor> {
           IconButton(
             onPressed: () async {
               final bytes = await _export(canvasSize);
-              if (!mounted) return;
+              if (!context.mounted) return;
               Navigator.pop(context, bytes);
             },
             icon: const Icon(Icons.check, color: Colors.white),
