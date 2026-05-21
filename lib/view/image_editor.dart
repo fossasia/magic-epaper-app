@@ -1,4 +1,5 @@
 import 'package:file_saver/file_saver.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
@@ -20,9 +21,6 @@ import 'package:magicepaperapp/util/epd/epd.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import '../util/app_logger.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class ImageEditor extends StatefulWidget {
   final DisplayDevice device;
@@ -162,37 +160,28 @@ class _ImageEditorState extends State<ImageEditor> {
 
   Future<void> _processImagesAsync(img.Image sourceImage) async {
     if (_isProcessingImages) return;
-    setState(() {
-      _isProcessingImages = true;
-    });
+    setState(() => _isProcessingImages = true);
+
     try {
-      await Future.delayed(const Duration(milliseconds: 50));
-      final rawImages =
-          processImages(originalImage: sourceImage, epd: widget.device);
-      final processedPngs = <Uint8List>[];
-      for (int i = 0; i < rawImages.length; i++) {
-        processedPngs.add(img.encodePng(rawImages[i]));
-        if (i % 2 == 0) {
-          await Future.delayed(const Duration(milliseconds: 1));
-        }
-      }
+      final result = await compute(_processImagesWorker, {
+        'source': sourceImage,
+        'device': widget.device,
+      });
+
       if (mounted) {
         setState(() {
-          _rawImages = rawImages;
-          _processedPngs = processedPngs;
+          _rawImages = result['raw'];
+          _processedPngs = result['pngs'];
+
           _processedSourceImage = sourceImage;
           _selectedFilterIndex = 0;
+          _isProcessingImages = false;
           flipHorizontal = false;
           flipVertical = false;
-          _isProcessingImages = false;
         });
       }
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isProcessingImages = false;
-        });
-      }
+      if (mounted) setState(() => _isProcessingImages = false);
     }
   }
 
@@ -311,7 +300,7 @@ class _ImageEditorState extends State<ImageEditor> {
               style: TextButton.styleFrom(
                 foregroundColor: colorAccent,
               ),
-              child: const Text('OK'),
+              child: Text(appLocalizations.ok),
             ),
           ],
         );
@@ -321,6 +310,7 @@ class _ImageEditorState extends State<ImageEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     var imgLoader = context.watch<ImageLoader>();
     if (!_isInitializing && imgLoader.image != null && !_isProcessingImages) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -578,6 +568,7 @@ class BottomActionMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     return SafeArea(
       top: false,
       bottom: true,
@@ -602,7 +593,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.add_photo_alternate_outlined,
-                label: "Import",
+                label: appLocalizations.import,
                 onTap: () async {
                   final success = await imgLoader.pickImage(
                     width: epd.width,
@@ -646,7 +637,7 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.text_fields,
-                label: "Text",
+                label: appLocalizations.text,
                 onTap: () async {
                   final bytes = await Navigator.of(context).push<Uint8List>(
                     MaterialPageRoute(
@@ -791,4 +782,22 @@ class BottomActionMenu extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<Map<String, dynamic>> _processImagesWorker(
+    Map<String, dynamic> data) async {
+  final img.Image source = data['source'];
+  final dynamic device = data['device'];
+
+  final raw = processImages(originalImage: source, epd: device);
+
+  List<Uint8List> pngs = [];
+  for (int i = 0; i < raw.length; i++) {
+    pngs.add(img.encodePng(raw[i]));
+  }
+
+  return {
+    'raw': raw,
+    'pngs': pngs,
+  };
 }
