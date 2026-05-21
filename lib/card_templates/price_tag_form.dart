@@ -207,6 +207,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
       );
 
       if (bytes != null) {
+        if (!mounted) return;
         Navigator.of(context)
           ..pop()
           ..pop(bytes);
@@ -352,12 +353,12 @@ class _PriceTagFormState extends State<PriceTagForm> {
                 child: ElevatedButton(
                   onPressed: _isGenerating ? null : _submitForm,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        colorPrimary.withAlpha(_isGenerating ? 125 : 255),
-                    foregroundColor:
-                        Colors.white.withAlpha(_isGenerating ? 178 : 255),
+                    backgroundColor: colorPrimary.withValues(
+                        alpha: _isGenerating ? 0.49 : 1.0),
+                    foregroundColor: Colors.white
+                        .withValues(alpha: _isGenerating ? 0.7 : 1.0),
                     elevation: _isGenerating ? 0 : 2,
-                    shadowColor: colorPrimary.withOpacity(0.3),
+                    shadowColor: colorPrimary.withValues(alpha: 0.3),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -417,12 +418,12 @@ class _PriceTagFormState extends State<PriceTagForm> {
       data: Theme.of(context).copyWith(
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: colorPrimary,
-          selectionColor: colorPrimary.withOpacity(0.2),
+          selectionColor: colorPrimary.withValues(alpha: 0.2),
           selectionHandleColor: colorPrimary,
         ),
         inputDecorationTheme: InputDecorationTheme(
           focusColor: colorPrimary,
-          hoverColor: colorPrimary.withOpacity(0.1),
+          hoverColor: colorPrimary.withValues(alpha: 0.1),
         ),
       ),
       child: TextFormField(
@@ -441,7 +442,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
           hintText: hint,
           prefixIcon: Icon(icon, color: colorAccent, size: 20),
           labelStyle: TextStyle(
-            color: colorBlack.withOpacity(0.7),
+            color: colorBlack.withValues(alpha: 0.7),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -515,7 +516,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: colorPrimary.withOpacity(0.1),
+                      color: colorPrimary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -533,8 +534,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
             InkWell(
               onTap: _pickProductImage,
               borderRadius: BorderRadius.circular(8),
-              splashColor: colorAccent.withOpacity(0.1),
-              highlightColor: colorAccent.withOpacity(0.05),
+              splashColor: colorAccent.withValues(alpha: 0.1),
+              highlightColor: colorAccent.withValues(alpha: 0.05),
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
@@ -558,7 +559,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: _productImage != null
-                              ? colorPrimary.withOpacity(0.3)
+                              ? colorPrimary.withValues(alpha: 0.3)
                               : Colors.grey.shade300,
                         ),
                       ),
@@ -632,7 +633,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color: _productImage != null
-                            ? colorPrimary.withOpacity(0.1)
+                            ? colorPrimary.withValues(alpha: 0.1)
                             : Colors.grey.shade100,
                         borderRadius: BorderRadius.circular(20),
                       ),
