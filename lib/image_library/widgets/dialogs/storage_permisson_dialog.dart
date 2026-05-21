@@ -69,7 +69,6 @@ class StoragePermissionDialog extends StatelessWidget {
                 Expanded(
                   child: TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
                       onCancel?.call();
                     },
                     style: TextButton.styleFrom(
@@ -93,7 +92,6 @@ class StoragePermissionDialog extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
                       onGrantPermission?.call();
                     },
                     style: ElevatedButton.styleFrom(
@@ -120,27 +118,6 @@ class StoragePermissionDialog extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  static Future<void> show(
-    BuildContext context, {
-    VoidCallback? onGrantPermission,
-    VoidCallback? onCancel,
-    Color colorAccent = Colors.blue,
-    Color colorBlack = Colors.black,
-  }) {
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return StoragePermissionDialog(
-          onGrantPermission: onGrantPermission,
-          onCancel: onCancel,
-          colorAccent: colorAccent,
-          colorBlack: colorBlack,
-        );
-      },
     );
   }
 }
