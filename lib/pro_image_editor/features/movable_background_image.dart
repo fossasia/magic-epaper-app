@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/pro_image_editor/features/bottom_bar.dart';
 import 'package:magicepaperapp/pro_image_editor/features/barcode_editor.dart';
 import 'package:magicepaperapp/pro_image_editor/features/text_bottom_bar.dart';
@@ -26,7 +27,6 @@ import '../core/mixin/example_helper.dart';
 import '../shared/widgets/material_icon_button.dart';
 import '../shared/widgets/pixel_transparent_painter.dart';
 import 'reorder_layer_example.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
 
 final bool _useMaterialDesign =
     platformDesignMode == ImageEditorDesignMode.material;
