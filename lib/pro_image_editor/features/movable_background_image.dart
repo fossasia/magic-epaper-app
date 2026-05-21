@@ -508,6 +508,11 @@ class _MovableBackgroundImageExampleState
                 mainEditor: MainEditorConfigs(
                   enableZoom: true,
                   enableCloseButton: !isDesktopMode(context),
+                  tools: const [
+                    SubEditorMode.paint,
+                    SubEditorMode.text,
+                    SubEditorMode.emoji,
+                  ],
                   widgets: MainEditorWidgets(
                     bodyItems: (editor, rebuildStream) {
                       return [
@@ -594,11 +599,10 @@ class _MovableBackgroundImageExampleState
                           ? MainAxisAlignment.spaceEvenly
                           : MainAxisAlignment.start),
                 ),
-                cropRotateEditor: const CropRotateEditorConfigs(enabled: false),
-                filterEditor: const FilterEditorConfigs(enabled: false),
-                blurEditor: const BlurEditorConfigs(enabled: false),
+                cropRotateEditor: const CropRotateEditorConfigs(),
+                filterEditor: const FilterEditorConfigs(),
+                blurEditor: const BlurEditorConfigs(),
                 stickerEditor: StickerEditorConfigs(
-                  enabled: false,
                   initWidth:
                       (_editorSize.aspectRatio > (widget.width / widget.height)
                               ? _editorSize.height

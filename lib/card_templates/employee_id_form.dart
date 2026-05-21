@@ -215,6 +215,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
       );
 
       if (result != null) {
+        if (!mounted) return;
         Navigator.of(context)
           ..pop()
           ..pop(result);
@@ -354,7 +355,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                     foregroundColor:
                         Colors.white.withAlpha(_isGenerating ? 178 : 255),
                     elevation: _isGenerating ? 0 : 2,
-                    shadowColor: colorPrimary.withOpacity(0.3),
+                    shadowColor: colorPrimary.withValues(alpha: 0.3),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -413,12 +414,12 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
       data: Theme.of(context).copyWith(
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: colorPrimary,
-          selectionColor: colorPrimary.withOpacity(0.2),
+          selectionColor: colorPrimary.withValues(alpha: 0.3),
           selectionHandleColor: colorPrimary,
         ),
         inputDecorationTheme: InputDecorationTheme(
           focusColor: colorPrimary,
-          hoverColor: colorPrimary.withOpacity(0.1),
+          hoverColor: colorPrimary.withValues(alpha: 0.3),
         ),
       ),
       child: TextFormField(
@@ -436,7 +437,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
           hintText: hint,
           prefixIcon: Icon(icon, color: colorAccent, size: 20),
           labelStyle: TextStyle(
-            color: colorBlack.withOpacity(0.7),
+            color: colorBlack.withValues(alpha: 0.7),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -511,7 +512,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: colorPrimary.withOpacity(0.1),
+                      color: colorPrimary.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -529,8 +530,8 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
             InkWell(
               onTap: _pickImage,
               borderRadius: BorderRadius.circular(8),
-              splashColor: colorAccent.withOpacity(0.1),
-              highlightColor: colorAccent.withOpacity(0.05),
+              splashColor: colorAccent.withValues(alpha: 0.1),
+              highlightColor: colorAccent.withValues(alpha: 0.05),
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
@@ -554,7 +555,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: _profileImage != null
-                              ? colorPrimary.withOpacity(0.3)
+                              ? colorPrimary.withValues(alpha: 0.3)
                               : Colors.grey.shade300,
                         ),
                       ),
@@ -628,7 +629,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color: _profileImage != null
-                            ? colorPrimary.withOpacity(0.1)
+                            ? colorPrimary.withValues(alpha: 0.3)
                             : Colors.grey.shade100,
                         borderRadius: BorderRadius.circular(20),
                       ),
