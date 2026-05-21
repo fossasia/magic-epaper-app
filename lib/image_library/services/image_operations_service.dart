@@ -177,6 +177,7 @@ class ImageOperationsService {
       }
       final decodedImage = img.decodeImage(imageData);
       if (decodedImage != null) {
+        if (!context.mounted) return;
         imageEpd.transfer(
           context,
           decodedImage,

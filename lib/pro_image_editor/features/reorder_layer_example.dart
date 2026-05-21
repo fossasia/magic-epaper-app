@@ -68,7 +68,7 @@ class _ReorderLayerSheetState extends State<ReorderLayerSheet> {
         return ListTile(
           key: ValueKey(layer),
           tileColor: isFirstLayer
-              ? Theme.of(context).disabledColor.withOpacity(0.1)
+              ? Theme.of(context).disabledColor.withValues(alpha: 0.1)
               : Theme.of(context).cardColor,
           title: layer.runtimeType == TextLayer
               ? Text(
