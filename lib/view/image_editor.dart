@@ -494,8 +494,7 @@ class _ImageEditorState extends State<ImageEditor> {
                   ),
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
-                  child:
-                      _buildTransferActionButton(context, appLocalizations),
+                  child: _buildTransferActionButton(context, appLocalizations),
                 ),
               ]
             : null,
@@ -585,8 +584,7 @@ class BottomActionMenu extends StatelessWidget {
     final double fontSize = isNarrow ? 9.0 : 10.0;
     // Grow the bar height with the user's font-scale so labels don't clip
     // vertically under accessibility settings.
-    final double barHeight =
-        75.0 + ((textScale - 1.0).clamp(0.0, 0.6)) * 28.0;
+    final double barHeight = 75.0 + ((textScale - 1.0).clamp(0.0, 0.6)) * 28.0;
     return SafeArea(
       top: false,
       bottom: true,
