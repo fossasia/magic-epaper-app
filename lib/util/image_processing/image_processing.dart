@@ -5,7 +5,7 @@ import 'package:magicepaperapp/src/rust/api/simple.dart';
 class ImageProcessingMethod {
   final DitherMethod method;
   final bool isBwr;
-  final bool useDartHalftone; 
+  final bool useDartHalftone;
   const ImageProcessingMethod(this.method, this.isBwr,
       {this.useDartHalftone = false});
 }
