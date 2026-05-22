@@ -11,8 +11,13 @@ import 'package:provider/provider.dart';
 import 'package:magicepaperapp/ndef_screen/nfc_read_screen.dart';
 import 'package:magicepaperapp/ndef_screen/nfc_write_screen.dart';
 import 'package:magicepaperapp/view/display_selection_screen.dart';
+import 'package:magicepaperapp/src/rust/frb_generated.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await RustLib.init();
+
   setupLocator();
   runApp(
     MultiProvider(
