@@ -39,7 +39,8 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
   bool _scanHandled = false;
   scanner.MobileScannerController? _scannerController;
 
-  static const Duration _validationDebounceDuration = Duration(milliseconds: 450);
+  static const Duration _validationDebounceDuration =
+      Duration(milliseconds: 450);
 
   void _showSnackBar(String message, {Color background = Colors.red}) {
     _messengerKey.currentState?.showSnackBar(
@@ -81,18 +82,14 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     'UPC A': '0 to 9',
   };
 
-  /// Formats whose final character is a checksum the package can compute for
-  /// us. For these we cap the input one short of the full length and let the
-  /// package append the check digit — much friendlier than asking users to
-  /// memorise checksum math.
+  /// Field caps at `length - 1` so the package auto-appends the check digit.
   static const Set<String> _autoChecksumFormats = {
     'EAN 13',
     'EAN 8',
     'UPC A',
   };
 
-  /// Formats whose alphabet only includes uppercase letters — we auto-uppercase
-  /// keystrokes so lowercase input isn't silently dropped.
+  /// Lowercase input is auto-uppercased; the package's charset is uppercase-only.
   static const Set<String> _uppercaseOnlyFormats = {
     'CODE 39',
     'CODE 93',
@@ -122,7 +119,6 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
   void _scheduleValidation(String text) {
     _validationDebounce?.cancel();
     if (text.isEmpty) {
-      // Clear instantly so the placeholder reappears with no delay.
       setState(() {
         _debouncedBarcodeData = '';
       });
@@ -162,8 +158,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
               'See barcode rules';
           return _ValidationError(
             title: 'Character not allowed',
-            detail:
-                "$friendly doesn't allow '$char'.\nAllowed: $allowed",
+            detail: "$friendly doesn't allow '$char'.\nAllowed: $allowed",
           );
         }
       }
@@ -190,9 +185,8 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       );
     }
 
-    // Final check: ask the underlying barcode package to actually encode the
-    // data. This catches checksum mismatches (EAN/UPC/ITF) and other format
-    // rules that simple length/charset checks miss.
+    // Catches checksum mismatches and other format rules the length/charset
+    // checks above miss.
     try {
       barcode.verify(data);
     } on BarcodeException catch (e) {
@@ -211,18 +205,13 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     return null;
   }
 
-  /// Builds a context-aware tip when validation fails. Returns null if there's
-  /// nothing helpful to add (so the card just shows title + detail).
   _Suggestion? _suggestionFor(Barcode b, String data, String rawError) {
-    // ITF needs an even number of digits.
     if (b.name == 'ITF' && data.length.isOdd) {
       return const _Suggestion(
         text: 'ITF needs an even number of digits. Add or remove one digit.',
       );
     }
 
-    // Codabar's start/stop letters are added by the package; if the user
-    // typed letters, point that out.
     if (b.name == 'CODABAR' && RegExp(r'[A-Za-z]').hasMatch(data)) {
       return const _Suggestion(
         text:
@@ -230,8 +219,6 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       );
     }
 
-    // A scanned UPC-E that came in as 8 compressed digits won't satisfy
-    // UPC-A's 11-digit minimum. Explain instead of showing a bare error.
     if (b.name == 'UPC A' && data.length == 8) {
       return const _Suggestion(
         text:
@@ -241,7 +228,6 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
 
     return null;
   }
-
 
   static final RegExp _checksumRegex =
       RegExp(r'checksum "(.)" should be "(.)"');
@@ -254,10 +240,10 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       return 'The last digit is a check digit. You entered "$entered" but it should be "$expected".\nTip: enter one fewer digit and we\'ll calculate it for you.';
     }
     if (raw.contains('not ') && raw.contains('digits')) {
-      return raw.replaceFirst(RegExp(r'^Unable to encode "[^"]*" to [^,]+, '), '')
+      return raw
+          .replaceFirst(RegExp(r'^Unable to encode "[^"]*" to [^,]+, '), '')
           .replaceFirst('it is not', 'Length should be');
     }
-    // Strip the noisy "Unable to encode ..." prefix if present.
     return raw.replaceFirst(
         RegExp(r'^Unable to encode "[^"]*" to [^,]+,\s*'), '');
   }
@@ -272,17 +258,12 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     return '$minLen–$maxLen characters';
   }
 
-  /// User-facing maximum length. For auto-checksum formats we shave one off the
-  /// package's max so the user enters only the data portion; the package adds
-  /// the check digit when encoding. Returns `null` for unbounded formats.
   int? _effectiveMaxLength(Barcode b) {
     if (b.maxLength >= 10000) return null;
     if (_autoChecksumFormats.contains(b.name)) return b.maxLength - 1;
     return b.maxLength;
   }
 
-  /// Minimum useful length the user must reach before the preview can render
-  /// successfully. Mirrors `_effectiveMaxLength` for auto-checksum formats.
   int _effectiveMinLength(Barcode b) {
     if (_autoChecksumFormats.contains(b.name)) return b.maxLength - 1;
     return b.minLength;
@@ -334,9 +315,8 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     return formatters;
   }
 
-  /// Strips characters not allowed by [newFormat] and truncates to its max
-  /// length. Called when the user explicitly switches format so they're never
-  /// stranded with text that's invalid for the new selection.
+  /// Called on format switch so the field text never carries chars or length
+  /// that the new format would reject.
   void _cleanTextForFormat(Barcode newFormat) {
     final original = _barcodeController.text;
     if (original.isEmpty) return;
@@ -344,10 +324,8 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     String cleaned = original;
     if (newFormat.charSet.isNotEmpty && newFormat.name != 'QR-Code') {
       final allowed = newFormat.charSet.toSet();
-      cleaned = cleaned.runes
-          .where(allowed.contains)
-          .map(String.fromCharCode)
-          .join();
+      cleaned =
+          cleaned.runes.where(allowed.contains).map(String.fromCharCode).join();
     }
     final maxLen = _effectiveMaxLength(newFormat);
     if (maxLen != null && cleaned.length > maxLen) {
@@ -377,11 +355,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       case scanner.BarcodeFormat.upcA:
         return Barcode.upcA();
       case scanner.BarcodeFormat.upcE:
-        // UPC-E is a compressed UPC-A. Map scans to UPC-A so the user can
-        // edit them like any other UPC-A (the scanner returns either the
-        // 8-digit compressed form or the 12-digit expanded form; either way
-        // UPC-A's encoder accepts the latter and rejects the former, which
-        // _handleBarcode then surfaces sensibly).
+        // UPC-E is a compressed UPC-A — surface it as UPC-A for editing.
         return Barcode.upcA();
       case scanner.BarcodeFormat.dataMatrix:
         return Barcode.dataMatrix();
@@ -406,10 +380,8 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       var value = barcode.displayValue ?? barcode.rawValue ?? '';
       final detected = _getBarcodeType(barcode.format);
 
-      // Scanner returns the full barcode including its check digit, but we
-      // cap the field at length-1 for auto-checksum formats. Drop the trailing
-      // check digit so the value fits and the package re-computes the same
-      // digit when rendering.
+      // Field caps at length-1 for auto-checksum formats; drop the scanned
+      // check digit so it fits and the package re-computes the same digit.
       if (detected != null &&
           _autoChecksumFormats.contains(detected.name) &&
           value.length == detected.maxLength) {
@@ -514,8 +486,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked == null) return;
 
-    // Reset so the _handleBarcode guard (meant to dedupe live-scanner frames)
-    // doesn't swallow this upload's one-shot result.
+    // Reset the live-scanner dedupe guard so it doesn't swallow this upload.
     _scanHandled = false;
     setState(() => _isAnalyzingUpload = true);
 
@@ -524,7 +495,6 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     );
 
     try {
-      // 1. Fast path: try the file directly. Works for most clean images.
       scanner.BarcodeCapture? result =
           await _analyzeAtPath(analyzer, picked.path);
       if (!mounted) return;
@@ -533,10 +503,8 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
         return;
       }
 
-      // 2. Fallback: decode bytes, normalize EXIF orientation, and try
-      //    rotations + a contrast-boosted variant. The live scanner sees
-      //    many frames at different angles — analyzeImage only sees one,
-      //    so a single still can fail where scanning succeeds.
+      // Fallback: live scanner sees many frames at different angles, but
+      // analyzeImage only sees one — retry rotations + contrast/grayscale.
       final bytes = await picked.readAsBytes();
       final decoded = img.decodeImage(bytes);
       if (decoded == null) {
@@ -675,9 +643,8 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     final validationError =
         _validateBarcodeData(_debouncedBarcodeData, _selectedBarcode);
     if (validationError != null) {
-      // Hide length-too-short errors during typing (the orange counter is
-      // already signalling). Show actionable errors (checksum, encode rules)
-      // because by then the user has typed enough to need a real message.
+      // Length-too-short stays silent during typing (orange counter signals
+      // it). Encode/checksum errors do render because the user is done typing.
       if (!validationError.showInPreview) {
         return _buildEmptyPreviewPlaceholder();
       }
@@ -1207,9 +1174,8 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: overMin
-                              ? Colors.grey[600]
-                              : Colors.orange[700],
+                          color:
+                              overMin ? Colors.grey[600] : Colors.orange[700],
                         ),
                       ),
                     ],
@@ -1395,8 +1361,7 @@ class _CharSetFormatter extends TextInputFormatter {
         .map(String.fromCharCode)
         .join();
     if (filtered == newValue.text) return newValue;
-    final newOffset = newValue.selection.baseOffset
-        .clamp(0, filtered.length);
+    final newOffset = newValue.selection.baseOffset.clamp(0, filtered.length);
     return TextEditingValue(
       text: filtered,
       selection: TextSelection.collapsed(offset: newOffset),
@@ -1463,7 +1428,6 @@ class _ScannerOverlayPainter extends CustomPainter {
     final boxRRect =
         RRect.fromRectAndRadius(boxRect, const Radius.circular(_cornerRadius));
 
-    // Dim everything, then punch a clear hole where the scan box sits.
     canvas.saveLayer(Offset.zero & size, Paint());
     canvas.drawRect(
       Offset.zero & size,
@@ -1475,7 +1439,6 @@ class _ScannerOverlayPainter extends CustomPainter {
     );
     canvas.restore();
 
-    // Green rounded corner brackets.
     final corner = Paint()
       ..color = _accent
       ..strokeWidth = 5
@@ -1490,7 +1453,6 @@ class _ScannerOverlayPainter extends CustomPainter {
     const cr = _cornerRadius;
     const ln = _cornerLen;
 
-    // Top-left
     canvas.drawPath(
       Path()
         ..moveTo(l, t + ln)
@@ -1499,7 +1461,6 @@ class _ScannerOverlayPainter extends CustomPainter {
         ..lineTo(l + ln, t),
       corner,
     );
-    // Top-right
     canvas.drawPath(
       Path()
         ..moveTo(r - ln, t)
@@ -1508,7 +1469,6 @@ class _ScannerOverlayPainter extends CustomPainter {
         ..lineTo(r, t + ln),
       corner,
     );
-    // Bottom-left
     canvas.drawPath(
       Path()
         ..moveTo(l, b - ln)
@@ -1517,7 +1477,6 @@ class _ScannerOverlayPainter extends CustomPainter {
         ..lineTo(l + ln, b),
       corner,
     );
-    // Bottom-right
     canvas.drawPath(
       Path()
         ..moveTo(r - ln, b)
@@ -1527,7 +1486,6 @@ class _ScannerOverlayPainter extends CustomPainter {
       corner,
     );
 
-    // Animated scan line + soft glow, clipped inside the frame.
     canvas.save();
     canvas.clipRRect(boxRRect);
 
