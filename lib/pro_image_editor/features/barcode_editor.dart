@@ -1217,9 +1217,8 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
             AnimatedSize(
               duration: const Duration(milliseconds: 220),
               curve: Curves.easeOutCubic,
-              child: (_debouncedBarcodeData.isNotEmpty &&
-                      _validateBarcodeData(
-                              _debouncedBarcodeData, _selectedBarcode) ==
+              child: (_barcodeData.isNotEmpty &&
+                      _validateBarcodeData(_barcodeData, _selectedBarcode) ==
                           null)
                   ? FilledButton.icon(
                       key: const Key('addBarcodeButton'),
