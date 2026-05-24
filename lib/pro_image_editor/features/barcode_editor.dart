@@ -29,6 +29,8 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
   final TextEditingController _barcodeController = TextEditingController();
   final GlobalKey<ScaffoldMessengerState> _messengerKey =
       GlobalKey<ScaffoldMessengerState>();
+  final GlobalKey<ScaffoldMessengerState> _scannerMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
   Barcode _selectedBarcode = Barcode.qrCode();
   String _barcodeData = '';
   String _debouncedBarcodeData = '';
@@ -43,12 +45,14 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       Duration(milliseconds: 450);
 
   void _showSnackBar(String message, {Color background = Colors.red}) {
-    _messengerKey.currentState?.showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: background,
-      ),
+    final snack = SnackBar(
+      content: Text(message),
+      backgroundColor: background,
     );
+    final messenger = _showScanner
+        ? (_scannerMessengerKey.currentState ?? _messengerKey.currentState)
+        : (_messengerKey.currentState ?? _scannerMessengerKey.currentState);
+    messenger?.showSnackBar(snack);
   }
 
   static const List<scanner.BarcodeFormat> _supportedScanFormats = [
@@ -82,14 +86,12 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     'UPC A': '0 to 9',
   };
 
-  /// Field caps at `length - 1` so the package auto-appends the check digit.
   static const Set<String> _autoChecksumFormats = {
     'EAN 13',
     'EAN 8',
     'UPC A',
   };
 
-  /// Lowercase input is auto-uppercased; the package's charset is uppercase-only.
   static const Set<String> _uppercaseOnlyFormats = {
     'CODE 39',
     'CODE 93',
@@ -167,11 +169,13 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     final minLen = _effectiveMinLength(barcode);
     if (data.length < minLen) {
       final needed = minLen - data.length;
+      final suggestion = _suggestionFor(barcode, data, '');
       return _ValidationError(
         title: 'Data too short',
         detail:
             '$friendly needs ${_lengthRequirement(barcode)}.\nYou entered ${data.length} — add $needed more.',
-        showInPreview: false,
+        suggestion: suggestion,
+        showInPreview: suggestion != null,
       );
     }
 
@@ -185,8 +189,6 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       );
     }
 
-    // Catches checksum mismatches and other format rules the length/charset
-    // checks above miss.
     try {
       barcode.verify(data);
     } on BarcodeException catch (e) {
@@ -315,13 +317,14 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     return formatters;
   }
 
-  /// Called on format switch so the field text never carries chars or length
-  /// that the new format would reject.
   void _cleanTextForFormat(Barcode newFormat) {
     final original = _barcodeController.text;
     if (original.isEmpty) return;
 
     String cleaned = original;
+    if (_uppercaseOnlyFormats.contains(newFormat.name)) {
+      cleaned = cleaned.toUpperCase();
+    }
     if (newFormat.charSet.isNotEmpty && newFormat.name != 'QR-Code') {
       final allowed = newFormat.charSet.toSet();
       cleaned =
@@ -355,7 +358,6 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       case scanner.BarcodeFormat.upcA:
         return Barcode.upcA();
       case scanner.BarcodeFormat.upcE:
-        // UPC-E is a compressed UPC-A — surface it as UPC-A for editing.
         return Barcode.upcA();
       case scanner.BarcodeFormat.dataMatrix:
         return Barcode.dataMatrix();
@@ -380,8 +382,6 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       var value = barcode.displayValue ?? barcode.rawValue ?? '';
       final detected = _getBarcodeType(barcode.format);
 
-      // Field caps at length-1 for auto-checksum formats; drop the scanned
-      // check digit so it fits and the package re-computes the same digit.
       if (detected != null &&
           _autoChecksumFormats.contains(detected.name) &&
           value.length == detected.maxLength) {
@@ -486,7 +486,6 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked == null) return;
 
-    // Reset the live-scanner dedupe guard so it doesn't swallow this upload.
     _scanHandled = false;
     setState(() => _isAnalyzingUpload = true);
 
@@ -503,8 +502,6 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
         return;
       }
 
-      // Fallback: live scanner sees many frames at different angles, but
-      // analyzeImage only sees one — retry rotations + contrast/grayscale.
       final bytes = await picked.readAsBytes();
       final decoded = img.decodeImage(bytes);
       if (decoded == null) {
@@ -643,8 +640,6 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     final validationError =
         _validateBarcodeData(_debouncedBarcodeData, _selectedBarcode);
     if (validationError != null) {
-      // Length-too-short stays silent during typing (orange counter signals
-      // it). Encode/checksum errors do render because the user is done typing.
       if (!validationError.showInPreview) {
         return _buildEmptyPreviewPlaceholder();
       }
@@ -839,6 +834,13 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
   }
 
   Widget _buildScannerView() {
+    return ScaffoldMessenger(
+      key: _scannerMessengerKey,
+      child: _buildScannerScaffold(),
+    );
+  }
+
+  Widget _buildScannerScaffold() {
     return Scaffold(
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
@@ -1155,8 +1157,8 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
                 final countText = maxLength != null
                     ? '$currentLength / $maxLength'
                     : '$currentLength';
-                final overMin =
-                    _barcodeData.length >= _selectedBarcode.minLength;
+                final overMin = _barcodeData.length >=
+                    _effectiveMinLength(_selectedBarcode);
                 return Padding(
                   padding: const EdgeInsets.only(top: 6),
                   child: Row(
