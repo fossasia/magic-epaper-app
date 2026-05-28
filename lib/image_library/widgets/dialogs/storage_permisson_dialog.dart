@@ -71,13 +71,6 @@ class StoragePermissionDialog extends StatelessWidget {
                     onPressed: () {
                       onCancel?.call();
                     },
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: BorderSide(color: Colors.grey.shade300),
-                      ),
-                    ),
                     child: const Text(
                       'Cancel',
                       style: TextStyle(
@@ -94,15 +87,6 @@ class StoragePermissionDialog extends StatelessWidget {
                     onPressed: () {
                       onGrantPermission?.call();
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorAccent,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      elevation: 0,
-                    ),
                     child: const Text(
                       'Grant Permission',
                       textAlign: TextAlign.center,
