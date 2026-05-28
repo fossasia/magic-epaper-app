@@ -417,8 +417,20 @@ class _MovableBackgroundImageExampleState
   @override
   Widget build(BuildContext context) {
     _calculateCanvasDimensions(MediaQuery.sizeOf(context));
-    return LayoutBuilder(builder: (context, constraints) {
-      return CustomPaint(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+        value: const SystemUiOverlayStyle(
+          statusBarColor: Colors.black,
+          systemNavigationBarColor: Colors.black,
+          statusBarIconBrightness: Brightness.light,
+          systemNavigationBarIconBrightness: Brightness.light,
+        ),
+        child: Scaffold(
+            backgroundColor: Colors.black,
+            body: Stack(
+                children: [
+            Positioned.fill(
+            child: LayoutBuilder(builder: (context, constraints) {
+        return CustomPaint(
         size: Size(constraints.maxWidth, constraints.maxHeight),
         painter: const PixelTransparentPainter(
           primary: Colors.white,
@@ -616,8 +628,27 @@ class _MovableBackgroundImageExampleState
             );
           },
         ),
-      );
-    });
+        );
+        }
+        )
+        ),
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: MediaQuery.viewPaddingOf(context).top,
+                    child: Container(color: Colors.black), ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: MediaQuery.viewPaddingOf(context).bottom,
+                    child: Container(color: Colors.black),
+                  ),
+        ]
+        )
+        )
+    );
   }
 
   Widget _bottomNavigationBar(
