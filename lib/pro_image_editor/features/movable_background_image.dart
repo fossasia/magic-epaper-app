@@ -243,7 +243,7 @@ class _MovableBackgroundImageExampleState
         ),
         builder: (context) {
           return Material(
-            color: Colors.black,
+            color: Colors.transparent,
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 24, left: 16, right: 16),
