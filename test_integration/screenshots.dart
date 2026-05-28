@@ -84,16 +84,11 @@ void main() {
       await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 2));
 
-      // Open the redesigned Add Barcode sheet. There can be more than one
-      // qr_code icon in the editor toolbar after the UI refresh, so target
-      // the first one (the toolbar action) explicitly.
       final barcodeButton = find.byIcon(Icons.qr_code).first;
       await tester.tap(barcodeButton);
       await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 1));
 
-      // The sheet now wraps its body in a SingleChildScrollView, so scope the
-      // TextField lookup to the visible sheet to avoid matching anything else.
       final inputField = find.byType(TextField).first;
       await tester.tap(inputField);
       await tester.pumpAndSettle();
@@ -101,9 +96,6 @@ void main() {
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
 
-      // The Add to canvas button is gated on valid data and slides in via
-      // AnimatedSize (~220 ms). Wait long enough for the animation to finish
-      // before looking it up.
       await tester.pump(const Duration(milliseconds: 400));
       await binding.takeScreenshot('5_barcode_screen');
 
