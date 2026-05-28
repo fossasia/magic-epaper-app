@@ -337,9 +337,12 @@ class _ImageEditorState extends State<ImageEditor> {
         InkWell(
           onTap: () => _showRefreshModeInfoDialog(context),
           customBorder: const CircleBorder(),
+          // Icon stays visually small (20) but the tap area meets the
+          // 48dp accessibility guideline. Width is fixed (not screen
+          // dependent) so it never overflows on small screens.
           child: const SizedBox(
-            height: controlHeight,
-            width: controlHeight,
+            height: 48,
+            width: 48,
             child: Icon(Icons.info_outline, color: Colors.white, size: 20),
           ),
         ),
@@ -373,8 +376,9 @@ class _ImageEditorState extends State<ImageEditor> {
         backgroundColor: colorAccent,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        // Visual height stays compact (32), but the default padded
+        // tapTargetSize keeps the touch target at the 48dp guideline.
         minimumSize: const Size(0, 32),
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
