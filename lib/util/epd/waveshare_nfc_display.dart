@@ -14,7 +14,7 @@ abstract class WaveshareNfcDisplay extends DisplayDevice {
   List<Color> get colors => [Colors.white, Colors.black];
 
   @override
-  List<img.Image Function(img.Image)> get processingMethods => [
+  List<ImageProcessingMethod> get processingMethods => [
         ImageProcessing.bwFloydSteinbergDither,
         ImageProcessing.bwFalseFloydSteinbergDither,
         ImageProcessing.bwStuckiDither,
