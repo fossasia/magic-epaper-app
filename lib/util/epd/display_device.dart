@@ -16,7 +16,8 @@ abstract class DisplayDevice {
   int get height;
   List<Color> get colors;
   List<String>? get displayChips;
-  List<img.Image Function(img.Image)> get processingMethods;
+
+  List<ImageProcessingMethod> get processingMethods;
 
   Future<void> transfer(
     BuildContext context,
@@ -60,7 +61,7 @@ abstract class DisplayDevice {
   List<Uint8List> extractEpaperColorFrames(img.Image orgImage) {
     final retList = <Uint8List>[];
     for (final c in colors) {
-      if (c == Colors.white) continue; // skip white
+      if (c == Colors.white) continue;
       retList.add(_extractEpaperColorFrame(c, orgImage));
     }
     return retList;
@@ -69,5 +70,5 @@ abstract class DisplayDevice {
   img.Image extractColorPlaneAsImage(Color color, img.Image orgImage) {
     return ImageProcessing.extract(color, orgImage);
   }
-  // TODO: howToAdjust ???
+// TODO: howToAdjust ???
 }
