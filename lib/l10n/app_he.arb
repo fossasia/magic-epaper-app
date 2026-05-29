@@ -9,7 +9,7 @@
     "qrCodeData": "נתוני קוד QR",
     "quantitySize": "כמות/גודל",
     "rawPrefix": "גולמי: ",
-    "rawPayloadLabel": "מטען גולמי: ",
+    "rawPayloadLabel": "  מטען גולמי: ",
     "reading": "מתבצעת קריאה…",
     "readNdefTags": "קריאת תגי NDEF",
     "readNfcTag": "קריאת תג NFC",
