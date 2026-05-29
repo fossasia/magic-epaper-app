@@ -8,7 +8,6 @@ import 'package:magicepaperapp/pro_image_editor/features/movable_background_imag
 import 'package:magicepaperapp/card_templates/card_template_selection_view.dart';
 import 'package:magicepaperapp/util/color_util.dart';
 import 'package:magicepaperapp/util/epd/driver/waveform.dart';
-import 'package:magicepaperapp/util/image_editor_utils.dart';
 import 'package:magicepaperapp/util/xbm_encoder.dart';
 import 'package:magicepaperapp/view/text_fit_editor.dart';
 import 'package:magicepaperapp/view/widget/image_list.dart';
@@ -20,6 +19,7 @@ import 'package:magicepaperapp/provider/image_loader.dart';
 import 'package:magicepaperapp/util/epd/epd.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
+import '../src/rust/api/simple.dart' as rust_api;
 import '../util/app_logger.dart';
 
 class ImageEditor extends StatefulWidget {
@@ -49,6 +49,7 @@ class _ImageEditorState extends State<ImageEditor> {
 
   @override
   void initState() {
+    AppLogger.info('DEBUG: ImageEditor initState called');
     setPortraitOrientation();
     super.initState();
     _selectedWaveform = null;
@@ -103,7 +104,6 @@ class _ImageEditorState extends State<ImageEditor> {
     );
   }
 
-  // Save image using ImageSaveHandler
   void _saveCurrentImage() async {
     if (_imageSaveHandler == null) return;
 
@@ -160,27 +160,59 @@ class _ImageEditorState extends State<ImageEditor> {
 
   Future<void> _processImagesAsync(img.Image sourceImage) async {
     if (_isProcessingImages) return;
-    setState(() => _isProcessingImages = true);
+
+    setState(() {
+      _isProcessingImages = true;
+      _rawImages = [];
+      _processedPngs = [];
+      _processedSourceImage = sourceImage;
+      _selectedFilterIndex = 0;
+      flipHorizontal = false;
+      flipVertical = false;
+    });
+
+    final Uint8List sourcePngBytes =
+        Uint8List.fromList(img.encodePng(sourceImage));
+    final filtersToRun = widget.device.processingMethods;
 
     try {
-      final result = await compute(_processImagesWorker, {
-        'source': sourceImage,
-        'device': widget.device,
-      });
+      for (int i = 0; i < filtersToRun.length; i++) {
+        if (!mounted || _processedSourceImage != sourceImage) break;
 
-      if (mounted) {
-        setState(() {
-          _rawImages = result['raw'];
-          _processedPngs = result['pngs'];
+        Uint8List bytesForRust = sourcePngBytes;
 
-          _processedSourceImage = sourceImage;
-          _selectedFilterIndex = 0;
-          _isProcessingImages = false;
-          flipHorizontal = false;
-          flipVertical = false;
-        });
+        if (filtersToRun[i].useDartHalftone) {
+          final tempImg = img.Image.from(sourceImage);
+          if (!filtersToRun[i].isBwr) {
+            img.grayscale(tempImg);
+          }
+          img.colorHalftone(tempImg, size: 3);
+          bytesForRust = Uint8List.fromList(img.encodePng(tempImg));
+        }
+
+        final Uint8List processedPngBytes = await rust_api.processImageRust(
+          imageBytes: bytesForRust,
+          targetWidth: widget.device.width.toInt(),
+          targetHeight: widget.device.height.toInt(),
+          method: filtersToRun[i].method,
+          isBwr: filtersToRun[i].isBwr,
+        );
+
+        final img.Image? decodedImage =
+            await compute(img.decodePng, processedPngBytes);
+
+        if (mounted && _processedSourceImage == sourceImage) {
+          setState(() {
+            _processedPngs.add(processedPngBytes);
+            _rawImages.add(decodedImage!);
+            if (i == 0) {
+              _isProcessingImages = false;
+            }
+          });
+        }
       }
     } catch (e) {
+      AppLogger.error('Exception in Rust processing: $e');
       if (mounted) setState(() => _isProcessingImages = false);
     }
   }
@@ -442,7 +474,6 @@ class _ImageEditorState extends State<ImageEditor> {
                           width: 36,
                           decoration: BoxDecoration(
                             color: Colors.transparent,
-                            // border: Border.all(color: Colors.white, width: 1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Icon(
@@ -658,52 +689,6 @@ class BottomActionMenu extends StatelessWidget {
                   }
                 },
               ),
-              // _buildActionButton(
-              //   key: const Key('adjustButton'),
-              //   context: context,
-              //   icon: Icons.tune_rounded,
-              //   label: appLocalizations.adjustButtonLabel,
-              //   onTap: () async {
-              //     if (imgLoader.image != null) {
-              //       final canvasBytes =
-              //           await Navigator.of(context).push<Uint8List>(
-              //         MaterialPageRoute(
-              //           builder: (context) => ProImageEditor.memory(
-              //             img.encodeJpg(imgLoader.image!),
-              //             callbacks: ProImageEditorCallbacks(
-              //               onImageEditingComplete: (Uint8List bytes) async {
-              //                 Navigator.pop(context, bytes);
-              //               },
-              //             ),
-              //             configs: const ProImageEditorConfigs(
-              //               paintEditor: PaintEditorConfigs(enabled: false),
-              //               textEditor: TextEditorConfigs(enabled: false),
-              //               cropRotateEditor: CropRotateEditorConfigs(
-              //                 enabled: false,
-              //               ),
-              //               emojiEditor: EmojiEditorConfigs(enabled: false),
-              //             ),
-              //           ),
-              //         ),
-              //       );
-              //       if (canvasBytes != null) {
-              //         imgLoader.updateImage(
-              //           bytes: canvasBytes,
-              //           width: epd.width,
-              //           height: epd.height,
-              //         );
-              //       }
-              //     } else {
-              //       ScaffoldMessenger.of(context).showSnackBar(
-              //         SnackBar(
-              //           duration: Durations.medium4,
-              //           content: Text(appLocalizations.noImageSelectedFeedback),
-              //           backgroundColor: colorPrimary,
-              //         ),
-              //       );
-              //     }
-              //   },
-              // ),
               _buildActionButton(
                 context: context,
                 icon: Icons.photo_library_outlined,
@@ -782,22 +767,4 @@ class BottomActionMenu extends StatelessWidget {
       ),
     );
   }
-}
-
-Future<Map<String, dynamic>> _processImagesWorker(
-    Map<String, dynamic> data) async {
-  final img.Image source = data['source'];
-  final dynamic device = data['device'];
-
-  final raw = processImages(originalImage: source, epd: device);
-
-  List<Uint8List> pngs = [];
-  for (int i = 0; i < raw.length; i++) {
-    pngs.add(img.encodePng(raw[i]));
-  }
-
-  return {
-    'raw': raw,
-    'pngs': pngs,
-  };
 }

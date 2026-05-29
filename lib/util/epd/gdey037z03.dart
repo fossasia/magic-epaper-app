@@ -4,15 +4,13 @@ import 'package:magicepaperapp/util/epd/driver/uc8253.dart';
 import 'package:magicepaperapp/util/image_processing/image_processing.dart';
 import 'driver/driver.dart';
 import 'epd.dart';
-import 'package:image/image.dart' as img;
 
 class Gdey037z03 extends Epd {
   @override
-  @override
-  int get width => 416; // pixels
+  int get width => 416;
 
   @override
-  int get height => 240; // pixels
+  int get height => 240;
 
   @override
   String get name => 'Magic ePaper 3.7" (WBR)';
@@ -30,7 +28,7 @@ class Gdey037z03 extends Epd {
   Driver get controller => Uc8253();
 
   @override
-  List<img.Image Function(img.Image)> get processingMethods => [
+  List<ImageProcessingMethod> get processingMethods => [
         ImageProcessing.bwrFloydSteinbergDither,
         ImageProcessing.bwrFalseFloydSteinbergDither,
         ImageProcessing.bwrStuckiDither,

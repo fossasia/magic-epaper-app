@@ -37,8 +37,8 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context)!;
 
-    return ChangeNotifierProvider<ColorPaletteProvider>(
-      create: (_) => getIt<ColorPaletteProvider>(),
+    return ChangeNotifierProvider<ColorPaletteProvider>.value(
+      value: getIt<ColorPaletteProvider>(),
       builder: (context, child) {
         return CommonScaffold(
           index: 0,

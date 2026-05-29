@@ -13,6 +13,7 @@ import 'dart:typed_data';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import '../../util/app_logger.dart';
+import '../../util/image_processing/image_processing.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
@@ -138,7 +139,7 @@ class ImageOperationsService {
     ImageLibraryProvider provider,
     String currentImageSource,
     int selectedFilterIndex,
-    List<Function> processingMethods,
+    List<ImageProcessingMethod> processingMethods,
     bool flipHorizontal,
     bool flipVertical,
     String epdModelId,
@@ -165,7 +166,8 @@ class ImageOperationsService {
     }
   }
 
-  String getFilterNameByIndex(int index, List<Function> processingMethods) {
+  String getFilterNameByIndex(
+      int index, List<ImageProcessingMethod> processingMethods) {
     return ImageFilterHelper.getFilterNameByIndex(index, processingMethods);
   }
 

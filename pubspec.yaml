@@ -8,7 +8,7 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=3.3.4 <4.0.0"
-  flutter: '3.41.9'
+  flutter: '3.44.0'
 
 dependencies:
   flutter:
@@ -49,6 +49,10 @@ dependencies:
   ndef: ^0.4.0
   logger: ^2.4.0
   device_info_plus: ^10.1.0
+  ffi: ^2.2.0
+  rust_lib_magicepaperapp:
+    path: rust_builder
+  flutter_rust_bridge: 2.12.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
