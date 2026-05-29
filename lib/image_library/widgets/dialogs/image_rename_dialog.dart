@@ -112,31 +112,9 @@ class ImageRenameDialog extends StatelessWidget {
             maxLength: 50,
             decoration: InputDecoration(
               hintText: appLocalizations.enterImageName,
-              filled: true,
-              fillColor: Colors.grey.shade50,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: colorAccent, width: 2),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Colors.red, width: 2),
-              ),
               prefixIcon: const Icon(
                 Icons.image_outlined,
                 color: Colors.grey,
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
               ),
             ),
             textCapitalization: TextCapitalization.words,
@@ -154,14 +132,6 @@ class ImageRenameDialog extends StatelessWidget {
         Expanded(
           child: OutlinedButton(
             onPressed: () => Navigator.pop(context),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              side: BorderSide(color: Colors.grey.shade300),
-              foregroundColor: Colors.grey.shade700,
-            ),
             child: Text(
               appLocalizations.cancel,
               style: const TextStyle(
@@ -175,15 +145,6 @@ class ImageRenameDialog extends StatelessWidget {
         Expanded(
           child: ElevatedButton(
             onPressed: () => _handleRename(controller, context),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: colorAccent,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 0,
-            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
