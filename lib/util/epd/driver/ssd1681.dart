@@ -218,19 +218,15 @@ class Ssd1681 extends Driver {
     await p.writeMsg(Uint8List.fromList([p.fw.epdCmd, 0x11]));
     await p.writeMsg(Uint8List.fromList([p.fw.epdSend, 0x03]));
 
-    await p
-        .writeMsg(Uint8List.fromList([p.fw.epdCmd, 0x3C]));
+    await p.writeMsg(Uint8List.fromList([p.fw.epdCmd, 0x3C]));
     await p.writeMsg(Uint8List.fromList([p.fw.epdSend, 0x05]));
 
-    await p.writeMsg(
-        Uint8List.fromList([p.fw.epdCmd, 0x22]));
+    await p.writeMsg(Uint8List.fromList([p.fw.epdCmd, 0x22]));
     if (waveform != null) {
-      await p.writeMsg(
-          Uint8List.fromList([p.fw.epdSend, 0xCC]));
+      await p.writeMsg(Uint8List.fromList([p.fw.epdSend, 0xCC]));
       await setlut(p, waveform);
     } else {
-      await p
-          .writeMsg(Uint8List.fromList([p.fw.epdSend, 0xF7]));
+      await p.writeMsg(Uint8List.fromList([p.fw.epdSend, 0xF7]));
     }
   }
 }
