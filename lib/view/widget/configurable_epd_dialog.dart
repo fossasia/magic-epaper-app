@@ -316,13 +316,6 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
     });
   }
 
-  static final ButtonStyle _dialogButtonStyle = ElevatedButton.styleFrom(
-    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-    visualDensity: VisualDensity.compact,
-    textStyle: const TextStyle(fontSize: 14),
-  );
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -421,15 +414,12 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                   onPressed: _addColor,
                   icon: const Icon(Icons.add, size: 16),
                   label: const Text("Add Color"),
-                  style: _dialogButtonStyle,
                 ),
-              ElevatedButton(
+              OutlinedButton(
                 onPressed: () => Navigator.of(context).pop(),
-                style: _dialogButtonStyle,
                 child: const Text('Cancel'),
               ),
               ElevatedButton(
-                style: _dialogButtonStyle,
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
