@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/pro_image_editor/features/bottom_bar.dart';
 import 'package:magicepaperapp/pro_image_editor/features/barcode_editor.dart';
 import 'package:magicepaperapp/pro_image_editor/features/text_bottom_bar.dart';
@@ -446,6 +447,21 @@ class _MovableBackgroundImageExampleState
                         key: editorKey,
                         callbacks: ProImageEditorCallbacks(
                           onImageEditingComplete: (Uint8List bytes) async {
+                            final editor = editorKey.currentState;
+
+                            if (editor == null ||
+                                editor.activeLayers.length <= 1) {
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(AppLocalizations.of(context)!
+                                        .cannotSaveEmptyCanvas),
+                                  ),
+                                );
+                              }
+                              return;
+                            }
+
                             Navigator.pop(context, bytes);
                           },
                           mainEditorCallbacks: MainEditorCallbacks(

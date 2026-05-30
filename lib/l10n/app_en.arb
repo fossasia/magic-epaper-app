@@ -558,5 +558,6 @@
   "text": "Text",
   "@text": {
     "description": "Label for text action"
-  }
+  },
+  "cannotSaveEmptyCanvas": "Cannot save an empty canvas"
 }
