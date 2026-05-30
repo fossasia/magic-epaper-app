@@ -3,7 +3,7 @@
     "short_name": "magicepaperapp",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#C72C2C",
+    "background_color": "#E51C0F",
     "theme_color": "#0175C2",
     "description": "A new Flutter project.",
     "orientation": "portrait-primary",

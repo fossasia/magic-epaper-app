@@ -79,7 +79,7 @@ flutter_launcher_icons:
   ios: true
   remove_alpha_ios: true
   image_path: "assets/icons/app_icon.png"
-  adaptive_icon_background: "#C72C2C"
+  adaptive_icon_background: "#E51C0F"
   adaptive_icon_foreground: "assets/icons/app_icon.png"
   adaptive_icon_monochrome: "assets/icons/app_icon.png"
   adaptive_icon_foreground_inset: 22
@@ -87,7 +87,7 @@ flutter_launcher_icons:
   web:
     generate: true
     image_path: "assets/icons/app_icon.png"
-    background_color: "#C72C2C"
+    background_color: "#E51C0F"
     theme_color: "#0175C2"
 
   windows:
