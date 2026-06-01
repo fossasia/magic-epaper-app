@@ -109,7 +109,7 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
     );
   }
 
-  Widget _buildTextFieldSection(BuildContext context) {
+  Widget _buildTextFieldSection(BuildContext _) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,7 +157,7 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
               ),
             ),
             textCapitalization: TextCapitalization.words,
-            onSubmitted: (value) => _handleRename(context),
+            onSubmitted: (_) => _handleRename(context),
           ),
         ],
       ),
