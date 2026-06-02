@@ -138,9 +138,11 @@ class NFCController extends ChangeNotifier {
 
   Future<void> verifyWrite() async {
     if (_availability != NFCAvailability.available) return;
+    _setReading(true);
     _setResult(appLocalizations.scanningTagForVerification);
     final result = await NFCOperationsService.verifyTag();
     _setResult(result.message);
+    _setReading(false);
   }
 
   Future<void> writeVCardRecord(VCardData vCardData) async {

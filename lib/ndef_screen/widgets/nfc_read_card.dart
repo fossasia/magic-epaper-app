@@ -94,7 +94,7 @@ class NFCReadCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 12),
                       _buildActionButton(
-                        onPressed: onVerify,
+                        onPressed: isReading ? null : onVerify,
                         icon: const Icon(Icons.search, color: colorWhite),
                         label: appLocalizations.verify,
                         backgroundColor: Colors.orange,
