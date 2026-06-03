@@ -36,8 +36,8 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   ];
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ColorPaletteProvider>(
-      create: (_) => getIt<ColorPaletteProvider>(),
+    return ChangeNotifierProvider<ColorPaletteProvider>.value(
+      value: getIt<ColorPaletteProvider>(),
       builder: (context, child) {
         return CommonScaffold(
           index: 0,

@@ -159,14 +159,6 @@ class ClearAllConfirmationDialog extends StatelessWidget {
         Expanded(
           child: OutlinedButton(
             onPressed: () => Navigator.pop(context),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              side: BorderSide(color: Colors.grey.shade300),
-              foregroundColor: Colors.grey.shade700,
-            ),
             child: const Text(
               'Cancel',
               style: TextStyle(
@@ -180,15 +172,6 @@ class ClearAllConfirmationDialog extends StatelessWidget {
         Expanded(
           child: ElevatedButton(
             onPressed: onConfirm,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 0,
-            ),
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
