@@ -70,8 +70,7 @@ class SettingsScreenState extends State<SettingsScreen> {
           children: [
             Text(
               appLocalizations.language,
-              style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Container(
