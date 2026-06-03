@@ -13,6 +13,7 @@ import 'dart:typed_data';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import '../../util/app_logger.dart';
+import '../../util/image_processing/image_processing.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
@@ -47,13 +48,14 @@ class ImageOperationsService {
       SavedImage image, ImageLibraryProvider provider) async {
     try {
       Navigator.pop(context);
-      _showLoadingSnackBar(appLocalizations.deletingImage);
+      _showLoadingSnackBar(appLocalizations.deletingImage(1));
       await provider.deleteImage(image.id);
       _showDeleteSuccessSnackBar(
           '${appLocalizations.imageDeleted}${image.name}${appLocalizations.deleted}');
     } catch (e) {
       _showErrorSnackBar(
-          '${appLocalizations.failedToDeleteImage}${e.toString()}');
+        appLocalizations.failedToDeleteImage(1, e.toString()),
+      );
     }
   }
 
@@ -125,7 +127,9 @@ class ImageOperationsService {
       _showBatchDeleteSuccessSnackBar(count);
     } catch (e) {
       _showErrorSnackBar(
-          '${appLocalizations.failedToDeleteImages}${e.toString()}');
+        appLocalizations.failedToDeleteImage(
+            selectedImages.length, e.toString()),
+      );
     }
   }
 
@@ -135,7 +139,7 @@ class ImageOperationsService {
     ImageLibraryProvider provider,
     String currentImageSource,
     int selectedFilterIndex,
-    List<Function> processingMethods,
+    List<ImageProcessingMethod> processingMethods,
     bool flipHorizontal,
     bool flipVertical,
     String epdModelId,
@@ -162,7 +166,8 @@ class ImageOperationsService {
     }
   }
 
-  String getFilterNameByIndex(int index, List<Function> processingMethods) {
+  String getFilterNameByIndex(
+      int index, List<ImageProcessingMethod> processingMethods) {
     return ImageFilterHelper.getFilterNameByIndex(index, processingMethods);
   }
 
@@ -312,7 +317,8 @@ class ImageOperationsService {
             ),
             const SizedBox(width: 12),
             Text(
-                '${appLocalizations.deletingImages}$count${appLocalizations.images}'),
+              appLocalizations.deletingImage(count),
+            )
           ],
         ),
         backgroundColor: Colors.amber,
@@ -330,9 +336,7 @@ class ImageOperationsService {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                count > 1
-                    ? '$count${appLocalizations.imagesDeletedSuccessfully}'
-                    : appLocalizations.imageDeletedSuccessfully,
+                appLocalizations.imageDeletedSuccessfully(count),
               ),
             ),
           ],

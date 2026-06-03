@@ -10,6 +10,7 @@ import 'package:magicepaperapp/image_library/provider/image_library_provider.dar
 import 'package:magicepaperapp/image_library/services/image_operations_service.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_save_dialog.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../util/image_processing/image_processing.dart';
 
 class ImageSaveHandler {
   final BuildContext context;
@@ -43,7 +44,7 @@ class ImageSaveHandler {
     required bool flipHorizontal,
     required bool flipVertical,
     required String currentImageSource,
-    required List<Function> processingMethods,
+    required List<ImageProcessingMethod> processingMethods,
     required String modelId,
   }) async {
     if (rawImages.isEmpty) return;
@@ -87,7 +88,7 @@ class ImageSaveHandler {
     Uint8List imageData,
     int selectedFilterIndex,
     String currentImageSource,
-    List<Function> processingMethods,
+    List<ImageProcessingMethod> processingMethods,
     bool flipHorizontal,
     bool flipVertical,
     String modelId,
@@ -120,7 +121,7 @@ class ImageSaveHandler {
     Uint8List imageData,
     String currentImageSource,
     int selectedFilterIndex,
-    List<Function> processingMethods,
+    List<ImageProcessingMethod> processingMethods,
     bool flipHorizontal,
     bool flipVertical,
     String modelId,
