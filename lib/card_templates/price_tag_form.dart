@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:magicepaperapp/card_templates/util/image_picker_util.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
@@ -12,6 +12,7 @@ import 'package:magicepaperapp/card_templates/price_tag_card_widget.dart';
 import 'package:magicepaperapp/card_templates/price_tag_model.dart';
 import 'package:magicepaperapp/util/template_util.dart';
 import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
+import 'package:magicepaperapp/card_templates/util/barcode_scanner_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
@@ -36,7 +37,6 @@ class _PriceTagFormState extends State<PriceTagForm> {
   final _barcodeController = TextEditingController();
 
   File? _productImage;
-  final ImagePicker _picker = ImagePicker();
   bool _isGenerating = false;
 
   late PriceTagModel _data;
@@ -94,12 +94,17 @@ class _PriceTagFormState extends State<PriceTagForm> {
   }
 
   Future<void> _pickProductImage() async {
-    final picked = await _picker.pickImage(source: ImageSource.gallery);
-    if (picked != null) {
-      setState(() {
-        _productImage = File(picked.path);
-        _updatePreview();
-      });
+    final picked = await pickAndEditImage(context);
+    if (picked != null && mounted) {
+      _productImage = picked;
+      _updatePreview();
+    }
+  }
+
+  Future<void> _scanBarcode() async {
+    final code = await scanCode(context);
+    if (code != null && code.isNotEmpty) {
+      _barcodeController.text = code;
     }
   }
 
@@ -223,35 +228,36 @@ class _PriceTagFormState extends State<PriceTagForm> {
   Widget build(BuildContext context) {
     return CommonScaffold(
       index: -1,
-      toolbarHeight: 85,
-      titleWidget: Padding(
-        padding: const EdgeInsets.fromLTRB(5, 16, 16, 5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              appLocalizations.priceTagGenerator,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              appLocalizations.priceTagDescription,
-              style: const TextStyle(fontSize: 16, color: Colors.white),
-            ),
-          ],
+      showBackButton: true,
+      titleWidget: Text(
+        appLocalizations.priceTagGenerator,
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
       body: SafeArea(
         top: false,
         bottom: true,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16.0, 14, 16.0, 16.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 16, 16.0, 16.0),
           child: Column(
             children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  appLocalizations.previewPriceTag,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: colorBlack,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
               PriceTagCardWidget(data: _data),
               const SizedBox(height: 20),
               const Divider(height: 1, color: Colors.grey),
@@ -285,6 +291,12 @@ class _PriceTagFormState extends State<PriceTagForm> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 6),
+                        Text(
+                          appLocalizations.priceTagDescription,
+                          style: TextStyle(
+                              fontSize: 13, color: Colors.grey.shade600),
+                        ),
                         const SizedBox(height: 20),
                         _buildProductImageSection(),
                         const SizedBox(height: 20),
@@ -301,6 +313,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                           hint: '',
                           icon: Icons.description_outlined,
                           maxLines: 2,
+                          maxLength: 60,
                         ),
                         const SizedBox(height: 16),
                         Row(
@@ -340,6 +353,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
                           label: appLocalizations.barcodeData,
                           hint: appLocalizations.barcodeDataHint,
                           icon: Icons.qr_code_scanner_outlined,
+                          maxLength: 80,
+                          onScan: _scanBarcode,
                         ),
                       ],
                     ),
@@ -413,6 +428,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
     String? Function(String?)? validator,
     TextInputType? keyboardType,
     int maxLines = 1,
+    VoidCallback? onScan,
+    int? maxLength = 25,
   }) {
     return Theme(
       data: Theme.of(context).copyWith(
@@ -431,6 +448,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
         validator: validator,
         keyboardType: keyboardType,
         maxLines: maxLines,
+        maxLength: maxLength,
         style: const TextStyle(
           fontSize: 16,
           color: colorBlack,
@@ -438,9 +456,17 @@ class _PriceTagFormState extends State<PriceTagForm> {
         ),
         cursorColor: colorPrimary,
         decoration: InputDecoration(
+          counterText: '',
           labelText: label,
           hintText: hint,
           prefixIcon: Icon(icon, color: colorAccent, size: 20),
+          suffixIcon: onScan != null
+              ? IconButton(
+                  tooltip: appLocalizations.scanBarcodeTooltip,
+                  icon: const Icon(Icons.qr_code_scanner, color: colorAccent),
+                  onPressed: onScan,
+                )
+              : null,
           labelStyle: TextStyle(
             color: colorBlack.withValues(alpha: 0.7),
             fontSize: 14,
