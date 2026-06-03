@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/image_library/model/image_properties.dart';
 import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
-import 'package:magicepaperapp/image_library/services/image_operations_service.dart';
+import 'package:magicepaperapp/image_library/utils/services/image_operations_service.dart';
 import 'package:magicepaperapp/image_library/utils/date_utils.dart' as dt;
 import 'package:magicepaperapp/image_library/utils/filter_utils.dart';
 import 'package:magicepaperapp/image_library/utils/source_utils.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
-import 'package:magicepaperapp/image_library/services/image_operations_service.dart';
+import 'package:magicepaperapp/image_library/utils/services/image_operations_service.dart';
 import 'package:magicepaperapp/image_library/widgets/app_bar_widget.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/batch_delete_confirmation_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/clear_all_confirmation_dialog.dart';
