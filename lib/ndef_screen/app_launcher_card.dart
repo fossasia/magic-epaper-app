@@ -289,16 +289,6 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: _addCustomApp,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colorAccent,
-                    foregroundColor: colorWhite,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 14, horizontal: 20),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
                   child: Text(
                     appLocalizations.add,
                     style: const TextStyle(
@@ -531,15 +521,8 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
           ),
         ),
         style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          backgroundColor: colorAccent,
-          foregroundColor: colorWhite,
           disabledBackgroundColor: Colors.grey[300],
           disabledForegroundColor: Colors.grey[600],
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
         ),
       ),
     );
@@ -557,13 +540,6 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
             fontSize: 14,
             fontWeight: FontWeight.w600,
             color: colorAccent,
-          ),
-        ),
-        style: OutlinedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          side: const BorderSide(color: colorAccent, width: 1.5),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
           ),
         ),
       ),
