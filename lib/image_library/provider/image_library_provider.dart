@@ -154,7 +154,7 @@ class ImageLibraryProvider extends ChangeNotifier {
       await _initializeDirectories();
       final imageId = DateTime.now().millisecondsSinceEpoch.toString();
       final fileName =
-          '${imageId}_${name.replaceAll(RegExp(r'[^\w\s-]'), '')}.jpg';
+          '${imageId}_${name.replaceAll(RegExp(r'[^\w\s-]'), '')}.png';
       final filePath = '${_imageDirectory!.path}/$fileName';
       final file = File(filePath);
       await file.writeAsBytes(imageData);
