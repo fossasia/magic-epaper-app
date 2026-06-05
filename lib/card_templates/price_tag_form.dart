@@ -471,6 +471,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
         maxLength: maxLength,
         readOnly: readOnly,
         onTap: onTap,
+        showCursor: onTap != null ? false : null,
         style: const TextStyle(
           fontSize: 16,
           color: colorBlack,
@@ -488,7 +489,9 @@ class _PriceTagFormState extends State<PriceTagForm> {
                   icon: const Icon(Icons.qr_code_scanner, color: colorAccent),
                   onPressed: onScan,
                 )
-              : null,
+              : onTap != null
+                  ? const Icon(Icons.arrow_drop_down, color: colorAccent)
+                  : null,
           labelStyle: TextStyle(
             color: colorBlack.withValues(alpha: 0.7),
             fontSize: 14,
