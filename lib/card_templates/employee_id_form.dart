@@ -102,6 +102,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
 
   Future<void> _scanQrData() async {
     final code = await scanCode(context);
+    if (!mounted) return;
     if (code != null && code.isNotEmpty) {
       _qrDataController.text = code;
     }

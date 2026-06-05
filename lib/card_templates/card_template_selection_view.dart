@@ -25,6 +25,7 @@ class CardTemplateSelectionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return CommonScaffold(
       index: -1,
+      showBackButton: true,
       toolbarHeight: 85,
       titleWidget: Padding(
         padding: const EdgeInsets.fromLTRB(5, 16, 16, 5),

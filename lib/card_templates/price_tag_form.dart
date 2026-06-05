@@ -103,6 +103,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
 
   Future<void> _scanBarcode() async {
     final code = await scanCode(context);
+    if (!mounted) return;
     if (code != null && code.isNotEmpty) {
       _barcodeController.text = code;
     }

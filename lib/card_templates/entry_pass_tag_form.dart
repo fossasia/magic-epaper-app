@@ -103,6 +103,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
 
   Future<void> _scanQrData() async {
     final code = await scanCode(context);
+    if (!mounted) return;
     if (code != null && code.isNotEmpty) {
       _qrDataController.text = code;
     }
@@ -116,9 +117,8 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
       firstDate: DateTime(now.year - 1),
       lastDate: DateTime(now.year + 10),
     );
-    if (picked != null) {
-      _validDateController.text = _formatDate(picked);
-    }
+    if (!mounted || picked == null) return;
+    _validDateController.text = _formatDate(picked);
   }
 
   String _formatDate(DateTime date) {
