@@ -1,0 +1,95 @@
+name: "Linux Workflow"
+
+inputs:
+  VERSION_NAME:
+    description: 'Version Name to be used for build'
+    required: false
+    default: '1.0.0'
+  VERSION_CODE:
+    description: 'Version Code to be used for build'
+    required: true
+    default: '1'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        cache: true
+        flutter-version-file: pubspec.yaml
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+
+    - name: Fetch Dependencies
+      shell: bash
+      run: flutter pub get
+
+    - name: Build Linux App
+      shell: bash
+      run: |
+        flutter config --enable-linux-desktop
+        flutter build linux --release --build-name ${{ inputs.VERSION_NAME }} --build-number ${{ inputs.VERSION_CODE }}
+
+    - name: Install fpm
+      shell: bash
+      run: |
+        sudo apt-get install -y ruby ruby-dev build-essential
+        sudo gem install --no-document fpm
+
+    - name: Prepare Package Directory & Desktop Icon
+      shell: bash
+      run: |
+        mkdir -p linux_package/opt/magic-epaper
+        mkdir -p linux_package/usr/bin
+        mkdir -p linux_package/usr/share/applications
+        mkdir -p linux_package/usr/share/icons/hicolor/512x512/apps
+        
+        cp -r build/linux/x64/release/bundle/* linux_package/opt/magic-epaper/
+        
+        ln -s /opt/magic-epaper/magic_epaper_app linux_package/usr/bin/magic-epaper
+
+        cp assets/icons/app_icon.png linux_package/usr/share/icons/hicolor/512x512/apps/magic-epaper.png
+
+        cat <<EOF > linux_package/usr/share/applications/magic-epaper.desktop
+        [Desktop Entry]
+        Version=1.0
+        Name=Magic E-Paper
+        GenericName=Magic E-Paper
+        Comment=FOSSASIA Magic E-Paper App
+        Terminal=false
+        Type=Application
+        Categories=Utility;
+        Exec=/opt/magic-epaper/magic_epaper_app
+        Icon=magic-epaper
+        EOF
+
+    - name: Build .deb package
+      shell: bash
+      run: |
+        fpm -s dir -t deb \
+          -n magic-epaper \
+          -v ${{ inputs.VERSION_NAME }} \
+          -C linux_package \
+          .
+
+    - name: Build .rpm package
+      shell: bash
+      run: |
+        fpm -s dir -t rpm \
+          -n magic-epaper \
+          -v ${{ inputs.VERSION_NAME }} \
+          -C linux_package \
+          .
+
+    - name: Store Packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: linux-artifact
+        path: |
+          *.deb
+          *.rpm
