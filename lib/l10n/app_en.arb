@@ -551,5 +551,6 @@
   "nothingToClear": "Nothing to clear",
   "@nothingToClear": {
     "description": "Shown when the user taps clear but there are no NFC results to clear"
-  }
+  },
+  "cannotSaveEmptyCanvas": "Cannot save an empty canvas"
 }
