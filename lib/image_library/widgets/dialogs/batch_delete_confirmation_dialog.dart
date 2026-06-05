@@ -80,7 +80,7 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '${selectedImages.length} ${appLocalizations.imagesSelected}',
+                appLocalizations.imagesSelected(selectedImages.length),
                 style: const TextStyle(
                   fontSize: 14,
                   color: Colors.red,
@@ -154,7 +154,7 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
             ),
           const SizedBox(height: 12),
           Text(
-            '${selectedImages.length} ${appLocalizations.imagesSelectedForDeletion}',
+            appLocalizations.imagesSelectedForDeletion(selectedImages.length),
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -203,13 +203,6 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
         Expanded(
           child: OutlinedButton(
             onPressed: () => Navigator.pop(context),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              side: BorderSide(color: Colors.grey.shade300),
-              foregroundColor: Colors.grey.shade700,
-            ),
             child: Text(
               appLocalizations.cancel,
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
@@ -220,14 +213,6 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
         Expanded(
           child: ElevatedButton(
             onPressed: onConfirm,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              elevation: 0,
-            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
