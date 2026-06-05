@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:currency_picker/currency_picker.dart';
 import 'package:magicepaperapp/card_templates/util/image_picker_util.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
@@ -37,6 +38,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
   final _barcodeController = TextEditingController();
 
   File? _productImage;
+  Currency? _selectedCurrency;
   bool _isGenerating = false;
 
   late PriceTagModel _data;
@@ -85,7 +87,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
         productName: _productNameController.text,
         productDescription: _productDescriptionController.text,
         price: _priceController.text,
-        currency: _currencyController.text,
+        currency: _selectedCurrency?.symbol ?? '',
         quantity: _quantityController.text,
         barcodeData: _barcodeController.text,
         productImage: _productImage,
@@ -99,6 +101,19 @@ class _PriceTagFormState extends State<PriceTagForm> {
       _productImage = picked;
       _updatePreview();
     }
+  }
+
+  void _openCurrencyPicker() {
+    showCurrencyPicker(
+      context: context,
+      showFlag: true,
+      showCurrencyName: true,
+      showCurrencyCode: true,
+      onSelect: (Currency currency) {
+        _selectedCurrency = currency;
+        _currencyController.text = '${currency.symbol}  ${currency.code}';
+      },
+    );
   }
 
   Future<void> _scanBarcode() async {
@@ -326,6 +341,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
                                 label: appLocalizations.currency,
                                 hint: appLocalizations.currencyHint,
                                 icon: Icons.currency_exchange_outlined,
+                                readOnly: true,
+                                onTap: _openCurrencyPicker,
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -335,7 +352,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                                 controller: _priceController,
                                 label: appLocalizations.price,
                                 hint: appLocalizations.priceHint,
-                                icon: Icons.attach_money_outlined,
+                                icon: Icons.payments_outlined,
                                 keyboardType: TextInputType.number,
                               ),
                             ),
@@ -431,6 +448,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
     int maxLines = 1,
     VoidCallback? onScan,
     int? maxLength = 25,
+    bool readOnly = false,
+    VoidCallback? onTap,
   }) {
     return Theme(
       data: Theme.of(context).copyWith(
@@ -450,6 +469,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
         keyboardType: keyboardType,
         maxLines: maxLines,
         maxLength: maxLength,
+        readOnly: readOnly,
+        onTap: onTap,
         style: const TextStyle(
           fontSize: 16,
           color: colorBlack,
