@@ -74,12 +74,15 @@ flutter:
     - assets/canvas/
     - assets/icons/
 
+  # To update changes:
+  # flutter pub get
+  # dart run flutter_launcher_icons
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   remove_alpha_ios: true
   image_path: "assets/icons/app_icon.png"
-  adaptive_icon_background: "#B22D24"
+  adaptive_icon_background: "#e8212d"
   adaptive_icon_foreground: "assets/icons/app_icon.png"
   adaptive_icon_monochrome: "assets/icons/app_icon.png"
   adaptive_icon_foreground_inset: 22
@@ -87,8 +90,8 @@ flutter_launcher_icons:
   web:
     generate: true
     image_path: "assets/icons/app_icon.png"
-    background_color: "#B22D24"
-    theme_color: "#0175C2"
+    background_color: "#e8212d"
+    theme_color: "#e8212d"
 
   windows:
     generate: true
