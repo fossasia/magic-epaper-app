@@ -221,8 +221,16 @@
   "exportXbm": "Export XBM",
   "exportingXbm": "Exporting XBM files...",
   "fullRefresh": "Full Refresh",
-  "fullRefreshSelected": "Full Refresh Selected",
-  "waveformSelected": "Selected",
+  "waveformSelectedMessage": "{waveformName} Selected",
+  "@waveformSelectedMessage": {
+    "description": "Snackbar message shown when a refresh mode/waveform is selected. The placeholder keeps word order consistent across all modes.",
+    "placeholders": {
+      "waveformName": {
+        "type": "String",
+        "example": "Quick Refresh"
+      }
+    }
+  },
   "library": "Library",
   "templates": "Templates",
   "barcodeGenerator": "Barcode Generator",
