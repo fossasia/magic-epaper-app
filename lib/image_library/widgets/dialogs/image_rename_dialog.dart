@@ -5,7 +5,7 @@ import 'package:magicepaperapp/provider/getitlocator.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
-class ImageRenameDialog extends StatefulWidget {
+class ImageRenameDialog extends StatelessWidget {
   final String currentName;
   final Function(String) onRename;
 
@@ -16,26 +16,9 @@ class ImageRenameDialog extends StatefulWidget {
   });
 
   @override
-  State<ImageRenameDialog> createState() => _ImageRenameDialogState();
-}
-
-class _ImageRenameDialogState extends State<ImageRenameDialog> {
-  late final TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.currentName);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final controller = TextEditingController(text: currentName);
+
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Container(
@@ -57,9 +40,9 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
           children: [
             _buildHeader(),
             const SizedBox(height: 24),
-            _buildTextFieldSection(context),
+            _buildTextFieldSection(controller, context),
             const SizedBox(height: 32),
-            _buildActionButtons(context),
+            _buildActionButtons(context, controller),
           ],
         ),
       ),
@@ -72,7 +55,7 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: colorAccent.withValues(alpha: 0.1),
+            color: colorAccent.withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: const Icon(
@@ -109,7 +92,7 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
     );
   }
 
-  Widget _buildTextFieldSection(BuildContext _) {
+  Widget _buildTextFieldSection(TextEditingController controller, context) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,7 +107,7 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
           ),
           const SizedBox(height: 8),
           TextField(
-            controller: _controller,
+            controller: controller,
             autofocus: true,
             maxLength: 50,
             decoration: InputDecoration(
@@ -135,14 +118,15 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
               ),
             ),
             textCapitalization: TextCapitalization.words,
-            onSubmitted: (_) => _handleRename(context),
+            onSubmitted: (value) => _handleRename(controller, context),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildActionButtons(BuildContext context) {
+  Widget _buildActionButtons(
+      BuildContext context, TextEditingController controller) {
     return Row(
       children: [
         Expanded(
@@ -160,16 +144,7 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
         const SizedBox(width: 12),
         Expanded(
           child: ElevatedButton(
-            onPressed: () => _handleRename(context),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: colorAccent,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 0,
-            ),
+            onPressed: () => _handleRename(controller, context),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -190,10 +165,10 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
     );
   }
 
-  void _handleRename(BuildContext context) {
-    if (_controller.text.trim().isNotEmpty) {
+  void _handleRename(TextEditingController controller, BuildContext context) {
+    if (controller.text.trim().isNotEmpty) {
       Navigator.pop(context);
-      widget.onRename(_controller.text.trim());
+      onRename(controller.text.trim());
     }
   }
 }
