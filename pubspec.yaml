@@ -1,5 +1,5 @@
 name: magicepaperapp
-description: "A new Flutter project."
+description: "Magic E-paper Label Customization App"
 
 # Prevent accidental publishing to pub.dev.
 publish_to: "none"
@@ -55,6 +55,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.4
 
   flutter_lints: ^6.0.0
   integration_test:
@@ -72,3 +73,31 @@ flutter:
     - assets/images/displays/
     - assets/canvas/
     - assets/icons/
+
+  # To update changes:
+  # flutter pub get
+  # dart run flutter_launcher_icons
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/icons/app_icon.png"
+  adaptive_icon_background: "#e8212d"
+  adaptive_icon_foreground: "assets/icons/app_icon.png"
+  adaptive_icon_monochrome: "assets/icons/app_icon.png"
+  adaptive_icon_foreground_inset: 22
+
+  web:
+    generate: true
+    image_path: "assets/icons/app_icon.png"
+    background_color: "#e8212d"
+    theme_color: "#e8212d"
+
+  windows:
+    generate: true
+    image_path: "assets/icons/app_icon.png"
+    icon_size: 48
+
+  macos:
+    generate: true
+    image_path: "assets/icons/app_icon.png"
