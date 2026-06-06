@@ -350,11 +350,12 @@ class _ImageEditorState extends State<ImageEditor> {
                     });
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        duration: Durations.medium3,
+                        duration: const Duration(milliseconds: 1200),
                         content: Text(
-                          _selectedWaveform == null
-                              ? appLocalizations.fullRefreshSelected
-                              : "${appLocalizations.waveformSelected} ${_selectedWaveform!.name}",
+                          appLocalizations.waveformSelectedMessage(
+                            _selectedWaveform?.name ??
+                                appLocalizations.fullRefresh,
+                          ),
                         ),
                         backgroundColor: colorPrimary,
                       ),
