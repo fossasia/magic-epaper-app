@@ -34,7 +34,7 @@ class StoragePermissionDialog extends StatelessWidget {
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                color: colorAccent.withOpacity(0.1),
+                color: colorAccent.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -69,16 +69,8 @@ class StoragePermissionDialog extends StatelessWidget {
                 Expanded(
                   child: TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
                       onCancel?.call();
                     },
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: BorderSide(color: Colors.grey.shade300),
-                      ),
-                    ),
                     child: const Text(
                       'Cancel',
                       style: TextStyle(
@@ -93,18 +85,8 @@ class StoragePermissionDialog extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
                       onGrantPermission?.call();
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorAccent,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      elevation: 0,
-                    ),
                     child: const Text(
                       'Grant Permission',
                       textAlign: TextAlign.center,
@@ -120,27 +102,6 @@ class StoragePermissionDialog extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  static Future<void> show(
-    BuildContext context, {
-    VoidCallback? onGrantPermission,
-    VoidCallback? onCancel,
-    Color colorAccent = Colors.blue,
-    Color colorBlack = Colors.black,
-  }) {
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return StoragePermissionDialog(
-          onGrantPermission: onGrantPermission,
-          onCancel: onCancel,
-          colorAccent: colorAccent,
-          colorBlack: colorBlack,
-        );
-      },
     );
   }
 }

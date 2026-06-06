@@ -2,7 +2,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:currency_picker/currency_picker.dart';
+import 'package:magicepaperapp/card_templates/util/image_picker_util.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
@@ -12,6 +13,7 @@ import 'package:magicepaperapp/card_templates/price_tag_card_widget.dart';
 import 'package:magicepaperapp/card_templates/price_tag_model.dart';
 import 'package:magicepaperapp/util/template_util.dart';
 import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
+import 'package:magicepaperapp/card_templates/util/barcode_scanner_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
@@ -36,7 +38,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
   final _barcodeController = TextEditingController();
 
   File? _productImage;
-  final ImagePicker _picker = ImagePicker();
+  Currency? _selectedCurrency;
   bool _isGenerating = false;
 
   late PriceTagModel _data;
@@ -85,7 +87,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
         productName: _productNameController.text,
         productDescription: _productDescriptionController.text,
         price: _priceController.text,
-        currency: _currencyController.text,
+        currency: _selectedCurrency?.symbol ?? '',
         quantity: _quantityController.text,
         barcodeData: _barcodeController.text,
         productImage: _productImage,
@@ -94,12 +96,31 @@ class _PriceTagFormState extends State<PriceTagForm> {
   }
 
   Future<void> _pickProductImage() async {
-    final picked = await _picker.pickImage(source: ImageSource.gallery);
-    if (picked != null) {
-      setState(() {
-        _productImage = File(picked.path);
-        _updatePreview();
-      });
+    final picked = await pickAndEditImage(context);
+    if (picked != null && mounted) {
+      _productImage = picked;
+      _updatePreview();
+    }
+  }
+
+  void _openCurrencyPicker() {
+    showCurrencyPicker(
+      context: context,
+      showFlag: true,
+      showCurrencyName: true,
+      showCurrencyCode: true,
+      onSelect: (Currency currency) {
+        _selectedCurrency = currency;
+        _currencyController.text = '${currency.symbol}  ${currency.code}';
+      },
+    );
+  }
+
+  Future<void> _scanBarcode() async {
+    final code = await scanCode(context);
+    if (!mounted) return;
+    if (code != null && code.isNotEmpty) {
+      _barcodeController.text = code;
     }
   }
 
@@ -207,6 +228,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
       );
 
       if (bytes != null) {
+        if (!mounted) return;
         Navigator.of(context)
           ..pop()
           ..pop(bytes);
@@ -222,35 +244,36 @@ class _PriceTagFormState extends State<PriceTagForm> {
   Widget build(BuildContext context) {
     return CommonScaffold(
       index: -1,
-      toolbarHeight: 85,
-      titleWidget: Padding(
-        padding: const EdgeInsets.fromLTRB(5, 16, 16, 5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              appLocalizations.priceTagGenerator,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              appLocalizations.priceTagDescription,
-              style: const TextStyle(fontSize: 16, color: Colors.white),
-            ),
-          ],
+      showBackButton: true,
+      titleWidget: Text(
+        appLocalizations.priceTagGenerator,
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
       body: SafeArea(
         top: false,
         bottom: true,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16.0, 14, 16.0, 16.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 16, 16.0, 16.0),
           child: Column(
             children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  appLocalizations.previewPriceTag,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: colorBlack,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
               PriceTagCardWidget(data: _data),
               const SizedBox(height: 20),
               const Divider(height: 1, color: Colors.grey),
@@ -284,6 +307,12 @@ class _PriceTagFormState extends State<PriceTagForm> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 6),
+                        Text(
+                          appLocalizations.priceTagDescription,
+                          style: TextStyle(
+                              fontSize: 13, color: Colors.grey.shade600),
+                        ),
                         const SizedBox(height: 20),
                         _buildProductImageSection(),
                         const SizedBox(height: 20),
@@ -300,6 +329,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                           hint: '',
                           icon: Icons.description_outlined,
                           maxLines: 2,
+                          maxLength: 60,
                         ),
                         const SizedBox(height: 16),
                         Row(
@@ -311,6 +341,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
                                 label: appLocalizations.currency,
                                 hint: appLocalizations.currencyHint,
                                 icon: Icons.currency_exchange_outlined,
+                                readOnly: true,
+                                onTap: _openCurrencyPicker,
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -320,7 +352,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                                 controller: _priceController,
                                 label: appLocalizations.price,
                                 hint: appLocalizations.priceHint,
-                                icon: Icons.attach_money_outlined,
+                                icon: Icons.payments_outlined,
                                 keyboardType: TextInputType.number,
                               ),
                             ),
@@ -339,6 +371,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
                           label: appLocalizations.barcodeData,
                           hint: appLocalizations.barcodeDataHint,
                           icon: Icons.qr_code_scanner_outlined,
+                          maxLength: 80,
+                          onScan: _scanBarcode,
                         ),
                       ],
                     ),
@@ -352,12 +386,12 @@ class _PriceTagFormState extends State<PriceTagForm> {
                 child: ElevatedButton(
                   onPressed: _isGenerating ? null : _submitForm,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        colorPrimary.withAlpha(_isGenerating ? 125 : 255),
-                    foregroundColor:
-                        Colors.white.withAlpha(_isGenerating ? 178 : 255),
+                    backgroundColor: colorPrimary.withValues(
+                        alpha: _isGenerating ? 0.49 : 1.0),
+                    foregroundColor: Colors.white
+                        .withValues(alpha: _isGenerating ? 0.7 : 1.0),
                     elevation: _isGenerating ? 0 : 2,
-                    shadowColor: colorPrimary.withOpacity(0.3),
+                    shadowColor: colorPrimary.withValues(alpha: 0.3),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -412,17 +446,21 @@ class _PriceTagFormState extends State<PriceTagForm> {
     String? Function(String?)? validator,
     TextInputType? keyboardType,
     int maxLines = 1,
+    VoidCallback? onScan,
+    int? maxLength = 25,
+    bool readOnly = false,
+    VoidCallback? onTap,
   }) {
     return Theme(
       data: Theme.of(context).copyWith(
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: colorPrimary,
-          selectionColor: colorPrimary.withOpacity(0.2),
+          selectionColor: colorPrimary.withValues(alpha: 0.2),
           selectionHandleColor: colorPrimary,
         ),
         inputDecorationTheme: InputDecorationTheme(
           focusColor: colorPrimary,
-          hoverColor: colorPrimary.withOpacity(0.1),
+          hoverColor: colorPrimary.withValues(alpha: 0.1),
         ),
       ),
       child: TextFormField(
@@ -430,6 +468,10 @@ class _PriceTagFormState extends State<PriceTagForm> {
         validator: validator,
         keyboardType: keyboardType,
         maxLines: maxLines,
+        maxLength: maxLength,
+        readOnly: readOnly,
+        onTap: onTap,
+        showCursor: onTap != null ? false : null,
         style: const TextStyle(
           fontSize: 16,
           color: colorBlack,
@@ -437,11 +479,21 @@ class _PriceTagFormState extends State<PriceTagForm> {
         ),
         cursorColor: colorPrimary,
         decoration: InputDecoration(
+          counterText: '',
           labelText: label,
           hintText: hint,
           prefixIcon: Icon(icon, color: colorAccent, size: 20),
+          suffixIcon: onScan != null
+              ? IconButton(
+                  tooltip: appLocalizations.scanBarcodeTooltip,
+                  icon: const Icon(Icons.qr_code_scanner, color: colorAccent),
+                  onPressed: onScan,
+                )
+              : onTap != null
+                  ? const Icon(Icons.arrow_drop_down, color: colorAccent)
+                  : null,
           labelStyle: TextStyle(
-            color: colorBlack.withOpacity(0.7),
+            color: colorBlack.withValues(alpha: 0.7),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -515,7 +567,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: colorPrimary.withOpacity(0.1),
+                      color: colorPrimary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -533,8 +585,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
             InkWell(
               onTap: _pickProductImage,
               borderRadius: BorderRadius.circular(8),
-              splashColor: colorAccent.withOpacity(0.1),
-              highlightColor: colorAccent.withOpacity(0.05),
+              splashColor: colorAccent.withValues(alpha: 0.1),
+              highlightColor: colorAccent.withValues(alpha: 0.05),
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
@@ -558,7 +610,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: _productImage != null
-                              ? colorPrimary.withOpacity(0.3)
+                              ? colorPrimary.withValues(alpha: 0.3)
                               : Colors.grey.shade300,
                         ),
                       ),
@@ -632,7 +684,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color: _productImage != null
-                            ? colorPrimary.withOpacity(0.1)
+                            ? colorPrimary.withValues(alpha: 0.1)
                             : Colors.grey.shade100,
                         borderRadius: BorderRadius.circular(20),
                       ),

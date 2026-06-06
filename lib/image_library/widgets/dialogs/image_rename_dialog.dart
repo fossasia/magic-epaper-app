@@ -5,7 +5,7 @@ import 'package:magicepaperapp/provider/getitlocator.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
-class ImageRenameDialog extends StatelessWidget {
+class ImageRenameDialog extends StatefulWidget {
   final String currentName;
   final Function(String) onRename;
 
@@ -16,9 +16,26 @@ class ImageRenameDialog extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final controller = TextEditingController(text: currentName);
+  State<ImageRenameDialog> createState() => _ImageRenameDialogState();
+}
 
+class _ImageRenameDialogState extends State<ImageRenameDialog> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.currentName);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Container(
@@ -28,7 +45,7 @@ class ImageRenameDialog extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -40,9 +57,9 @@ class ImageRenameDialog extends StatelessWidget {
           children: [
             _buildHeader(),
             const SizedBox(height: 24),
-            _buildTextFieldSection(controller, context),
+            _buildTextFieldSection(context),
             const SizedBox(height: 32),
-            _buildActionButtons(context, controller),
+            _buildActionButtons(context),
           ],
         ),
       ),
@@ -55,7 +72,7 @@ class ImageRenameDialog extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: colorAccent.withOpacity(0.1),
+            color: colorAccent.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: const Icon(
@@ -92,7 +109,7 @@ class ImageRenameDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildTextFieldSection(TextEditingController controller, context) {
+  Widget _buildTextFieldSection(BuildContext _) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,61 +124,30 @@ class ImageRenameDialog extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           TextField(
-            controller: controller,
+            controller: _controller,
             autofocus: true,
             maxLength: 50,
             decoration: InputDecoration(
               hintText: appLocalizations.enterImageName,
-              filled: true,
-              fillColor: Colors.grey.shade50,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: colorAccent, width: 2),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Colors.red, width: 2),
-              ),
               prefixIcon: const Icon(
                 Icons.image_outlined,
                 color: Colors.grey,
               ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
             ),
             textCapitalization: TextCapitalization.words,
-            onSubmitted: (value) => _handleRename(controller, context),
+            onSubmitted: (_) => _handleRename(context),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildActionButtons(
-      BuildContext context, TextEditingController controller) {
+  Widget _buildActionButtons(BuildContext context) {
     return Row(
       children: [
         Expanded(
           child: OutlinedButton(
             onPressed: () => Navigator.pop(context),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              side: BorderSide(color: Colors.grey.shade300),
-              foregroundColor: Colors.grey.shade700,
-            ),
             child: Text(
               appLocalizations.cancel,
               style: const TextStyle(
@@ -174,7 +160,7 @@ class ImageRenameDialog extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: ElevatedButton(
-            onPressed: () => _handleRename(controller, context),
+            onPressed: () => _handleRename(context),
             style: ElevatedButton.styleFrom(
               backgroundColor: colorAccent,
               foregroundColor: Colors.white,
@@ -204,10 +190,10 @@ class ImageRenameDialog extends StatelessWidget {
     );
   }
 
-  void _handleRename(TextEditingController controller, BuildContext context) {
-    if (controller.text.trim().isNotEmpty) {
+  void _handleRename(BuildContext context) {
+    if (_controller.text.trim().isNotEmpty) {
       Navigator.pop(context);
-      onRename(controller.text.trim());
+      widget.onRename(_controller.text.trim());
     }
   }
 }
