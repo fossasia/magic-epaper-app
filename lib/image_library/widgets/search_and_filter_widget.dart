@@ -26,7 +26,7 @@ class SearchAndFilterWidget extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: colorBlack.withOpacity(0.05),
+            color: colorBlack.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -47,6 +47,7 @@ class SearchAndFilterWidget extends StatelessWidget {
             children: [
               Text(appLocalizations.filter,
                   style: const TextStyle(fontWeight: FontWeight.w500)),
+              const SizedBox(width: 8),
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,

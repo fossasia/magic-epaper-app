@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:magicepaperapp/card_templates/util/image_picker_util.dart';
 import 'package:magicepaperapp/card_templates/employee_id_card_widget.dart';
 import 'package:magicepaperapp/card_templates/employee_id_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
@@ -11,6 +11,7 @@ import 'package:magicepaperapp/pro_image_editor/features/movable_background_imag
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:magicepaperapp/util/template_util.dart';
 import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
+import 'package:magicepaperapp/card_templates/util/barcode_scanner_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
@@ -35,7 +36,6 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
   final _qrDataController = TextEditingController();
 
   File? _profileImage;
-  final ImagePicker _picker = ImagePicker();
   bool _isGenerating = false;
 
   late EmployeeIdModel _employeeData;
@@ -93,12 +93,18 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _profileImage = File(pickedFile.path);
-        _updatePreview();
-      });
+    final picked = await pickAndEditImage(context);
+    if (picked != null && mounted) {
+      _profileImage = picked;
+      _updatePreview();
+    }
+  }
+
+  Future<void> _scanQrData() async {
+    final code = await scanCode(context);
+    if (!mounted) return;
+    if (code != null && code.isNotEmpty) {
+      _qrDataController.text = code;
     }
   }
 
@@ -115,8 +121,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
 
       if (_profileImage != null) {
         layers.add(LayerSpec.widget(
-          widget: ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
+          widget: ClipOval(
             child: Image.file(_profileImage!,
                 width: 200, height: 200, fit: BoxFit.cover),
           ),
@@ -220,6 +225,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
       );
 
       if (result != null) {
+        if (!mounted) return;
         Navigator.of(context)
           ..pop()
           ..pop(result);
@@ -235,35 +241,36 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
   Widget build(BuildContext context) {
     return CommonScaffold(
       index: -1,
-      toolbarHeight: 85,
-      titleWidget: Padding(
-        padding: const EdgeInsets.fromLTRB(5, 16, 16, 5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              appLocalizations.employeeIdCard,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              appLocalizations.fillDetailsToCreateId,
-              style: const TextStyle(fontSize: 16, color: Colors.white),
-            ),
-          ],
+      showBackButton: true,
+      titleWidget: Text(
+        appLocalizations.employeeIdCard,
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
       body: SafeArea(
         top: false,
         bottom: true,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16.0, 14, 16.0, 16.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 16, 16.0, 16.0),
           child: Column(
             children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  appLocalizations.previewIdCard,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: colorBlack,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
               EmployeeIdCardWidget(data: _employeeData),
               const SizedBox(height: 20),
               const Divider(height: 1, color: Colors.grey),
@@ -296,6 +303,12 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                               ),
                             ),
                           ],
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          appLocalizations.fillDetailsToCreateId,
+                          style: TextStyle(
+                              fontSize: 13, color: Colors.grey.shade600),
                         ),
                         const SizedBox(height: 20),
                         _buildPhotoSection(),
@@ -341,6 +354,8 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                           hint: appLocalizations.enterQrCodeData,
                           icon: Icons.qr_code_outlined,
                           maxLines: 2,
+                          maxLength: 250,
+                          onScan: _scanQrData,
                         ),
                       ],
                     ),
@@ -359,7 +374,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                     foregroundColor:
                         Colors.white.withAlpha(_isGenerating ? 178 : 255),
                     elevation: _isGenerating ? 0 : 2,
-                    shadowColor: colorPrimary.withOpacity(0.3),
+                    shadowColor: colorPrimary.withValues(alpha: 0.3),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -413,23 +428,26 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
     required IconData icon,
     String? Function(String?)? validator,
     int maxLines = 1,
+    VoidCallback? onScan,
+    int? maxLength = 25,
   }) {
     return Theme(
       data: Theme.of(context).copyWith(
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: colorPrimary,
-          selectionColor: colorPrimary.withOpacity(0.2),
+          selectionColor: colorPrimary.withValues(alpha: 0.3),
           selectionHandleColor: colorPrimary,
         ),
         inputDecorationTheme: InputDecorationTheme(
           focusColor: colorPrimary,
-          hoverColor: colorPrimary.withOpacity(0.1),
+          hoverColor: colorPrimary.withValues(alpha: 0.3),
         ),
       ),
       child: TextFormField(
         controller: controller,
         validator: validator,
         maxLines: maxLines,
+        maxLength: maxLength,
         style: const TextStyle(
           fontSize: 16,
           color: colorBlack,
@@ -437,11 +455,19 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         ),
         cursorColor: colorPrimary,
         decoration: InputDecoration(
+          counterText: '',
           labelText: label,
           hintText: hint,
           prefixIcon: Icon(icon, color: colorAccent, size: 20),
+          suffixIcon: onScan != null
+              ? IconButton(
+                  tooltip: appLocalizations.scanQrCode,
+                  icon: const Icon(Icons.qr_code_scanner, color: colorAccent),
+                  onPressed: onScan,
+                )
+              : null,
           labelStyle: TextStyle(
-            color: colorBlack.withOpacity(0.7),
+            color: colorBlack.withValues(alpha: 0.7),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -516,7 +542,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: colorPrimary.withOpacity(0.1),
+                      color: colorPrimary.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -534,8 +560,8 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
             InkWell(
               onTap: _pickImage,
               borderRadius: BorderRadius.circular(8),
-              splashColor: colorAccent.withOpacity(0.1),
-              highlightColor: colorAccent.withOpacity(0.05),
+              splashColor: colorAccent.withValues(alpha: 0.1),
+              highlightColor: colorAccent.withValues(alpha: 0.05),
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
@@ -556,18 +582,17 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                       height: 60,
                       decoration: BoxDecoration(
                         color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(8),
+                        shape: BoxShape.circle,
                         border: Border.all(
                           color: _profileImage != null
-                              ? colorPrimary.withOpacity(0.3)
+                              ? colorPrimary.withValues(alpha: 0.3)
                               : Colors.grey.shade300,
                         ),
                       ),
                       child: _profileImage != null
                           ? Stack(
                               children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(7),
+                                ClipOval(
                                   child: Image.file(
                                     _profileImage!,
                                     fit: BoxFit.cover,
@@ -633,7 +658,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color: _profileImage != null
-                            ? colorPrimary.withOpacity(0.1)
+                            ? colorPrimary.withValues(alpha: 0.3)
                             : Colors.grey.shade100,
                         borderRadius: BorderRadius.circular(20),
                       ),

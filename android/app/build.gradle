@@ -61,6 +61,9 @@ android {
             if (LOCAL_KEY_PRESENT || GITHUB_BUILD) {
                 signingConfig signingConfigs.release
             }
+            else {
+                signingConfig signingConfigs.debug
+            }
         }
     }
 }

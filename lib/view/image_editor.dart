@@ -1,4 +1,5 @@
 import 'package:file_saver/file_saver.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
@@ -7,7 +8,6 @@ import 'package:magicepaperapp/pro_image_editor/features/movable_background_imag
 import 'package:magicepaperapp/card_templates/card_template_selection_view.dart';
 import 'package:magicepaperapp/util/color_util.dart';
 import 'package:magicepaperapp/util/epd/driver/waveform.dart';
-import 'package:magicepaperapp/util/image_editor_utils.dart';
 import 'package:magicepaperapp/util/xbm_encoder.dart';
 import 'package:magicepaperapp/view/text_fit_editor.dart';
 import 'package:magicepaperapp/view/widget/image_list.dart';
@@ -19,10 +19,8 @@ import 'package:magicepaperapp/provider/image_loader.dart';
 import 'package:magicepaperapp/util/epd/epd.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
+import '../src/rust/api/simple.dart' as rust_api;
 import '../util/app_logger.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class ImageEditor extends StatefulWidget {
   final DisplayDevice device;
@@ -51,6 +49,7 @@ class _ImageEditorState extends State<ImageEditor> {
 
   @override
   void initState() {
+    AppLogger.info('DEBUG: ImageEditor initState called');
     setPortraitOrientation();
     super.initState();
     _selectedWaveform = null;
@@ -105,7 +104,6 @@ class _ImageEditorState extends State<ImageEditor> {
     );
   }
 
-  // Save image using ImageSaveHandler
   void _saveCurrentImage() async {
     if (_imageSaveHandler == null) return;
 
@@ -162,37 +160,60 @@ class _ImageEditorState extends State<ImageEditor> {
 
   Future<void> _processImagesAsync(img.Image sourceImage) async {
     if (_isProcessingImages) return;
+
     setState(() {
       _isProcessingImages = true;
+      _rawImages = [];
+      _processedPngs = [];
+      _processedSourceImage = sourceImage;
+      _selectedFilterIndex = 0;
+      flipHorizontal = false;
+      flipVertical = false;
     });
+
+    final Uint8List sourcePngBytes =
+        Uint8List.fromList(img.encodePng(sourceImage));
+    final filtersToRun = widget.device.processingMethods;
+
     try {
-      await Future.delayed(const Duration(milliseconds: 50));
-      final rawImages =
-          processImages(originalImage: sourceImage, epd: widget.device);
-      final processedPngs = <Uint8List>[];
-      for (int i = 0; i < rawImages.length; i++) {
-        processedPngs.add(img.encodePng(rawImages[i]));
-        if (i % 2 == 0) {
-          await Future.delayed(const Duration(milliseconds: 1));
+      for (int i = 0; i < filtersToRun.length; i++) {
+        if (!mounted || _processedSourceImage != sourceImage) break;
+
+        Uint8List bytesForRust = sourcePngBytes;
+
+        if (filtersToRun[i].useDartHalftone) {
+          final tempImg = img.Image.from(sourceImage);
+          if (!filtersToRun[i].isBwr) {
+            img.grayscale(tempImg);
+          }
+          img.colorHalftone(tempImg, size: 3);
+          bytesForRust = Uint8List.fromList(img.encodePng(tempImg));
+        }
+
+        final Uint8List processedPngBytes = await rust_api.processImageRust(
+          imageBytes: bytesForRust,
+          targetWidth: widget.device.width.toInt(),
+          targetHeight: widget.device.height.toInt(),
+          method: filtersToRun[i].method,
+          isBwr: filtersToRun[i].isBwr,
+        );
+
+        final img.Image? decodedImage =
+            await compute(img.decodePng, processedPngBytes);
+
+        if (mounted && _processedSourceImage == sourceImage) {
+          setState(() {
+            _processedPngs.add(processedPngBytes);
+            _rawImages.add(decodedImage!);
+            if (i == 0) {
+              _isProcessingImages = false;
+            }
+          });
         }
       }
-      if (mounted) {
-        setState(() {
-          _rawImages = rawImages;
-          _processedPngs = processedPngs;
-          _processedSourceImage = sourceImage;
-          _selectedFilterIndex = 0;
-          flipHorizontal = false;
-          flipVertical = false;
-          _isProcessingImages = false;
-        });
-      }
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isProcessingImages = false;
-        });
-      }
+      AppLogger.error('Exception in Rust processing: $e');
+      if (mounted) setState(() => _isProcessingImages = false);
     }
   }
 
@@ -257,6 +278,154 @@ class _ImageEditorState extends State<ImageEditor> {
     }
   }
 
+  Widget _buildWaveformDropdownGroup(
+    BuildContext context,
+    AppLocalizations appLocalizations,
+  ) {
+    final epd = widget.device as Epd;
+    const double controlHeight = 32.0;
+    const TextStyle itemTextStyle = TextStyle(
+      color: Colors.white,
+      fontSize: 13,
+      fontWeight: FontWeight.w500,
+    );
+    final List<DropdownMenuItem<String?>> dropdownItems = [
+      DropdownMenuItem<String?>(
+        value: null,
+        child: Text(appLocalizations.fullRefresh, style: itemTextStyle),
+      ),
+      ...epd.controller.waveforms.map((waveform) {
+        return DropdownMenuItem<String?>(
+          value: waveform.name,
+          child: Text(
+            waveform.name,
+            style: itemTextStyle,
+            overflow: TextOverflow.ellipsis,
+          ),
+        );
+      }),
+    ];
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        GestureDetector(
+          onLongPress: () => _showRefreshModeInfoDialog(context),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 130, minWidth: 92),
+            child: Container(
+              height: controlHeight,
+              decoration: BoxDecoration(
+                color: colorAccent,
+                border: Border.all(color: Colors.white, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String?>(
+                  value: _selectedWaveformName,
+                  isExpanded: true,
+                  isDense: true,
+                  hint: Text(
+                    appLocalizations.fullRefresh,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: itemTextStyle,
+                  ),
+                  dropdownColor: colorAccent,
+                  style: itemTextStyle,
+                  borderRadius: BorderRadius.circular(8),
+                  icon: const Icon(Icons.keyboard_arrow_down,
+                      color: Colors.white, size: 18),
+                  items: dropdownItems,
+                  onChanged: (String? newName) {
+                    setState(() {
+                      _selectedWaveformName = newName;
+                      if (newName == null) {
+                        _selectedWaveform = null;
+                      } else {
+                        _selectedWaveform = epd.controller.waveforms
+                            .firstWhere((w) => w.name == newName);
+                      }
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        duration: Durations.medium3,
+                        content: Text(
+                          _selectedWaveform == null
+                              ? appLocalizations.fullRefreshSelected
+                              : "${appLocalizations.waveformSelected} ${_selectedWaveform!.name}",
+                        ),
+                        backgroundColor: colorPrimary,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 2),
+        InkWell(
+          onTap: () => _showRefreshModeInfoDialog(context),
+          customBorder: const CircleBorder(),
+          // Compact 32 footprint so the title keeps its horizontal space
+          // on narrow screens (a 48 box squeezed the title too much).
+          child: const SizedBox(
+            height: controlHeight,
+            width: controlHeight,
+            child: Icon(Icons.info_outline, color: Colors.white, size: 20),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTransferActionButton(
+    BuildContext context,
+    AppLocalizations appLocalizations,
+  ) {
+    return TextButton(
+      onPressed: widget.isExportOnly
+          ? _exportXbmFiles
+          : () async {
+              img.Image finalImg = _rawImages[_selectedFilterIndex];
+
+              if (flipHorizontal) {
+                finalImg = img.flipHorizontal(finalImg);
+              }
+              if (flipVertical) {
+                finalImg = img.flipVertical(finalImg);
+              }
+              await widget.device.transfer(
+                context,
+                finalImg,
+                waveform: _selectedWaveform,
+              );
+            },
+      style: TextButton.styleFrom(
+        backgroundColor: colorAccent,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        // Visual height stays compact (32), but the default padded
+        // tapTargetSize keeps the touch target at the 48dp guideline.
+        minimumSize: const Size(0, 32),
+        textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: const BorderSide(color: Colors.white, width: 1),
+        ),
+      ),
+      child: Text(
+        widget.isExportOnly
+            ? appLocalizations.exportXbm
+            : appLocalizations.transferButtonLabel,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+
   void _showRefreshModeInfoDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -311,7 +480,7 @@ class _ImageEditorState extends State<ImageEditor> {
               style: TextButton.styleFrom(
                 foregroundColor: colorAccent,
               ),
-              child: const Text('OK'),
+              child: Text(appLocalizations.ok),
             ),
           ],
         );
@@ -321,6 +490,7 @@ class _ImageEditorState extends State<ImageEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     var imgLoader = context.watch<ImageLoader>();
     if (!_isInitializing && imgLoader.image != null && !_isProcessingImages) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -328,179 +498,41 @@ class _ImageEditorState extends State<ImageEditor> {
       });
     }
 
+    final bool hasActions = _rawImages.isNotEmpty;
+    final bool hasDropdown =
+        hasActions && widget.device is Epd && !widget.isExportOnly;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
+        iconTheme: const IconThemeData(color: Colors.white),
         titleSpacing: 0.0,
         backgroundColor: colorAccent,
         elevation: 0,
         title: Text(
           appLocalizations.filterScreenTitle,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: const TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13.8),
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 15.0,
+          ),
         ),
-        actions: [
-          if (_rawImages.isNotEmpty) ...[
-            if (widget.device is Epd && !widget.isExportOnly)
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Builder(builder: (context) {
-                  final epd = widget.device as Epd;
-                  final List<DropdownMenuItem<String?>> dropdownItems = [
-                    DropdownMenuItem<String?>(
-                      value: null,
-                      child: Text(
-                        appLocalizations.fullRefresh,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    ...epd.controller.waveforms.map((waveform) {
-                      return DropdownMenuItem<String?>(
-                        value: waveform.name,
-                        child: Text(
-                          waveform.name,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      );
-                    }),
-                  ];
-
-                  return Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      GestureDetector(
-                          onLongPress: () =>
-                              _showRefreshModeInfoDialog(context),
-                          child: Container(
-                            height: 36,
-                            constraints: const BoxConstraints(minWidth: 120),
-                            decoration: BoxDecoration(
-                              color: colorAccent,
-                              border: Border.all(color: Colors.white, width: 1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String?>(
-                                value: _selectedWaveformName,
-                                hint: Text(
-                                  appLocalizations.fullRefresh,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                isDense: true,
-                                dropdownColor: colorAccent,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                borderRadius: BorderRadius.circular(8),
-                                icon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                                items: dropdownItems,
-                                onChanged: (String? newName) {
-                                  setState(() {
-                                    _selectedWaveformName = newName;
-                                    if (newName == null) {
-                                      _selectedWaveform = null;
-                                    } else {
-                                      _selectedWaveform = epd
-                                          .controller.waveforms
-                                          .firstWhere((w) => w.name == newName);
-                                    }
-                                  });
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      duration: Durations.medium3,
-                                      content: Text(
-                                        _selectedWaveform == null
-                                            ? appLocalizations
-                                                .fullRefreshSelected
-                                            : "${appLocalizations.waveformSelected} ${_selectedWaveform!.name}",
-                                      ),
-                                      backgroundColor: colorPrimary,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          )),
-                      const SizedBox(width: 4),
-                      GestureDetector(
-                        onTap: () => _showRefreshModeInfoDialog(context),
-                        child: Container(
-                          height: 36,
-                          width: 36,
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            // border: Border.all(color: Colors.white, width: 1),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Icon(
-                            Icons.info_outline,
-                            color: Colors.white,
-                            size: 26,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                }),
-              ),
-            Padding(
-              padding: const EdgeInsets.only(right: 12.0),
-              child: TextButton(
-                onPressed: widget.isExportOnly
-                    ? _exportXbmFiles
-                    : () async {
-                        img.Image finalImg = _rawImages[_selectedFilterIndex];
-
-                        if (flipHorizontal) {
-                          finalImg = img.flipHorizontal(finalImg);
-                        }
-                        if (flipVertical) {
-                          finalImg = img.flipVertical(finalImg);
-                        }
-                        await widget.device.transfer(
-                          context,
-                          finalImg,
-                          waveform: _selectedWaveform,
-                        );
-                      },
-                style: TextButton.styleFrom(
-                  backgroundColor: colorAccent,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    side: const BorderSide(color: Colors.white, width: 1),
+        actions: hasActions
+            ? [
+                if (hasDropdown)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 6.0),
+                    child:
+                        _buildWaveformDropdownGroup(context, appLocalizations),
                   ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: _buildTransferActionButton(context, appLocalizations),
                 ),
-                child: widget.isExportOnly
-                    ? Text(appLocalizations.exportXbm)
-                    : Text(appLocalizations.transferButtonLabel),
-              ),
-            ),
-          ],
-        ],
+              ]
+            : null,
       ),
       body: SafeArea(
         top: false,
@@ -578,11 +610,21 @@ class BottomActionMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+    final MediaQueryData mq = MediaQuery.of(context);
+    final double screenWidth = mq.size.width;
+    final double textScale = mq.textScaler.scale(1.0);
+    final bool isNarrow = screenWidth < 360;
+    final double iconSize = isNarrow ? 20.0 : 22.0;
+    final double fontSize = isNarrow ? 9.0 : 10.0;
+    // Grow the bar height with the user's font-scale so labels don't clip
+    // vertically under accessibility settings.
+    final double barHeight = 75.0 + ((textScale - 1.0).clamp(0.0, 0.6)) * 28.0;
     return SafeArea(
       top: false,
       bottom: true,
       child: Container(
-        height: 75,
+        height: barHeight,
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -595,14 +637,17 @@ class BottomActionMenu extends StatelessWidget {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          padding: EdgeInsets.symmetric(
+              horizontal: isNarrow ? 4.0 : 8.0, vertical: 6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildActionButton(
                 context: context,
                 icon: Icons.add_photo_alternate_outlined,
-                label: "Import",
+                iconSize: iconSize,
+                fontSize: fontSize,
+                label: appLocalizations.import,
                 onTap: () async {
                   final success = await imgLoader.pickImage(
                     width: epd.width,
@@ -621,6 +666,8 @@ class BottomActionMenu extends StatelessWidget {
                 key: const Key('openEditorButton'),
                 context: context,
                 icon: Icons.edit_outlined,
+                iconSize: iconSize,
+                fontSize: fontSize,
                 label: appLocalizations.openEditor,
                 onTap: () async {
                   final canvasBytes =
@@ -646,7 +693,9 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.text_fields,
-                label: "Text",
+                iconSize: iconSize,
+                fontSize: fontSize,
+                label: appLocalizations.text,
                 onTap: () async {
                   final bytes = await Navigator.of(context).push<Uint8List>(
                     MaterialPageRoute(
@@ -667,55 +716,11 @@ class BottomActionMenu extends StatelessWidget {
                   }
                 },
               ),
-              // _buildActionButton(
-              //   key: const Key('adjustButton'),
-              //   context: context,
-              //   icon: Icons.tune_rounded,
-              //   label: appLocalizations.adjustButtonLabel,
-              //   onTap: () async {
-              //     if (imgLoader.image != null) {
-              //       final canvasBytes =
-              //           await Navigator.of(context).push<Uint8List>(
-              //         MaterialPageRoute(
-              //           builder: (context) => ProImageEditor.memory(
-              //             img.encodeJpg(imgLoader.image!),
-              //             callbacks: ProImageEditorCallbacks(
-              //               onImageEditingComplete: (Uint8List bytes) async {
-              //                 Navigator.pop(context, bytes);
-              //               },
-              //             ),
-              //             configs: const ProImageEditorConfigs(
-              //               paintEditor: PaintEditorConfigs(enabled: false),
-              //               textEditor: TextEditorConfigs(enabled: false),
-              //               cropRotateEditor: CropRotateEditorConfigs(
-              //                 enabled: false,
-              //               ),
-              //               emojiEditor: EmojiEditorConfigs(enabled: false),
-              //             ),
-              //           ),
-              //         ),
-              //       );
-              //       if (canvasBytes != null) {
-              //         imgLoader.updateImage(
-              //           bytes: canvasBytes,
-              //           width: epd.width,
-              //           height: epd.height,
-              //         );
-              //       }
-              //     } else {
-              //       ScaffoldMessenger.of(context).showSnackBar(
-              //         SnackBar(
-              //           duration: Durations.medium4,
-              //           content: Text(appLocalizations.noImageSelectedFeedback),
-              //           backgroundColor: colorPrimary,
-              //         ),
-              //       );
-              //     }
-              //   },
-              // ),
               _buildActionButton(
                 context: context,
                 icon: Icons.photo_library_outlined,
+                iconSize: iconSize,
+                fontSize: fontSize,
                 label: appLocalizations.library,
                 onTap: () async {
                   await imageSaveHandler?.navigateToImageLibrary();
@@ -724,6 +729,8 @@ class BottomActionMenu extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.dashboard_customize_outlined,
+                iconSize: iconSize,
+                fontSize: fontSize,
                 label: appLocalizations.templates,
                 onTap: () async {
                   final result = await Navigator.of(context).push<Uint8List>(
@@ -759,6 +766,8 @@ class BottomActionMenu extends StatelessWidget {
     required IconData icon,
     required String label,
     required VoidCallback onTap,
+    required double iconSize,
+    required double fontSize,
     Key? key,
   }) {
     return Expanded(
@@ -766,24 +775,29 @@ class BottomActionMenu extends StatelessWidget {
         key: key,
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
-        child: Container(
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, color: colorAccent, size: 22),
+              Icon(icon, color: colorAccent, size: iconSize),
               const SizedBox(height: 2),
-              Text(
-                label,
-                style: const TextStyle(
-                  color: colorBlack,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w500,
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      color: colorBlack,
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
