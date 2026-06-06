@@ -14,18 +14,22 @@ import 'package:magicepaperapp/view/display_selection_screen.dart';
 import 'package:magicepaperapp/src/rust/frb_generated.dart';
 import 'constants/color_constants.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await RustLib.init();
 
   setupLocator();
+
+  final localeProvider = LocaleProvider();
+  await localeProvider.loadSavedLocale();
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ImageLoader()),
+        ChangeNotifierProvider(create: (_) => ImageLoader()),
         ChangeNotifierProvider(create: (_) => ImageLibraryProvider()),
-        ChangeNotifierProvider(create: (_) => LocaleProvider()),
+        ChangeNotifierProvider<LocaleProvider>.value(value: localeProvider),
       ],
       child: const MyApp(),
     ),
