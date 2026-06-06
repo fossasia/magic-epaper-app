@@ -223,7 +223,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
   Widget build(BuildContext context) {
     return CommonScaffold(
       index: -1,
-      toolbarHeight: 85,
+      toolbarHeight: 95,
       titleWidget: Padding(
         padding: const EdgeInsets.fromLTRB(5, 16, 16, 5),
         child: Column(
@@ -240,8 +240,11 @@ class _PriceTagFormState extends State<PriceTagForm> {
             const SizedBox(height: 8),
             Text(
               appLocalizations.priceTagDescription,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 16, color: Colors.white),
             ),
+            const SizedBox(height: 8),
           ],
         ),
       ),
