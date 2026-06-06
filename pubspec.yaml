@@ -41,6 +41,7 @@ dependencies:
   mime: ^2.0.0
   mobile_scanner: ^7.1.4
   barcode_widget: ^2.0.4
+  currency_picker: ^2.0.21
   intl: ^0.20.2
   path_provider: ^2.0.15
   get_it: ^9.2.0
