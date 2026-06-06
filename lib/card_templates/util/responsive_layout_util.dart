@@ -48,6 +48,54 @@ class ResponsiveLayoutUtil {
         return PriceTagLayoutParams.display416x240();
     }
   }
+
+  static EventBadgeLayoutParams getEventBadgeLayout(int width, int height) {
+    final displayKey = '${width}x$height';
+    switch (displayKey) {
+      case '416x240':
+        return EventBadgeLayoutParams.display416x240();
+      case '320x240':
+        return EventBadgeLayoutParams.display320x240();
+      case '250x122':
+        return EventBadgeLayoutParams.display250x122();
+      case '296x128':
+        return EventBadgeLayoutParams.display296x128();
+      case '264x176':
+        return EventBadgeLayoutParams.display264x176();
+      case '400x300':
+        return EventBadgeLayoutParams.display400x300();
+      case '800x480':
+        return EventBadgeLayoutParams.display800x480();
+      case '880x528':
+        return EventBadgeLayoutParams.display880x528();
+      default:
+        return EventBadgeLayoutParams.display416x240();
+    }
+  }
+
+  static EntryPassTagLayoutParams getEntryPassTagLayout(int width, int height) {
+    final displayKey = '${width}x$height';
+    switch (displayKey) {
+      case '416x240':
+        return EntryPassTagLayoutParams.display416x240();
+      case '320x240':
+        return EntryPassTagLayoutParams.display320x240();
+      case '250x122':
+        return EntryPassTagLayoutParams.display250x122();
+      case '296x128':
+        return EntryPassTagLayoutParams.display296x128();
+      case '264x176':
+        return EntryPassTagLayoutParams.display264x176();
+      case '400x300':
+        return EntryPassTagLayoutParams.display400x300();
+      case '800x480':
+        return EntryPassTagLayoutParams.display800x480();
+      case '880x528':
+        return EntryPassTagLayoutParams.display880x528();
+      default:
+        return EntryPassTagLayoutParams.display416x240();
+    }
+  }
 }
 
 class EmployeeIdLayoutParams {
@@ -301,7 +349,7 @@ class PriceTagLayoutParams {
       quantityFontSize: 16,
       quantityScale: 0.75,
       quantityOffset: Offset(120, 85),
-      barcodeScale: 12.5,
+      barcodeScale: 7,
       barcodeOffset: Offset(-68, 45),
       barcodeSize: Size(240, 120),
     );
@@ -323,7 +371,7 @@ class PriceTagLayoutParams {
       quantityFontSize: 16,
       quantityScale: 0.75,
       quantityOffset: Offset(130, 85),
-      barcodeScale: 13,
+      barcodeScale: 7.5,
       barcodeOffset: Offset(-58, 45),
       barcodeSize: Size(240, 120),
     );
@@ -345,7 +393,7 @@ class PriceTagLayoutParams {
       quantityFontSize: 16,
       quantityScale: 0.75,
       quantityOffset: Offset(120, 55),
-      barcodeScale: 12.5,
+      barcodeScale: 7,
       barcodeOffset: Offset(-68, 35),
       barcodeSize: Size(240, 120),
     );
@@ -367,7 +415,7 @@ class PriceTagLayoutParams {
       quantityFontSize: 16,
       quantityScale: 0.75,
       quantityOffset: Offset(120, 55),
-      barcodeScale: 11.5,
+      barcodeScale: 6.5,
       barcodeOffset: Offset(-68, 25),
       barcodeSize: Size(240, 120),
     );
@@ -389,7 +437,7 @@ class PriceTagLayoutParams {
       quantityFontSize: 16,
       quantityScale: 0.75,
       quantityOffset: Offset(130, 85),
-      barcodeScale: 13,
+      barcodeScale: 7.5,
       barcodeOffset: Offset(-58, 45),
       barcodeSize: Size(240, 120),
     );
@@ -411,7 +459,7 @@ class PriceTagLayoutParams {
       quantityFontSize: 16,
       quantityScale: 0.75,
       quantityOffset: Offset(130, 85),
-      barcodeScale: 13,
+      barcodeScale: 7.5,
       barcodeOffset: Offset(-58, 45),
       barcodeSize: Size(240, 120),
     );
@@ -433,7 +481,7 @@ class PriceTagLayoutParams {
       quantityFontSize: 16,
       quantityScale: 0.75,
       quantityOffset: Offset(130, 85),
-      barcodeScale: 13,
+      barcodeScale: 7.5,
       barcodeOffset: Offset(-58, 45),
       barcodeSize: Size(240, 120),
     );
@@ -455,9 +503,401 @@ class PriceTagLayoutParams {
       quantityFontSize: 80,
       quantityScale: 2.0,
       quantityOffset: Offset(-100, -240),
-      barcodeScale: 28,
+      barcodeScale: 16,
       barcodeOffset: Offset(165, 220),
       barcodeSize: Size(440, 220),
+    );
+  }
+}
+
+class EventBadgeLayoutParams {
+  final double profileImageScale;
+  final Offset profileImageOffset;
+  final double eventNameFontSize;
+  final double eventNameScale;
+  final Offset eventNameOffset;
+  final double textFieldFontSize;
+  final double textFieldScale;
+  final Map<String, Offset> textOffsets;
+  final double qrCodeScale;
+  final Offset qrCodeOffset;
+  final Size qrCodeSize;
+
+  const EventBadgeLayoutParams({
+    required this.profileImageScale,
+    required this.profileImageOffset,
+    required this.eventNameFontSize,
+    required this.eventNameScale,
+    required this.eventNameOffset,
+    required this.textFieldFontSize,
+    required this.textFieldScale,
+    required this.textOffsets,
+    required this.qrCodeScale,
+    required this.qrCodeOffset,
+    required this.qrCodeSize,
+  });
+
+  factory EventBadgeLayoutParams.display416x240() {
+    return const EventBadgeLayoutParams(
+      profileImageScale: 5.4,
+      profileImageOffset: Offset(-132, -60),
+      eventNameFontSize: 50,
+      eventNameScale: 1.0,
+      eventNameOffset: Offset(55, -92),
+      textFieldFontSize: 16,
+      textFieldScale: 0.75,
+      textOffsets: {
+        'attendeeName': Offset(55, -50),
+        'role': Offset(55, -15),
+        'organization': Offset(55, 20),
+        'ticketId': Offset(55, 55),
+      },
+      qrCodeScale: 6,
+      qrCodeOffset: Offset(-130, 55),
+      qrCodeSize: Size(60, 60),
+    );
+  }
+
+  factory EventBadgeLayoutParams.display320x240() {
+    return const EventBadgeLayoutParams(
+      profileImageScale: 6,
+      profileImageOffset: Offset(-130, -70),
+      eventNameFontSize: 50,
+      eventNameScale: 1.0,
+      eventNameOffset: Offset(55, -92),
+      textFieldFontSize: 16,
+      textFieldScale: 0.75,
+      textOffsets: {
+        'attendeeName': Offset(55, -50),
+        'role': Offset(55, -15),
+        'organization': Offset(55, 20),
+        'ticketId': Offset(55, 55),
+      },
+      qrCodeScale: 7,
+      qrCodeOffset: Offset(-125, 70),
+      qrCodeSize: Size(60, 60),
+    );
+  }
+
+  factory EventBadgeLayoutParams.display250x122() {
+    return const EventBadgeLayoutParams(
+      profileImageScale: 4.5,
+      profileImageOffset: Offset(-132, -55),
+      eventNameFontSize: 50,
+      eventNameScale: 1.0,
+      eventNameOffset: Offset(55, -75),
+      textFieldFontSize: 16,
+      textFieldScale: 0.75,
+      textOffsets: {
+        'attendeeName': Offset(55, -40),
+        'role': Offset(55, -5),
+        'organization': Offset(55, 30),
+        'ticketId': Offset(55, 65),
+      },
+      qrCodeScale: 5,
+      qrCodeOffset: Offset(-130, 45),
+      qrCodeSize: Size(60, 60),
+    );
+  }
+
+  factory EventBadgeLayoutParams.display296x128() {
+    return const EventBadgeLayoutParams(
+      profileImageScale: 3.75,
+      profileImageOffset: Offset(-145, -45),
+      eventNameFontSize: 50,
+      eventNameScale: 1.0,
+      eventNameOffset: Offset(55, -70),
+      textFieldFontSize: 16,
+      textFieldScale: 0.75,
+      textOffsets: {
+        'attendeeName': Offset(55, -40),
+        'role': Offset(55, -5),
+        'organization': Offset(55, 30),
+        'ticketId': Offset(55, 65),
+      },
+      qrCodeScale: 5,
+      qrCodeOffset: Offset(-138, 35),
+      qrCodeSize: Size(60, 60),
+    );
+  }
+
+  factory EventBadgeLayoutParams.display264x176() {
+    return const EventBadgeLayoutParams(
+      profileImageScale: 6,
+      profileImageOffset: Offset(-130, -70),
+      eventNameFontSize: 50,
+      eventNameScale: 1.0,
+      eventNameOffset: Offset(55, -92),
+      textFieldFontSize: 16,
+      textFieldScale: 0.75,
+      textOffsets: {
+        'attendeeName': Offset(55, -50),
+        'role': Offset(55, -15),
+        'organization': Offset(55, 20),
+        'ticketId': Offset(55, 55),
+      },
+      qrCodeScale: 7,
+      qrCodeOffset: Offset(-125, 60),
+      qrCodeSize: Size(60, 60),
+    );
+  }
+
+  factory EventBadgeLayoutParams.display400x300() {
+    return const EventBadgeLayoutParams(
+      profileImageScale: 6,
+      profileImageOffset: Offset(-130, -70),
+      eventNameFontSize: 50,
+      eventNameScale: 1.0,
+      eventNameOffset: Offset(55, -92),
+      textFieldFontSize: 16,
+      textFieldScale: 0.75,
+      textOffsets: {
+        'attendeeName': Offset(55, -50),
+        'role': Offset(55, -15),
+        'organization': Offset(55, 20),
+        'ticketId': Offset(55, 55),
+      },
+      qrCodeScale: 7,
+      qrCodeOffset: Offset(-125, 60),
+      qrCodeSize: Size(60, 60),
+    );
+  }
+
+  factory EventBadgeLayoutParams.display800x480() {
+    return const EventBadgeLayoutParams(
+      profileImageScale: 5.5,
+      profileImageOffset: Offset(-130, -65),
+      eventNameFontSize: 50,
+      eventNameScale: 1.0,
+      eventNameOffset: Offset(55, -92),
+      textFieldFontSize: 16,
+      textFieldScale: 0.75,
+      textOffsets: {
+        'attendeeName': Offset(55, -50),
+        'role': Offset(55, -15),
+        'organization': Offset(55, 20),
+        'ticketId': Offset(55, 55),
+      },
+      qrCodeScale: 7,
+      qrCodeOffset: Offset(-125, 50),
+      qrCodeSize: Size(60, 60),
+    );
+  }
+
+  factory EventBadgeLayoutParams.display880x528() {
+    return const EventBadgeLayoutParams(
+      profileImageScale: 5.5,
+      profileImageOffset: Offset(-130, -65),
+      eventNameFontSize: 50,
+      eventNameScale: 1.0,
+      eventNameOffset: Offset(55, -92),
+      textFieldFontSize: 16,
+      textFieldScale: 0.75,
+      textOffsets: {
+        'attendeeName': Offset(55, -50),
+        'role': Offset(55, -15),
+        'organization': Offset(55, 20),
+        'ticketId': Offset(55, 55),
+      },
+      qrCodeScale: 7,
+      qrCodeOffset: Offset(-125, 50),
+      qrCodeSize: Size(60, 60),
+    );
+  }
+}
+
+class EntryPassTagLayoutParams {
+  final double profileImageScale;
+  final Offset profileImageOffset;
+  final double venueNameFontSize;
+  final double venueNameScale;
+  final Offset venueNameOffset;
+  final double textFieldFontSize;
+  final double textFieldScale;
+  final Map<String, Offset> textOffsets;
+  final double qrCodeScale;
+  final Offset qrCodeOffset;
+  final Size qrCodeSize;
+
+  const EntryPassTagLayoutParams({
+    required this.profileImageScale,
+    required this.profileImageOffset,
+    required this.venueNameFontSize,
+    required this.venueNameScale,
+    required this.venueNameOffset,
+    required this.textFieldFontSize,
+    required this.textFieldScale,
+    required this.textOffsets,
+    required this.qrCodeScale,
+    required this.qrCodeOffset,
+    required this.qrCodeSize,
+  });
+
+  factory EntryPassTagLayoutParams.display416x240() {
+    return const EntryPassTagLayoutParams(
+      profileImageScale: 5.4,
+      profileImageOffset: Offset(-132, -60),
+      venueNameFontSize: 50,
+      venueNameScale: 1.0,
+      venueNameOffset: Offset(55, -92),
+      textFieldFontSize: 16,
+      textFieldScale: 0.75,
+      textOffsets: {
+        'visitorName': Offset(55, -50),
+        'passType': Offset(55, -15),
+        'validDate': Offset(55, 20),
+        'passId': Offset(55, 55),
+      },
+      qrCodeScale: 6,
+      qrCodeOffset: Offset(-130, 55),
+      qrCodeSize: Size(60, 60),
+    );
+  }
+
+  factory EntryPassTagLayoutParams.display320x240() {
+    return const EntryPassTagLayoutParams(
+      profileImageScale: 6,
+      profileImageOffset: Offset(-130, -70),
+      venueNameFontSize: 50,
+      venueNameScale: 1.0,
+      venueNameOffset: Offset(55, -92),
+      textFieldFontSize: 16,
+      textFieldScale: 0.75,
+      textOffsets: {
+        'visitorName': Offset(55, -50),
+        'passType': Offset(55, -15),
+        'validDate': Offset(55, 20),
+        'passId': Offset(55, 55),
+      },
+      qrCodeScale: 7,
+      qrCodeOffset: Offset(-125, 70),
+      qrCodeSize: Size(60, 60),
+    );
+  }
+
+  factory EntryPassTagLayoutParams.display250x122() {
+    return const EntryPassTagLayoutParams(
+      profileImageScale: 4.5,
+      profileImageOffset: Offset(-132, -55),
+      venueNameFontSize: 50,
+      venueNameScale: 1.0,
+      venueNameOffset: Offset(55, -75),
+      textFieldFontSize: 16,
+      textFieldScale: 0.75,
+      textOffsets: {
+        'visitorName': Offset(55, -40),
+        'passType': Offset(55, -5),
+        'validDate': Offset(55, 30),
+        'passId': Offset(55, 65),
+      },
+      qrCodeScale: 5,
+      qrCodeOffset: Offset(-130, 45),
+      qrCodeSize: Size(60, 60),
+    );
+  }
+
+  factory EntryPassTagLayoutParams.display296x128() {
+    return const EntryPassTagLayoutParams(
+      profileImageScale: 3.75,
+      profileImageOffset: Offset(-145, -45),
+      venueNameFontSize: 50,
+      venueNameScale: 1.0,
+      venueNameOffset: Offset(55, -70),
+      textFieldFontSize: 16,
+      textFieldScale: 0.75,
+      textOffsets: {
+        'visitorName': Offset(55, -40),
+        'passType': Offset(55, -5),
+        'validDate': Offset(55, 30),
+        'passId': Offset(55, 65),
+      },
+      qrCodeScale: 5,
+      qrCodeOffset: Offset(-138, 35),
+      qrCodeSize: Size(60, 60),
+    );
+  }
+
+  factory EntryPassTagLayoutParams.display264x176() {
+    return const EntryPassTagLayoutParams(
+      profileImageScale: 6,
+      profileImageOffset: Offset(-130, -70),
+      venueNameFontSize: 50,
+      venueNameScale: 1.0,
+      venueNameOffset: Offset(55, -92),
+      textFieldFontSize: 16,
+      textFieldScale: 0.75,
+      textOffsets: {
+        'visitorName': Offset(55, -50),
+        'passType': Offset(55, -15),
+        'validDate': Offset(55, 20),
+        'passId': Offset(55, 55),
+      },
+      qrCodeScale: 7,
+      qrCodeOffset: Offset(-125, 60),
+      qrCodeSize: Size(60, 60),
+    );
+  }
+
+  factory EntryPassTagLayoutParams.display400x300() {
+    return const EntryPassTagLayoutParams(
+      profileImageScale: 6,
+      profileImageOffset: Offset(-130, -70),
+      venueNameFontSize: 50,
+      venueNameScale: 1.0,
+      venueNameOffset: Offset(55, -92),
+      textFieldFontSize: 16,
+      textFieldScale: 0.75,
+      textOffsets: {
+        'visitorName': Offset(55, -50),
+        'passType': Offset(55, -15),
+        'validDate': Offset(55, 20),
+        'passId': Offset(55, 55),
+      },
+      qrCodeScale: 7,
+      qrCodeOffset: Offset(-125, 60),
+      qrCodeSize: Size(60, 60),
+    );
+  }
+
+  factory EntryPassTagLayoutParams.display800x480() {
+    return const EntryPassTagLayoutParams(
+      profileImageScale: 5.5,
+      profileImageOffset: Offset(-130, -65),
+      venueNameFontSize: 50,
+      venueNameScale: 1.0,
+      venueNameOffset: Offset(55, -92),
+      textFieldFontSize: 16,
+      textFieldScale: 0.75,
+      textOffsets: {
+        'visitorName': Offset(55, -50),
+        'passType': Offset(55, -15),
+        'validDate': Offset(55, 20),
+        'passId': Offset(55, 55),
+      },
+      qrCodeScale: 7,
+      qrCodeOffset: Offset(-125, 50),
+      qrCodeSize: Size(60, 60),
+    );
+  }
+
+  factory EntryPassTagLayoutParams.display880x528() {
+    return const EntryPassTagLayoutParams(
+      profileImageScale: 5.5,
+      profileImageOffset: Offset(-130, -65),
+      venueNameFontSize: 50,
+      venueNameScale: 1.0,
+      venueNameOffset: Offset(55, -92),
+      textFieldFontSize: 16,
+      textFieldScale: 0.75,
+      textOffsets: {
+        'visitorName': Offset(55, -50),
+        'passType': Offset(55, -15),
+        'validDate': Offset(55, 20),
+        'passId': Offset(55, 55),
+      },
+      qrCodeScale: 7,
+      qrCodeOffset: Offset(-125, 50),
+      qrCodeSize: Size(60, 60),
     );
   }
 }
