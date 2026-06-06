@@ -603,17 +603,10 @@
   "partialRefreshInfo": "Partial Refresh (Waveforms)",
   "partialRefreshDescription": "Updates only the changed pixels using optimized waveforms. This is faster than full refresh but may result in ghosting or reduced contrast over time.",
   "longPressForInfo": "Long press for more information",
+  "importImageButtonLabel": "Import",
   "nothingToClear": "Nothing to clear",
   "@nothingToClear": {
     "description": "Shown when the user taps clear but there are no NFC results to clear"
-  },
-  "import": "Import",
-  "@import": {
-    "description": "Label for import action"
-  },
-  "text": "Text",
-  "@text": {
-    "description": "Label for text action"
   },
   "cannotSaveEmptyCanvas": "Cannot save an empty canvas"
 }

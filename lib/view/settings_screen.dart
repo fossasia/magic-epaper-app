@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/provider/locale_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:magicepaperapp/util/orientation_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -60,9 +57,11 @@ class SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final localeProvider = Provider.of<LocaleProvider>(context);
+    final appLocalizations = AppLocalizations.of(context)!;
 
     return CommonScaffold(
       index: 4,
+      title: appLocalizations.appName,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -195,7 +194,6 @@ class SettingsScreenState extends State<SettingsScreen> {
           ],
         ),
       ),
-      title: appLocalizations.appName,
     );
   }
 }
