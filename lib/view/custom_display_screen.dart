@@ -63,6 +63,7 @@ class _CustomDisplayConfigurationScreenState
       if (await file.exists()) {
         final content = await file.readAsString();
         final List<dynamic> jsonList = jsonDecode(content);
+        if (!mounted) return;
         setState(() {
           _savedConfigs =
               jsonList.map((j) => DynamicDisplay.fromJson(j)).toList();
@@ -71,7 +72,7 @@ class _CustomDisplayConfigurationScreenState
     } catch (e) {
       debugPrint("Storage load error: $e");
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 

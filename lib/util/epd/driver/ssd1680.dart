@@ -3,7 +3,7 @@ import 'package:magicepaperapp/util/epd/driver/waveform.dart';
 import 'package:magicepaperapp/util/protocol.dart';
 import 'driver.dart';
 
-class SsdQuickLut extends Waveform {
+class Ssd1680QuickLut extends Waveform {
   @override
   String get desc => "Generic Fast Partial Refresh for SSD1680";
   @override
@@ -194,7 +194,7 @@ class Ssd1680 extends Driver {
   int get pllControl => 0x30;
 
   @override
-  WaveformList waveforms = [SsdQuickLut()];
+  WaveformList waveforms = [Ssd1680QuickLut()];
 
   @override
   String get driverName => 'SSD1680';

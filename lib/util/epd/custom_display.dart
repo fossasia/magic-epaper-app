@@ -27,7 +27,7 @@ class DynamicDisplay extends ConfigurableEpd {
       'width': width,
       'height': height,
       'colors': colors.map((c) => c.toARGB32()).toList(),
-      'icType': icType.index,
+      'icType': icType.name,
     };
   }
 
@@ -37,9 +37,10 @@ class DynamicDisplay extends ConfigurableEpd {
       width: json['width'],
       height: json['height'],
       colors: (json['colors'] as List).map((c) => Color(c)).toList(),
-      icType: json['icType'] != null
-          ? DriverIC.values[json['icType']]
-          : DriverIC.uc8253,
+      icType: DriverIC.values.firstWhere(
+        (e) => e.name == json['icType'],
+        orElse: () => DriverIC.uc8253,
+      ),
     );
   }
 
