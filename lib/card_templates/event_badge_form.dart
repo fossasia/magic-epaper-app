@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/card_templates/util/image_picker_util.dart';
-import 'package:magicepaperapp/card_templates/employee_id_card_widget.dart';
-import 'package:magicepaperapp/card_templates/employee_id_model.dart';
+import 'package:magicepaperapp/card_templates/event_badge_card_widget.dart';
+import 'package:magicepaperapp/card_templates/event_badge_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
@@ -16,76 +16,76 @@ import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
-class EmployeeIdForm extends StatefulWidget {
+class EventBadgeForm extends StatefulWidget {
   final int width;
   final int height;
 
-  const EmployeeIdForm({super.key, required this.width, required this.height});
+  const EventBadgeForm({super.key, required this.width, required this.height});
 
   @override
-  State<EmployeeIdForm> createState() => _EmployeeIdFormState();
+  State<EventBadgeForm> createState() => _EventBadgeFormState();
 }
 
-class _EmployeeIdFormState extends State<EmployeeIdForm> {
+class _EventBadgeFormState extends State<EventBadgeForm> {
   final _formKey = GlobalKey<FormState>();
-  final _companyNameController = TextEditingController();
-  final _nameController = TextEditingController();
-  final _idNumberController = TextEditingController();
-  final _divisionController = TextEditingController();
-  final _positionController = TextEditingController();
+  final _eventNameController = TextEditingController();
+  final _attendeeNameController = TextEditingController();
+  final _roleController = TextEditingController();
+  final _organizationController = TextEditingController();
+  final _ticketIdController = TextEditingController();
   final _qrDataController = TextEditingController();
 
   File? _profileImage;
   bool _isGenerating = false;
 
-  late EmployeeIdModel _employeeData;
+  late EventBadgeModel _badgeData;
 
   @override
   void initState() {
     super.initState();
-    _employeeData = EmployeeIdModel(
-      companyName: '',
-      name: '',
-      idNumber: '',
-      division: '',
-      position: '',
+    _badgeData = EventBadgeModel(
+      eventName: '',
+      attendeeName: '',
+      role: '',
+      organization: '',
+      ticketId: '',
       qrData: '',
     );
 
-    _companyNameController.addListener(_updatePreview);
-    _nameController.addListener(_updatePreview);
-    _idNumberController.addListener(_updatePreview);
-    _divisionController.addListener(_updatePreview);
-    _positionController.addListener(_updatePreview);
+    _eventNameController.addListener(_updatePreview);
+    _attendeeNameController.addListener(_updatePreview);
+    _roleController.addListener(_updatePreview);
+    _organizationController.addListener(_updatePreview);
+    _ticketIdController.addListener(_updatePreview);
     _qrDataController.addListener(_updatePreview);
   }
 
   @override
   void dispose() {
-    _companyNameController.removeListener(_updatePreview);
-    _nameController.removeListener(_updatePreview);
-    _idNumberController.removeListener(_updatePreview);
-    _divisionController.removeListener(_updatePreview);
-    _positionController.removeListener(_updatePreview);
+    _eventNameController.removeListener(_updatePreview);
+    _attendeeNameController.removeListener(_updatePreview);
+    _roleController.removeListener(_updatePreview);
+    _organizationController.removeListener(_updatePreview);
+    _ticketIdController.removeListener(_updatePreview);
     _qrDataController.removeListener(_updatePreview);
 
-    _companyNameController.dispose();
-    _nameController.dispose();
-    _idNumberController.dispose();
-    _divisionController.dispose();
-    _positionController.dispose();
+    _eventNameController.dispose();
+    _attendeeNameController.dispose();
+    _roleController.dispose();
+    _organizationController.dispose();
+    _ticketIdController.dispose();
     _qrDataController.dispose();
     super.dispose();
   }
 
   void _updatePreview() {
     setState(() {
-      _employeeData = EmployeeIdModel(
-        companyName: _companyNameController.text,
-        name: _nameController.text,
-        idNumber: _idNumberController.text,
-        division: _divisionController.text,
-        position: _positionController.text,
+      _badgeData = EventBadgeModel(
+        eventName: _eventNameController.text,
+        attendeeName: _attendeeNameController.text,
+        role: _roleController.text,
+        organization: _organizationController.text,
+        ticketId: _ticketIdController.text,
         qrData: _qrDataController.text,
         profileImage: _profileImage,
       );
@@ -109,6 +109,10 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
   }
 
   void _submitForm() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
     setState(() {
       _isGenerating = true;
     });
@@ -117,7 +121,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
       final List<LayerSpec> layers = [];
 
       final layoutParams =
-          ResponsiveLayoutUtil.getEmployeeIdLayout(widget.width, widget.height);
+          ResponsiveLayoutUtil.getEventBadgeLayout(widget.width, widget.height);
 
       if (_profileImage != null) {
         layers.add(LayerSpec.widget(
@@ -130,77 +134,79 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         ));
       }
 
-      if (_employeeData.companyName.isNotEmpty) {
+      if (_badgeData.eventName.isNotEmpty) {
         layers.add(LayerSpec.text(
           textStyle: TextStyle(
-            fontSize: layoutParams.companyNameFontSize,
+            fontSize: layoutParams.eventNameFontSize,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
-          text: _employeeData.companyName,
+          text: _badgeData.eventName,
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.center,
-          offset: layoutParams.companyNameOffset,
-          scale: layoutParams.companyNameScale,
+          offset: layoutParams.eventNameOffset,
+          scale: layoutParams.eventNameScale,
         ));
       }
 
-      if (_employeeData.name.isNotEmpty) {
+      if (_badgeData.attendeeName.isNotEmpty) {
         layers.add(LayerSpec.text(
-          text: '${appLocalizations.namePrefix}${_employeeData.name}',
+          text:
+              '${appLocalizations.attendeeNamePrefix}${_badgeData.attendeeName}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['name']!,
+          offset: layoutParams.textOffsets['attendeeName']!,
           scale: layoutParams.textFieldScale,
         ));
       }
 
-      if (_employeeData.position.isNotEmpty) {
+      if (_badgeData.role.isNotEmpty) {
         layers.add(LayerSpec.text(
-          text: '${appLocalizations.positionPrefix}${_employeeData.position}',
+          text: '${appLocalizations.rolePrefix}${_badgeData.role}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['position']!,
+          offset: layoutParams.textOffsets['role']!,
           scale: layoutParams.textFieldScale,
         ));
       }
 
-      if (_employeeData.division.isNotEmpty) {
+      if (_badgeData.organization.isNotEmpty) {
         layers.add(LayerSpec.text(
-          text: '${appLocalizations.divisionPrefix}${_employeeData.division}',
+          text:
+              '${appLocalizations.organizationPrefix}${_badgeData.organization}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['division']!,
+          offset: layoutParams.textOffsets['organization']!,
           scale: layoutParams.textFieldScale,
         ));
       }
 
-      if (_employeeData.idNumber.isNotEmpty) {
+      if (_badgeData.ticketId.isNotEmpty) {
         layers.add(LayerSpec.text(
-          text: '${appLocalizations.idPrefix}${_employeeData.idNumber}',
+          text: '${appLocalizations.ticketIdPrefix}${_badgeData.ticketId}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
           textColor: Colors.black,
           backgroundColor: Colors.white,
           textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['idNumber']!,
+          offset: layoutParams.textOffsets['ticketId']!,
           scale: layoutParams.textFieldScale,
         ));
       }
 
-      if (_employeeData.qrData.isNotEmpty) {
+      if (_badgeData.qrData.isNotEmpty) {
         layers.add(LayerSpec.widget(
           widget: BarcodeWidget(
             padding: const EdgeInsets.all(2),
             backgroundColor: colorWhite,
             barcode: Barcode.qrCode(),
-            data: _employeeData.qrData,
+            data: _badgeData.qrData,
             width: layoutParams.qrCodeSize.width,
             height: layoutParams.qrCodeSize.height,
           ),
@@ -226,9 +232,11 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
           ..pop(result);
       }
     } finally {
-      setState(() {
-        _isGenerating = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isGenerating = false;
+        });
+      }
     }
   }
 
@@ -238,7 +246,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
       index: -1,
       showBackButton: true,
       titleWidget: Text(
-        appLocalizations.employeeIdCard,
+        appLocalizations.eventBadgeTitle,
         style: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
@@ -257,7 +265,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  appLocalizations.previewIdCard,
+                  appLocalizations.previewBadge,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -266,7 +274,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                 ),
               ),
               const SizedBox(height: 12),
-              EmployeeIdCardWidget(data: _employeeData),
+              EventBadgeCardWidget(data: _badgeData),
               const SizedBox(height: 20),
               const Divider(height: 1, color: Colors.grey),
               const SizedBox(height: 20),
@@ -290,7 +298,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                                 color: colorAccent, size: 20),
                             const SizedBox(width: 8),
                             Text(
-                              appLocalizations.idCardDetails,
+                              appLocalizations.eventBadgeDetails,
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -301,7 +309,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          appLocalizations.fillDetailsToCreateId,
+                          appLocalizations.fillDetailsToCreateBadge,
                           style: TextStyle(
                               fontSize: 13, color: Colors.grey.shade600),
                         ),
@@ -309,38 +317,46 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         _buildPhotoSection(),
                         const SizedBox(height: 20),
                         _buildTextFormField(
-                          controller: _companyNameController,
-                          label: appLocalizations.companyName,
-                          hint: appLocalizations.enterCompanyName,
-                          icon: Icons.business_outlined,
+                          controller: _eventNameController,
+                          label: appLocalizations.eventName,
+                          hint: appLocalizations.enterEventName,
+                          icon: Icons.event_outlined,
+                          validator: (value) =>
+                              value == null || value.trim().isEmpty
+                                  ? appLocalizations.pleaseEnterEventName
+                                  : null,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
-                          controller: _nameController,
-                          label: appLocalizations.name,
-                          hint: appLocalizations.enterEmployeeName,
+                          controller: _attendeeNameController,
+                          label: appLocalizations.attendeeName,
+                          hint: appLocalizations.enterAttendeeName,
                           icon: Icons.person_outline,
+                          validator: (value) =>
+                              value == null || value.trim().isEmpty
+                                  ? appLocalizations.pleaseEnterAttendeeName
+                                  : null,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
-                          controller: _positionController,
-                          label: appLocalizations.position,
-                          hint: appLocalizations.enterJobPosition,
+                          controller: _roleController,
+                          label: appLocalizations.role,
+                          hint: appLocalizations.enterRole,
                           icon: Icons.work_outline,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
-                          controller: _divisionController,
-                          label: appLocalizations.division,
-                          hint: appLocalizations.enterDepartment,
-                          icon: Icons.groups_outlined,
+                          controller: _organizationController,
+                          label: appLocalizations.organization,
+                          hint: appLocalizations.enterOrganization,
+                          icon: Icons.business_outlined,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
-                          controller: _idNumberController,
-                          label: appLocalizations.idNumber,
-                          hint: appLocalizations.enterUniqueId,
-                          icon: Icons.badge_outlined,
+                          controller: _ticketIdController,
+                          label: appLocalizations.ticketId,
+                          hint: appLocalizations.enterTicketId,
+                          icon: Icons.confirmation_number_outlined,
                         ),
                         const SizedBox(height: 16),
                         _buildTextFormField(
@@ -389,7 +405,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                             ),
                             const SizedBox(width: 12),
                             Text(
-                              appLocalizations.generatingIdCard,
+                              appLocalizations.generatingBadge,
                               style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
@@ -398,10 +414,10 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                       : Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.credit_card, size: 18),
+                            const Icon(Icons.badge_outlined, size: 18),
                             const SizedBox(width: 8),
                             Text(
-                              appLocalizations.generateIdCard,
+                              appLocalizations.generateBadge,
                               style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
