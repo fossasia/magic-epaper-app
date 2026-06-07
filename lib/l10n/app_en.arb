@@ -221,8 +221,16 @@
   "exportXbm": "Export XBM",
   "exportingXbm": "Exporting XBM files...",
   "fullRefresh": "Full Refresh",
-  "fullRefreshSelected": "Full Refresh Selected",
-  "waveformSelected": "Selected",
+  "waveformSelectedMessage": "{waveformName} Selected",
+  "@waveformSelectedMessage": {
+    "description": "Snackbar message shown when a refresh mode/waveform is selected. The placeholder keeps word order consistent across all modes.",
+    "placeholders": {
+      "waveformName": {
+        "type": "String",
+        "example": "Quick Refresh"
+      }
+    }
+  },
   "library": "Library",
   "templates": "Templates",
   "barcodeGenerator": "Barcode Generator",
@@ -603,17 +611,10 @@
   "partialRefreshInfo": "Partial Refresh (Waveforms)",
   "partialRefreshDescription": "Updates only the changed pixels using optimized waveforms. This is faster than full refresh but may result in ghosting or reduced contrast over time.",
   "longPressForInfo": "Long press for more information",
+  "importImageButtonLabel": "Import",
   "nothingToClear": "Nothing to clear",
   "@nothingToClear": {
     "description": "Shown when the user taps clear but there are no NFC results to clear"
-  },
-  "import": "Import",
-  "@import": {
-    "description": "Label for import action"
-  },
-  "text": "Text",
-  "@text": {
-    "description": "Label for text action"
   },
   "cannotSaveEmptyCanvas": "Cannot save an empty canvas"
 }
