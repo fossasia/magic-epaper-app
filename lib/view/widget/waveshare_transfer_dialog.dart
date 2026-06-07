@@ -90,7 +90,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
 
     final services = WaveShareNfcServices();
     try {
-      final result = await services.flashImage(
+      await services.flashImage(
         _processedImage!,
         widget.ePaperSizeEnum,
         onProgress: (progress) {
@@ -105,13 +105,13 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
       );
       if (!mounted) return;
       setState(() {
-        _message = result;
+        _message = appLocalizations.transferCompleteMessage;
         _currentState = _TransferState.complete;
       });
-    } on PlatformException catch (e) {
+    } on PlatformException {
       if (!mounted) return;
       setState(() {
-        _message = "Transfer failed: ${e.message}";
+        _message = appLocalizations.transferFailed;
         _currentState = _TransferState.error;
       });
     }

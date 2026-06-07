@@ -9,9 +9,8 @@ import 'package:magicepaperapp/waveshare/services/waveshare_nfc_protocol.dart';
 class WaveShareNfcServices {
   static const platform = MethodChannel('org.fossasia.magicepaperapp/nfc');
   static const _pollTimeout = Duration(minutes: 2);
-  static const _successMessage = 'Image flashed successfully!';
 
-  Future<String> flashImage(
+  Future<void> flashImage(
     img.Image image,
     int ePaperSize, {
     WaveshareProgressCallback? onProgress,
@@ -64,25 +63,24 @@ class WaveShareNfcServices {
         );
       }
 
-      await _finishSession(success: true);
-      return _successMessage;
+      await _finishSession();
     } on WaveshareNfcException catch (error) {
       if (sessionStarted) {
-        await _finishSession(errorMessage: error.message);
+        await _finishSession();
       }
-      throw PlatformException(code: error.code, message: error.message);
+      throw PlatformException(code: error.code);
     } on PlatformException {
       if (sessionStarted) {
-        await _finishSession(errorMessage: 'NFC communication failed.');
+        await _finishSession();
       }
       rethrow;
     } catch (error) {
       if (sessionStarted) {
-        await _finishSession(errorMessage: error.toString());
+        await _finishSession();
       }
       throw PlatformException(
         code: 'NFC_ERROR',
-        message: 'Failed to write over NFC: $error',
+        details: error.toString(),
       );
     } finally {
       await restoreSilentReaderMode();
@@ -92,8 +90,10 @@ class WaveShareNfcServices {
   Future<void> restoreSilentReaderMode() async {
     try {
       await platform.invokeMethod('disableNfcReaderMode');
+    } on MissingPluginException {
+      // Ignoring exception on platforms without the Android NFC bridge.
     } on PlatformException {
-      /// Ignoring exception
+      // Ignoring exception
     }
   }
 
@@ -124,17 +124,11 @@ class WaveShareNfcServices {
         tag.type == NFCTagType.mifare_plus;
   }
 
-  Future<void> _finishSession({
-    bool success = false,
-    String? errorMessage,
-  }) async {
+  Future<void> _finishSession() async {
     try {
-      await FlutterNfcKit.finish(
-        iosAlertMessage: success ? _successMessage : null,
-        iosErrorMessage: success ? null : errorMessage,
-      );
+      await FlutterNfcKit.finish();
     } catch (_) {
-      /// Ignoring finish errors because the NFC session may already be closed.
+      // Ignoring finish errors because the NFC session may already be closed.
     }
   }
 }
