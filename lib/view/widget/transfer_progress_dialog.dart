@@ -201,9 +201,9 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: widget.colorAccent.withOpacity(0.1),
+                  color: widget.colorAccent.withValues(alpha: 0.1),
                   border: Border.all(
-                    color: widget.colorAccent.withOpacity(0.3),
+                    color: widget.colorAccent.withValues(alpha: 0.3),
                     width: 2,
                   ),
                 ),
