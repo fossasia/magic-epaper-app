@@ -28,7 +28,7 @@ jobs:
 
       - id: check
         run: |
-          if git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep -vE '\.(md|png|jpg|jpeg|gif|svg|webp|txt|arb)$' | grep -v '^docs/'; then
+          if git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep -vE '\.(md|png|jpg|jpeg|gif|svg|webp|txt)$' | grep -v '^docs/'; then
             echo "is_code=true" >> $GITHUB_OUTPUT
           else
             echo "is_code=false" >> $GITHUB_OUTPUT
