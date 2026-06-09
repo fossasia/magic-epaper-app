@@ -9,14 +9,14 @@ class NFCSessionManager {
   static Future<void> finishSession({String? iosMessage}) async {
     try {
       if (iosMessage != null) {
-        await FlutterNfcKit.finish(iosAlertMessage: iosMessage);
+        //await FlutterNfcKit.finish(iosAlertMessage: iosMessage);
       } else {
         await FlutterNfcKit.finish();
       }
     } catch (e) {
       AppLogger.error('${appLocalizations.errorFinishingNfcSession}$e');
       try {
-        await FlutterNfcKit.finish();
+        //await FlutterNfcKit.finish();
       } catch (e2) {
         AppLogger.error('${appLocalizations.secondaryCleanupAlsoFailed}$e2');
       }
