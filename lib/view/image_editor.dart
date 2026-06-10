@@ -278,6 +278,16 @@ class _ImageEditorState extends State<ImageEditor> {
     }
   }
 
+  String _localizedWaveformName(
+      String name, AppLocalizations appLocalizations) {
+    switch (name) {
+      case 'Quick Refresh':
+        return appLocalizations.quickRefresh;
+      default:
+        return name;
+    }
+  }
+
   Widget _buildWaveformDropdownGroup(
     BuildContext context,
     AppLocalizations appLocalizations,
@@ -298,7 +308,7 @@ class _ImageEditorState extends State<ImageEditor> {
         return DropdownMenuItem<String?>(
           value: waveform.name,
           child: Text(
-            waveform.name,
+            _localizedWaveformName(waveform.name, appLocalizations),
             style: itemTextStyle,
             overflow: TextOverflow.ellipsis,
           ),
@@ -353,8 +363,10 @@ class _ImageEditorState extends State<ImageEditor> {
                         duration: const Duration(milliseconds: 1200),
                         content: Text(
                           appLocalizations.waveformSelectedMessage(
-                            _selectedWaveform?.name ??
-                                appLocalizations.fullRefresh,
+                            _selectedWaveform != null
+                                ? _localizedWaveformName(
+                                    _selectedWaveform!.name, appLocalizations)
+                                : appLocalizations.fullRefresh,
                           ),
                         ),
                         backgroundColor: colorPrimary,

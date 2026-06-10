@@ -4,7 +4,7 @@ import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
 import 'package:ndef/ndef.dart' as ndef;
 import 'dart:typed_data';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class NDEFRecordFactory {
   static ndef.NDEFRecord createVCardRecord(VCardData vCardData) {

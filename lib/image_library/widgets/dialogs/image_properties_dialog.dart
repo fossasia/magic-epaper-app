@@ -321,14 +321,14 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
   }
 
   Widget _buildLoadingSection() {
-    return const Center(
+    return Center(
       child: Padding(
-        padding: EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 12),
-            Text('Loading image properties...'),
+            const CircularProgressIndicator(),
+            const SizedBox(height: 12),
+            Text(appLocalizations.loadingImageProperties),
           ],
         ),
       ),
