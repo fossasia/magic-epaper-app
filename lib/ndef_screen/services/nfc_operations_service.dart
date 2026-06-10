@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
@@ -48,10 +49,10 @@ class NFCOperationsService {
         for (int i = 0; i < records.length; i++) {
           message += '${appLocalizations.record}${i + 1}:\n';
           message +=
-              '${appLocalizations.type}${NDEFRecordParser.getRecordTypeString(records[i])}\n';
+          '${appLocalizations.type}${NDEFRecordParser.getRecordTypeString(records[i])}\n';
           message += '${appLocalizations.tnf}${records[i].tnf}\n';
           message +=
-              '${appLocalizations.content}${NDEFRecordParser.getRecordInfo(records[i])}\n\n';
+          '${appLocalizations.content}${NDEFRecordParser.getRecordInfo(records[i])}\n\n';
         }
       }
 
@@ -65,7 +66,7 @@ class NFCOperationsService {
       await NFCSessionManager.finishSession();
       return NFCOperationResult.failure(
         error:
-            '${appLocalizations.errorReadingTag}$e${appLocalizations.holdTagCloseAndTryAgain}',
+        '${appLocalizations.errorReadingTag}$e${appLocalizations.holdTagCloseAndTryAgain}',
         operationType: NFCOperationType.read,
       );
     }
@@ -91,6 +92,40 @@ class NFCOperationsService {
         ndefAvailable: tag.ndefAvailable,
         ndefWritable: tag.ndefWritable,
       );
+
+      if (tag.ndefAvailable != true && tag.type == NFCTagType.iso7816) {
+        final Uint8List waveshareInitCmd = Uint8List.fromList([
+          116, 177, 0, 0, 8, 0, 17, 34, 51, 68, 85, 102, 119
+        ]);
+
+        try {
+          final Uint8List response = await FlutterNfcKit.transceive(waveshareInitCmd);
+          if (response.length >= 2 &&
+              response[response.length - 2] == 144 &&
+              response[response.length - 1] == 0) {
+            
+            await FlutterNfcKit.transceive(Uint8List.fromList([116, 151, 0, 8, 0]));
+
+            await NFCSessionManager.finishSession(iosMessage: appLocalizations.waveshareWritten);
+
+            return NFCOperationResult.success(
+              message: appLocalizations.waveshareWritingCompleted(tagInfo.toString()),
+              operationType: NFCOperationType.write,
+              tagInfo: tagInfo,
+              records: [],
+            );
+          } else {
+            throw Exception(appLocalizations.yzrcosChipRejected);
+          }
+        } catch (transceiveError) {
+          await NFCSessionManager.finishSession();
+          return NFCOperationResult.failure(
+            error: appLocalizations.waveshareIsoDepError(transceiveError.toString()),
+            operationType: NFCOperationType.write,
+            tagInfo: tagInfo,
+          );
+        }
+      }
 
       if (tag.ndefAvailable != true) {
         await NFCSessionManager.finishSession(
@@ -123,9 +158,9 @@ class NFCOperationsService {
       for (int i = 0; i < records.length; i++) {
         message += '${appLocalizations.writtenRecord}${i + 1}:\n';
         message +=
-            '${appLocalizations.type}${NDEFRecordParser.getRecordTypeString(records[i])}\n';
+        '${appLocalizations.type}${NDEFRecordParser.getRecordTypeString(records[i])}\n';
         message +=
-            '${appLocalizations.content}${NDEFRecordParser.getRecordInfo(records[i])}\n\n';
+        '${appLocalizations.content}${NDEFRecordParser.getRecordInfo(records[i])}\n\n';
       }
 
       return NFCOperationResult.success(
@@ -138,7 +173,7 @@ class NFCOperationsService {
       await NFCSessionManager.finishSession();
       return NFCOperationResult.failure(
         error:
-            '${appLocalizations.errorWritingToTag}$e${appLocalizations.tryHoldingTagCloser}',
+        '${appLocalizations.errorWritingToTag}$e${appLocalizations.tryHoldingTagCloser}',
         operationType: NFCOperationType.write,
       );
     }
@@ -156,6 +191,15 @@ class NFCOperationsService {
         ndefAvailable: tag.ndefAvailable,
         ndefWritable: tag.ndefWritable,
       );
+
+      if (tag.ndefAvailable != true && tag.type == NFCTagType.iso7816) {
+        await NFCSessionManager.finishSession(iosMessage: appLocalizations.waveshareIsoDepNoClearRequired);
+        return NFCOperationResult.success(
+          message: "${tagInfo.toString()}\n\n${appLocalizations.waveshareTagDetectedNoNdefClear}",
+          operationType: NFCOperationType.clear,
+          tagInfo: tagInfo,
+        );
+      }
 
       if (tag.ndefAvailable != true) {
         await NFCSessionManager.finishSession(
@@ -195,7 +239,7 @@ class NFCOperationsService {
       await NFCSessionManager.finishSession();
       return NFCOperationResult.failure(
         error:
-            '${appLocalizations.errorClearingTag}$e${appLocalizations.tryMovingTagCloser}',
+        '${appLocalizations.errorClearingTag}$e${appLocalizations.tryMovingTagCloser}',
         operationType: NFCOperationType.clear,
       );
     }
@@ -247,6 +291,35 @@ class NFCOperationsService {
         ndefAvailable: tag.ndefAvailable,
         ndefWritable: tag.ndefWritable,
       );
+
+      if (tag.ndefAvailable != true && tag.type == NFCTagType.iso7816) {
+        final Uint8List waveshareInitCmd = Uint8List.fromList([
+          116, 177, 0, 0, 8, 0, 17, 34, 51, 68, 85, 102, 119
+        ]);
+
+        try {
+          final Uint8List response = await FlutterNfcKit.transceive(waveshareInitCmd);
+
+          if (response.length >= 2 &&
+              response[response.length - 2] == 144 &&
+              response[response.length - 1] == 0) {
+
+            await NFCSessionManager.finishSession(iosMessage: appLocalizations.waveshareTagVerified);
+
+            return NFCOperationResult.success(
+              message: "${appLocalizations.verificationResults}\n"
+                  "${appLocalizations.waveshareIsoDepDetected}\n"
+                  "${tagInfo.toString()}\n"
+                  "${appLocalizations.waveshareHardwareInitSuccess}",
+              operationType: NFCOperationType.verify,
+              tagInfo: tagInfo,
+              records: [],
+            );
+          }
+        } catch (transceiveError) {
+          AppLogger.error(appLocalizations.waveshareHandshakeFailed(transceiveError.toString()));
+        }
+      }
 
       if (tag.ndefAvailable != true) {
         await NFCSessionManager.finishSession(

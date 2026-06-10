@@ -12,7 +12,7 @@ typedef WaveshareTransceive = Future<Uint8List> Function(
 typedef WaveshareProgressCallback = void Function(int progress);
 
 class WaveshareNfcProtocol {
-  static const _transceiveTimeout = Duration(milliseconds: 700);
+  static const _transceiveTimeout = Duration(milliseconds: 2000);
   static const _maxBusyPolls = 240;
   static const _androidPackageRecord = [
     3,
@@ -72,10 +72,15 @@ class WaveshareNfcProtocol {
   }) : _transceive = transceive;
 
   Future<bool> writeDisplay(
-    WaveshareNfcProfile profile,
-    WaveshareImageData imageData, {
-    WaveshareProgressCallback? onProgress,
-  }) async {
+      WaveshareNfcProfile profile,
+      WaveshareImageData imageData, {
+        WaveshareProgressCallback? onProgress,
+        bool isIsoDep = true,
+      }) async {
+    if (isIsoDep) {
+      return _writeIsoDepDisplay(profile, imageData, onProgress: onProgress);
+    }
+
     if (profile.isHdDisplay) {
       return _writeHdDisplay(profile, imageData, onProgress: onProgress);
     }
@@ -331,5 +336,89 @@ class WaveshareNfcProtocol {
 
   Future<void> _sleep(int milliseconds) {
     return Future<void>.delayed(Duration(milliseconds: milliseconds));
+  }
+
+  Future<bool> _writeIsoDepDisplay(
+      WaveshareNfcProfile profile,
+      WaveshareImageData imageData, {
+        WaveshareProgressCallback? onProgress,
+      }) async {
+
+    final initResp = await _send([116, 177, 0, 0, 8, 0, 17, 34, 51, 68, 85, 102, 119]);
+    if (!_isIsoDepOk(initResp)) return false;
+
+    if (!_isIsoDepOk(await _send([116, 151, 0, 8, 0]))) return false;
+    await _sleep(150);
+
+    if (!_isIsoDepOk(await _send([116, 151, 1, 8, 0]))) return false;
+    await _sleep(150);
+
+    if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 1]))) return false;
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 3, 199, 0, 1]))) return false;
+    if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 17]))) return false;
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 1]))) return false;
+    if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 68]))) return false;
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 2, 0, 24]))) return false;
+    if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 69]))) return false;
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 4, 199, 0, 0, 0]))) return false;
+    if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 60]))) return false;
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 5]))) return false;
+    if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 24]))) return false;
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 128]))) return false;
+    if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 78]))) return false;
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 0]))) return false;
+    if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 79]))) return false;
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 2, 199, 0]))) return false;
+    await _sleep(100);
+
+    if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 36]))) return false;
+
+    var chunkHeader = [116, 154, 0, 14, 250];
+    for (var i = 0; i < 20; i++) {
+      final offset = i * 250;
+      final payload = imageData.primary.sublist(offset, offset + 250);
+      final txBuffer = Uint8List.fromList([...chunkHeader, ...payload]);
+
+      onProgress?.call((i * 100) ~/ 40);
+      if (!_isIsoDepOk(await _send(txBuffer))) return false;
+    }
+
+    if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 38]))) return false;
+
+    for (var i = 0; i < 20; i++) {
+      final offset = i * 250;
+      final payload = imageData.secondary.length > offset
+          ? imageData.secondary.sublist(offset, offset + 250)
+          : imageData.primary.sublist(offset, offset + 250);
+
+      final txBuffer = Uint8List.fromList([...chunkHeader, ...payload]);
+
+      onProgress?.call(((i + 20) * 100) ~/ 40);
+      if (!_isIsoDepOk(await _send(txBuffer))) return false;
+    }
+
+    onProgress?.call(99);
+
+    if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 34]))) return false;
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 247]))) return false;
+    if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 32]))) return false;
+
+    await _sleep(4000);
+    for (var attempt = 0; attempt < _maxBusyPolls; attempt++) {
+      final busyResponse = await _send([116, 155, 0, 15, 1]);
+      if (busyResponse.isNotEmpty && busyResponse[0] != 1) {
+        onProgress?.call(100);
+        return true;
+      }
+      await _sleep(200);
+    }
+
+    return false;
+  }
+
+  bool _isIsoDepOk(Uint8List response) {
+    return response.length >= 2 &&
+        response[response.length - 2] == 144 &&
+        response[response.length - 1] == 0;
   }
 }
