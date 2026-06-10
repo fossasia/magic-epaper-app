@@ -72,11 +72,11 @@ class WaveshareNfcProtocol {
   }) : _transceive = transceive;
 
   Future<bool> writeDisplay(
-      WaveshareNfcProfile profile,
-      WaveshareImageData imageData, {
-        WaveshareProgressCallback? onProgress,
-        bool isIsoDep = true,
-      }) async {
+    WaveshareNfcProfile profile,
+    WaveshareImageData imageData, {
+    WaveshareProgressCallback? onProgress,
+    bool isIsoDep = false,
+  }) async {
     if (isIsoDep) {
       return _writeIsoDepDisplay(profile, imageData, onProgress: onProgress);
     }
@@ -339,12 +339,12 @@ class WaveshareNfcProtocol {
   }
 
   Future<bool> _writeIsoDepDisplay(
-      WaveshareNfcProfile profile,
-      WaveshareImageData imageData, {
-        WaveshareProgressCallback? onProgress,
-      }) async {
-
-    final initResp = await _send([116, 177, 0, 0, 8, 0, 17, 34, 51, 68, 85, 102, 119]);
+    WaveshareNfcProfile profile,
+    WaveshareImageData imageData, {
+    WaveshareProgressCallback? onProgress,
+  }) async {
+    final initResp =
+        await _send([116, 177, 0, 0, 8, 0, 17, 34, 51, 68, 85, 102, 119]);
     if (!_isIsoDepOk(initResp)) return false;
 
     if (!_isIsoDepOk(await _send([116, 151, 0, 8, 0]))) return false;
@@ -354,19 +354,26 @@ class WaveshareNfcProtocol {
     await _sleep(150);
 
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 1]))) return false;
-    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 3, 199, 0, 1]))) return false;
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 3, 199, 0, 1])))
+      return false;
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 17]))) return false;
     if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 1]))) return false;
+
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 68]))) return false;
     if (!_isIsoDepOk(await _send([116, 154, 0, 14, 2, 0, 24]))) return false;
+
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 69]))) return false;
-    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 4, 199, 0, 0, 0]))) return false;
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 4, 199, 0, 0, 0])))
+      return false;
+
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 60]))) return false;
     if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 5]))) return false;
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 24]))) return false;
     if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 128]))) return false;
+
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 78]))) return false;
     if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 0]))) return false;
+
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 79]))) return false;
     if (!_isIsoDepOk(await _send([116, 154, 0, 14, 2, 199, 0]))) return false;
     await _sleep(100);

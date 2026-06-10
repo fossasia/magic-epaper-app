@@ -49,10 +49,10 @@ class NFCOperationsService {
         for (int i = 0; i < records.length; i++) {
           message += '${appLocalizations.record}${i + 1}:\n';
           message +=
-          '${appLocalizations.type}${NDEFRecordParser.getRecordTypeString(records[i])}\n';
+              '${appLocalizations.type}${NDEFRecordParser.getRecordTypeString(records[i])}\n';
           message += '${appLocalizations.tnf}${records[i].tnf}\n';
           message +=
-          '${appLocalizations.content}${NDEFRecordParser.getRecordInfo(records[i])}\n\n';
+              '${appLocalizations.content}${NDEFRecordParser.getRecordInfo(records[i])}\n\n';
         }
       }
 
@@ -66,7 +66,7 @@ class NFCOperationsService {
       await NFCSessionManager.finishSession();
       return NFCOperationResult.failure(
         error:
-        '${appLocalizations.errorReadingTag}$e${appLocalizations.holdTagCloseAndTryAgain}',
+            '${appLocalizations.errorReadingTag}$e${appLocalizations.holdTagCloseAndTryAgain}',
         operationType: NFCOperationType.read,
       );
     }
@@ -94,22 +94,24 @@ class NFCOperationsService {
       );
 
       if (tag.ndefAvailable != true && tag.type == NFCTagType.iso7816) {
-        final Uint8List waveshareInitCmd = Uint8List.fromList([
-          116, 177, 0, 0, 8, 0, 17, 34, 51, 68, 85, 102, 119
-        ]);
+        final Uint8List waveshareInitCmd = Uint8List.fromList(
+            [116, 177, 0, 0, 8, 0, 17, 34, 51, 68, 85, 102, 119]);
 
         try {
-          final Uint8List response = await FlutterNfcKit.transceive(waveshareInitCmd);
+          final Uint8List response =
+              await FlutterNfcKit.transceive(waveshareInitCmd);
           if (response.length >= 2 &&
               response[response.length - 2] == 144 &&
               response[response.length - 1] == 0) {
-            
-            await FlutterNfcKit.transceive(Uint8List.fromList([116, 151, 0, 8, 0]));
+            await FlutterNfcKit.transceive(
+                Uint8List.fromList([116, 151, 0, 8, 0]));
 
-            await NFCSessionManager.finishSession(iosMessage: appLocalizations.waveshareWritten);
+            await NFCSessionManager.finishSession(
+                iosMessage: appLocalizations.waveshareWritten);
 
             return NFCOperationResult.success(
-              message: appLocalizations.waveshareWritingCompleted(tagInfo.toString()),
+              message: appLocalizations
+                  .waveshareWritingCompleted(tagInfo.toString()),
               operationType: NFCOperationType.write,
               tagInfo: tagInfo,
               records: [],
@@ -120,7 +122,8 @@ class NFCOperationsService {
         } catch (transceiveError) {
           await NFCSessionManager.finishSession();
           return NFCOperationResult.failure(
-            error: appLocalizations.waveshareIsoDepError(transceiveError.toString()),
+            error: appLocalizations
+                .waveshareIsoDepError(transceiveError.toString()),
             operationType: NFCOperationType.write,
             tagInfo: tagInfo,
           );
@@ -158,9 +161,9 @@ class NFCOperationsService {
       for (int i = 0; i < records.length; i++) {
         message += '${appLocalizations.writtenRecord}${i + 1}:\n';
         message +=
-        '${appLocalizations.type}${NDEFRecordParser.getRecordTypeString(records[i])}\n';
+            '${appLocalizations.type}${NDEFRecordParser.getRecordTypeString(records[i])}\n';
         message +=
-        '${appLocalizations.content}${NDEFRecordParser.getRecordInfo(records[i])}\n\n';
+            '${appLocalizations.content}${NDEFRecordParser.getRecordInfo(records[i])}\n\n';
       }
 
       return NFCOperationResult.success(
@@ -173,7 +176,7 @@ class NFCOperationsService {
       await NFCSessionManager.finishSession();
       return NFCOperationResult.failure(
         error:
-        '${appLocalizations.errorWritingToTag}$e${appLocalizations.tryHoldingTagCloser}',
+            '${appLocalizations.errorWritingToTag}$e${appLocalizations.tryHoldingTagCloser}',
         operationType: NFCOperationType.write,
       );
     }
@@ -193,9 +196,11 @@ class NFCOperationsService {
       );
 
       if (tag.ndefAvailable != true && tag.type == NFCTagType.iso7816) {
-        await NFCSessionManager.finishSession(iosMessage: appLocalizations.waveshareIsoDepNoClearRequired);
+        await NFCSessionManager.finishSession(
+            iosMessage: appLocalizations.waveshareIsoDepNoClearRequired);
         return NFCOperationResult.success(
-          message: "${tagInfo.toString()}\n\n${appLocalizations.waveshareTagDetectedNoNdefClear}",
+          message:
+              "${tagInfo.toString()}\n\n${appLocalizations.waveshareTagDetectedNoNdefClear}",
           operationType: NFCOperationType.clear,
           tagInfo: tagInfo,
         );
@@ -239,7 +244,7 @@ class NFCOperationsService {
       await NFCSessionManager.finishSession();
       return NFCOperationResult.failure(
         error:
-        '${appLocalizations.errorClearingTag}$e${appLocalizations.tryMovingTagCloser}',
+            '${appLocalizations.errorClearingTag}$e${appLocalizations.tryMovingTagCloser}',
         operationType: NFCOperationType.clear,
       );
     }
@@ -293,18 +298,18 @@ class NFCOperationsService {
       );
 
       if (tag.ndefAvailable != true && tag.type == NFCTagType.iso7816) {
-        final Uint8List waveshareInitCmd = Uint8List.fromList([
-          116, 177, 0, 0, 8, 0, 17, 34, 51, 68, 85, 102, 119
-        ]);
+        final Uint8List waveshareInitCmd = Uint8List.fromList(
+            [116, 177, 0, 0, 8, 0, 17, 34, 51, 68, 85, 102, 119]);
 
         try {
-          final Uint8List response = await FlutterNfcKit.transceive(waveshareInitCmd);
+          final Uint8List response =
+              await FlutterNfcKit.transceive(waveshareInitCmd);
 
           if (response.length >= 2 &&
               response[response.length - 2] == 144 &&
               response[response.length - 1] == 0) {
-
-            await NFCSessionManager.finishSession(iosMessage: appLocalizations.waveshareTagVerified);
+            await NFCSessionManager.finishSession(
+                iosMessage: appLocalizations.waveshareTagVerified);
 
             return NFCOperationResult.success(
               message: "${appLocalizations.verificationResults}\n"
@@ -317,7 +322,8 @@ class NFCOperationsService {
             );
           }
         } catch (transceiveError) {
-          AppLogger.error(appLocalizations.waveshareHandshakeFailed(transceiveError.toString()));
+          AppLogger.error(appLocalizations
+              .waveshareHandshakeFailed(transceiveError.toString()));
         }
       }
 
