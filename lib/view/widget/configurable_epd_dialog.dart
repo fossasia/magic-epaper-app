@@ -274,7 +274,8 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
 
   void _addColor() async {
     final available = _availableColors
-        .where((c) => !_currentColors.any((ec) => ec.toARGB32() == c.toARGB32()))
+        .where(
+            (c) => !_currentColors.any((ec) => ec.toARGB32() == c.toARGB32()))
         .toList();
     if (available.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
