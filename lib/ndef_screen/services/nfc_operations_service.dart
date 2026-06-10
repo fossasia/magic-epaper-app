@@ -27,8 +27,6 @@ class NFCOperationsService {
       );
 
       if (tag.ndefAvailable != true) {
-        await NFCSessionManager.finishSession(
-            iosMessage: appLocalizations.tagIsNotNdefCompatible);
         return NFCOperationResult.failure(
           error: appLocalizations.tagIsNotNdefCompatible,
           operationType: NFCOperationType.read,
@@ -131,8 +129,6 @@ class NFCOperationsService {
       }
 
       if (tag.ndefAvailable != true) {
-        await NFCSessionManager.finishSession(
-            iosMessage: appLocalizations.tagDoesNotSupportNdef);
         return NFCOperationResult.failure(
           error: appLocalizations.tagDoesNotSupportNdef,
           operationType: NFCOperationType.write,
@@ -196,8 +192,6 @@ class NFCOperationsService {
       );
 
       if (tag.ndefAvailable != true && tag.type == NFCTagType.iso7816) {
-        await NFCSessionManager.finishSession(
-            iosMessage: appLocalizations.waveshareIsoDepNoClearRequired);
         return NFCOperationResult.success(
           message:
               "${tagInfo.toString()}\n\n${appLocalizations.waveshareTagDetectedNoNdefClear}",
@@ -207,8 +201,6 @@ class NFCOperationsService {
       }
 
       if (tag.ndefAvailable != true) {
-        await NFCSessionManager.finishSession(
-            iosMessage: appLocalizations.tagDoesNotSupportNdef);
         return NFCOperationResult.failure(
           error: appLocalizations.tagDoesNotSupportNdefCannotClear,
           operationType: NFCOperationType.clear,
@@ -308,9 +300,6 @@ class NFCOperationsService {
           if (response.length >= 2 &&
               response[response.length - 2] == 144 &&
               response[response.length - 1] == 0) {
-            await NFCSessionManager.finishSession(
-                iosMessage: appLocalizations.waveshareTagVerified);
-
             return NFCOperationResult.success(
               message: "${appLocalizations.verificationResults}\n"
                   "${appLocalizations.waveshareIsoDepDetected}\n"
@@ -328,8 +317,6 @@ class NFCOperationsService {
       }
 
       if (tag.ndefAvailable != true) {
-        await NFCSessionManager.finishSession(
-            iosMessage: appLocalizations.tagDoesNotSupportNdef);
         return NFCOperationResult.failure(
           error: appLocalizations.tagDoesNotSupportNdef,
           operationType: NFCOperationType.verify,
