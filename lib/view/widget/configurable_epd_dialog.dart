@@ -274,7 +274,8 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
 
   void _addColor() async {
     final available = _availableColors
-        .where((c) => !_currentColors.any((ec) => ec.value == c.value))
+        .where(
+            (c) => !_currentColors.any((ec) => ec.toARGB32() == c.toARGB32()))
         .toList();
     if (available.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -312,7 +313,7 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
   void _removeColor(Color color) {
     if (color == Colors.black || color == Colors.white) return;
     setState(() {
-      _currentColors.removeWhere((c) => c.value == color.value);
+      _currentColors.removeWhere((c) => c.toARGB32() == color.toARGB32());
     });
   }
 
