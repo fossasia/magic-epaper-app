@@ -650,7 +650,7 @@
         "type": "String"
       }
     }
-  }
+  },
 
   "clearAllData": "Clear All Data",
   "completeDataRemoval": "Complete data removal",
