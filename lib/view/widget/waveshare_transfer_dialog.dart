@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
@@ -40,12 +39,9 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
     with TickerProviderStateMixin {
   _TransferState _currentState = _TransferState.processing;
   String? _message;
-  Uint8List? _processedImageBytes;
+  img.Image? _processedImage;
 
   double _progress = 0.0;
-  StreamSubscription? _progressSubscription;
-  static const _progressChannel =
-      EventChannel('org.fossasia.magicepaperapp/nfc_progress');
 
   late final AnimationController _pulseController;
   late final Animation<double> _pulseAnimation;
@@ -70,8 +66,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
   @override
   void dispose() {
     _pulseController.dispose();
-    _progressSubscription?.cancel();
-    WaveShareNfcServices().disableNfcReaderMode();
+    WaveShareNfcServices().restoreSilentReaderMode();
     super.dispose();
   }
 
@@ -81,45 +76,44 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
     });
     await Future.delayed(const Duration(milliseconds: 200));
 
-    _processedImageBytes = Uint8List.fromList(img.encodePng(widget.image));
-
-    _flashImage();
+    _processedImage = img.Image.from(widget.image);
 
     setState(() {
       _currentState = _TransferState.waitingForNfc;
     });
+
+    await _flashImage();
   }
 
   Future<void> _flashImage() async {
-    if (_processedImageBytes == null) return;
-
-    _progressSubscription =
-        _progressChannel.receiveBroadcastStream().listen((progress) {
-      if (progress is int && mounted) {
-        setState(() {
-          if (_currentState != _TransferState.flashing) {
-            _currentState = _TransferState.flashing;
-          }
-          _progress = progress / 100.0;
-        });
-      }
-    });
+    if (_processedImage == null) return;
 
     final services = WaveShareNfcServices();
     try {
-      final result = await services.flashImage(
-          _processedImageBytes!, widget.ePaperSizeEnum);
+      await services.flashImage(
+        _processedImage!,
+        widget.ePaperSizeEnum,
+        onProgress: (progress) {
+          if (!mounted) return;
+          setState(() {
+            if (_currentState != _TransferState.flashing) {
+              _currentState = _TransferState.flashing;
+            }
+            _progress = progress.clamp(0, 100) / 100.0;
+          });
+        },
+      );
+      if (!mounted) return;
       setState(() {
-        _message = result ?? appLocalizations.transferCompleteMessage;
+        _message = appLocalizations.transferCompleteMessage;
         _currentState = _TransferState.complete;
       });
-    } on PlatformException catch (e) {
+    } on PlatformException {
+      if (!mounted) return;
       setState(() {
-        _message = "Transfer failed: ${e.message}";
+        _message = appLocalizations.transferFailed;
         _currentState = _TransferState.error;
       });
-    } finally {
-      _progressSubscription?.cancel();
     }
   }
 
