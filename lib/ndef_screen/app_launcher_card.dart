@@ -8,7 +8,7 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/ndef_screen/app_nfc/app_data_model.dart';
 import 'package:magicepaperapp/ndef_screen/app_nfc/app_selection_service.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class AppLauncherCard extends StatefulWidget {
   final AppData? selectedApp;

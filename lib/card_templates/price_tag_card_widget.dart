@@ -6,7 +6,7 @@ import 'package:magicepaperapp/card_templates/price_tag_model.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class PriceTagCardWidget extends StatelessWidget {
   final PriceTagModel data;

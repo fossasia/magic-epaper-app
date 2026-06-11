@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class ClearAllConfirmationDialog extends StatelessWidget {
   final VoidCallback onConfirm;
@@ -65,9 +69,9 @@ class ClearAllConfirmationDialog extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Clear All Data',
-                style: TextStyle(
+              Text(
+                appLocalizations.clearAllData,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
@@ -75,7 +79,7 @@ class ClearAllConfirmationDialog extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Complete data removal',
+                appLocalizations.completeDataRemoval,
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.red.shade600,
@@ -126,7 +130,7 @@ class ClearAllConfirmationDialog extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Total Images',
+                      appLocalizations.totalImagesLabel,
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.red.shade600,
@@ -139,9 +143,9 @@ class ClearAllConfirmationDialog extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          const Text(
-            'All images and associated data will be permanently removed',
-            style: TextStyle(
+          Text(
+            appLocalizations.allImagesPermanentlyRemoved,
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Colors.black87,
@@ -159,9 +163,9 @@ class ClearAllConfirmationDialog extends StatelessWidget {
         Expanded(
           child: OutlinedButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(
+            child: Text(
+              appLocalizations.cancel,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
@@ -172,14 +176,14 @@ class ClearAllConfirmationDialog extends StatelessWidget {
         Expanded(
           child: ElevatedButton(
             onPressed: onConfirm,
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.delete_forever, size: 20),
-                SizedBox(width: 8),
+                const Icon(Icons.delete_forever, size: 20),
+                const SizedBox(width: 8),
                 Text(
-                  'Clear All',
-                  style: TextStyle(
+                  appLocalizations.clearAll,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),

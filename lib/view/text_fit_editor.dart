@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 
@@ -88,6 +89,7 @@ class TextFitEditorState extends State<TextFitEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final Size canvasSize = _calculateCanvas(MediaQuery.sizeOf(context));
     final double padding = 16;
     final double fontSize = _fitFontSize(
@@ -103,8 +105,8 @@ class TextFitEditorState extends State<TextFitEditor> {
         titleSpacing: 0.0,
         backgroundColor: colorAccent,
         elevation: 0,
-        title: const Text('Text Editor',
-            style: TextStyle(
+        title: Text(appLocalizations.textEditorTitle,
+            style: const TextStyle(
                 color: Colors.white,
                 fontSize: 13.8,
                 fontWeight: FontWeight.bold)),
@@ -144,7 +146,7 @@ class TextFitEditorState extends State<TextFitEditor> {
                     onChanged: (_) => setState(() {}),
                     style: const TextStyle(fontSize: 14),
                     decoration: InputDecoration(
-                      hintText: 'Enter text',
+                      hintText: appLocalizations.enterTextHint,
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 10),
                       border: OutlineInputBorder(
@@ -157,8 +159,8 @@ class TextFitEditorState extends State<TextFitEditor> {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    const Text('Text',
-                        style: TextStyle(
+                    Text(appLocalizations.text,
+                        style: const TextStyle(
                             fontSize: 12, fontWeight: FontWeight.w600)),
                     const SizedBox(width: 8),
                     Expanded(
@@ -226,8 +228,8 @@ class TextFitEditorState extends State<TextFitEditor> {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    const Text('Background',
-                        style: TextStyle(
+                    Text(appLocalizations.backgroundLabel,
+                        style: const TextStyle(
                             fontSize: 12, fontWeight: FontWeight.w600)),
                     const SizedBox(width: 8),
                     Expanded(

@@ -23,7 +23,7 @@ class SettingsScreenState extends State<SettingsScreen> {
   String _getLanguageName(Locale locale) {
     switch (locale.languageCode) {
       case 'hi':
-        return 'हिंदी (Beta - Partial Translation)';
+        return 'हिंदी';
       case 'en':
       default:
         return 'English';
