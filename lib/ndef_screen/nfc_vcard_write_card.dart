@@ -4,7 +4,7 @@ import 'package:magicepaperapp/ndef_screen/widgets/v_card_form.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class NFCVCardWriteCard extends StatefulWidget {
   final bool isWriting;

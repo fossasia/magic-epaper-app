@@ -6,7 +6,7 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/waveshare/services/waveshare_nfc_services.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 enum _TransferState { processing, waitingForNfc, flashing, complete, error }
 

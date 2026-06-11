@@ -7,7 +7,7 @@ import 'package:magicepaperapp/util/epd/driver/uc8253.dart';
 import 'package:magicepaperapp/util/image_processing/image_processing.dart';
 import 'epd.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 /// Represents a named image filter for use in e-paper image processing.
 ///

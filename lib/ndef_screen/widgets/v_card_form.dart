@@ -4,7 +4,7 @@ import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class VCardFormWidget extends StatefulWidget {
   final VCardData? initialData;
@@ -109,13 +109,13 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Row(
+        Row(
           children: [
-            Icon(Icons.contact_page, color: colorAccent, size: 22),
-            SizedBox(width: 8),
+            const Icon(Icons.contact_page, color: colorAccent, size: 22),
+            const SizedBox(width: 8),
             Text(
-              'vCard Contact Information',
-              style: TextStyle(
+              appLocalizations.vCardContactInformation,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: colorBlack,
@@ -125,7 +125,7 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
         ),
         const SizedBox(height: 16),
         _buildSectionContainer(
-          title: 'Personal Information',
+          title: appLocalizations.personalInformation,
           icon: Icons.person,
           children: [
             Row(
@@ -133,7 +133,7 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
                 Expanded(
                   child: _buildTextField(
                     controller: _firstNameController,
-                    labelText: 'First Name',
+                    labelText: appLocalizations.firstName,
                     prefixIcon: Icons.person_outline,
                   ),
                 ),
@@ -141,7 +141,7 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
                 Expanded(
                   child: _buildTextField(
                     controller: _lastNameController,
-                    labelText: 'Last Name',
+                    labelText: appLocalizations.lastName,
                   ),
                 ),
               ],
@@ -150,7 +150,7 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
         ),
         const SizedBox(height: 16),
         _buildSectionContainer(
-          title: 'Work Information',
+          title: appLocalizations.workInformation,
           icon: Icons.work,
           children: [
             Row(
@@ -158,7 +158,7 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
                 Expanded(
                   child: _buildTextField(
                     controller: _organizationController,
-                    labelText: 'Organization',
+                    labelText: appLocalizations.organization,
                     prefixIcon: Icons.business,
                   ),
                 ),
@@ -166,7 +166,7 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
                 Expanded(
                   child: _buildTextField(
                     controller: _titleController,
-                    labelText: 'Job Title',
+                    labelText: appLocalizations.jobTitle,
                   ),
                 ),
               ],
@@ -175,26 +175,26 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
         ),
         const SizedBox(height: 16),
         _buildSectionContainer(
-          title: 'Contact Information',
+          title: appLocalizations.contactInformation,
           icon: Icons.contact_phone,
           children: [
             _buildTextField(
               controller: _mobileNumberController,
-              labelText: 'Mobile Number',
+              labelText: appLocalizations.mobileNumber,
               prefixIcon: Icons.phone,
               keyboardType: TextInputType.phone,
             ),
             const SizedBox(height: 12),
             _buildTextField(
               controller: _emailController,
-              labelText: 'Email Address',
+              labelText: appLocalizations.emailAddress,
               prefixIcon: Icons.email,
               keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 12),
             _buildTextField(
               controller: _websiteController,
-              labelText: 'Website',
+              labelText: appLocalizations.website,
               prefixIcon: Icons.web,
               keyboardType: TextInputType.url,
             ),
@@ -202,12 +202,12 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
         ),
         const SizedBox(height: 16),
         _buildSectionContainer(
-          title: 'Address Information',
+          title: appLocalizations.addressInformation,
           icon: Icons.location_on,
           children: [
             _buildTextField(
               controller: _streetController,
-              labelText: 'Street Address',
+              labelText: appLocalizations.streetAddress,
               prefixIcon: Icons.home,
             ),
             const SizedBox(height: 12),
@@ -217,14 +217,14 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
                   flex: 2,
                   child: _buildTextField(
                     controller: _cityController,
-                    labelText: 'City',
+                    labelText: appLocalizations.city,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildTextField(
                     controller: _zipCodeController,
-                    labelText: 'Zip Code',
+                    labelText: appLocalizations.zipCode,
                     keyboardType: TextInputType.number,
                   ),
                 ),
@@ -233,7 +233,7 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
             const SizedBox(height: 12),
             _buildTextField(
               controller: _countryController,
-              labelText: 'Country',
+              labelText: appLocalizations.country,
             ),
           ],
         ),

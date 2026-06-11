@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class EmptyStateWidget extends StatelessWidget {
   const EmptyStateWidget({super.key});
