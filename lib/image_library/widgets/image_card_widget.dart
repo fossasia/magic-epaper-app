@@ -54,6 +54,19 @@ class ImageCardWidget extends StatelessWidget {
                       fit: BoxFit.cover,
                       width: double.infinity,
                       isAntiAlias: false,
+                      errorBuilder: (context, error, stackTrace) {
+                        final colorScheme = Theme.of(context).colorScheme;
+                        return Container(
+                          color: colorScheme.surfaceContainerLow,
+                          child: Center(
+                            child: Icon(
+                              Icons.broken_image_outlined,
+                              color: colorScheme.onSurfaceVariant,
+                              size: 48,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   ImageOverlayWidget(
