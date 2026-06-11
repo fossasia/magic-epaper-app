@@ -78,32 +78,29 @@ class _AppDrawerState extends State<AppDrawer> {
   }
 
   void _showArduinoHelpDialog() {
+    final appLocalizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.info_outline, color: Colors.blue),
-            SizedBox(width: 8),
-            Text('Arduino Export'),
+            const Icon(Icons.info_outline, color: Colors.blue),
+            const SizedBox(width: 8),
+            Text(appLocalizations.arduinoExport),
           ],
         ),
-        content: const Text(
-          'This feature allows you to export your ePaper display designs as XMB files for use with Arduino projects.\n\n'
-          'Configure your custom ePaper display dimensions and color palette, then export your designs as XMB files that can be loaded onto Arduino-compatible ePaper displays.\n\n'
-          'Perfect for creating custom badges, signs, and displays for your Arduino projects!',
-        ),
+        content: Text(appLocalizations.arduinoExportHelp),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Got it'),
+            child: Text(appLocalizations.gotIt),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
               _showArduinoExportDialog();
             },
-            child: const Text('Continue'),
+            child: Text(appLocalizations.continueButton),
           ),
         ],
       ),

@@ -9,7 +9,7 @@ import 'package:magicepaperapp/card_templates/entry_pass_tag_form.dart';
 import 'package:magicepaperapp/card_templates/event_badge_form.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class CardTemplateSelectionView extends StatelessWidget {
   final int width;

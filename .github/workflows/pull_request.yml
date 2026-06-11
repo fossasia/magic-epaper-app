@@ -100,6 +100,76 @@ jobs:
         if: needs.changes.outputs.is_code != 'true'
         run: echo "Non-code change detected."
 
+  web:
+    name: Web App Flutter Build
+    needs: [changes, common]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.changes.outputs.is_code == 'true'
+
+      - name: Web App Workflow
+        if: needs.changes.outputs.is_code == 'true'
+        uses: ./.github/actions/web
+
+      - name: Non-Code Change
+        if: needs.changes.outputs.is_code != 'true'
+        run: echo "Non-code change detected."
+
+  windows:
+    name: Windows Flutter Build
+    needs: [changes, common]
+    runs-on: ${{ needs.changes.outputs.is_code == 'true' && 'windows-latest' || 'ubuntu-latest' }}
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.changes.outputs.is_code == 'true'
+
+      - name: Windows Workflow
+        if: needs.changes.outputs.is_code == 'true'
+        uses: ./.github/actions/windows
+
+      - name: Non-Code Change
+        if: needs.changes.outputs.is_code != 'true'
+        run: echo "Non-code change detected."
+
+  linux:
+    name: Linux Flutter Build
+    needs: [changes, common]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.changes.outputs.is_code == 'true'
+
+      - name: Linux Workflow
+        if: needs.changes.outputs.is_code == 'true'
+        uses: ./.github/actions/linux
+
+      - name: Non-Code Change
+        if: needs.changes.outputs.is_code != 'true'
+        run: echo "Non-code change detected."
+
+  macos:
+    name: macOS Flutter Build
+    needs: [changes, common]
+    runs-on: ${{ needs.changes.outputs.is_code == 'true' && 'macos-latest' || 'ubuntu-latest' }}
+    steps:
+      - name: Set up Xcode
+        if: needs.changes.outputs.is_code == 'true'
+        uses: maxim-lobanov/setup-xcode@v1.6.0
+        with:
+          xcode-version: latest-stable
+
+      - uses: actions/checkout@v4
+        if: needs.changes.outputs.is_code == 'true'
+
+      - name: macOS Workflow
+        if: needs.changes.outputs.is_code == 'true'
+        uses: ./.github/actions/macos
+
+      - name: Non-Code Change
+        if: needs.changes.outputs.is_code != 'true'
+        run: echo "Non-code change detected."
+
   screenshots-android:
     name: Screenshots (Android)
     needs: [changes, common]
