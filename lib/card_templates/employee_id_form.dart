@@ -14,7 +14,7 @@ import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
 import 'package:magicepaperapp/card_templates/util/barcode_scanner_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class EmployeeIdForm extends StatefulWidget {
   final int width;

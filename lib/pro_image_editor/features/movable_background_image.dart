@@ -31,6 +31,8 @@ import 'reorder_layer_example.dart';
 final bool _useMaterialDesign =
     platformDesignMode == ImageEditorDesignMode.material;
 
+AppLocalizations get _appLocalizations => getIt.get<AppLocalizations>();
+
 /// The example for movableBackground
 class MovableBackgroundImageExample extends StatefulWidget {
   /// Creates a new [MovableBackgroundImageExample] widget.
@@ -209,23 +211,23 @@ class _MovableBackgroundImageExampleState
             actions: <CupertinoActionSheetAction>[
               CupertinoActionSheetAction(
                 onPressed: () => _openPicker(ImageSource.camera),
-                child: const Wrap(
+                child: Wrap(
                   spacing: 7,
                   runAlignment: WrapAlignment.center,
                   children: [
-                    Icon(CupertinoIcons.photo_camera),
-                    Text('Camera'),
+                    const Icon(CupertinoIcons.photo_camera),
+                    Text(_appLocalizations.camera),
                   ],
                 ),
               ),
               CupertinoActionSheetAction(
                 onPressed: () => _openPicker(ImageSource.gallery),
-                child: const Wrap(
+                child: Wrap(
                   spacing: 7,
                   runAlignment: WrapAlignment.center,
                   children: [
-                    Icon(CupertinoIcons.photo),
-                    Text('Gallery'),
+                    const Icon(CupertinoIcons.photo),
+                    Text(_appLocalizations.gallery),
                   ],
                 ),
               ),
@@ -235,7 +237,7 @@ class _MovableBackgroundImageExampleState
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Cancel'),
+              child: Text(_appLocalizations.cancel),
             ),
           ),
         ),
@@ -264,14 +266,14 @@ class _MovableBackgroundImageExampleState
                       primaryColor: const Color(0xFFEC407A),
                       secondaryColor: const Color(0xFFD3396D),
                       icon: Icons.photo_camera,
-                      text: 'Camera',
+                      text: _appLocalizations.camera,
                       onTap: () => _openPicker(ImageSource.camera),
                     ),
                     MaterialIconActionButton(
                       primaryColor: const Color(0xFFBF59CF),
                       secondaryColor: const Color(0xFFAC44CF),
                       icon: Icons.image,
-                      text: 'Gallery',
+                      text: _appLocalizations.gallery,
                       onTap: () => _openPicker(ImageSource.gallery),
                     ),
                   ],
@@ -560,6 +562,18 @@ class _MovableBackgroundImageExampleState
                           ),
                         ),
                         configs: ProImageEditorConfigs(
+                          i18n: I18n(
+                            various: I18nVarious(
+                              closeEditorWarningTitle:
+                                  _appLocalizations.closeImageEditorTitle,
+                              closeEditorWarningMessage:
+                                  _appLocalizations.closeImageEditorMessage,
+                              closeEditorWarningConfirmBtn:
+                                  _appLocalizations.ok,
+                              closeEditorWarningCancelBtn:
+                                  _appLocalizations.cancel,
+                            ),
+                          ),
                           designMode: platformDesignMode,
                           imageGeneration: ImageGenerationConfigs(
                             cropToDrawingBounds: true,
@@ -739,7 +753,8 @@ class _MovableBackgroundImageExampleState
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     FlatIconTextButton(
-                      label: Text('Canvas Color', style: _bottomTextStyle),
+                      label: Text(_appLocalizations.canvasColor,
+                          style: _bottomTextStyle),
                       icon: Container(
                         width: 22.0,
                         height: 22.0,
@@ -752,7 +767,8 @@ class _MovableBackgroundImageExampleState
                       onPressed: _changeCanvasColor,
                     ),
                     FlatIconTextButton(
-                      label: Text('Add Image', style: _bottomTextStyle),
+                      label: Text(_appLocalizations.addImage,
+                          style: _bottomTextStyle),
                       icon: const Icon(
                         Icons.image_outlined,
                         size: 22.0,
@@ -761,7 +777,8 @@ class _MovableBackgroundImageExampleState
                       onPressed: _chooseCameraOrGallery,
                     ),
                     FlatIconTextButton(
-                      label: Text('Paint', style: _bottomTextStyle),
+                      label: Text(_appLocalizations.paint,
+                          style: _bottomTextStyle),
                       icon: const Icon(
                         Icons.edit_rounded,
                         size: 22.0,
@@ -770,7 +787,8 @@ class _MovableBackgroundImageExampleState
                       onPressed: editor.openPaintEditor,
                     ),
                     FlatIconTextButton(
-                      label: Text('Text', style: _bottomTextStyle),
+                      label:
+                          Text(_appLocalizations.text, style: _bottomTextStyle),
                       icon: const Icon(
                         Icons.text_fields,
                         size: 22.0,
@@ -779,7 +797,8 @@ class _MovableBackgroundImageExampleState
                       onPressed: () => editorKey.currentState!.openTextEditor(),
                     ),
                     FlatIconTextButton(
-                      label: Text('Barcode', style: _bottomTextStyle),
+                      label: Text(_appLocalizations.barcode,
+                          style: _bottomTextStyle),
                       icon: const Icon(
                         Icons.qr_code,
                         size: 22.0,
@@ -788,7 +807,8 @@ class _MovableBackgroundImageExampleState
                       onPressed: _openBarcodeSheet,
                     ),
                     FlatIconTextButton(
-                      label: Text('Emoji', style: _bottomTextStyle),
+                      label: Text(_appLocalizations.emoji,
+                          style: _bottomTextStyle),
                       icon: const Icon(
                         Icons.sentiment_satisfied_alt_rounded,
                         size: 22.0,
