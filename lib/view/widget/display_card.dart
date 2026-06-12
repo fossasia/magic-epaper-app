@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/color_util.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/util/epd/epd.dart';
 import 'package:magicepaperapp/util/epd/waveshare_nfc_display.dart';
 import 'package:magicepaperapp/view/widget/color_dot.dart';
+
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class DisplayCard extends StatelessWidget {
   final DisplayDevice display;
@@ -116,15 +120,18 @@ class DisplayCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   if (display is WaveshareNfcDisplay) ...[
-                    _buildSpecRow('SKU:', display.modelId),
                     _buildSpecRow(
-                        'Resolution:', '${display.width} × ${display.height}'),
-                    _buildSpecRow('SDK:', driverText),
+                        appLocalizations.skuSpecLabel, display.modelId),
+                    _buildSpecRow(appLocalizations.resolutionSpecLabel,
+                        '${display.width} × ${display.height}'),
+                    _buildSpecRow(appLocalizations.sdkSpecLabel, driverText),
                   ] else ...[
-                    _buildSpecRow('Display:', display.modelId),
                     _buildSpecRow(
-                        'Resolution:', '${display.width} × ${display.height}'),
-                    _buildSpecRow('Display Driver:', driverText),
+                        appLocalizations.displaySpecLabel, display.modelId),
+                    _buildSpecRow(appLocalizations.resolutionSpecLabel,
+                        '${display.width} × ${display.height}'),
+                    _buildSpecRow(
+                        appLocalizations.displayDriverSpecLabel, driverText),
                   ],
                 ],
               ),

@@ -8,7 +8,7 @@ import 'package:magicepaperapp/ndef_screen/services/nfc_availability_service.dar
 import 'package:magicepaperapp/ndef_screen/services/nfc_operations_service.dart';
 import 'package:ndef/ndef.dart' as ndef;
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class NFCController extends ChangeNotifier {
   NFCAvailability _availability = NFCAvailability.not_supported;

@@ -5,7 +5,7 @@ import 'package:magicepaperapp/provider/getitlocator.dart';
 
 import 'package:magicepaperapp/constants/color_constants.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class NFCReadCard extends StatelessWidget {
   final bool isReading;

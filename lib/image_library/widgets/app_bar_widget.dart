@@ -3,7 +3,7 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isDeleteMode;
@@ -112,9 +112,9 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Clear All Data',
-                              style: TextStyle(
+                            Text(
+                              appLocalizations.clearAllData,
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black87,
@@ -122,7 +122,7 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              'Remove all images',
+                              appLocalizations.removeAllImages,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey.shade600,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/util/epd/gdeq031t10.dart';
@@ -9,11 +10,8 @@ import 'package:magicepaperapp/util/epd/waveshare_displays.dart';
 import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'package:magicepaperapp/view/custom_display_screen.dart';
-import 'package:provider/provider.dart';
-import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/view/widget/display_card.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+import 'package:provider/provider.dart';
 
 class DisplaySelectionScreen extends StatefulWidget {
   const DisplaySelectionScreen({super.key});
@@ -38,6 +36,8 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return ChangeNotifierProvider<ColorPaletteProvider>.value(
       value: getIt<ColorPaletteProvider>(),
       builder: (context, child) {
@@ -176,17 +176,17 @@ class _LoadingWrapperState extends State<_LoadingWrapper> {
     if (_showLoading) {
       return Scaffold(
         backgroundColor: Colors.white,
-        body: const Center(
+        body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircularProgressIndicator(
+              const CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2196F3)),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
-                'Loading...',
-                style: TextStyle(color: Colors.black, fontSize: 14),
+                AppLocalizations.of(context)?.loading ?? 'Loading...',
+                style: const TextStyle(color: Colors.black, fontSize: 14),
               ),
             ],
           ),

@@ -4,6 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/image_library/image_library.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/storage_permisson_dialog.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
@@ -204,24 +205,23 @@ class ImageSaveHandler {
   }
 
   static void _showSettingsRedirectDialog(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Permission Required'),
-        content: const Text(
-          'Storage permission is permanently denied. Please enable it in the app settings to continue.',
-        ),
+        title: Text(appLocalizations.permissionRequired),
+        content: Text(appLocalizations.storagePermissionMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(appLocalizations.cancel),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               openAppSettings();
             },
-            child: const Text('Open Settings'),
+            child: Text(appLocalizations.openSettings),
           ),
         ],
       ),

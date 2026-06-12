@@ -1,0 +1,60 @@
+name: "macOS Workflow"
+description: "Builds the macOS App"
+inputs:
+  VERSION_NAME:
+    description: "Version Name"
+    required: false
+    default: "1.0.0"
+  VERSION_CODE:
+    description: "Version Code"
+    required: false
+    default: "1"
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        cache: false # TODO set to <true> after https://github.com/actions/runner/issues/449 is fixed
+        flutter-version-file: pubspec.yaml
+
+    - name: Update Podfile & Dependencies
+      shell: bash
+      run: |
+        cd ./macos
+        flutter pub get
+        pod install --repo-update
+
+    - name: Build macOS App
+      shell: bash
+      env:
+        VERSION_NAME: ${{ inputs.VERSION_NAME }}
+        VERSION_CODE: ${{ inputs.VERSION_CODE }}
+      run: |
+        flutter config --enable-macos-desktop
+        flutter build macos --release --build-name $VERSION_NAME --build-number $VERSION_CODE
+
+    - name: Install create-dmg
+      shell: bash
+      run: brew install create-dmg
+
+    - name: Create DMG Archive
+      shell: bash
+      run: |
+        cd build/macos/Build/Products/Release
+        create-dmg \
+          --volname "Magic EPaper" \
+          --window-pos 200 120 \
+          --window-size 800 400 \
+          --icon-size 100 \
+          --hide-extension "magicepaperapp.app" \
+          --app-drop-link 600 185 \
+          "magic-epaper-${{ inputs.VERSION_NAME }}+${{ inputs.VERSION_CODE }}.dmg" \
+          "magicepaperapp.app"
+        cp "magic-epaper-${{ inputs.VERSION_NAME }}+${{ inputs.VERSION_CODE }}.dmg" ../../../../../
+
+    - name: Store macOS Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: macos-artifact
+        path: "*.dmg"
