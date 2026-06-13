@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/color_util.dart';
+
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class CustomEpdConfig {
   final int width;
@@ -279,13 +283,13 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
         .toList();
     if (available.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("No more colors to add.")));
+          SnackBar(content: Text(appLocalizations.noMoreColorsToAdd)));
       return;
     }
     final pickedColor = await showDialog<Color>(
         context: context,
         builder: (context) => AlertDialog(
-              title: const Text('Select a Color'),
+              title: Text(appLocalizations.selectAColor),
               content: SizedBox(
                 width: double.maxFinite,
                 child: ListView.builder(
@@ -320,7 +324,7 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Choose Your Display'),
+      title: Text(appLocalizations.chooseYourDisplay),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -334,13 +338,16 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                     .map((preset) => DropdownMenuItem(
                         value: preset,
                         child: Text(
-                          preset.name,
+                          preset == DisplayPreset.custom
+                              ? appLocalizations.customPreset
+                              : preset.name,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         )))
                     .toList(),
                 onChanged: _onPresetChanged,
-                decoration: const InputDecoration(labelText: 'Display Preset'),
+                decoration:
+                    InputDecoration(labelText: appLocalizations.displayPreset),
                 isExpanded: true,
               ),
               const SizedBox(height: 16),
@@ -350,12 +357,13 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                     child: TextFormField(
                       controller: _widthController,
                       readOnly: !_isCustom,
-                      decoration: const InputDecoration(labelText: 'Width'),
+                      decoration: InputDecoration(
+                          labelText: appLocalizations.widthLabel),
                       keyboardType: TextInputType.number,
                       validator: (v) => (v == null ||
                               int.tryParse(v) == null ||
                               int.parse(v) <= 0)
-                          ? 'Invalid'
+                          ? appLocalizations.invalidValue
                           : null,
                     ),
                   ),
@@ -364,19 +372,21 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                     child: TextFormField(
                       controller: _heightController,
                       readOnly: !_isCustom,
-                      decoration: const InputDecoration(labelText: 'Height'),
+                      decoration: InputDecoration(
+                          labelText: appLocalizations.heightLabel),
                       keyboardType: TextInputType.number,
                       validator: (v) => (v == null ||
                               int.tryParse(v) == null ||
                               int.parse(v) <= 0)
-                          ? 'Invalid'
+                          ? appLocalizations.invalidValue
                           : null,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
-              Text('Colors:', style: Theme.of(context).textTheme.titleSmall),
+              Text(appLocalizations.colorsLabel,
+                  style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
@@ -414,11 +424,11 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                 ElevatedButton.icon(
                   onPressed: _addColor,
                   icon: const Icon(Icons.add, size: 16),
-                  label: const Text("Add Color"),
+                  label: Text(appLocalizations.addColor),
                 ),
               OutlinedButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancel'),
+                child: Text(appLocalizations.cancel),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -434,7 +444,7 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                     );
                   }
                 },
-                child: const Text('OK'),
+                child: Text(appLocalizations.ok),
               ),
             ],
           ),

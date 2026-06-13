@@ -4,7 +4,7 @@ import 'package:magicepaperapp/image_library/widgets/image_card_widget.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class ImageGridWidget extends StatelessWidget {
   final List<SavedImage> images;

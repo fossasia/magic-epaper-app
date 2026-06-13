@@ -15,7 +15,7 @@ import 'package:magicepaperapp/provider/getitlocator.dart';
 import '../../util/app_logger.dart';
 import '../../util/image_processing/image_processing.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class ImageOperationsService {
   final BuildContext context;
@@ -66,18 +66,19 @@ class ImageOperationsService {
       await provider.clearAllData();
       _showClearAllSuccessSnackBar();
     } catch (e) {
-      _showErrorSnackBar('Failed to clear all data: ${e.toString()}');
+      _showErrorSnackBar(
+          '${appLocalizations.failedToClearAllData}: ${e.toString()}');
     }
   }
 
   void _showClearAllSuccessSnackBar() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Row(
+        content: Row(
           children: [
-            Icon(Icons.check_circle, color: Colors.white, size: 20),
-            SizedBox(width: 12),
-            Text('All data cleared successfully!'),
+            const Icon(Icons.check_circle, color: Colors.white, size: 20),
+            const SizedBox(width: 12),
+            Text(appLocalizations.allDataCleared),
           ],
         ),
         backgroundColor: Colors.green,
@@ -89,10 +90,10 @@ class ImageOperationsService {
 
   void _showClearAllLoadingSnackBar() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+      SnackBar(
         content: Row(
           children: [
-            SizedBox(
+            const SizedBox(
               width: 20,
               height: 20,
               child: CircularProgressIndicator(
@@ -100,12 +101,12 @@ class ImageOperationsService {
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             ),
-            SizedBox(width: 12),
-            Text('Clearing all data...'),
+            const SizedBox(width: 12),
+            Text(appLocalizations.clearingAllData),
           ],
         ),
         backgroundColor: Colors.orange,
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
       ),
     );
   }

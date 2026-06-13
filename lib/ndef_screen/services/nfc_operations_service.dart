@@ -9,7 +9,7 @@ import 'package:ndef/ndef.dart' as ndef;
 
 import '../../util/app_logger.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class NFCOperationsService {
   static Future<NFCOperationResult> readNDEF() async {

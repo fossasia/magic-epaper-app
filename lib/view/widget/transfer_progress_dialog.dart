@@ -3,7 +3,7 @@ import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class TransferProgressDialog extends StatefulWidget {
   final img.Image finalImg;

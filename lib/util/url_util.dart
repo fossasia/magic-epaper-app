@@ -3,7 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 Future<void> openUrl(BuildContext context, String url) async {
   try {
