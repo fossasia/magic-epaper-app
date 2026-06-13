@@ -617,6 +617,40 @@
     "description": "Shown when the user taps clear but there are no NFC results to clear"
   },
   "cannotSaveEmptyCanvas": "Cannot save an empty canvas",
+  "waveshareWritten": "Waveshare E-Paper Written!",
+  "waveshareWritingCompleted": "Writing completed on the proprietary Waveshare tag.\n{tagInfo}\nThe hardware responded correctly to data initialization.",
+  "@waveshareWritingCompleted": {
+    "description": "Message shown when Waveshare proprietary tag writing is complete",
+    "placeholders": {
+      "tagInfo": {
+        "type": "String"
+      }
+    }
+  },
+  "yzrcosChipRejected": "The YZRCOS chip rejected the write initialization.",
+  "waveshareIsoDepError": "Error during Waveshare IsoDep writing: {error}",
+  "@waveshareIsoDepError": {
+    "description": "Error message for Waveshare IsoDep operations",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "waveshareIsoDepNoClearRequired": "Waveshare IsoDep tags do not require NDEF clearing.",
+  "waveshareTagDetectedNoNdefClear": "Waveshare tag detected. This type of display does not use a clearable NDEF file system; it is simply overwritten with a new image.",
+  "waveshareTagVerified": "Waveshare E-Paper tag verified!",
+  "waveshareIsoDepDetected": "Detected: Waveshare E-Paper Tag (IsoDep)",
+  "waveshareHardwareInitSuccess": "Status: Hardware initialization successful. Ready for image.",
+  "waveshareHandshakeFailed": "Waveshare handshake attempt failed: {error}",
+  "@waveshareHandshakeFailed": {
+    "description": "Log message when Waveshare handshake fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
 
   "clearAllData": "Clear All Data",
   "completeDataRemoval": "Complete data removal",

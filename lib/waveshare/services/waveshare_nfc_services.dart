@@ -34,10 +34,11 @@ class WaveShareNfcServices {
       );
       sessionStarted = true;
 
+      final bool isIsoDep = tag.type == NFCTagType.iso7816;
       if (!_isSupportedWaveshareTag(tag)) {
         throw WaveshareNfcException(
           'TAG_NOT_SUPPORTED',
-          'NFC tag type not supported.',
+          'NFC tag type not supported: ${tag.type}',
         );
       }
 
@@ -49,11 +50,11 @@ class WaveShareNfcServices {
           );
         },
       );
-
       final success = await protocol.writeDisplay(
         profile,
         imageData,
         onProgress: onProgress,
+        isIsoDep: isIsoDep,
       );
 
       if (!success) {
@@ -118,6 +119,7 @@ class WaveShareNfcServices {
   bool _isSupportedWaveshareTag(NFCTag tag) {
     final standard = tag.standard.toLowerCase();
     return standard.contains('type a') ||
+        tag.type == NFCTagType.iso7816 ||
         tag.type == NFCTagType.mifare_ultralight ||
         tag.type == NFCTagType.mifare_classic ||
         tag.type == NFCTagType.mifare_desfire ||
