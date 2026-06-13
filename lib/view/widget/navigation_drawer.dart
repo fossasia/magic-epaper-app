@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
-//import 'package:share_plus/share_plus.dart';
-import 'package:magicepaperapp/util/url_util.dart';
-import 'package:magicepaperapp/view/widget/configurable_epd_dialog.dart';
-import 'package:magicepaperapp/util/epd/configurable_editor.dart';
-import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
+import 'package:magicepaperapp/util/app_logger.dart';
+import 'package:magicepaperapp/util/epd/configurable_editor.dart';
+import 'package:magicepaperapp/util/url_util.dart';
+import 'package:magicepaperapp/view/image_editor.dart';
+import 'package:magicepaperapp/view/widget/configurable_epd_dialog.dart';
 import 'package:provider/provider.dart';
-import '../../util/app_logger.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class AppDrawer extends StatefulWidget {
   final int selectedIndex;
@@ -44,6 +40,7 @@ class _AppDrawerState extends State<AppDrawer> {
       height: 300,
       colors: [Colors.white, Colors.black, Colors.red],
     );
+
     final result = await showDialog<CustomEpdConfig>(
       context: context,
       builder: (context) => ConfigurableEpdDialog(
@@ -52,6 +49,7 @@ class _AppDrawerState extends State<AppDrawer> {
         initialColors: List<Color>.from(configurable.colors),
       ),
     );
+
     if (result != null) {
       final customEpd = ConfigurableEpd(
         width: result.width,
@@ -59,12 +57,14 @@ class _AppDrawerState extends State<AppDrawer> {
         colors: result.colors,
         modelId: result.presetName,
       );
+
       if (mounted) {
         try {
           context.read<ColorPaletteProvider>().updateColors(customEpd.colors);
         } catch (e) {
           AppLogger.warning('ColorPaletteProvider not available: $e');
         }
+
         Navigator.pop(context);
         Navigator.push(
           context,
@@ -78,32 +78,29 @@ class _AppDrawerState extends State<AppDrawer> {
   }
 
   void _showArduinoHelpDialog() {
+    final appLocalizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.info_outline, color: Colors.blue),
-            SizedBox(width: 8),
-            Text('Arduino Export'),
+            const Icon(Icons.info_outline, color: Colors.blue),
+            const SizedBox(width: 8),
+            Text(appLocalizations.arduinoExport),
           ],
         ),
-        content: const Text(
-          'This feature allows you to export your ePaper display designs as XMB files for use with Arduino projects.\n\n'
-          'Configure your custom ePaper display dimensions and color palette, then export your designs as XMB files that can be loaded onto Arduino-compatible ePaper displays.\n\n'
-          'Perfect for creating custom badges, signs, and displays for your Arduino projects!',
-        ),
+        content: Text(appLocalizations.arduinoExportHelp),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Got it'),
+            child: Text(appLocalizations.gotIt),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
               _showArduinoExportDialog();
             },
-            child: const Text('Continue'),
+            child: Text(appLocalizations.continueButton),
           ),
         ],
       ),
@@ -112,6 +109,8 @@ class _AppDrawerState extends State<AppDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return Drawer(
       backgroundColor: drawerHeaderTitle,
       child: ListView(
@@ -120,7 +119,7 @@ class _AppDrawerState extends State<AppDrawer> {
           AspectRatio(
             aspectRatio: 16 / 9,
             child: DrawerHeader(
-              decoration: BoxDecoration(color: colorAccent),
+              decoration: const BoxDecoration(color: colorAccent),
               child: Center(
                 child: Text(
                   appLocalizations.appName,
@@ -189,24 +188,6 @@ class _AppDrawerState extends State<AppDrawer> {
             title: appLocalizations.getBadge,
             routeName: '/buyBadge',
           ),
-          //TODO after adding app to the appstore
-          // _buildListTile(
-          //   index: 4,
-          //   icon: Icons.share,
-          //   title: 'Share',
-          //   routeName: '/share',
-          //   shareText:
-          //       'Badge Magic is an app to control LED name badges. This app provides features to portray names, graphics and simple animations on LED badges.You can also download it from below link https://play.google.com/store/apps/details?id=org.fossasia.badgemagic',
-          // ),
-          // _buildListTile(
-          //   index: 8,
-          //   icon: Icons.star,
-          //   title: 'Rate Us',
-          //   routeName: '/rateUs',
-          //   externalLink: Platform.isIOS
-          //       ? 'https://apps.apple.com/us/app/badge-magic/id6740176888?action=write-review'
-          //       : 'https://play.google.com/store/apps/details?id=org.fossasia.badgemagic',
-          // ),
           _buildListTile(
             index: 7,
             icon: Icons.bug_report,
@@ -221,14 +202,6 @@ class _AppDrawerState extends State<AppDrawer> {
             routeName: '/feedback',
             externalLink: 'https://badgemagic.fossasia.org/privacy/',
           ),
-          //TODO after adding privacy policy
-          // _buildListTile(
-          //   index: 10,
-          //   assetIcon: "assets/icons/r_insurance.png",
-          //   title: 'Privacy Policy',
-          //   routeName: '/privacyPolicy',
-          //   externalLink: 'https://badgemagic.fossasia.org/privacy/',
-          // ),
         ],
       ),
     );

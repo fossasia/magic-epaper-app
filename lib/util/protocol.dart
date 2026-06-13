@@ -14,7 +14,7 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'app_logger.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 typedef ProgressCallback = void Function(double progress, String status);
 typedef TagDetectedCallback = void Function();

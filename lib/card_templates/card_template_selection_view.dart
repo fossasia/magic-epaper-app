@@ -5,9 +5,11 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/card_templates/employee_id_form.dart';
 import 'package:magicepaperapp/card_templates/price_tag_form.dart';
+import 'package:magicepaperapp/card_templates/entry_pass_tag_form.dart';
+import 'package:magicepaperapp/card_templates/event_badge_form.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class CardTemplateSelectionView extends StatelessWidget {
   final int width;
@@ -23,6 +25,7 @@ class CardTemplateSelectionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return CommonScaffold(
       index: -1,
+      showBackButton: true,
       toolbarHeight: 85,
       titleWidget: Padding(
         padding: const EdgeInsets.fromLTRB(5, 16, 16, 5),
@@ -104,16 +107,30 @@ class CardTemplateSelectionView extends StatelessWidget {
         description: appLocalizations.entryPassTagDescription,
         icon: Icons.card_membership_outlined,
         color: Colors.orange,
-        isEnabled: false,
-        onTap: (context) => _showComingSoonDialog(context),
+        isEnabled: true,
+        onTap: (context) async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  EntryPassTagForm(width: width, height: height),
+            ),
+          );
+        },
       ),
       TemplateItem(
         title: appLocalizations.eventBadgeTitle,
         description: appLocalizations.eventBadgeDescription,
         icon: Icons.person_outline,
         color: Colors.purple,
-        isEnabled: false,
-        onTap: (context) => _showComingSoonDialog(context),
+        isEnabled: true,
+        onTap: (context) async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  EventBadgeForm(width: width, height: height),
+            ),
+          );
+        },
       ),
     ];
   }
@@ -244,49 +261,6 @@ class CardTemplateSelectionView extends StatelessWidget {
               ),
             ),
           ),
-        );
-      },
-    );
-  }
-
-  void _showComingSoonDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          title: Row(
-            children: [
-              const Icon(Icons.info_outline, color: colorAccent, size: 24),
-              const SizedBox(width: 12),
-              Text(
-                appLocalizations.comingSoon,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          content: Text(
-            appLocalizations.comingSoonMessage,
-            style: const TextStyle(fontSize: 14, height: 1.4),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: TextButton.styleFrom(
-                backgroundColor: colorAccent,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Text(appLocalizations.ok),
-            ),
-          ],
         );
       },
     );

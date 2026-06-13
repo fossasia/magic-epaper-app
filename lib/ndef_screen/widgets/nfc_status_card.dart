@@ -8,7 +8,7 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 
 import 'package:magicepaperapp/ndef_screen/services/nfc_availability_service.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class NFCStatusCard extends StatelessWidget {
   final NFCAvailability availability;
