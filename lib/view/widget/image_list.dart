@@ -66,8 +66,12 @@ class ImageList extends StatelessWidget {
               child: Transform(
                 alignment: Alignment.center,
                 transform: Matrix4.identity()
-                  ..scale(
-                      flipHorizontal ? -1.0 : 1.0, flipVertical ? -1.0 : 1.0),
+                  ..scaleByDouble(
+                    flipHorizontal ? -1.0 : 1.0,
+                    flipVertical ? -1.0 : 1.0,
+                    1.0,
+                    1.0,
+                  ),
                 child: Image.memory(
                   processedPngs[selectedIndex],
                   fit: BoxFit.contain,
@@ -234,8 +238,12 @@ class FilterCard extends StatelessWidget {
                   child: Transform(
                     alignment: Alignment.center,
                     transform: Matrix4.identity()
-                      ..scale(flipHorizontal ? -1.0 : 1.0,
-                          flipVertical ? -1.0 : 1.0),
+                      ..scaleByDouble(
+                        flipHorizontal ? -1.0 : 1.0,
+                        flipVertical ? -1.0 : 1.0,
+                        1.0,
+                        1.0,
+                      ),
                     child: Image.memory(
                       filterQuality: FilterQuality.high,
                       imageData,
