@@ -9,6 +9,7 @@ import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
 import 'package:magicepaperapp/util/epd/waveshare_displays.dart';
 import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/view/custom_display_screen.dart';
 import 'package:magicepaperapp/view/widget/display_card.dart';
 import 'package:provider/provider.dart';
 
@@ -43,6 +44,33 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
         return CommonScaffold(
           index: 0,
           toolbarHeight: 85,
+          actions: [
+            Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 14.0),
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  icon: const Icon(
+                    Icons.add_circle_outline,
+                    color: Colors.white,
+                    size: 26,
+                  ),
+                  tooltip: 'Create Custom Display',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const CustomDisplayConfigurationScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
           titleWidget: Padding(
             padding: const EdgeInsets.fromLTRB(5, 16, 16, 5),
             child: Column(
@@ -122,16 +150,13 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
 
 class _LoadingWrapper extends StatefulWidget {
   final Widget child;
-
   const _LoadingWrapper({required this.child});
-
   @override
   State<_LoadingWrapper> createState() => _LoadingWrapperState();
 }
 
 class _LoadingWrapperState extends State<_LoadingWrapper> {
   bool _showLoading = true;
-
   @override
   void initState() {
     super.initState();
@@ -168,7 +193,6 @@ class _LoadingWrapperState extends State<_LoadingWrapper> {
         ),
       );
     }
-
     return widget.child;
   }
 }
