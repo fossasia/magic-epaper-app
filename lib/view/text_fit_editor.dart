@@ -37,6 +37,12 @@ class TextFitEditorState extends State<TextFitEditor> {
     );
   }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   Size _calculateCanvas(Size screenSize) {
     final double targetAspect = widget.width / widget.height;
     final double availableWidth = screenSize.width - 32;
