@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/util/epd/waveshare_nfc_display.dart';
 import 'package:magicepaperapp/util/image_processing/image_processing.dart';
@@ -110,9 +109,8 @@ class Waveshare2in9b extends WaveshareNfcDisplay {
 
   @override
   List<Color> get colors => [Colors.white, Colors.black, Colors.red];
-
   @override
-  List<img.Image Function(img.Image)> get processingMethods => [
+  List<ImageProcessingMethod> get processingMethods => [
         ImageProcessing.bwrFloydSteinbergDither,
         ImageProcessing.bwrFalseFloydSteinbergDither,
         ImageProcessing.bwrStuckiDither,

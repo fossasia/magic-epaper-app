@@ -9,7 +9,7 @@ import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'dart:async';
 import '../util/app_logger.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class NFCReadScreen extends StatefulWidget {
   const NFCReadScreen({super.key});
@@ -164,13 +164,15 @@ class _NFCReadScreenState extends State<NFCReadScreen>
       index: 1,
       actions: [
         IconButton(
-          icon: const Icon(Icons.clear_all, color: Colors.white),
-          onPressed: _nfcController.result.isNotEmpty
-              ? () {
-                  _nfcController.clearResult();
-                  _showSnackBar(appLocalizations.resultsCleared);
-                }
-              : null,
+          icon: const Icon(Icons.delete_sweep, color: Colors.white),
+          onPressed: () {
+            if (_nfcController.result.isNotEmpty) {
+              _nfcController.clearResult();
+              _showSnackBar(appLocalizations.resultsCleared);
+            } else {
+              _showSnackBar(appLocalizations.nothingToClear, isError: true);
+            }
+          },
           tooltip: appLocalizations.clearResults,
         ),
       ],

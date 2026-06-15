@@ -4,7 +4,7 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class ImageSaveDialog extends StatelessWidget {
   final Uint8List imageData;
@@ -214,14 +214,6 @@ class ImageSaveDialog extends StatelessWidget {
         Expanded(
           child: OutlinedButton(
             onPressed: () => Navigator.pop(context),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              side: BorderSide(color: Colors.grey.shade300),
-              foregroundColor: Colors.grey.shade700,
-            ),
             child: Text(
               appLocalizations.cancel,
               style: const TextStyle(
@@ -235,15 +227,6 @@ class ImageSaveDialog extends StatelessWidget {
         Expanded(
           child: ElevatedButton(
             onPressed: () => _handleSave(nameController),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: colorAccent,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 0,
-            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

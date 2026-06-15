@@ -11,7 +11,7 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class ImagePreviewDialog extends StatelessWidget {
   final SavedImage image;
@@ -172,11 +172,7 @@ class ImagePreviewDialog extends StatelessWidget {
                 icon: const Icon(Icons.delete_outline, color: Colors.red),
                 label: Text(
                   appLocalizations.delete,
-                  style: TextStyle(fontSize: 12),
-                ),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.red,
-                  side: const BorderSide(color: Colors.red),
+                  style: TextStyle(color: Colors.red, fontSize: 12),
                 ),
               ),
             ),
@@ -203,11 +199,6 @@ class ImagePreviewDialog extends StatelessWidget {
             },
             icon: const Icon(Icons.send),
             label: Text(appLocalizations.transferToEpaper),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: colorAccent,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 12),
-            ),
           ),
         ),
       ],

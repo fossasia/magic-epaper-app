@@ -4,12 +4,14 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/image_library/image_library.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/storage_permisson_dialog.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/image_library/services/image_operations_service.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_save_dialog.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../util/image_processing/image_processing.dart';
 
 class ImageSaveHandler {
   final BuildContext context;
@@ -43,7 +45,7 @@ class ImageSaveHandler {
     required bool flipHorizontal,
     required bool flipVertical,
     required String currentImageSource,
-    required List<Function> processingMethods,
+    required List<ImageProcessingMethod> processingMethods,
     required String modelId,
   }) async {
     if (rawImages.isEmpty) return;
@@ -87,7 +89,7 @@ class ImageSaveHandler {
     Uint8List imageData,
     int selectedFilterIndex,
     String currentImageSource,
-    List<Function> processingMethods,
+    List<ImageProcessingMethod> processingMethods,
     bool flipHorizontal,
     bool flipVertical,
     String modelId,
@@ -120,7 +122,7 @@ class ImageSaveHandler {
     Uint8List imageData,
     String currentImageSource,
     int selectedFilterIndex,
-    List<Function> processingMethods,
+    List<ImageProcessingMethod> processingMethods,
     bool flipHorizontal,
     bool flipVertical,
     String modelId,
@@ -203,24 +205,23 @@ class ImageSaveHandler {
   }
 
   static void _showSettingsRedirectDialog(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Permission Required'),
-        content: const Text(
-          'Storage permission is permanently denied. Please enable it in the app settings to continue.',
-        ),
+        title: Text(appLocalizations.permissionRequired),
+        content: Text(appLocalizations.storagePermissionMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(appLocalizations.cancel),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               openAppSettings();
             },
-            child: const Text('Open Settings'),
+            child: Text(appLocalizations.openSettings),
           ),
         ],
       ),

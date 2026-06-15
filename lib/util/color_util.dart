@@ -72,8 +72,8 @@ class ColorUtils {
 
   static bool colorListsEqual(List<Color> a, List<Color> b) {
     if (a.length != b.length) return false;
-    final aValues = a.map((c) => c.value).toSet();
-    final bValues = b.map((c) => c.value).toSet();
+    final aValues = a.map((c) => c.toARGB32()).toSet();
+    final bValues = b.map((c) => c.toARGB32()).toSet();
     return aValues.difference(bValues).isEmpty;
   }
 }

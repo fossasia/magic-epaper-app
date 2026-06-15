@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/pro_image_editor/features/bottom_bar.dart';
 import 'package:magicepaperapp/pro_image_editor/features/barcode_editor.dart';
 import 'package:magicepaperapp/pro_image_editor/features/text_bottom_bar.dart';
@@ -29,6 +30,8 @@ import 'reorder_layer_example.dart';
 
 final bool _useMaterialDesign =
     platformDesignMode == ImageEditorDesignMode.material;
+
+AppLocalizations get _appLocalizations => getIt.get<AppLocalizations>();
 
 /// The example for movableBackground
 class MovableBackgroundImageExample extends StatefulWidget {
@@ -202,23 +205,23 @@ class _MovableBackgroundImageExampleState
             actions: <CupertinoActionSheetAction>[
               CupertinoActionSheetAction(
                 onPressed: () => _openPicker(ImageSource.camera),
-                child: const Wrap(
+                child: Wrap(
                   spacing: 7,
                   runAlignment: WrapAlignment.center,
                   children: [
-                    Icon(CupertinoIcons.photo_camera),
-                    Text('Camera'),
+                    const Icon(CupertinoIcons.photo_camera),
+                    Text(_appLocalizations.camera),
                   ],
                 ),
               ),
               CupertinoActionSheetAction(
                 onPressed: () => _openPicker(ImageSource.gallery),
-                child: const Wrap(
+                child: Wrap(
                   spacing: 7,
                   runAlignment: WrapAlignment.center,
                   children: [
-                    Icon(CupertinoIcons.photo),
-                    Text('Gallery'),
+                    const Icon(CupertinoIcons.photo),
+                    Text(_appLocalizations.gallery),
                   ],
                 ),
               ),
@@ -228,7 +231,7 @@ class _MovableBackgroundImageExampleState
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Cancel'),
+              child: Text(_appLocalizations.cancel),
             ),
           ),
         ),
@@ -242,7 +245,7 @@ class _MovableBackgroundImageExampleState
         ),
         builder: (context) {
           return Material(
-            color: Colors.black,
+            color: Colors.transparent,
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 24, left: 16, right: 16),
@@ -257,14 +260,14 @@ class _MovableBackgroundImageExampleState
                       primaryColor: const Color(0xFFEC407A),
                       secondaryColor: const Color(0xFFD3396D),
                       icon: Icons.photo_camera,
-                      text: 'Camera',
+                      text: _appLocalizations.camera,
                       onTap: () => _openPicker(ImageSource.camera),
                     ),
                     MaterialIconActionButton(
                       primaryColor: const Color(0xFFBF59CF),
                       secondaryColor: const Color(0xFFAC44CF),
                       icon: Icons.image,
-                      text: 'Gallery',
+                      text: _appLocalizations.gallery,
                       onTap: () => _openPicker(ImageSource.gallery),
                     ),
                   ],
@@ -417,207 +420,272 @@ class _MovableBackgroundImageExampleState
   @override
   Widget build(BuildContext context) {
     _calculateCanvasDimensions(MediaQuery.sizeOf(context));
-    return LayoutBuilder(builder: (context, constraints) {
-      return CustomPaint(
-        size: Size(constraints.maxWidth, constraints.maxHeight),
-        painter: const PixelTransparentPainter(
-          primary: Colors.white,
-          secondary: Color(0xFFE2E2E2),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+        value: const SystemUiOverlayStyle(
+          statusBarColor: Colors.black,
+          systemNavigationBarColor: Colors.black,
+          statusBarIconBrightness: Brightness.light,
+          systemNavigationBarIconBrightness: Brightness.light,
         ),
-        child: FutureBuilder<Uint8List>(
-          future: _loadAndResizeWhiteBoard(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            return ProImageEditor.memory(
-              snapshot.data!,
-              key: editorKey,
-              callbacks: ProImageEditorCallbacks(
-                onImageEditingComplete: (Uint8List bytes) async {
-                  Navigator.pop(context, bytes);
-                },
-                mainEditorCallbacks: MainEditorCallbacks(
-                  helperLines: const HelperLinesCallbacks(),
-                  onAfterViewInit: () {
-                    editorKey.currentState!.addLayer(
-                      WidgetLayer(
-                        interaction: LayerInteraction(
-                          enableEdit: false,
-                          enableMove: false,
-                          enableRotate: false,
-                          enableScale: false,
-                          enableSelection: false,
-                        ),
-                        offset: Offset.zero,
-                        scale: _initScale,
-                        widget: Image.asset(
-                          ImageAssets.whiteBoard,
-                          width: _canvasWidth,
-                          height: _canvasHeight,
-                          fit: BoxFit.cover,
-                          frameBuilder:
-                              (context, child, frame, wasSynchronouslyLoaded) {
-                            return AnimatedSwitcher(
-                              layoutBuilder: (currentChild, previousChildren) {
-                                return SizedBox(
-                                  width: _canvasWidth,
-                                  height: _canvasHeight,
-                                  child: Stack(
-                                    fit: StackFit.expand,
-                                    alignment: Alignment.center,
-                                    children: <Widget>[
-                                      ...previousChildren,
-                                      if (currentChild != null) currentChild,
-                                    ],
+        child: Scaffold(
+            backgroundColor: Colors.black,
+            body: Stack(children: [
+              Positioned.fill(
+                  child: LayoutBuilder(builder: (context, constraints) {
+                return CustomPaint(
+                  size: Size(constraints.maxWidth, constraints.maxHeight),
+                  painter: const PixelTransparentPainter(
+                    primary: Colors.white,
+                    secondary: Color(0xFFE2E2E2),
+                  ),
+                  child: FutureBuilder<Uint8List>(
+                    future: _loadAndResizeWhiteBoard(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      return ProImageEditor.memory(
+                        snapshot.data!,
+                        key: editorKey,
+                        callbacks: ProImageEditorCallbacks(
+                          onImageEditingComplete: (Uint8List bytes) async {
+                            final editor = editorKey.currentState;
+
+                            if (editor == null ||
+                                editor.activeLayers.length <= 1) {
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(AppLocalizations.of(context)!
+                                        .cannotSaveEmptyCanvas),
                                   ),
                                 );
-                              },
-                              duration: const Duration(milliseconds: 1),
-                              child: frame != null
-                                  ? child
-                                  : const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                            );
+                              }
+                              return;
+                            }
+
+                            Navigator.pop(context, bytes);
                           },
-                        ),
-                      ),
-                    );
-
-                    // Add initial layers from widget parameter
-                    if (widget.initialLayers != null) {
-                      addInitialLayers(widget.initialLayers!);
-                    }
-                  },
-                ),
-              ),
-              configs: ProImageEditorConfigs(
-                designMode: platformDesignMode,
-                imageGeneration: ImageGenerationConfigs(
-                  cropToDrawingBounds: true,
-                  allowEmptyEditingCompletion: false,
-                  outputFormat: OutputFormat.png,
-
-                  /// Set the pixel ratio manually. You can also set this
-                  /// value higher than the device pixel ratio for higher
-                  /// quality.
-                  customPixelRatio: max(2000 / MediaQuery.sizeOf(context).width,
-                      MediaQuery.devicePixelRatioOf(context)),
-                ),
-                mainEditor: MainEditorConfigs(
-                  enableZoom: true,
-                  enableCloseButton: !isDesktopMode(context),
-                  tools: const [
-                    SubEditorMode.paint,
-                    SubEditorMode.text,
-                    SubEditorMode.emoji,
-                  ],
-                  widgets: MainEditorWidgets(
-                    bodyItems: (editor, rebuildStream) {
-                      return [
-                        ReactiveWidget(
-                          stream: rebuildStream,
-                          builder: (_) => editor.isSubEditorOpen
-                              ? const SizedBox.shrink()
-                              : Positioned(
-                                  bottom: 20,
-                                  left: 0,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.lightBlue.shade200,
-                                      borderRadius: const BorderRadius.only(
-                                        topRight: Radius.circular(100),
-                                        bottomRight: Radius.circular(100),
-                                      ),
-                                    ),
-                                    child: IconButton(
-                                      onPressed: () =>
-                                          _openReorderSheet(editor),
-                                      icon: const Icon(
-                                        Icons.reorder,
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                          mainEditorCallbacks: MainEditorCallbacks(
+                            helperLines: const HelperLinesCallbacks(),
+                            onAfterViewInit: () {
+                              editorKey.currentState!.addLayer(
+                                WidgetLayer(
+                                  interaction: LayerInteraction(
+                                    enableEdit: false,
+                                    enableMove: false,
+                                    enableRotate: false,
+                                    enableScale: false,
+                                    enableSelection: false,
+                                  ),
+                                  offset: Offset.zero,
+                                  scale: _initScale,
+                                  widget: Image.asset(
+                                    ImageAssets.whiteBoard,
+                                    width: _canvasWidth,
+                                    height: _canvasHeight,
+                                    fit: BoxFit.cover,
+                                    frameBuilder: (context, child, frame,
+                                        wasSynchronouslyLoaded) {
+                                      return AnimatedSwitcher(
+                                        layoutBuilder:
+                                            (currentChild, previousChildren) {
+                                          return SizedBox(
+                                            width: _canvasWidth,
+                                            height: _canvasHeight,
+                                            child: Stack(
+                                              fit: StackFit.expand,
+                                              alignment: Alignment.center,
+                                              children: <Widget>[
+                                                ...previousChildren,
+                                                if (currentChild != null)
+                                                  currentChild,
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                        duration:
+                                            const Duration(milliseconds: 1),
+                                        child: frame != null
+                                            ? child
+                                            : const Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
+                                      );
+                                    },
                                   ),
                                 ),
+                              );
+
+                              // Add initial layers from widget parameter
+                              if (widget.initialLayers != null) {
+                                addInitialLayers(widget.initialLayers!);
+                              }
+                            },
+                          ),
                         ),
-                      ];
+                        configs: ProImageEditorConfigs(
+                          i18n: I18n(
+                            various: I18nVarious(
+                              closeEditorWarningTitle:
+                                  _appLocalizations.closeImageEditorTitle,
+                              closeEditorWarningMessage:
+                                  _appLocalizations.closeImageEditorMessage,
+                              closeEditorWarningConfirmBtn:
+                                  _appLocalizations.ok,
+                              closeEditorWarningCancelBtn:
+                                  _appLocalizations.cancel,
+                            ),
+                          ),
+                          designMode: platformDesignMode,
+                          imageGeneration: ImageGenerationConfigs(
+                            cropToDrawingBounds: true,
+                            allowEmptyEditingCompletion: false,
+                            outputFormat: OutputFormat.png,
+
+                            /// Set the pixel ratio manually. You can also set this
+                            /// value higher than the device pixel ratio for higher
+                            /// quality.
+                            customPixelRatio: max(
+                                2000 / MediaQuery.sizeOf(context).width,
+                                MediaQuery.devicePixelRatioOf(context)),
+                          ),
+                          mainEditor: MainEditorConfigs(
+                            enableZoom: true,
+                            enableCloseButton: !isDesktopMode(context),
+                            tools: const [
+                              SubEditorMode.paint,
+                              SubEditorMode.text,
+                              SubEditorMode.emoji,
+                            ],
+                            widgets: MainEditorWidgets(
+                              bodyItems: (editor, rebuildStream) {
+                                return [
+                                  ReactiveWidget(
+                                    stream: rebuildStream,
+                                    builder: (_) => editor.isSubEditorOpen
+                                        ? const SizedBox.shrink()
+                                        : Positioned(
+                                            bottom: 20,
+                                            left: 0,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    Colors.lightBlue.shade200,
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                  topRight:
+                                                      Radius.circular(100),
+                                                  bottomRight:
+                                                      Radius.circular(100),
+                                                ),
+                                              ),
+                                              child: IconButton(
+                                                onPressed: () =>
+                                                    _openReorderSheet(editor),
+                                                icon: const Icon(
+                                                  Icons.reorder,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                  ),
+                                ];
+                              },
+                              bottomBar: (editor, rebuildStream, key) =>
+                                  ReactiveWidget(
+                                stream: rebuildStream,
+                                key: key,
+                                builder: (_) => _bottomNavigationBar(
+                                  editor,
+                                  constraints,
+                                ),
+                              ),
+                            ),
+                            style: const MainEditorStyle(
+                              uiOverlayStyle: SystemUiOverlayStyle(
+                                statusBarColor: Colors.black,
+                              ),
+                              background: ui.Color.fromARGB(255, 155, 152, 152),
+                            ),
+                          ),
+                          paintEditor: PaintEditorConfigs(
+                            enableZoom: true,
+                            widgets: PaintEditorWidgets(
+                              colorPicker: (editor, rebuildStream, currentColor,
+                                      setColor) =>
+                                  null,
+                              bodyItems: _buildPaintEditorBody,
+                            ),
+                            style: const PaintEditorStyle(
+                              initialColor: Colors.black,
+                              uiOverlayStyle: SystemUiOverlayStyle(
+                                statusBarColor: Colors.black,
+                              ),
+                              background: Colors.black,
+                            ),
+                          ),
+                          textEditor: TextEditorConfigs(
+                            customTextStyles: [
+                              GoogleFonts.roboto(),
+                              GoogleFonts.averiaLibre(),
+                              GoogleFonts.lato(),
+                              GoogleFonts.comicNeue(),
+                              GoogleFonts.actor(),
+                              GoogleFonts.odorMeanChey(),
+                              GoogleFonts.nabla(),
+                            ],
+                            widgets: TextEditorWidgets(
+                              appBar: (textEditor, rebuildStream) => null,
+                              colorPicker: (editor, rebuildStream, currentColor,
+                                      setColor) =>
+                                  null,
+                              bottomBar: (textEditor, rebuildStream) => null,
+                              bodyItems: _buildTextEditorBody,
+                            ),
+                            style: TextEditorStyle(
+                                textFieldMargin: EdgeInsets.zero,
+                                bottomBarBackground: Colors.black,
+                                bottomBarMainAxisAlignment: !_useMaterialDesign
+                                    ? MainAxisAlignment.spaceEvenly
+                                    : MainAxisAlignment.start),
+                          ),
+                          cropRotateEditor: const CropRotateEditorConfigs(),
+                          filterEditor: const FilterEditorConfigs(),
+                          blurEditor: const BlurEditorConfigs(),
+                          stickerEditor: StickerEditorConfigs(
+                            initWidth: (_editorSize.aspectRatio >
+                                        (widget.width / widget.height)
+                                    ? _editorSize.height
+                                    : _editorSize.width) /
+                                _initScale,
+                            builder: (setLayer, scrollController) {
+                              return const SizedBox();
+                            },
+                          ),
+                        ),
+                      );
                     },
-                    bottomBar: (editor, rebuildStream, key) => ReactiveWidget(
-                      stream: rebuildStream,
-                      key: key,
-                      builder: (_) => _bottomNavigationBar(
-                        editor,
-                        constraints,
-                      ),
-                    ),
                   ),
-                  style: const MainEditorStyle(
-                    uiOverlayStyle: SystemUiOverlayStyle(
-                      statusBarColor: Colors.black,
-                    ),
-                    background: ui.Color.fromARGB(255, 155, 152, 152),
-                  ),
-                ),
-                paintEditor: PaintEditorConfigs(
-                  enableZoom: true,
-                  widgets: PaintEditorWidgets(
-                    colorPicker:
-                        (editor, rebuildStream, currentColor, setColor) => null,
-                    bodyItems: _buildPaintEditorBody,
-                  ),
-                  style: const PaintEditorStyle(
-                    initialColor: Colors.black,
-                    uiOverlayStyle: SystemUiOverlayStyle(
-                      statusBarColor: Colors.black,
-                    ),
-                    background: Colors.black,
-                  ),
-                ),
-                textEditor: TextEditorConfigs(
-                  customTextStyles: [
-                    GoogleFonts.roboto(),
-                    GoogleFonts.averiaLibre(),
-                    GoogleFonts.lato(),
-                    GoogleFonts.comicNeue(),
-                    GoogleFonts.actor(),
-                    GoogleFonts.odorMeanChey(),
-                    GoogleFonts.nabla(),
-                  ],
-                  widgets: TextEditorWidgets(
-                    appBar: (textEditor, rebuildStream) => null,
-                    colorPicker:
-                        (editor, rebuildStream, currentColor, setColor) => null,
-                    bottomBar: (textEditor, rebuildStream) => null,
-                    bodyItems: _buildTextEditorBody,
-                  ),
-                  style: TextEditorStyle(
-                      textFieldMargin: EdgeInsets.zero,
-                      bottomBarBackground: Colors.black,
-                      bottomBarMainAxisAlignment: !_useMaterialDesign
-                          ? MainAxisAlignment.spaceEvenly
-                          : MainAxisAlignment.start),
-                ),
-                cropRotateEditor: const CropRotateEditorConfigs(),
-                filterEditor: const FilterEditorConfigs(),
-                blurEditor: const BlurEditorConfigs(),
-                stickerEditor: StickerEditorConfigs(
-                  initWidth:
-                      (_editorSize.aspectRatio > (widget.width / widget.height)
-                              ? _editorSize.height
-                              : _editorSize.width) /
-                          _initScale,
-                  builder: (setLayer, scrollController) {
-                    return const SizedBox();
-                  },
-                ),
+                );
+              })),
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                height: MediaQuery.viewPaddingOf(context).top,
+                child: Container(color: Colors.black),
               ),
-            );
-          },
-        ),
-      );
-    });
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: MediaQuery.viewPaddingOf(context).bottom,
+                child: Container(color: Colors.black),
+              ),
+            ])));
   }
 
   Widget _bottomNavigationBar(
@@ -649,7 +717,8 @@ class _MovableBackgroundImageExampleState
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     FlatIconTextButton(
-                      label: Text('Canvas Color', style: _bottomTextStyle),
+                      label: Text(_appLocalizations.canvasColor,
+                          style: _bottomTextStyle),
                       icon: Container(
                         width: 22.0,
                         height: 22.0,
@@ -662,7 +731,8 @@ class _MovableBackgroundImageExampleState
                       onPressed: _changeCanvasColor,
                     ),
                     FlatIconTextButton(
-                      label: Text('Add Image', style: _bottomTextStyle),
+                      label: Text(_appLocalizations.addImage,
+                          style: _bottomTextStyle),
                       icon: const Icon(
                         Icons.image_outlined,
                         size: 22.0,
@@ -671,7 +741,8 @@ class _MovableBackgroundImageExampleState
                       onPressed: _chooseCameraOrGallery,
                     ),
                     FlatIconTextButton(
-                      label: Text('Paint', style: _bottomTextStyle),
+                      label: Text(_appLocalizations.paint,
+                          style: _bottomTextStyle),
                       icon: const Icon(
                         Icons.edit_rounded,
                         size: 22.0,
@@ -680,7 +751,8 @@ class _MovableBackgroundImageExampleState
                       onPressed: editor.openPaintEditor,
                     ),
                     FlatIconTextButton(
-                      label: Text('Text', style: _bottomTextStyle),
+                      label:
+                          Text(_appLocalizations.text, style: _bottomTextStyle),
                       icon: const Icon(
                         Icons.text_fields,
                         size: 22.0,
@@ -689,7 +761,8 @@ class _MovableBackgroundImageExampleState
                       onPressed: () => editorKey.currentState!.openTextEditor(),
                     ),
                     FlatIconTextButton(
-                      label: Text('Barcode', style: _bottomTextStyle),
+                      label: Text(_appLocalizations.barcode,
+                          style: _bottomTextStyle),
                       icon: const Icon(
                         Icons.qr_code,
                         size: 22.0,
@@ -698,7 +771,8 @@ class _MovableBackgroundImageExampleState
                       onPressed: _openBarcodeSheet,
                     ),
                     FlatIconTextButton(
-                      label: Text('Emoji', style: _bottomTextStyle),
+                      label: Text(_appLocalizations.emoji,
+                          style: _bottomTextStyle),
                       icon: const Icon(
                         Icons.sentiment_satisfied_alt_rounded,
                         size: 22.0,

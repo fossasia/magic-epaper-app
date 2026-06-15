@@ -6,7 +6,7 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class SearchAndFilterWidget extends StatelessWidget {
   final TextEditingController searchController;
@@ -47,6 +47,7 @@ class SearchAndFilterWidget extends StatelessWidget {
             children: [
               Text(appLocalizations.filter,
                   style: const TextStyle(fontWeight: FontWeight.w500)),
+              const SizedBox(width: 8),
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
