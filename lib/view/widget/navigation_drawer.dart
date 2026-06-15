@@ -292,7 +292,7 @@ class _AppDrawerState extends State<AppDrawer> {
               subtitle,
               style: TextStyle(
                 color: currentIndex == index
-                    ? colorAccent.withOpacity(0.7)
+                    ? colorAccent.withValues(alpha: 0.7)
                     : Colors.grey[600],
                 fontSize: 12,
               ),
