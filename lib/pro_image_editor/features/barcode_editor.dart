@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
@@ -26,6 +27,8 @@ class BarcodeEditor extends StatefulWidget {
 }
 
 class _BarcodeEditorState extends State<BarcodeEditor> {
+  AppLocalizations get _l10n => AppLocalizations.of(context)!;
+
   final TextEditingController _barcodeController = TextEditingController();
   final GlobalKey<ScaffoldMessengerState> _messengerKey =
       GlobalKey<ScaffoldMessengerState>();
@@ -434,7 +437,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       setState(() => _torchOn = !_torchOn);
     } catch (_) {
       if (!mounted) return;
-      _showSnackBar('Flash is not available on this device.');
+      _showSnackBar(_l10n.flashNotAvailable);
     }
   }
 
@@ -445,7 +448,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       await controller.switchCamera();
     } catch (_) {
       if (!mounted) return;
-      _showSnackBar('No other camera available.');
+      _showSnackBar(_l10n.noOtherCamera);
     }
   }
 
@@ -506,7 +509,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       final decoded = img.decodeImage(bytes);
       if (decoded == null) {
         if (!mounted) return;
-        _showSnackBar("Couldn't read the image. Try a different file.");
+        _showSnackBar(_l10n.couldntReadImage);
         return;
       }
       final normalized = img.bakeOrientation(decoded);
@@ -529,9 +532,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
         }
       }
 
-      _showSnackBar(
-        "This doesn't look like a barcode. Please upload a clear barcode image.",
-      );
+      _showSnackBar(_l10n.notABarcode);
     } finally {
       await analyzer.dispose();
       if (mounted) setState(() => _isAnalyzingUpload = false);
@@ -604,9 +605,9 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     return DropdownButtonFormField<String>(
       initialValue: _selectedBarcode.name,
       isExpanded: true,
-      decoration: const InputDecoration(
-        labelText: 'Barcode Format',
-        border: OutlineInputBorder(),
+      decoration: InputDecoration(
+        labelText: _l10n.barcodeFormat,
+        border: const OutlineInputBorder(),
       ),
       items: availableFormats.entries
           .map((entry) => DropdownMenuItem(
@@ -813,7 +814,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Live preview',
+              _l10n.livePreview,
               style: TextStyle(
                 color: Colors.grey.shade600,
                 fontWeight: FontWeight.w500,
@@ -821,7 +822,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
             ),
             const SizedBox(height: 2),
             Text(
-              'Start typing to see your barcode',
+              _l10n.startTypingToSeeBarcode,
               style: TextStyle(
                 color: Colors.grey.shade500,
                 fontSize: 12,
@@ -915,15 +916,15 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
               ),
             ],
           ),
-          child: const Row(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.center_focus_strong_rounded,
+              const Icon(Icons.center_focus_strong_rounded,
                   color: Colors.white, size: 18),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
-                'Align barcode within the frame',
-                style: TextStyle(
+                _l10n.alignBarcodeInFrame,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -968,13 +969,13 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
                   icon: _torchOn
                       ? Icons.flash_on_rounded
                       : Icons.flash_off_rounded,
-                  label: 'Flash',
+                  label: _l10n.flash,
                   active: _torchOn,
                   onTap: _toggleTorch,
                 ),
                 _scannerControlButton(
                   icon: Icons.flip_camera_ios_rounded,
-                  label: 'Flip Camera',
+                  label: _l10n.switchCamera,
                   onTap: _flipCamera,
                 ),
               ],
@@ -1048,7 +1049,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
             ),
             const SizedBox(height: 16),
             Text(
-              isPermission ? 'Camera access needed' : 'Camera unavailable',
+              isPermission ? _l10n.cameraAccessNeeded : _l10n.cameraUnavailable,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -1058,8 +1059,8 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
             const SizedBox(height: 8),
             Text(
               isPermission
-                  ? 'Grant camera permission in Settings to scan barcodes, or upload an image from your gallery.'
-                  : 'We couldn\'t start the camera. Try uploading an image instead.',
+                  ? _l10n.cameraPermissionMessage
+                  : _l10n.cameraStartFailedMessage,
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.white70, fontSize: 14),
             ),
@@ -1067,7 +1068,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
             FilledButton.tonalIcon(
               onPressed: _isAnalyzingUpload ? null : _uploadBarcodeImage,
               icon: const Icon(Icons.photo_library_rounded),
-              label: const Text('Upload from gallery'),
+              label: Text(_l10n.uploadFromGallery),
             ),
           ],
         ),
@@ -1128,7 +1129,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
               ),
             ),
             Text(
-              'Add Barcode',
+              _l10n.addBarcode,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 22,
@@ -1143,7 +1144,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
               maxLength: _effectiveMaxLength(_selectedBarcode),
               inputFormatters: _inputFormattersFor(_selectedBarcode),
               decoration: InputDecoration(
-                labelText: 'Barcode Data',
+                labelText: _l10n.barcodeData,
                 hintText: _formatExample(_selectedBarcode),
                 prefixIcon: const Icon(Icons.qr_code_2_rounded),
                 border: const OutlineInputBorder(),
@@ -1226,7 +1227,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
                       key: const Key('addBarcodeButton'),
                       onPressed: _addBarcodeLayer,
                       icon: const Icon(Icons.check_rounded),
-                      label: const Text('Add to canvas'),
+                      label: Text(_l10n.addToCanvas),
                       style: FilledButton.styleFrom(
                         backgroundColor: Colors.green.shade600,
                         foregroundColor: Colors.white,
@@ -1247,12 +1248,12 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
   Widget _buildActionButtons(bool isNarrow) {
     final scanBtn = _SourceButton(
       icon: Icons.qr_code_scanner_rounded,
-      label: 'Scan',
+      label: _l10n.scan,
       onPressed: _isAnalyzingUpload ? null : _startScanning,
     );
     final uploadBtn = _SourceButton(
       icon: Icons.image_outlined,
-      label: _isAnalyzingUpload ? 'Analyzing…' : 'Upload',
+      label: _isAnalyzingUpload ? _l10n.analyzing : _l10n.upload,
       busy: _isAnalyzingUpload,
       onPressed: _isAnalyzingUpload ? null : _uploadBarcodeImage,
     );

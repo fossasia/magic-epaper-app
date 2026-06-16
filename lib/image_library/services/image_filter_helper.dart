@@ -2,7 +2,7 @@ import 'package:magicepaperapp/util/image_processing/image_processing.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class ImageFilterHelper {
   static Map<ImageProcessingMethod, String> get filterMap => {
