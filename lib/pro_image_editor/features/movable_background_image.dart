@@ -65,6 +65,11 @@ class _MovableBackgroundImageExampleState
   late double _canvasWidth;
   late double _canvasHeight;
 
+  Future<Uint8List>? _whiteBoardFuture;
+  bool _readyToBuildEditor = false;
+  Animation<double>? _routeAnimation;
+  bool _editorReady = false;
+
   final _bottomTextStyle = const TextStyle(fontSize: 10.0, color: Colors.white);
 
   @override
@@ -82,7 +87,29 @@ class _MovableBackgroundImageExampleState
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_readyToBuildEditor || _routeAnimation != null) return;
+    final animation = ModalRoute.of(context)?.animation;
+    if (animation == null || animation.status == AnimationStatus.completed) {
+      _readyToBuildEditor = true;
+    } else {
+      _routeAnimation = animation;
+      animation.addStatusListener(_handleRouteAnimation);
+    }
+  }
+
+  void _handleRouteAnimation(AnimationStatus status) {
+    if (status == AnimationStatus.completed) {
+      _routeAnimation?.removeStatusListener(_handleRouteAnimation);
+      _routeAnimation = null;
+      if (mounted) setState(() => _readyToBuildEditor = true);
+    }
+  }
+
+  @override
   void dispose() {
+    _routeAnimation?.removeStatusListener(_handleRouteAnimation);
     _bottomBarScrollCtrl.dispose();
     super.dispose();
   }
@@ -420,6 +447,7 @@ class _MovableBackgroundImageExampleState
   @override
   Widget build(BuildContext context) {
     _calculateCanvasDimensions(MediaQuery.sizeOf(context));
+    _whiteBoardFuture ??= _loadAndResizeWhiteBoard();
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: const SystemUiOverlayStyle(
           statusBarColor: Colors.black,
@@ -432,19 +460,22 @@ class _MovableBackgroundImageExampleState
             body: Stack(children: [
               Positioned.fill(
                   child: LayoutBuilder(builder: (context, constraints) {
-                return CustomPaint(
-                  size: Size(constraints.maxWidth, constraints.maxHeight),
-                  painter: const PixelTransparentPainter(
-                    primary: Colors.white,
-                    secondary: Color(0xFFE2E2E2),
-                  ),
-                  child: FutureBuilder<Uint8List>(
-                    future: _loadAndResizeWhiteBoard(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      return ProImageEditor.memory(
+                return FutureBuilder<Uint8List>(
+                  future: _whiteBoardFuture,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || !_readyToBuildEditor) {
+                      return const ColoredBox(
+                        color: Colors.white,
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
+                    return CustomPaint(
+                      size: Size(constraints.maxWidth, constraints.maxHeight),
+                      painter: const PixelTransparentPainter(
+                        primary: Colors.white,
+                        secondary: Color(0xFFE2E2E2),
+                      ),
+                      child: ProImageEditor.memory(
                         snapshot.data!,
                         key: editorKey,
                         callbacks: ProImageEditorCallbacks(
@@ -522,6 +553,11 @@ class _MovableBackgroundImageExampleState
                               if (widget.initialLayers != null) {
                                 addInitialLayers(widget.initialLayers!);
                               }
+
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                if (mounted)
+                                  setState(() => _editorReady = true);
+                              });
                             },
                           ),
                         ),
@@ -666,11 +702,18 @@ class _MovableBackgroundImageExampleState
                             },
                           ),
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 );
               })),
+              if (!_editorReady)
+                const Positioned.fill(
+                  child: ColoredBox(
+                    color: Colors.white,
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                ),
               Positioned(
                 top: 0,
                 left: 0,
