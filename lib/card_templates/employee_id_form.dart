@@ -138,11 +138,10 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
             color: Colors.black,
           ),
           text: _employeeData.companyName,
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
           textAlign: TextAlign.center,
           offset: layoutParams.companyNameOffset,
           scale: layoutParams.companyNameScale,
+          followCanvasTheme: true,
         ));
       }
 
@@ -150,11 +149,10 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.namePrefix}${_employeeData.name}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['name']!,
           scale: layoutParams.textFieldScale,
+          followCanvasTheme: true,
         ));
       }
 
@@ -162,11 +160,10 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.positionPrefix}${_employeeData.position}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['position']!,
           scale: layoutParams.textFieldScale,
+          followCanvasTheme: true,
         ));
       }
 
@@ -174,11 +171,10 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.divisionPrefix}${_employeeData.division}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['division']!,
           scale: layoutParams.textFieldScale,
+          followCanvasTheme: true,
         ));
       }
 
@@ -186,11 +182,10 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.idPrefix}${_employeeData.idNumber}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['idNumber']!,
           scale: layoutParams.textFieldScale,
+          followCanvasTheme: true,
         ));
       }
 

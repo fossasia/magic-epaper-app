@@ -67,6 +67,8 @@ class _MovableBackgroundImageExampleState
 
   final _bottomTextStyle = const TextStyle(fontSize: 10.0, color: Colors.white);
 
+  final Set<String> _noFollowLayerIds = {};
+
   @override
   void initState() {
     super.initState();
@@ -93,26 +95,30 @@ class _MovableBackgroundImageExampleState
     if (editor == null) return;
     for (final layer in layers) {
       if (layer.text != null) {
-        editor.addLayer(
-          TextLayer(
-            maxTextWidth: _canvasWidth - 70,
-            textStyle: layer.textStyle,
-            align: layer.textAlign ?? TextAlign.left,
-            offset: layer.offset,
-            scale: layer.scale,
-            rotation: layer.rotation,
-            color: layer.textColor ?? Colors.black,
-            background: layer.backgroundColor ?? Colors.white,
-            colorMode: LayerBackgroundMode.backgroundAndColor,
-            text: layer.text!,
-            interaction: LayerInteraction(
-              enableEdit: true,
-              enableMove: true,
-              enableRotate: true,
-              enableScale: true,
-              enableSelection: true,
-            ),
+        final textLayer = TextLayer(
+          maxTextWidth: _canvasWidth - 70,
+          textStyle: layer.textStyle,
+          align: layer.textAlign ?? TextAlign.left,
+          offset: layer.offset,
+          scale: layer.scale,
+          rotation: layer.rotation,
+          color: layer.textColor ?? Colors.black,
+          background: layer.backgroundColor ?? Colors.white,
+          colorMode: LayerBackgroundMode.backgroundAndColor,
+          text: layer.text!,
+          interaction: LayerInteraction(
+            enableEdit: true,
+            enableMove: true,
+            enableRotate: true,
+            enableScale: true,
+            enableSelection: true,
           ),
+        );
+        if (!layer.followCanvasTheme) {
+          _noFollowLayerIds.add(textLayer.id);
+        }
+        editor.addLayer(
+          textLayer,
           blockSelectLayer: true,
         );
       } else if (layer.widget != null) {
@@ -304,6 +310,33 @@ class _MovableBackgroundImageExampleState
     return 'white';
   }
 
+  bool _isDark(Color c) => c.computeLuminance() < 0.5;
+
+  void _updateTextLayersForCanvas(Color canvasColor) {
+    final editor = editorKey.currentState;
+    if (editor == null) return;
+
+    final isDark = _isDark(canvasColor);
+    final textBg = isDark ? Colors.black : Colors.white;
+    final textFg = isDark ? Colors.white : Colors.black;
+
+    final layers = editor.activeLayers;
+
+    for (int i = 0; i < layers.length; i++) {
+      final layer = layers[i];
+
+      if (layer is TextLayer && !_noFollowLayerIds.contains(layer.id)) {
+        editor.replaceLayer(
+          index: i,
+          layer: layer.copyWith(
+            background: textBg,
+            color: textFg,
+          ),
+        );
+      }
+    }
+  }
+
   void _changeCanvasColor() {
     setState(() {
       currentCanvasColorIndex =
@@ -312,6 +345,8 @@ class _MovableBackgroundImageExampleState
       _currentCanvasColor =
           _getCanvasColorName(availableCanvasColors[currentCanvasColorIndex]);
     });
+
+    final Color canvasColor = availableCanvasColors[currentCanvasColorIndex];
 
     // Update the canvas by replacing the first layer
     editorKey.currentState?.replaceLayer(
@@ -358,6 +393,7 @@ class _MovableBackgroundImageExampleState
         ),
       ),
     );
+    _updateTextLayersForCanvas(canvasColor);
   }
 
   Size get _editorSize => Size(
