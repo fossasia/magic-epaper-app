@@ -187,6 +187,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
           textAlign: TextAlign.center,
           offset: layoutParams.priceOffset,
           scale: layoutParams.priceScale,
+          followCanvasTheme: false,
         ));
       }
 

@@ -22,9 +22,11 @@ class ColorPickerCustom extends StatefulWidget {
   ///   initColor: Colors.blue,
   /// )
   /// ```
+  final Color initColor;
   const ColorPickerCustom({
     super.key,
     required this.onColorChanged,
+    this.initColor = Colors.black,
   });
 
   /// Callback for handling color changes.
@@ -43,8 +45,14 @@ class ColorPickerCustom extends StatefulWidget {
 }
 
 class _ColorPickerCustomState extends State<ColorPickerCustom> {
-  Color _selectedColor = Colors.black;
+  late Color _selectedColor;
   final List<Color> _colors = getIt<ColorPaletteProvider>().colors;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedColor = widget.initColor;
+  }
 
   @override
   Widget build(BuildContext context) {
