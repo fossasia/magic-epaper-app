@@ -398,11 +398,28 @@ class WaveshareNfcProtocol {
     if (!_isIsoDepOk(await _send([116, 151, 1, 8, 0]))) return false;
     await _sleep(150);
 
+    // The physical axes of the RAM based on the orientation of the panel
+    int xPixels =
+        profile.needsRotation ? profile.payloadRows : profile.displayWidth;
+    int yPixels =
+        profile.needsRotation ? profile.displayWidth : profile.payloadRows;
+
+    int xBytes = (xPixels / 8).ceil();
+
+    // Hardware Offset Management: Only 2.9" displays (Type 2 and 7)
+    // require a +1 byte RAM offset to center the image.
+    int xStart = (profile.type == 2 || profile.type == 7) ? 1 : 0;
+    int xEnd = xStart + xBytes - 1;
+
+    // Y Axis
+    int yMax = yPixels - 1;
+    int yMaxLow = yMax & 0xff;
+    int yMaxHigh = (yMax >> 8) & 0xff;
+
     // Reg 0x01 — Driver output control: gate lines, scanning direction
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 1]))) return false;
-    // Value: 295 gate lines, scan direction = 1 (last 1)
-    // IMPORTANT: number of Y lines for 2.9 inch: 296 pixel = 39 and 1 because 256 x 1 + 39 = 295 (296-1)
-    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 3, 39, 1, 1]))) return false;
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 3, yMaxLow, yMaxHigh, 1])))
+      return false;
 
     // Reg 0x11 — Data entry mode: X/Y increment direction for RAM write
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 17]))) return false;
@@ -411,19 +428,19 @@ class WaveshareNfcProtocol {
 
     // Reg 0x44 — RAM X address start/end (gate window, in bytes)
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 68]))) return false;
-    // Value: start = 1, end = 16 (not 0 and 15) → 16 bytes × 8 bits = 128 columns
-    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 2, 1, 16]))) return false;
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 2, xStart, xEnd])))
+      return false;
 
     // Reg 0x45 — RAM Y address start/end (source window, in lines)
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 69]))) return false;
-    // Value: start = 39, end = 0 → 40 lines (counting down)
-    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 4, 39, 1, 0, 0])))
+    if (!_isIsoDepOk(
+        await _send([116, 154, 0, 14, 4, yMaxLow, yMaxHigh, 0, 0])))
       return false;
 
     // Reg 0x3C — Border waveform control
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 60]))) return false;
-    // Value: 0x05 = follow LUT1 / VSS border
-    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 5]))) return false;
+    // Value: 0x01 = follow LUT1 / VSS border
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 1]))) return false;
 
     // Reg 0x18 — Temperature sensor selection
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 24]))) return false;
@@ -432,19 +449,20 @@ class WaveshareNfcProtocol {
 
     // Reg 0x4E — RAM X address counter (set write cursor to column 0)
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 78]))) return false;
-    // Value: 1
-    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 1]))) return false;
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, xStart]))) return false;
 
     // Reg 0x4F — RAM Y address counter (set write cursor to row 199, top of display)
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 79]))) return false;
-    // Value: 39, 1 high byte
-    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 2, 39, 1]))) return false;
-    await _sleep(100); // wait for panel to stabilize after cursor reset
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 2, yMaxLow, yMaxHigh])))
+      return false;
+    await _sleep(100);
+
+    // Calculate the exact bytes needed by multiplying the packets by their useful length
+    final int totalBytes = profile.packetCount * profile.payloadLength;
 
     // Reg 0x24 — Select black/white RAM for writing
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 36]))) return false;
 
-    final int totalBytes = 4736;
     var offset = 0;
 
     while (offset < totalBytes) {
@@ -452,29 +470,33 @@ class WaveshareNfcProtocol {
       var chunkHeader = [116, 154, 0, 14, chunkSize];
       final payload = imageData.primary.sublist(offset, offset + chunkSize);
       final txBuffer = Uint8List.fromList([...chunkHeader, ...payload]);
-      onProgress?.call((offset * 50) ~/ totalBytes);
+
+      onProgress?.call(
+          (offset * (profile.hasSecondaryFrame ? 50 : 100)) ~/ totalBytes);
       if (!_isIsoDepOk(await _send(txBuffer))) return false;
       offset += chunkSize;
     }
 
-    // Reg 0x26 - secondary RAM (Red)
-    if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 38]))) return false;
+    // Reg 0x26 - Secondary RAM (Red)
+    if (profile.hasSecondaryFrame) {
+      if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 38]))) return false;
 
-    offset = 0;
-    while (offset < totalBytes) {
-      int chunkSize = (totalBytes - offset > 250) ? 250 : totalBytes - offset;
-      var chunkHeader = [116, 154, 0, 14, chunkSize];
+      offset = 0;
+      while (offset < totalBytes) {
+        int chunkSize = (totalBytes - offset > 250) ? 250 : totalBytes - offset;
+        var chunkHeader = [116, 154, 0, 14, chunkSize];
 
-      final payload = imageData.secondary.length > offset
-          ? imageData.secondary.sublist(offset, offset + chunkSize)
-          : imageData.primary.sublist(offset, offset + chunkSize);
+        final payload = imageData.secondary.length > offset
+            ? imageData.secondary.sublist(offset, offset + chunkSize)
+            : imageData.primary.sublist(offset, offset + chunkSize);
 
-      final txBuffer = Uint8List.fromList([...chunkHeader, ...payload]);
+        final txBuffer = Uint8List.fromList([...chunkHeader, ...payload]);
 
-      onProgress?.call(((offset * 50) ~/ totalBytes) + 50);
-      if (!_isIsoDepOk(await _send(txBuffer))) return false;
+        onProgress?.call(((offset * 50) ~/ totalBytes) + 50);
+        if (!_isIsoDepOk(await _send(txBuffer))) return false;
 
-      offset += chunkSize;
+        offset += chunkSize;
+      }
     }
 
     onProgress?.call(99);
