@@ -390,82 +390,90 @@ class WaveshareNfcProtocol {
         await _send([116, 177, 0, 0, 8, 0, 17, 34, 51, 68, 85, 102, 119]);
     if (!_isIsoDepOk(initResp)) return false;
 
-// Software reset (panel off)
+    // Software reset (panel off)
     if (!_isIsoDepOk(await _send([116, 151, 0, 8, 0]))) return false;
     await _sleep(150);
 
-// Software reset (panel on)
+    // Software reset (panel on)
     if (!_isIsoDepOk(await _send([116, 151, 1, 8, 0]))) return false;
     await _sleep(150);
 
-// Reg 0x01 — Driver output control: gate lines, scanning direction
+    // Reg 0x01 — Driver output control: gate lines, scanning direction
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 1]))) return false;
-// Value: 199 (0xC7) gate lines, scan direction = 1
-    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 3, 199, 0, 1])))
-      return false;
+    // Value: 295 gate lines, scan direction = 1 (last 1)
+    // IMPORTANT: number of Y lines for 2.9 inch: 296 pixel = 39 and 1 because 256 x 1 + 39 = 295 (296-1)
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 3, 39, 1, 1]))) return false;
 
-// Reg 0x11 — Data entry mode: X/Y increment direction for RAM write
+    // Reg 0x11 — Data entry mode: X/Y increment direction for RAM write
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 17]))) return false;
-// Value: 0x01 = X increment, Y decrement
+    // Value: 0x01 = X increment, Y decrement
     if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 1]))) return false;
 
-// Reg 0x44 — RAM X address start/end (gate window, in bytes)
+    // Reg 0x44 — RAM X address start/end (gate window, in bytes)
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 68]))) return false;
-// Value: start = 0x00, end = 0x18 (24) → 25 bytes × 8 bits = 200 columns
-    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 2, 0, 24]))) return false;
+    // Value: start = 1, end = 16 (not 0 and 15) → 16 bytes × 8 bits = 128 columns
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 2, 1, 16]))) return false;
 
-// Reg 0x45 — RAM Y address start/end (source window, in lines)
+    // Reg 0x45 — RAM Y address start/end (source window, in lines)
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 69]))) return false;
-// Value: start = 199 (0xC7), end = 0x0000 → 200 lines (counting down)
-    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 4, 199, 0, 0, 0])))
-      return false;
+    // Value: start = 39, end = 0 → 40 lines (counting down)
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 4, 39, 1, 0, 0]))) return false;
 
-// Reg 0x3C — Border waveform control
+    // Reg 0x3C — Border waveform control
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 60]))) return false;
-// Value: 0x05 = follow LUT1 / VSS border
+    // Value: 0x05 = follow LUT1 / VSS border
     if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 5]))) return false;
 
-// Reg 0x18 — Temperature sensor selection
+    // Reg 0x18 — Temperature sensor selection
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 24]))) return false;
-// Value: 0x80 = use internal temperature sensor
+    // Value: 0x80 = use internal temperature sensor
     if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 128]))) return false;
 
-// Reg 0x4E — RAM X address counter (set write cursor to column 0)
+    // Reg 0x4E — RAM X address counter (set write cursor to column 0)
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 78]))) return false;
-// Value: 0x00
-    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 0]))) return false;
+    // Value: 1
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 1]))) return false;
 
-// Reg 0x4F — RAM Y address counter (set write cursor to row 199, top of display)
+    // Reg 0x4F — RAM Y address counter (set write cursor to row 199, top of display)
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 79]))) return false;
-// Value: 199 (0xC7), 0x00 high byte
-    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 2, 199, 0]))) return false;
+    // Value: 39, 1 high byte
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 2, 39, 1]))) return false;
     await _sleep(100); // wait for panel to stabilize after cursor reset
 
-// Reg 0x24 — Select black/white RAM for writing
+    // Reg 0x24 — Select black/white RAM for writing
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 36]))) return false;
 
-    var chunkHeader = [116, 154, 0, 14, 250];
-    for (var i = 0; i < 20; i++) {
-      final offset = i * 250;
-      final payload = imageData.primary.sublist(offset, offset + 250);
-      final txBuffer = Uint8List.fromList([...chunkHeader, ...payload]);
+    final int totalBytes = 4736;
+    var offset = 0;
 
-      onProgress?.call((i * 100) ~/ 40);
+    while (offset < totalBytes) {
+      int chunkSize = (totalBytes - offset > 250) ? 250 : totalBytes - offset;
+      var chunkHeader = [116, 154, 0, 14, chunkSize];
+      final payload = imageData.primary.sublist(offset, offset + chunkSize);
+      final txBuffer = Uint8List.fromList([...chunkHeader, ...payload]);
+      onProgress?.call((offset * 50) ~/ totalBytes);
       if (!_isIsoDepOk(await _send(txBuffer))) return false;
+      offset += chunkSize;
     }
 
+    // Reg 0x26 - secondary RAM (Red)
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 38]))) return false;
 
-    for (var i = 0; i < 20; i++) {
-      final offset = i * 250;
+    offset = 0;
+    while (offset < totalBytes) {
+      int chunkSize = (totalBytes - offset > 250) ? 250 : totalBytes - offset;
+      var chunkHeader = [116, 154, 0, 14, chunkSize];
+
       final payload = imageData.secondary.length > offset
-          ? imageData.secondary.sublist(offset, offset + 250)
-          : imageData.primary.sublist(offset, offset + 250);
+          ? imageData.secondary.sublist(offset, offset + chunkSize)
+          : imageData.primary.sublist(offset, offset + chunkSize);
 
       final txBuffer = Uint8List.fromList([...chunkHeader, ...payload]);
 
-      onProgress?.call(((i + 20) * 100) ~/ 40);
+      onProgress?.call(((offset * 50) ~/ totalBytes) + 50);
       if (!_isIsoDepOk(await _send(txBuffer))) return false;
+
+      offset += chunkSize;
     }
 
     onProgress?.call(99);
