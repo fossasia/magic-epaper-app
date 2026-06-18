@@ -110,15 +110,18 @@ jobs:
           name: android-aab
           path: build/app/outputs/bundle
 
-      - name: Push app in open testing track
-        if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
-        run: |
-          cd ./android
-          git clone --branch=fastlane-android --depth=1 https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} fastlane
-          fastlane uploadToOpenTesting
-          if [[ $? -ne 0 ]]; then
-              exit 1
-          fi
+      # Disabled until the app is published on the Play Store. The open-testing
+      # upload fails on a package-name mismatch, which fails the Android job and
+      # skips publish-app-branch. Re-enable once the app is published.
+      # - name: Push app in open testing track
+      #   if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
+      #   run: |
+      #     cd ./android
+      #     git clone --branch=fastlane-android --depth=1 https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} fastlane
+      #     fastlane uploadToOpenTesting
+      #     if [[ $? -ne 0 ]]; then
+      #         exit 1
+      #     fi
 
   ios:
     name: iOS Flutter Build
@@ -180,6 +183,12 @@ jobs:
           VERSION_NAME: ${{needs.common.outputs.VERSION_NAME}}
           VERSION_CODE: ${{needs.common.outputs.VERSION_CODE}}
 
+      - name: Upload Web App Archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-artifact
+          path: build/magic-epaper-web-app-${{ needs.common.outputs.VERSION_NAME }}.zip
+
   windows:
     name: Windows Flutter Build
     needs: common
@@ -192,6 +201,12 @@ jobs:
           VERSION_NAME: ${{needs.common.outputs.VERSION_NAME}}
           VERSION_CODE: ${{needs.common.outputs.VERSION_CODE}}
 
+      - name: Upload Windows Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-artifact
+          path: build/windows/x64/installer/Release/*.exe
+
   linux:
     name: Linux Flutter Build
     needs: common
@@ -203,6 +218,14 @@ jobs:
         with:
           VERSION_NAME: ${{needs.common.outputs.VERSION_NAME}}
           VERSION_CODE: ${{needs.common.outputs.VERSION_CODE}}
+
+      - name: Upload Linux Packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-artifact
+          path: |
+            *.deb
+            *.rpm
 
   macos:
     name: macOS Flutter Build
@@ -219,6 +242,12 @@ jobs:
         with:
           VERSION_NAME: ${{needs.common.outputs.VERSION_NAME}}
           VERSION_CODE: ${{needs.common.outputs.VERSION_CODE}}
+
+      - name: Upload macOS DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-artifact
+          path: "*.dmg"
 
   publish-app-branch:
     name: Publish artifacts to app branch
