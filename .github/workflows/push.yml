@@ -110,8 +110,10 @@ jobs:
           name: android-aab
           path: build/app/outputs/bundle
 
+      # Non-blocking until the app is published on the Play Store (package-name mismatch).
       - name: Push app in open testing track
         if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
+        continue-on-error: true
         run: |
           cd ./android
           git clone --branch=fastlane-android --depth=1 https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} fastlane
