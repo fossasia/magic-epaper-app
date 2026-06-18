@@ -417,7 +417,8 @@ class WaveshareNfcProtocol {
     // Reg 0x45 — RAM Y address start/end (source window, in lines)
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 69]))) return false;
     // Value: start = 39, end = 0 → 40 lines (counting down)
-    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 4, 39, 1, 0, 0]))) return false;
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 4, 39, 1, 0, 0])))
+      return false;
 
     // Reg 0x3C — Border waveform control
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 60]))) return false;
