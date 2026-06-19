@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
       builder: (context, localeProvider, child) {
         return MaterialApp(
           title: 'Magic ePaper',
+          debugShowCheckedModeBanner: false,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: localeProvider.locale,
