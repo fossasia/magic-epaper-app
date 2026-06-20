@@ -12,6 +12,7 @@ import 'package:magicepaperapp/util/xbm_encoder.dart';
 import 'package:magicepaperapp/view/text_fit_editor.dart';
 import 'package:magicepaperapp/view/widget/image_list.dart';
 import 'package:magicepaperapp/util/orientation_util.dart';
+import 'package:magicepaperapp/util/page_route_util.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/util/epd/display_device.dart';
@@ -685,8 +686,8 @@ class BottomActionMenu extends StatelessWidget {
                 onTap: () async {
                   final canvasBytes =
                       await Navigator.of(context).push<Uint8List>(
-                    MaterialPageRoute(
-                      builder: (context) => MovableBackgroundImageExample(
+                    buildOpaqueSlideRoute(
+                      MovableBackgroundImageExample(
                         width: epd.width,
                         height: epd.height,
                       ),
