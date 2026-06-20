@@ -547,9 +547,13 @@ class _MovableBackgroundImageExampleState
                             Navigator.pop(context, bytes);
                           },
                           stickerEditorCallbacks: StickerEditorCallbacks(
-                            onTapEditSticker: (editor, sticker) =>
-                                _returnToForm(sticker
-                                    .meta?[LayerMetaKeys.elementId] as String?),
+                            onTapEditSticker: (editor, sticker) {
+                              final elementId = sticker
+                                  .meta?[LayerMetaKeys.elementId] as String?;
+                              if (elementId != null) {
+                                _returnToForm(elementId);
+                              }
+                            },
                           ),
                           mainEditorCallbacks: MainEditorCallbacks(
                             helperLines: const HelperLinesCallbacks(),
