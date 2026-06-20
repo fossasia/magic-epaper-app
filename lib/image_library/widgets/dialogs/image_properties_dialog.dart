@@ -37,12 +37,14 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
     try {
       final properties =
           await _imageOperationsService.loadImageProperties(widget.image);
+      if (!mounted) return;
       setState(() {
         _imageProperties = properties;
         _isLoadingProperties = false;
       });
     } catch (e) {
       AppLogger.error('Error in dialog loading image properties: $e');
+      if (!mounted) return;
       setState(() {
         _isLoadingProperties = false;
       });
