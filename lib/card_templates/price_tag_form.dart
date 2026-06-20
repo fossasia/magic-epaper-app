@@ -11,6 +11,7 @@ import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
 import 'package:magicepaperapp/card_templates/price_tag_card_widget.dart';
 import 'package:magicepaperapp/card_templates/price_tag_model.dart';
+import 'package:magicepaperapp/util/page_route_util.dart';
 import 'package:magicepaperapp/util/template_util.dart';
 import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
 import 'package:magicepaperapp/card_templates/util/barcode_scanner_util.dart';
@@ -219,8 +220,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
       }
 
       final Uint8List? bytes = await Navigator.of(context).push<Uint8List>(
-        MaterialPageRoute(
-          builder: (context) => MovableBackgroundImageExample(
+        buildOpaqueSlideRoute(
+          MovableBackgroundImageExample(
             width: widget.width,
             height: widget.height,
             initialLayers: layers,
