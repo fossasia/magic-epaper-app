@@ -9,6 +9,7 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:magicepaperapp/util/page_route_util.dart';
 import 'package:magicepaperapp/util/template_util.dart';
 import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
 import 'package:magicepaperapp/card_templates/util/barcode_scanner_util.dart';
@@ -138,11 +139,10 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
             color: Colors.black,
           ),
           text: _employeeData.companyName,
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
           textAlign: TextAlign.center,
           offset: layoutParams.companyNameOffset,
           scale: layoutParams.companyNameScale,
+          followCanvasTheme: true,
         ));
       }
 
@@ -150,11 +150,10 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.namePrefix}${_employeeData.name}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['name']!,
           scale: layoutParams.textFieldScale,
+          followCanvasTheme: true,
         ));
       }
 
@@ -162,11 +161,10 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.positionPrefix}${_employeeData.position}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['position']!,
           scale: layoutParams.textFieldScale,
+          followCanvasTheme: true,
         ));
       }
 
@@ -174,11 +172,10 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.divisionPrefix}${_employeeData.division}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['division']!,
           scale: layoutParams.textFieldScale,
+          followCanvasTheme: true,
         ));
       }
 
@@ -186,11 +183,10 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.idPrefix}${_employeeData.idNumber}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['idNumber']!,
           scale: layoutParams.textFieldScale,
+          followCanvasTheme: true,
         ));
       }
 
@@ -210,8 +206,8 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
       }
 
       final result = await Navigator.of(context).push<Uint8List>(
-        MaterialPageRoute(
-          builder: (context) => MovableBackgroundImageExample(
+        buildOpaqueSlideRoute(
+          MovableBackgroundImageExample(
             width: widget.width,
             height: widget.height,
             initialLayers: layers,

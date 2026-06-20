@@ -65,7 +65,14 @@ class _MovableBackgroundImageExampleState
   late double _canvasWidth;
   late double _canvasHeight;
 
+  Future<Uint8List>? _whiteBoardFuture;
+  bool _readyToBuildEditor = false;
+  Animation<double>? _routeAnimation;
+  bool _editorReady = false;
+
   final _bottomTextStyle = const TextStyle(fontSize: 10.0, color: Colors.white);
+
+  final Set<String> _noFollowLayerIds = {};
 
   @override
   void initState() {
@@ -82,7 +89,29 @@ class _MovableBackgroundImageExampleState
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_readyToBuildEditor || _routeAnimation != null) return;
+    final animation = ModalRoute.of(context)?.animation;
+    if (animation == null || animation.status == AnimationStatus.completed) {
+      _readyToBuildEditor = true;
+    } else {
+      _routeAnimation = animation;
+      animation.addStatusListener(_handleRouteAnimation);
+    }
+  }
+
+  void _handleRouteAnimation(AnimationStatus status) {
+    if (status == AnimationStatus.completed) {
+      _routeAnimation?.removeStatusListener(_handleRouteAnimation);
+      _routeAnimation = null;
+      if (mounted) setState(() => _readyToBuildEditor = true);
+    }
+  }
+
+  @override
   void dispose() {
+    _routeAnimation?.removeStatusListener(_handleRouteAnimation);
     _bottomBarScrollCtrl.dispose();
     super.dispose();
   }
@@ -93,26 +122,30 @@ class _MovableBackgroundImageExampleState
     if (editor == null) return;
     for (final layer in layers) {
       if (layer.text != null) {
-        editor.addLayer(
-          TextLayer(
-            maxTextWidth: _canvasWidth - 70,
-            textStyle: layer.textStyle,
-            align: layer.textAlign ?? TextAlign.left,
-            offset: layer.offset,
-            scale: layer.scale,
-            rotation: layer.rotation,
-            color: layer.textColor ?? Colors.black,
-            background: layer.backgroundColor ?? Colors.white,
-            colorMode: LayerBackgroundMode.backgroundAndColor,
-            text: layer.text!,
-            interaction: LayerInteraction(
-              enableEdit: true,
-              enableMove: true,
-              enableRotate: true,
-              enableScale: true,
-              enableSelection: true,
-            ),
+        final textLayer = TextLayer(
+          maxTextWidth: _canvasWidth - 70,
+          textStyle: layer.textStyle,
+          align: layer.textAlign ?? TextAlign.left,
+          offset: layer.offset,
+          scale: layer.scale,
+          rotation: layer.rotation,
+          color: layer.textColor ?? Colors.black,
+          background: layer.backgroundColor ?? Colors.white,
+          colorMode: LayerBackgroundMode.backgroundAndColor,
+          text: layer.text!,
+          interaction: LayerInteraction(
+            enableEdit: true,
+            enableMove: true,
+            enableRotate: true,
+            enableScale: true,
+            enableSelection: true,
           ),
+        );
+        if (!layer.followCanvasTheme) {
+          _noFollowLayerIds.add(textLayer.id);
+        }
+        editor.addLayer(
+          textLayer,
           blockSelectLayer: true,
         );
       } else if (layer.widget != null) {
@@ -304,6 +337,33 @@ class _MovableBackgroundImageExampleState
     return 'white';
   }
 
+  bool _isDark(Color c) => c.computeLuminance() < 0.5;
+
+  void _updateTextLayersForCanvas(Color canvasColor) {
+    final editor = editorKey.currentState;
+    if (editor == null) return;
+
+    final isDark = _isDark(canvasColor);
+    final textBg = isDark ? Colors.black : Colors.white;
+    final textFg = isDark ? Colors.white : Colors.black;
+
+    final layers = editor.activeLayers;
+
+    for (int i = 0; i < layers.length; i++) {
+      final layer = layers[i];
+
+      if (layer is TextLayer && !_noFollowLayerIds.contains(layer.id)) {
+        editor.replaceLayer(
+          index: i,
+          layer: layer.copyWith(
+            background: textBg,
+            color: textFg,
+          ),
+        );
+      }
+    }
+  }
+
   void _changeCanvasColor() {
     setState(() {
       currentCanvasColorIndex =
@@ -312,6 +372,8 @@ class _MovableBackgroundImageExampleState
       _currentCanvasColor =
           _getCanvasColorName(availableCanvasColors[currentCanvasColorIndex]);
     });
+
+    final Color canvasColor = availableCanvasColors[currentCanvasColorIndex];
 
     // Update the canvas by replacing the first layer
     editorKey.currentState?.replaceLayer(
@@ -358,6 +420,7 @@ class _MovableBackgroundImageExampleState
         ),
       ),
     );
+    _updateTextLayersForCanvas(canvasColor);
   }
 
   Size get _editorSize => Size(
@@ -420,6 +483,7 @@ class _MovableBackgroundImageExampleState
   @override
   Widget build(BuildContext context) {
     _calculateCanvasDimensions(MediaQuery.sizeOf(context));
+    _whiteBoardFuture ??= _loadAndResizeWhiteBoard();
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: const SystemUiOverlayStyle(
           statusBarColor: Colors.black,
@@ -432,19 +496,22 @@ class _MovableBackgroundImageExampleState
             body: Stack(children: [
               Positioned.fill(
                   child: LayoutBuilder(builder: (context, constraints) {
-                return CustomPaint(
-                  size: Size(constraints.maxWidth, constraints.maxHeight),
-                  painter: const PixelTransparentPainter(
-                    primary: Colors.white,
-                    secondary: Color(0xFFE2E2E2),
-                  ),
-                  child: FutureBuilder<Uint8List>(
-                    future: _loadAndResizeWhiteBoard(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      return ProImageEditor.memory(
+                return FutureBuilder<Uint8List>(
+                  future: _whiteBoardFuture,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || !_readyToBuildEditor) {
+                      return const ColoredBox(
+                        color: Colors.white,
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
+                    return CustomPaint(
+                      size: Size(constraints.maxWidth, constraints.maxHeight),
+                      painter: const PixelTransparentPainter(
+                        primary: Colors.white,
+                        secondary: Color(0xFFE2E2E2),
+                      ),
+                      child: ProImageEditor.memory(
                         snapshot.data!,
                         key: editorKey,
                         callbacks: ProImageEditorCallbacks(
@@ -522,6 +589,11 @@ class _MovableBackgroundImageExampleState
                               if (widget.initialLayers != null) {
                                 addInitialLayers(widget.initialLayers!);
                               }
+
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                if (mounted)
+                                  setState(() => _editorReady = true);
+                              });
                             },
                           ),
                         ),
@@ -666,11 +738,18 @@ class _MovableBackgroundImageExampleState
                             },
                           ),
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 );
               })),
+              if (!_editorReady)
+                const Positioned.fill(
+                  child: ColoredBox(
+                    color: Colors.white,
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                ),
               Positioned(
                 top: 0,
                 left: 0,
