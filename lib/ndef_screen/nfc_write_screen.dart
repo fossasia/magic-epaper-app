@@ -165,6 +165,7 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
   Future<void> _writeAppLauncher() async {
     if (_selectedApp != null) {
       await _nfcController.writeAppLauncherRecord(_selectedApp!.packageName);
+      if (!mounted) return;
       _handleWriteResult();
       if (_nfcController.result.contains(appLocalizations.successfully)) {
         setState(() {
@@ -249,10 +250,12 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
                       setState(() => _vCardData = vCardData),
                   onWriteText: () async {
                     await _nfcController.writeTextRecord(_textValue);
+                    if (!mounted) return;
                     _handleWriteResult();
                   },
                   onWriteUrl: () async {
                     await _nfcController.writeUrlRecord(_urlValue);
+                    if (!mounted) return;
                     _handleWriteResult();
                   },
                   onWriteWifi: () async {
@@ -260,11 +263,13 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
                       _wifiSSIDValue,
                       _wifiPasswordValue,
                     );
+                    if (!mounted) return;
                     _handleWriteResult();
                   },
                   onWriteVCard: () async {
                     if (_vCardData != null) {
                       await _nfcController.writeVCardRecord(_vCardData!);
+                      if (!mounted) return;
                       _handleWriteResult();
                     }
                   },
@@ -276,6 +281,7 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
                       _wifiPasswordValue,
                       _vCardData,
                     );
+                    if (!mounted) return;
                     _handleWriteResult();
                   },
                 ),
