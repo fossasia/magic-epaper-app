@@ -52,9 +52,3 @@ runs:
           "magic-epaper-${{ inputs.VERSION_NAME }}+${{ inputs.VERSION_CODE }}.dmg" \
           "magicepaperapp.app"
         cp "magic-epaper-${{ inputs.VERSION_NAME }}+${{ inputs.VERSION_CODE }}.dmg" ../../../../../
-
-    - name: Store macOS Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: macos-artifact
-        path: "*.dmg"
