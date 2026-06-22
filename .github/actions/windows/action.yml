@@ -53,9 +53,3 @@ runs:
           (Get-Content $issPath) | Where-Object { $_ -notmatch 'Icelandic\.isl' } | Set-Content $issPath
         }
         & "$iscc" /O+ "build\windows\x64\installer\Release\inno-script.iss"
-
-    - name: Store Windows Installer Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: windows-artifact
-        path: build/windows/x64/installer/Release/*.exe
