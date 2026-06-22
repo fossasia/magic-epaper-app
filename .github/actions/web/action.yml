@@ -34,9 +34,3 @@ runs:
       run: |
         cd build/web
         zip -r ../magic-epaper-web-app-${{ inputs.VERSION_NAME }}.zip .
-
-    - name: Store Archive
-      uses: actions/upload-artifact@v4
-      with:
-        name: web-artifact
-        path: build/magic-epaper-web-app-${{ inputs.VERSION_NAME }}.zip
