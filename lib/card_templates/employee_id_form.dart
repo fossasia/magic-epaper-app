@@ -9,6 +9,7 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:magicepaperapp/util/page_route_util.dart';
 import 'package:magicepaperapp/util/template_util.dart';
 import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
 import 'package:magicepaperapp/card_templates/util/barcode_scanner_util.dart';
@@ -34,6 +35,15 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
   final _divisionController = TextEditingController();
   final _positionController = TextEditingController();
   final _qrDataController = TextEditingController();
+
+  final Map<String, FocusNode> _fieldFocusNodes = {
+    'companyName': FocusNode(),
+    'name': FocusNode(),
+    'position': FocusNode(),
+    'division': FocusNode(),
+    'idNumber': FocusNode(),
+    'qr': FocusNode(),
+  };
 
   File? _profileImage;
   bool _isGenerating = false;
@@ -75,6 +85,10 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
     _divisionController.dispose();
     _positionController.dispose();
     _qrDataController.dispose();
+
+    for (final node in _fieldFocusNodes.values) {
+      node.dispose();
+    }
     super.dispose();
   }
 
@@ -100,6 +114,18 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
     }
   }
 
+  void _handleEditRequest(String elementId) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      FocusScope.of(context).unfocus();
+      if (elementId == 'profileImage') {
+        _pickImage();
+        return;
+      }
+      _fieldFocusNodes[elementId]?.requestFocus();
+    });
+  }
+
   Future<void> _scanQrData() async {
     final code = await scanCode(context);
     if (!mounted) return;
@@ -109,6 +135,8 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
   }
 
   void _submitForm() async {
+    FocusScope.of(context).unfocus();
+
     setState(() {
       _isGenerating = true;
     });
@@ -127,6 +155,8 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
           ),
           offset: layoutParams.profileImageOffset,
           scale: layoutParams.profileImageScale,
+          kind: LayerKind.image,
+          elementId: 'profileImage',
         ));
       }
 
@@ -142,6 +172,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
           offset: layoutParams.companyNameOffset,
           scale: layoutParams.companyNameScale,
           followCanvasTheme: true,
+          elementId: 'companyName',
         ));
       }
 
@@ -153,6 +184,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
           offset: layoutParams.textOffsets['name']!,
           scale: layoutParams.textFieldScale,
           followCanvasTheme: true,
+          elementId: 'name',
         ));
       }
 
@@ -164,6 +196,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
           offset: layoutParams.textOffsets['position']!,
           scale: layoutParams.textFieldScale,
           followCanvasTheme: true,
+          elementId: 'position',
         ));
       }
 
@@ -175,6 +208,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
           offset: layoutParams.textOffsets['division']!,
           scale: layoutParams.textFieldScale,
           followCanvasTheme: true,
+          elementId: 'division',
         ));
       }
 
@@ -186,6 +220,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
           offset: layoutParams.textOffsets['idNumber']!,
           scale: layoutParams.textFieldScale,
           followCanvasTheme: true,
+          elementId: 'idNumber',
         ));
       }
 
@@ -201,12 +236,14 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
           ),
           offset: layoutParams.qrCodeOffset,
           scale: layoutParams.qrCodeScale,
+          kind: LayerKind.barcode,
+          elementId: 'qr',
         ));
       }
 
-      final result = await Navigator.of(context).push<Uint8List>(
-        MaterialPageRoute(
-          builder: (context) => MovableBackgroundImageExample(
+      final result = await Navigator.of(context).push<Object>(
+        buildOpaqueSlideRoute(
+          MovableBackgroundImageExample(
             width: widget.width,
             height: widget.height,
             initialLayers: layers,
@@ -214,11 +251,13 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         ),
       );
 
-      if (result != null) {
-        if (!mounted) return;
+      if (!mounted) return;
+      if (result is Uint8List) {
         Navigator.of(context)
           ..pop()
           ..pop(result);
+      } else if (result is String) {
+        _handleEditRequest(result);
       }
     } finally {
       setState(() {
@@ -305,6 +344,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         const SizedBox(height: 20),
                         _buildTextFormField(
                           controller: _companyNameController,
+                          focusNode: _fieldFocusNodes['companyName'],
                           label: appLocalizations.companyName,
                           hint: appLocalizations.enterCompanyName,
                           icon: Icons.business_outlined,
@@ -312,6 +352,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _nameController,
+                          focusNode: _fieldFocusNodes['name'],
                           label: appLocalizations.name,
                           hint: appLocalizations.enterEmployeeName,
                           icon: Icons.person_outline,
@@ -319,6 +360,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _positionController,
+                          focusNode: _fieldFocusNodes['position'],
                           label: appLocalizations.position,
                           hint: appLocalizations.enterJobPosition,
                           icon: Icons.work_outline,
@@ -326,6 +368,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _divisionController,
+                          focusNode: _fieldFocusNodes['division'],
                           label: appLocalizations.division,
                           hint: appLocalizations.enterDepartment,
                           icon: Icons.groups_outlined,
@@ -333,6 +376,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _idNumberController,
+                          focusNode: _fieldFocusNodes['idNumber'],
                           label: appLocalizations.idNumber,
                           hint: appLocalizations.enterUniqueId,
                           icon: Icons.badge_outlined,
@@ -340,6 +384,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _qrDataController,
+                          focusNode: _fieldFocusNodes['qr'],
                           label: appLocalizations.qrCodeData,
                           hint: appLocalizations.enterQrCodeData,
                           icon: Icons.qr_code_outlined,
@@ -420,6 +465,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
     int maxLines = 1,
     VoidCallback? onScan,
     int? maxLength = 25,
+    FocusNode? focusNode,
   }) {
     return Theme(
       data: Theme.of(context).copyWith(
@@ -435,6 +481,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
       ),
       child: TextFormField(
         controller: controller,
+        focusNode: focusNode,
         validator: validator,
         maxLines: maxLines,
         maxLength: maxLength,

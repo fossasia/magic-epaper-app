@@ -11,6 +11,7 @@ import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
 import 'package:magicepaperapp/card_templates/price_tag_card_widget.dart';
 import 'package:magicepaperapp/card_templates/price_tag_model.dart';
+import 'package:magicepaperapp/util/page_route_util.dart';
 import 'package:magicepaperapp/util/template_util.dart';
 import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
 import 'package:magicepaperapp/card_templates/util/barcode_scanner_util.dart';
@@ -36,6 +37,14 @@ class _PriceTagFormState extends State<PriceTagForm> {
   final _currencyController = TextEditingController();
   final _quantityController = TextEditingController();
   final _barcodeController = TextEditingController();
+
+  final Map<String, FocusNode> _fieldFocusNodes = {
+    'productName': FocusNode(),
+    'productDescription': FocusNode(),
+    'price': FocusNode(),
+    'quantity': FocusNode(),
+    'barcode': FocusNode(),
+  };
 
   File? _productImage;
   Currency? _selectedCurrency;
@@ -78,6 +87,10 @@ class _PriceTagFormState extends State<PriceTagForm> {
     _currencyController.dispose();
     _quantityController.dispose();
     _barcodeController.dispose();
+
+    for (final node in _fieldFocusNodes.values) {
+      node.dispose();
+    }
     super.dispose();
   }
 
@@ -116,6 +129,18 @@ class _PriceTagFormState extends State<PriceTagForm> {
     );
   }
 
+  void _handleEditRequest(String elementId) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      FocusScope.of(context).unfocus();
+      if (elementId == 'productImage') {
+        _pickProductImage();
+        return;
+      }
+      _fieldFocusNodes[elementId]?.requestFocus();
+    });
+  }
+
   Future<void> _scanBarcode() async {
     final code = await scanCode(context);
     if (!mounted) return;
@@ -125,6 +150,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
   }
 
   void _submitForm() async {
+    FocusScope.of(context).unfocus();
+
     setState(() {
       _isGenerating = true;
     });
@@ -144,6 +171,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
           ),
           offset: layoutParams.productImageOffset,
           scale: layoutParams.productImageScale,
+          kind: LayerKind.image,
+          elementId: 'productImage',
         ));
       }
 
@@ -158,6 +187,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
           textAlign: TextAlign.center,
           offset: layoutParams.productNameOffset,
           scale: layoutParams.productNameScale,
+          elementId: 'productName',
         ));
         if (_data.productDescription.isNotEmpty) {
           layers.add(LayerSpec.text(
@@ -171,6 +201,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
             textAlign: TextAlign.center,
             offset: layoutParams.productDescriptionOffset,
             scale: layoutParams.productDescriptionScale,
+            elementId: 'productDescription',
           ));
         }
       }
@@ -187,6 +218,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
           offset: layoutParams.priceOffset,
           scale: layoutParams.priceScale,
           followCanvasTheme: false,
+          elementId: 'price',
         ));
       }
 
@@ -199,6 +231,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
           textAlign: TextAlign.center,
           offset: layoutParams.quantityOffset,
           scale: layoutParams.quantityScale,
+          elementId: 'quantity',
         ));
       }
 
@@ -215,12 +248,14 @@ class _PriceTagFormState extends State<PriceTagForm> {
           ),
           offset: layoutParams.barcodeOffset,
           scale: layoutParams.barcodeScale,
+          kind: LayerKind.barcode,
+          elementId: 'barcode',
         ));
       }
 
-      final Uint8List? bytes = await Navigator.of(context).push<Uint8List>(
-        MaterialPageRoute(
-          builder: (context) => MovableBackgroundImageExample(
+      final Object? result = await Navigator.of(context).push<Object>(
+        buildOpaqueSlideRoute(
+          MovableBackgroundImageExample(
             width: widget.width,
             height: widget.height,
             initialLayers: layers,
@@ -228,11 +263,13 @@ class _PriceTagFormState extends State<PriceTagForm> {
         ),
       );
 
-      if (bytes != null) {
-        if (!mounted) return;
+      if (!mounted) return;
+      if (result is Uint8List) {
         Navigator.of(context)
           ..pop()
-          ..pop(bytes);
+          ..pop(result);
+      } else if (result is String) {
+        _handleEditRequest(result);
       }
     } finally {
       setState(() {
@@ -319,6 +356,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                         const SizedBox(height: 20),
                         _buildTextFormField(
                           controller: _productNameController,
+                          focusNode: _fieldFocusNodes['productName'],
                           label: appLocalizations.productName,
                           hint: appLocalizations.productNameHint,
                           icon: Icons.inventory_2_outlined,
@@ -326,6 +364,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                         const SizedBox(height: 12),
                         _buildTextFormField(
                           controller: _productDescriptionController,
+                          focusNode: _fieldFocusNodes['productDescription'],
                           label: 'Description',
                           hint: '',
                           icon: Icons.description_outlined,
@@ -351,6 +390,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                               flex: 1,
                               child: _buildTextFormField(
                                 controller: _priceController,
+                                focusNode: _fieldFocusNodes['price'],
                                 label: appLocalizations.price,
                                 hint: appLocalizations.priceHint,
                                 icon: Icons.payments_outlined,
@@ -362,6 +402,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _quantityController,
+                          focusNode: _fieldFocusNodes['quantity'],
                           label: appLocalizations.quantitySize,
                           hint: appLocalizations.quantitySizeHint,
                           icon: Icons.straighten_outlined,
@@ -369,6 +410,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _barcodeController,
+                          focusNode: _fieldFocusNodes['barcode'],
                           label: appLocalizations.barcodeData,
                           hint: appLocalizations.barcodeDataHint,
                           icon: Icons.qr_code_scanner_outlined,
@@ -451,6 +493,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
     int? maxLength = 25,
     bool readOnly = false,
     VoidCallback? onTap,
+    FocusNode? focusNode,
   }) {
     return Theme(
       data: Theme.of(context).copyWith(
@@ -466,6 +509,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
       ),
       child: TextFormField(
         controller: controller,
+        focusNode: focusNode,
         validator: validator,
         keyboardType: keyboardType,
         maxLines: maxLines,

@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "id": "employee_id",
+  "title": "Employee ID Card",
+  "description": "Professional employee identification card",
+  "icon": "badge_outlined",
+  "color": "blue",
+  "elements": [
+    {
+      "id": "profileImage",
+      "type": "image",
+      "label": "Profile Photo",
+      "props": {
+        "width": 200,
+        "height": 200,
+        "shape": "oval"
+      }
+    },
+    {
+      "id": "companyName",
+      "type": "text",
+      "label": "Company Name",
+      "props": {
+        "bold": true,
+        "align": "center",
+        "color": "black"
+      }
+    },
+    {
+      "id": "name",
+      "type": "text",
+      "label": "Name",
+      "props": {
+        "prefixKey": "namePrefix",
+        "align": "left",
+        "color": "black"
+      }
+    },
+    {
+      "id": "position",
+      "type": "text",
+      "label": "Position",
+      "props": {
+        "prefixKey": "positionPrefix",
+        "align": "left",
+        "color": "black"
+      }
+    },
+    {
+      "id": "division",
+      "type": "text",
+      "label": "Division",
+      "props": {
+        "prefixKey": "divisionPrefix",
+        "align": "left",
+        "color": "black"
+      }
+    },
+    {
+      "id": "idNumber",
+      "type": "text",
+      "label": "ID Number",
+      "props": {
+        "prefixKey": "idPrefix",
+        "align": "left",
+        "color": "black"
+      }
+    },
+    {
+      "id": "qr",
+      "type": "barcode",
+      "label": "QR Code Data",
+      "props": {
+        "barcodeName": "QR-Code"
+      }
+    }
+  ]
+}

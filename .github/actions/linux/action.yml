@@ -85,11 +85,3 @@ runs:
           -v ${{ inputs.VERSION_NAME }} \
           -C linux_package \
           .
-
-    - name: Store Packages
-      uses: actions/upload-artifact@v4
-      with:
-        name: linux-artifact
-        path: |
-          *.deb
-          *.rpm
