@@ -6,7 +6,7 @@ import 'package:magicepaperapp/provider/getitlocator.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
-class ImageSaveDialog extends StatelessWidget {
+class ImageSaveDialog extends StatefulWidget {
   final Uint8List imageData;
   final String filterName;
   final Function(String) onSave;
@@ -19,11 +19,28 @@ class ImageSaveDialog extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final nameController = TextEditingController(
+  State<ImageSaveDialog> createState() => _ImageSaveDialogState();
+}
+
+class _ImageSaveDialogState extends State<ImageSaveDialog> {
+  late final TextEditingController _nameController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(
       text: 'Filtered_${DateTime.now().millisecondsSinceEpoch}',
     );
+  }
 
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
       child: SingleChildScrollView(
@@ -49,11 +66,11 @@ class ImageSaveDialog extends StatelessWidget {
               const SizedBox(height: 16),
               _buildImagePreview(),
               const SizedBox(height: 16),
-              _buildTextFieldSection(nameController),
+              _buildTextFieldSection(),
               const SizedBox(height: 24),
               _buildFilterInfoChip(),
               const SizedBox(height: 20),
-              _buildActionButtons(context, nameController),
+              _buildActionButtons(context),
             ],
           ),
         ),
@@ -117,14 +134,14 @@ class ImageSaveDialog extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: Image.memory(
-          imageData,
+          widget.imageData,
           fit: BoxFit.contain,
         ),
       ),
     );
   }
 
-  Widget _buildTextFieldSection(TextEditingController nameController) {
+  Widget _buildTextFieldSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -138,7 +155,7 @@ class ImageSaveDialog extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         TextField(
-          controller: nameController,
+          controller: _nameController,
           autofocus: true,
           maxLength: 50,
           decoration: InputDecoration(
@@ -171,7 +188,7 @@ class ImageSaveDialog extends StatelessWidget {
             ),
           ),
           textCapitalization: TextCapitalization.words,
-          onSubmitted: (value) => _handleSave(nameController),
+          onSubmitted: (value) => _handleSave(),
         ),
       ],
     );
@@ -195,7 +212,7 @@ class ImageSaveDialog extends StatelessWidget {
           ),
           const SizedBox(width: 6),
           Text(
-            '${appLocalizations.filterApplied} $filterName',
+            '${appLocalizations.filterApplied} ${widget.filterName}',
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
@@ -207,8 +224,7 @@ class ImageSaveDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons(
-      BuildContext context, TextEditingController nameController) {
+  Widget _buildActionButtons(BuildContext context) {
     return Row(
       children: [
         Expanded(
@@ -226,7 +242,7 @@ class ImageSaveDialog extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: ElevatedButton(
-            onPressed: () => _handleSave(nameController),
+            onPressed: () => _handleSave(),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -247,9 +263,9 @@ class ImageSaveDialog extends StatelessWidget {
     );
   }
 
-  void _handleSave(TextEditingController nameController) {
-    if (nameController.text.trim().isNotEmpty) {
-      onSave(nameController.text.trim());
+  void _handleSave() {
+    if (_nameController.text.trim().isNotEmpty) {
+      widget.onSave(_nameController.text.trim());
     }
   }
 }
