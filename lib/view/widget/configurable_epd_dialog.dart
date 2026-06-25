@@ -308,6 +308,7 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
             ));
 
     if (pickedColor != null) {
+      if (!mounted) return;
       setState(() {
         _currentColors.add(pickedColor);
       });
