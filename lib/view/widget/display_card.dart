@@ -16,16 +16,25 @@ class DisplayCard extends StatelessWidget {
   final VoidCallback onTap;
 
   final double? width;
+  final bool fill;
 
   static const double _referenceWidth = 300.0;
 
-  const DisplayCard({
+  const DisplayCard.fill({
     super.key,
     required this.display,
     required this.isSelected,
     required this.onTap,
-    this.width,
-  });
+  })  : width = null,
+        fill = true;
+
+  const DisplayCard.scaled({
+    super.key,
+    required this.display,
+    required this.isSelected,
+    required this.onTap,
+    required this.width,
+  }) : fill = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +49,6 @@ class DisplayCard extends StatelessWidget {
 
     final chips = display.displayChips;
 
-    final bool fill = width == null;
     final double scale =
         fill ? 1.0 : (width! / _referenceWidth).clamp(0.5, 1.0);
 

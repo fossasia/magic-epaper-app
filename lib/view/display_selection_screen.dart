@@ -115,33 +115,43 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
 
   Widget _buildDisplayCard(
       BuildContext context, DisplayDevice display, double? width) {
-    return DisplayCard(
-      key: Key(display.modelId),
-      display: display,
-      isSelected: false,
-      width: width,
-      onTap: () {
-        context.read<ColorPaletteProvider>().updateColors(display.colors);
+    void onTap() {
+      context.read<ColorPaletteProvider>().updateColors(display.colors);
 
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                _LoadingWrapper(
-              child: ImageEditor(
-                isExportOnly: false,
-                device: display,
-              ),
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              _LoadingWrapper(
+            child: ImageEditor(
+              isExportOnly: false,
+              device: display,
             ),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-            transitionDuration: const Duration(milliseconds: 300),
           ),
-        );
-      },
-    );
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+          transitionDuration: const Duration(milliseconds: 300),
+        ),
+      );
+    }
+
+    final key = Key(display.modelId);
+
+    return width == null
+        ? DisplayCard.fill(
+            key: key,
+            display: display,
+            isSelected: false,
+            onTap: onTap,
+          )
+        : DisplayCard.scaled(
+            key: key,
+            display: display,
+            isSelected: false,
+            width: width,
+            onTap: onTap,
+          );
   }
 
   @override
