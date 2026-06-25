@@ -34,6 +34,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   ];
 
   static const double _scrollbarGutter = 16.0;
+  static const double _mobileBreakpoint = 600.0;
 
   final ScrollController _scrollController = ScrollController();
 
@@ -43,8 +44,77 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
     super.dispose();
   }
 
+  Widget _buildMobileGrid(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10.0, 14, 16.0, 16.0),
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.6,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+        ),
+        itemCount: displays.length,
+        itemBuilder: (context, index) {
+          return _buildDisplayCard(context, displays[index], null);
+        },
+      ),
+    );
+  }
+
+  Widget _buildResponsiveGrid(
+      BuildContext context, BoxConstraints constraints) {
+    const double horizontalPadding = 16.0;
+    const double spacing = 12.0;
+    const double targetCardWidth = 340.0;
+
+    final double available =
+        constraints.maxWidth - (horizontalPadding * 2) - _scrollbarGutter;
+    final int columns = (available / targetCardWidth).floor().clamp(1, 4);
+    final double cardWidth = (available - spacing * (columns - 1)) / columns;
+
+    return Scrollbar(
+      controller: _scrollController,
+      thumbVisibility: true,
+      child: SingleChildScrollView(
+        controller: _scrollController,
+        padding: const EdgeInsets.fromLTRB(
+          horizontalPadding,
+          14.0,
+          horizontalPadding + _scrollbarGutter,
+          16.0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (int row = 0; row < displays.length; row += columns)
+              Padding(
+                padding: const EdgeInsets.only(bottom: spacing),
+                child: IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (int col = 0; col < columns; col++) ...[
+                        if (col > 0) const SizedBox(width: spacing),
+                        Expanded(
+                          child: (row + col) < displays.length
+                              ? _buildDisplayCard(
+                                  context, displays[row + col], cardWidth)
+                              : const SizedBox.shrink(),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildDisplayCard(
-      BuildContext context, DisplayDevice display, double width) {
+      BuildContext context, DisplayDevice display, double? width) {
     return DisplayCard(
       key: Key(display.modelId),
       display: display,
@@ -134,56 +204,10 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
             bottom: true,
             child: LayoutBuilder(
               builder: (context, constraints) {
-                const double horizontalPadding = 16.0;
-                const double spacing = 12.0;
-                const double targetCardWidth = 340.0;
-
-                final double available = constraints.maxWidth -
-                    (horizontalPadding * 2) -
-                    _scrollbarGutter;
-                final int columns =
-                    (available / targetCardWidth).floor().clamp(1, 4);
-                final double cardWidth =
-                    (available - spacing * (columns - 1)) / columns;
-
-                return Scrollbar(
-                  controller: _scrollController,
-                  thumbVisibility: true,
-                  child: SingleChildScrollView(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.fromLTRB(
-                      horizontalPadding,
-                      14.0,
-                      horizontalPadding + _scrollbarGutter,
-                      16.0,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        for (int row = 0; row < displays.length; row += columns)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: spacing),
-                            child: IntrinsicHeight(
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  for (int col = 0; col < columns; col++) ...[
-                                    if (col > 0) const SizedBox(width: spacing),
-                                    Expanded(
-                                      child: (row + col) < displays.length
-                                          ? _buildDisplayCard(context,
-                                              displays[row + col], cardWidth)
-                                          : const SizedBox.shrink(),
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                );
+                if (constraints.maxWidth < _mobileBreakpoint) {
+                  return _buildMobileGrid(context);
+                }
+                return _buildResponsiveGrid(context, constraints);
               },
             ),
           ),
