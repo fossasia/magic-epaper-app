@@ -15,11 +15,16 @@ class DisplayCard extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
+  final double width;
+
+  static const double _referenceWidth = 300.0;
+
   const DisplayCard({
     super.key,
     required this.display,
     required this.isSelected,
     required this.onTap,
+    this.width = _referenceWidth,
   });
 
   @override
@@ -35,44 +40,48 @@ class DisplayCard extends StatelessWidget {
 
     final chips = display.displayChips;
 
+    final double scale = (width / _referenceWidth).clamp(0.5, 1.0);
+
     return InkWell(
       onTap: onTap,
       highlightColor: Colors.redAccent,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(12 * scale),
       splashColor: Colors.redAccent.withAlpha(51),
       child: Card(
         color: Colors.white,
         elevation: isSelected ? 4 : 1,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12 * scale),
           side: BorderSide(
             color: isSelected ? colorPrimary : Colors.grey.shade300,
             width: isSelected ? 2.0 : 1.0,
           ),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
+            SizedBox(
+              height: 120 * scale,
+              width: double.infinity,
               child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(11),
-                  topRight: Radius.circular(11),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(11 * scale),
+                  topRight: Radius.circular(11 * scale),
                 ),
                 child: Container(
                   width: double.infinity,
                   color: Colors.white,
                   child: Padding(
-                    padding: const EdgeInsets.all(4.0),
+                    padding: EdgeInsets.all(4.0 * scale),
                     child: Image.asset(
                       display.imgPath,
                       fit: BoxFit.contain,
-                      height: 160,
                       errorBuilder: (context, error, stackTrace) {
                         return Center(
                           child: Icon(
                             Icons.display_settings,
-                            size: 60,
+                            size: 60 * scale,
                             color: Colors.grey.shade400,
                           ),
                         );
@@ -83,55 +92,62 @@ class DisplayCard extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: EdgeInsets.all(12.0 * scale),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     display.name,
-                    style: const TextStyle(
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 16 * scale,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8 * scale),
                   if (chips != null && chips.isNotEmpty) ...[
                     Wrap(
-                      spacing: 4,
-                      runSpacing: 4,
-                      children: chips.map((chip) => _buildChip(chip)).toList(),
+                      spacing: 4 * scale,
+                      runSpacing: 4 * scale,
+                      children:
+                          chips.map((chip) => _buildChip(chip, scale)).toList(),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8 * scale),
                   ],
                   Row(
                     children: display.colors
-                        .map((color) => ColorDot(color: color))
+                        .map(
+                            (color) => ColorDot(color: color, size: 12 * scale))
                         .toList(),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4 * scale),
                   Text(
                     display.colors
                         .map(ColorUtils.getColorDisplayName)
                         .join(', '),
-                    style: const TextStyle(
-                      fontSize: 10,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 10 * scale,
                       color: Colors.grey,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8 * scale),
                   if (display is WaveshareNfcDisplay) ...[
                     _buildSpecRow(
-                        appLocalizations.skuSpecLabel, display.modelId),
+                        appLocalizations.skuSpecLabel, display.modelId, scale),
                     _buildSpecRow(appLocalizations.resolutionSpecLabel,
-                        '${display.width} × ${display.height}'),
-                    _buildSpecRow(appLocalizations.sdkSpecLabel, driverText),
+                        '${display.width} × ${display.height}', scale),
+                    _buildSpecRow(
+                        appLocalizations.sdkSpecLabel, driverText, scale),
                   ] else ...[
-                    _buildSpecRow(
-                        appLocalizations.displaySpecLabel, display.modelId),
+                    _buildSpecRow(appLocalizations.displaySpecLabel,
+                        display.modelId, scale),
                     _buildSpecRow(appLocalizations.resolutionSpecLabel,
-                        '${display.width} × ${display.height}'),
-                    _buildSpecRow(
-                        appLocalizations.displayDriverSpecLabel, driverText),
+                        '${display.width} × ${display.height}', scale),
+                    _buildSpecRow(appLocalizations.displayDriverSpecLabel,
+                        driverText, scale),
                   ],
                 ],
               ),
@@ -142,12 +158,12 @@ class DisplayCard extends StatelessWidget {
     );
   }
 
-  Widget _buildChip(String label) {
+  Widget _buildChip(String label, double scale) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: EdgeInsets.symmetric(horizontal: 8 * scale, vertical: 3 * scale),
       decoration: BoxDecoration(
         color: colorPrimary.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12 * scale),
         border: Border.all(
           color: colorPrimary.withValues(alpha: 0.3),
           width: 0.8,
@@ -155,8 +171,8 @@ class DisplayCard extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: const TextStyle(
-          fontSize: 7,
+        style: TextStyle(
+          fontSize: 7 * scale,
           fontWeight: FontWeight.w600,
           color: colorPrimary,
         ),
@@ -164,18 +180,26 @@ class DisplayCard extends StatelessWidget {
     );
   }
 
-  Widget _buildSpecRow(String label, String value) {
+  Widget _buildSpecRow(String label, String value, double scale) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
+      padding: EdgeInsets.only(bottom: 4 * scale),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
-          const SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 10 * scale, color: Colors.grey),
+            ),
+          ),
+          SizedBox(width: 8 * scale),
           Flexible(
             child: Text(
               value,
-              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+              style:
+                  TextStyle(fontSize: 10 * scale, fontWeight: FontWeight.w500),
               softWrap: true,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

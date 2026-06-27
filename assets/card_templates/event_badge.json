@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "id": "event_badge",
+  "title": "Event Badge",
+  "description": "Conference/event attendee badge with QR code",
+  "icon": "person_outline",
+  "color": "purple",
+  "elements": [
+    {
+      "id": "profileImage",
+      "type": "image",
+      "label": "Profile Photo",
+      "props": {
+        "width": 200,
+        "height": 200,
+        "shape": "oval"
+      }
+    },
+    {
+      "id": "eventName",
+      "type": "text",
+      "label": "Event Name",
+      "props": {
+        "bold": true,
+        "align": "center",
+        "color": "black"
+      }
+    },
+    {
+      "id": "attendeeName",
+      "type": "text",
+      "label": "Attendee Name",
+      "props": {
+        "prefixKey": "attendeeNamePrefix",
+        "align": "left",
+        "color": "black"
+      }
+    },
+    {
+      "id": "role",
+      "type": "text",
+      "label": "Role",
+      "props": {
+        "prefixKey": "rolePrefix",
+        "align": "left",
+        "color": "black"
+      }
+    },
+    {
+      "id": "organization",
+      "type": "text",
+      "label": "Organization",
+      "props": {
+        "prefixKey": "organizationPrefix",
+        "align": "left",
+        "color": "black"
+      }
+    },
+    {
+      "id": "ticketId",
+      "type": "text",
+      "label": "Ticket ID",
+      "props": {
+        "prefixKey": "ticketIdPrefix",
+        "align": "left",
+        "color": "black"
+      }
+    },
+    {
+      "id": "qr",
+      "type": "barcode",
+      "label": "QR Code Data",
+      "props": {
+        "barcodeName": "QR-Code"
+      }
+    }
+  ]
+}

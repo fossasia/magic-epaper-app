@@ -36,6 +36,14 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
   final _passIdController = TextEditingController();
   final _qrDataController = TextEditingController();
 
+  final Map<String, FocusNode> _fieldFocusNodes = {
+    'venueName': FocusNode(),
+    'visitorName': FocusNode(),
+    'passType': FocusNode(),
+    'passId': FocusNode(),
+    'qr': FocusNode(),
+  };
+
   File? _profileImage;
   bool _isGenerating = false;
 
@@ -76,6 +84,10 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
     _validDateController.dispose();
     _passIdController.dispose();
     _qrDataController.dispose();
+
+    for (final node in _fieldFocusNodes.values) {
+      node.dispose();
+    }
     super.dispose();
   }
 
@@ -107,6 +119,22 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
     if (code != null && code.isNotEmpty) {
       _qrDataController.text = code;
     }
+  }
+
+  void _handleEditRequest(String elementId) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      FocusScope.of(context).unfocus();
+      if (elementId == 'profileImage') {
+        _pickImage();
+        return;
+      }
+      if (elementId == 'validDate') {
+        _pickValidDate();
+        return;
+      }
+      _fieldFocusNodes[elementId]?.requestFocus();
+    });
   }
 
   Future<void> _pickValidDate() async {
@@ -145,6 +173,8 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
       return;
     }
 
+    FocusScope.of(context).unfocus();
+
     setState(() {
       _isGenerating = true;
     });
@@ -163,6 +193,8 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
           ),
           offset: layoutParams.profileImageOffset,
           scale: layoutParams.profileImageScale,
+          kind: LayerKind.image,
+          elementId: 'profileImage',
         ));
       }
 
@@ -179,6 +211,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
           textAlign: TextAlign.center,
           offset: layoutParams.venueNameOffset,
           scale: layoutParams.venueNameScale,
+          elementId: 'venueName',
         ));
       }
 
@@ -191,6 +224,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['visitorName']!,
           scale: layoutParams.textFieldScale,
+          elementId: 'visitorName',
         ));
       }
 
@@ -203,6 +237,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['passType']!,
           scale: layoutParams.textFieldScale,
+          elementId: 'passType',
         ));
       }
 
@@ -215,6 +250,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['validDate']!,
           scale: layoutParams.textFieldScale,
+          elementId: 'validDate',
         ));
       }
 
@@ -227,6 +263,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['passId']!,
           scale: layoutParams.textFieldScale,
+          elementId: 'passId',
         ));
       }
 
@@ -242,10 +279,12 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
           ),
           offset: layoutParams.qrCodeOffset,
           scale: layoutParams.qrCodeScale,
+          kind: LayerKind.barcode,
+          elementId: 'qr',
         ));
       }
 
-      final result = await Navigator.of(context).push<Uint8List>(
+      final result = await Navigator.of(context).push<Object>(
         MaterialPageRoute(
           builder: (context) => MovableBackgroundImageExample(
             width: widget.width,
@@ -255,11 +294,13 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
         ),
       );
 
-      if (result != null) {
-        if (!mounted) return;
+      if (!mounted) return;
+      if (result is Uint8List) {
         Navigator.of(context)
           ..pop()
           ..pop(result);
+      } else if (result is String) {
+        _handleEditRequest(result);
       }
     } finally {
       if (mounted) {
@@ -348,6 +389,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
                         const SizedBox(height: 20),
                         _buildTextFormField(
                           controller: _venueNameController,
+                          focusNode: _fieldFocusNodes['venueName'],
                           label: appLocalizations.venueName,
                           hint: appLocalizations.enterVenueName,
                           icon: Icons.location_on_outlined,
@@ -359,6 +401,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _visitorNameController,
+                          focusNode: _fieldFocusNodes['visitorName'],
                           label: appLocalizations.visitorName,
                           hint: appLocalizations.enterVisitorName,
                           icon: Icons.person_outline,
@@ -370,6 +413,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _passTypeController,
+                          focusNode: _fieldFocusNodes['passType'],
                           label: appLocalizations.passType,
                           hint: appLocalizations.enterPassType,
                           icon: Icons.badge_outlined,
@@ -386,6 +430,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _passIdController,
+                          focusNode: _fieldFocusNodes['passId'],
                           label: appLocalizations.passId,
                           hint: appLocalizations.enterPassId,
                           icon: Icons.confirmation_number_outlined,
@@ -393,6 +438,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _qrDataController,
+                          focusNode: _fieldFocusNodes['qr'],
                           label: appLocalizations.qrCodeData,
                           hint: appLocalizations.enterQrCodeData,
                           icon: Icons.qr_code_outlined,
@@ -476,6 +522,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
     bool readOnly = false,
     VoidCallback? onTap,
     int? maxLength = 25,
+    FocusNode? focusNode,
   }) {
     return Theme(
       data: Theme.of(context).copyWith(
@@ -491,6 +538,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
       ),
       child: TextFormField(
         controller: controller,
+        focusNode: focusNode,
         validator: validator,
         maxLines: maxLines,
         maxLength: maxLength,
