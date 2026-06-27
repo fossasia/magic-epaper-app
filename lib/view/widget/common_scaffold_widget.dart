@@ -10,6 +10,7 @@ class CommonScaffold extends StatelessWidget {
   final List<Widget>? actions;
   final double? toolbarHeight;
   final bool showBackButton;
+  final double leadingUpOffset;
 
   const CommonScaffold({
     super.key,
@@ -20,6 +21,7 @@ class CommonScaffold extends StatelessWidget {
     this.actions,
     this.toolbarHeight,
     this.showBackButton = false,
+    this.leadingUpOffset = 0,
   });
 
   @override
@@ -28,25 +30,28 @@ class CommonScaffold extends StatelessWidget {
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        leading: showBackButton
-            ? IconButton(
-                onPressed: () => Navigator.of(context).maybePop(),
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                ),
-              )
-            : Builder(builder: (context) {
-                return IconButton(
-                  onPressed: () {
-                    Scaffold.of(context).openDrawer();
-                  },
+        leading: Padding(
+          padding: EdgeInsets.only(bottom: leadingUpOffset * 2),
+          child: showBackButton
+              ? IconButton(
+                  onPressed: () => Navigator.of(context).maybePop(),
                   icon: const Icon(
-                    Icons.menu,
+                    Icons.arrow_back,
                     color: Colors.white,
                   ),
-                );
-              }),
+                )
+              : Builder(builder: (context) {
+                  return IconButton(
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                    icon: const Icon(
+                      Icons.menu,
+                      color: Colors.white,
+                    ),
+                  );
+                }),
+        ),
         backgroundColor: colorAccent,
         elevation: 0,
         title: titleWidget ??
