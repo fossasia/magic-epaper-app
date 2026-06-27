@@ -165,6 +165,7 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
   Future<void> _writeAppLauncher() async {
     if (_selectedApp != null) {
       await _nfcController.writeAppLauncherRecord(_selectedApp!.packageName);
+      if (!mounted) return;
       _handleWriteResult();
       if (_nfcController.result.contains(appLocalizations.successfully)) {
         setState(() {
@@ -265,20 +266,24 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                       setState(() => _vCardData = vCardData),
                   onWriteText: () async {
                     await _nfcController.writeTextRecord(_textValue);
+                    if (!mounted) return;
                     _handleWriteResult();
                   },
                   onWriteUrl: () async {
                     await _nfcController.writeUrlRecord(_urlValue);
+                    if (!mounted) return;
                     _handleWriteResult();
                   },
                   onWriteWifi: () async {
                     await _nfcController.writeWifiRecord(
                         _wifiSSIDValue, _wifiPasswordValue);
+                    if (!mounted) return;
                     _handleWriteResult();
                   },
                   onWriteVCard: () async {
                     if (_vCardData != null) {
                       await _nfcController.writeVCardRecord(_vCardData!);
+                      if (!mounted) return;
                       _handleWriteResult();
                     }
                   },
@@ -290,6 +295,7 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                       _wifiPasswordValue,
                       _vCardData,
                     );
+                    if (!mounted) return;
                     _handleWriteResult();
                   },
                 ),
