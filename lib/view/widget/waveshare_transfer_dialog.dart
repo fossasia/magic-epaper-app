@@ -76,6 +76,8 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
     });
     await Future.delayed(const Duration(milliseconds: 200));
 
+    if (!mounted) return;
+
     _processedImage = img.Image.from(widget.image);
 
     setState(() {

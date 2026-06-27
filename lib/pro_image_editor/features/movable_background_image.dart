@@ -133,6 +133,7 @@ class _MovableBackgroundImageExampleState
           background: layer.backgroundColor ?? Colors.white,
           colorMode: LayerBackgroundMode.backgroundAndColor,
           text: layer.text!,
+          meta: layer.toLayerMeta(),
           interaction: LayerInteraction(
             enableEdit: true,
             enableMove: true,
@@ -149,8 +150,11 @@ class _MovableBackgroundImageExampleState
           blockSelectLayer: true,
         );
       } else if (layer.widget != null) {
+        final bool editable =
+            layer.kind == LayerKind.image || layer.kind == LayerKind.barcode;
         editor.addLayer(
           WidgetLayer(
+            meta: layer.toLayerMeta(),
             interaction: LayerInteraction(
               enableEdit: true,
               enableMove: true,
@@ -161,11 +165,51 @@ class _MovableBackgroundImageExampleState
             offset: layer.offset,
             scale: layer.scale,
             rotation: layer.rotation,
-            widget: layer.widget!,
+            widget: editable
+                ? _wrapEditable(layer.widget!, layer.elementId)
+                : layer.widget!,
           ),
         );
       }
     }
+  }
+
+  Widget _wrapEditable(Widget child, String? elementId) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => _returnToForm(elementId),
+      child: child,
+    );
+  }
+
+  void _returnToForm([String? elementId]) {
+    if (mounted) Navigator.of(context).pop(elementId);
+  }
+
+  Future<TextLayer?> _onEditTextLayer(TextLayer layer) async {
+    final bool isTemplateText =
+        layer.meta?[LayerMetaKeys.kind] == LayerKind.text.name;
+    if (isTemplateText) {
+      _returnToForm(layer.meta?[LayerMetaKeys.elementId] as String?);
+      return null;
+    }
+    return _openBuiltInTextEditor(layer);
+  }
+
+  Future<TextLayer?> _openBuiltInTextEditor(TextLayer layer) {
+    final editor = editorKey.currentState;
+    if (editor == null) return Future<TextLayer?>.value(null);
+    return Navigator.of(context).push<TextLayer?>(
+      MaterialPageRoute(
+        builder: (_) => TextEditor(
+          layer: layer,
+          configs: editor.configs,
+          callbacks: editor.callbacks,
+          theme: Theme.of(context),
+          imageSize: Size(_canvasWidth, _canvasHeight),
+        ),
+      ),
+    );
   }
 
   void _calculateCanvasDimensions(Size screenSize) {
@@ -533,8 +577,18 @@ class _MovableBackgroundImageExampleState
 
                             Navigator.pop(context, bytes);
                           },
+                          stickerEditorCallbacks: StickerEditorCallbacks(
+                            onTapEditSticker: (editor, sticker) {
+                              final elementId = sticker
+                                  .meta?[LayerMetaKeys.elementId] as String?;
+                              if (elementId != null) {
+                                _returnToForm(elementId);
+                              }
+                            },
+                          ),
                           mainEditorCallbacks: MainEditorCallbacks(
                             helperLines: const HelperLinesCallbacks(),
+                            onEditTextLayer: _onEditTextLayer,
                             onAfterViewInit: () {
                               editorKey.currentState!.addLayer(
                                 WidgetLayer(

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/util/template_util.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
@@ -21,6 +22,22 @@ class BarcodeEditor extends StatefulWidget {
     required this.onBarcodeCreated,
     this.initialScale = 6.0,
   });
+
+  /// All barcode formats offered by the editor, keyed by their display label.
+  static Map<String, Barcode> get availableFormats => {
+        'QR Code': Barcode.qrCode(),
+        'Data Matrix': Barcode.dataMatrix(),
+        'Aztec': Barcode.aztec(),
+        'PDF417': Barcode.pdf417(),
+        'Code 128': Barcode.code128(),
+        'Code 93': Barcode.code93(),
+        'Code 39': Barcode.code39(),
+        'Codabar': Barcode.codabar(),
+        'EAN-13': Barcode.ean13(),
+        'EAN-8': Barcode.ean8(),
+        'ITF': Barcode.itf(),
+        'UPC-A': Barcode.upcA(),
+      };
 
   @override
   State<BarcodeEditor> createState() => _BarcodeEditorState();
@@ -566,6 +583,9 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     final layer = WidgetLayer(
       offset: Offset.zero,
       scale: widget.initialScale,
+      meta: {
+        LayerMetaKeys.kind: LayerKind.barcode.name,
+      },
       widget: Container(
         child: barcodeWidget,
       ),
@@ -587,20 +607,8 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
   }
 
   Widget _buildBarcodeFormatSelector(StateSetter setModalState) {
-    final Map<String, Barcode> availableFormats = {
-      'QR Code': Barcode.qrCode(),
-      'Data Matrix': Barcode.dataMatrix(),
-      'Aztec': Barcode.aztec(),
-      'PDF417': Barcode.pdf417(),
-      'Code 128': Barcode.code128(),
-      'Code 93': Barcode.code93(),
-      'Code 39': Barcode.code39(),
-      'Codabar': Barcode.codabar(),
-      'EAN-13': Barcode.ean13(),
-      'EAN-8': Barcode.ean8(),
-      'ITF': Barcode.itf(),
-      'UPC-A': Barcode.upcA(),
-    };
+    final Map<String, Barcode> availableFormats =
+        BarcodeEditor.availableFormats;
 
     return DropdownButtonFormField<String>(
       initialValue: _selectedBarcode.name,

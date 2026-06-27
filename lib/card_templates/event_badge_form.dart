@@ -35,6 +35,15 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
   final _ticketIdController = TextEditingController();
   final _qrDataController = TextEditingController();
 
+  final Map<String, FocusNode> _fieldFocusNodes = {
+    'eventName': FocusNode(),
+    'attendeeName': FocusNode(),
+    'role': FocusNode(),
+    'organization': FocusNode(),
+    'ticketId': FocusNode(),
+    'qr': FocusNode(),
+  };
+
   File? _profileImage;
   bool _isGenerating = false;
 
@@ -75,6 +84,10 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
     _organizationController.dispose();
     _ticketIdController.dispose();
     _qrDataController.dispose();
+
+    for (final node in _fieldFocusNodes.values) {
+      node.dispose();
+    }
     super.dispose();
   }
 
@@ -100,6 +113,18 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
     }
   }
 
+  void _handleEditRequest(String elementId) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      FocusScope.of(context).unfocus();
+      if (elementId == 'profileImage') {
+        _pickImage();
+        return;
+      }
+      _fieldFocusNodes[elementId]?.requestFocus();
+    });
+  }
+
   Future<void> _scanQrData() async {
     final code = await scanCode(context);
     if (!mounted) return;
@@ -112,6 +137,8 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
+
+    FocusScope.of(context).unfocus();
 
     setState(() {
       _isGenerating = true;
@@ -131,6 +158,8 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
           ),
           offset: layoutParams.profileImageOffset,
           scale: layoutParams.profileImageScale,
+          kind: LayerKind.image,
+          elementId: 'profileImage',
         ));
       }
 
@@ -147,6 +176,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
           textAlign: TextAlign.center,
           offset: layoutParams.eventNameOffset,
           scale: layoutParams.eventNameScale,
+          elementId: 'eventName',
         ));
       }
 
@@ -160,6 +190,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['attendeeName']!,
           scale: layoutParams.textFieldScale,
+          elementId: 'attendeeName',
         ));
       }
 
@@ -172,6 +203,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['role']!,
           scale: layoutParams.textFieldScale,
+          elementId: 'role',
         ));
       }
 
@@ -185,6 +217,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['organization']!,
           scale: layoutParams.textFieldScale,
+          elementId: 'organization',
         ));
       }
 
@@ -197,6 +230,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['ticketId']!,
           scale: layoutParams.textFieldScale,
+          elementId: 'ticketId',
         ));
       }
 
@@ -212,10 +246,12 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
           ),
           offset: layoutParams.qrCodeOffset,
           scale: layoutParams.qrCodeScale,
+          kind: LayerKind.barcode,
+          elementId: 'qr',
         ));
       }
 
-      final result = await Navigator.of(context).push<Uint8List>(
+      final result = await Navigator.of(context).push<Object>(
         MaterialPageRoute(
           builder: (context) => MovableBackgroundImageExample(
             width: widget.width,
@@ -225,11 +261,13 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
         ),
       );
 
-      if (result != null) {
-        if (!mounted) return;
+      if (!mounted) return;
+      if (result is Uint8List) {
         Navigator.of(context)
           ..pop()
           ..pop(result);
+      } else if (result is String) {
+        _handleEditRequest(result);
       }
     } finally {
       if (mounted) {
@@ -318,6 +356,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                         const SizedBox(height: 20),
                         _buildTextFormField(
                           controller: _eventNameController,
+                          focusNode: _fieldFocusNodes['eventName'],
                           label: appLocalizations.eventName,
                           hint: appLocalizations.enterEventName,
                           icon: Icons.event_outlined,
@@ -329,6 +368,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _attendeeNameController,
+                          focusNode: _fieldFocusNodes['attendeeName'],
                           label: appLocalizations.attendeeName,
                           hint: appLocalizations.enterAttendeeName,
                           icon: Icons.person_outline,
@@ -340,6 +380,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _roleController,
+                          focusNode: _fieldFocusNodes['role'],
                           label: appLocalizations.role,
                           hint: appLocalizations.enterRole,
                           icon: Icons.work_outline,
@@ -347,6 +388,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _organizationController,
+                          focusNode: _fieldFocusNodes['organization'],
                           label: appLocalizations.organization,
                           hint: appLocalizations.enterOrganization,
                           icon: Icons.business_outlined,
@@ -354,6 +396,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _ticketIdController,
+                          focusNode: _fieldFocusNodes['ticketId'],
                           label: appLocalizations.ticketId,
                           hint: appLocalizations.enterTicketId,
                           icon: Icons.confirmation_number_outlined,
@@ -361,6 +404,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                         const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _qrDataController,
+                          focusNode: _fieldFocusNodes['qr'],
                           label: appLocalizations.qrCodeData,
                           hint: appLocalizations.enterQrCodeData,
                           icon: Icons.qr_code_outlined,
@@ -441,6 +485,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
     int maxLines = 1,
     VoidCallback? onScan,
     int? maxLength = 25,
+    FocusNode? focusNode,
   }) {
     return Theme(
       data: Theme.of(context).copyWith(
@@ -456,6 +501,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
       ),
       child: TextFormField(
         controller: controller,
+        focusNode: focusNode,
         validator: validator,
         maxLines: maxLines,
         maxLength: maxLength,
