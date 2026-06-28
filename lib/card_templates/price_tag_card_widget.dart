@@ -161,9 +161,8 @@ class PriceTagCardWidget extends StatelessWidget {
                     child: Container(
                       height: double.infinity,
                       decoration: BoxDecoration(
-                        color: data.barcodeData.isNotEmpty
-                            ? colorWhite
-                            : grey50,
+                        color:
+                            data.barcodeData.isNotEmpty ? colorWhite : grey50,
                         borderRadius: BorderRadius.circular(6),
                         border: Border.all(
                           color: data.barcodeData.isNotEmpty

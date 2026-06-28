@@ -33,8 +33,7 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
         isDeleteMode
             ? appLocalizations.selectImagesToDelete
             : appLocalizations.imageLibrary,
-        style:
-            const TextStyle(color: colorWhite, fontWeight: FontWeight.bold),
+        style: const TextStyle(color: colorWhite, fontWeight: FontWeight.bold),
       ),
       actions: [
         if (isDeleteMode) ...[

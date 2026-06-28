@@ -336,8 +336,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         const SizedBox(height: 6),
                         Text(
                           appLocalizations.fillDetailsToCreateId,
-                          style: TextStyle(
-                              fontSize: 13, color: grey600),
+                          style: TextStyle(fontSize: 13, color: grey600),
                         ),
                         const SizedBox(height: 20),
                         _buildPhotoSection(),
@@ -606,9 +605,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                   color: colorWhite,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: _profileImage != null
-                        ? colorPrimary
-                        : grey300,
+                    color: _profileImage != null ? colorPrimary : grey300,
                     width: _profileImage != null ? 2 : 1,
                   ),
                 ),
@@ -703,9 +700,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         _profileImage != null
                             ? Icons.edit
                             : Icons.arrow_forward_ios,
-                        color: _profileImage != null
-                            ? colorPrimary
-                            : grey400,
+                        color: _profileImage != null ? colorPrimary : grey400,
                         size: _profileImage != null ? 16 : 14,
                       ),
                     ),

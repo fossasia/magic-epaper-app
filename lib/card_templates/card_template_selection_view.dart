@@ -154,9 +154,7 @@ class CardTemplateSelectionView extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
               side: BorderSide(
-                color: template.isEnabled
-                    ? grey300
-                    : grey200,
+                color: template.isEnabled ? grey300 : grey200,
                 width: 1,
               ),
             ),
@@ -183,8 +181,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                         child: Icon(
                           template.icon,
                           size: 32,
-                          color:
-                              template.isEnabled ? template.color : grey500,
+                          color: template.isEnabled ? template.color : grey500,
                         ),
                       ),
                     ),
@@ -206,9 +203,8 @@ class CardTemplateSelectionView extends StatelessWidget {
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
-                                  color: template.isEnabled
-                                      ? colorBlack
-                                      : grey600,
+                                  color:
+                                      template.isEnabled ? colorBlack : grey600,
                                 ),
                                 textAlign: TextAlign.center,
                                 maxLines: isCompactHeight ? 2 : 2,
@@ -222,9 +218,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                           template.description,
                           style: TextStyle(
                             fontSize: 10,
-                            color: template.isEnabled
-                                ? grey600
-                                : grey500,
+                            color: template.isEnabled ? grey600 : grey500,
                             height: 1.3,
                           ),
                           textAlign: TextAlign.center,

@@ -348,8 +348,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                         const SizedBox(height: 6),
                         Text(
                           appLocalizations.priceTagDescription,
-                          style: TextStyle(
-                              fontSize: 13, color: grey600),
+                          style: TextStyle(fontSize: 13, color: grey600),
                         ),
                         const SizedBox(height: 20),
                         _buildProductImageSection(),
@@ -431,8 +430,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colorPrimary.withValues(
                         alpha: _isGenerating ? 0.49 : 1.0),
-                    foregroundColor: colorWhite
-                        .withValues(alpha: _isGenerating ? 0.7 : 1.0),
+                    foregroundColor:
+                        colorWhite.withValues(alpha: _isGenerating ? 0.7 : 1.0),
                     elevation: _isGenerating ? 0 : 2,
                     shadowColor: colorPrimary.withValues(alpha: 0.3),
                     shape: RoundedRectangleBorder(
@@ -639,9 +638,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                   color: colorWhite,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: _productImage != null
-                        ? colorPrimary
-                        : grey300,
+                    color: _productImage != null ? colorPrimary : grey300,
                     width: _productImage != null ? 2 : 1,
                   ),
                 ),
@@ -737,9 +734,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                         _productImage != null
                             ? Icons.edit
                             : Icons.photo_library,
-                        color: _productImage != null
-                            ? colorPrimary
-                            : grey400,
+                        color: _productImage != null ? colorPrimary : grey400,
                         size: 16,
                       ),
                     ),

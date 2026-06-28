@@ -206,8 +206,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                         color: colorWhite,
                       ),
                       child: IconButton(
-                        icon: const Icon(Icons.clear,
-                            color: grey500, size: 18),
+                        icon: const Icon(Icons.clear, color: grey500, size: 18),
                         onPressed: () => widget.onAppSelected(null),
                         padding: const EdgeInsets.all(4),
                         constraints: const BoxConstraints(

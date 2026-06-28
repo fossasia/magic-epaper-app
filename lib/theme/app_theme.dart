@@ -21,8 +21,7 @@ class AppTheme {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: grey50,
-      contentPadding:
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       floatingLabelStyle: AppTypography.floatingLabel,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),

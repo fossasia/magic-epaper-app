@@ -14,8 +14,7 @@ class EmptyStateWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.photo_library_outlined,
-              size: 64, color: grey500),
+          const Icon(Icons.photo_library_outlined, size: 64, color: grey500),
           const SizedBox(height: 16),
           Text(
             appLocalizations.noSavedImagesYet,

@@ -243,8 +243,7 @@ class _ImageEditorState extends State<ImageEditor> {
         baseImage = img.flipVertical(baseImage);
       }
 
-      final nonWhiteColors =
-          widget.device.colors.where((c) => c != colorWhite);
+      final nonWhiteColors = widget.device.colors.where((c) => c != colorWhite);
 
       int exportedCount = 0;
       for (final color in nonWhiteColors) {
@@ -589,8 +588,7 @@ class _ImageEditorState extends State<ImageEditor> {
                     : Center(
                         child: Text(
                           appLocalizations.importStartingImageFeedback,
-                          style:
-                              const TextStyle(color: grey500, fontSize: 16),
+                          style: const TextStyle(color: grey500, fontSize: 16),
                         ),
                       ),
               ),
