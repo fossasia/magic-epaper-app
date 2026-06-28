@@ -28,9 +28,16 @@ const Color surfaceColor = Colors.white;
 
 // Greys
 const Color grey50 = Color(0xFFFAFAFA);
+const Color grey100 = Color(0xFFF5F5F5);
+const Color grey200 = Color(0xFFEEEEEE);
 const Color grey300 = Color(0xFFE0E0E0);
+const Color grey400 = Color(0xFFBDBDBD);
 const Color mdGrey400 = Color(0xFFBDBDBD);
+const Color grey500 = Color(0xFF9E9E9E);
+const Color grey600 = Color(0xFF757575);
 const Color grey700 = Color(0xFF616161);
+const Color grey800 = Color(0xFF424242);
+const Color grey900 = Color(0xFF212121);
 const Color dividerColor = Color(0xFFE0E0E0);
 
 // Semantic

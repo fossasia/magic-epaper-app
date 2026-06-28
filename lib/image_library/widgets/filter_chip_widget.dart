@@ -25,7 +25,7 @@ class FilterChipWidget extends StatelessWidget {
         onSelected: (_) => onSelected(value),
         selectedColor: colorAccent.withValues(alpha: 0.2),
         checkmarkColor: colorAccent,
-        backgroundColor: Colors.grey.shade100,
+        backgroundColor: grey100,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),

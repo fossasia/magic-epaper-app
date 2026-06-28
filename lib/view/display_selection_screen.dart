@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
@@ -110,7 +111,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: colorWhite,
                         ),
                       ),
                       if (showSubtitle) ...[
@@ -119,7 +120,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                           appLocalizations.selectDisplayType,
                           style: const TextStyle(
                             fontSize: 16,
-                            color: Colors.white,
+                            color: colorWhite,
                           ),
                         ),
                       ],
@@ -223,7 +224,7 @@ class _LoadingWrapperState extends State<_LoadingWrapper> {
   Widget build(BuildContext context) {
     if (_showLoading) {
       return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: colorWhite,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -234,7 +235,7 @@ class _LoadingWrapperState extends State<_LoadingWrapper> {
               const SizedBox(height: 16),
               Text(
                 AppLocalizations.of(context)?.loading ?? 'Loading...',
-                style: const TextStyle(color: Colors.black, fontSize: 14),
+                style: const TextStyle(color: colorBlack, fontSize: 14),
               ),
             ],
           ),

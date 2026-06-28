@@ -37,13 +37,13 @@ class CardTemplateSelectionView extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: colorWhite,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               appLocalizations.chooseTemplateSubtitle,
-              style: const TextStyle(fontSize: 16, color: Colors.white),
+              style: const TextStyle(fontSize: 16, color: colorWhite),
             ),
           ],
         ),
@@ -149,21 +149,21 @@ class CardTemplateSelectionView extends StatelessWidget {
           splashColor:
               template.isEnabled ? colorAccent.withValues(alpha: 0.2) : null,
           child: Card(
-            color: Colors.white,
+            color: colorWhite,
             elevation: template.isEnabled ? 2 : 1,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
               side: BorderSide(
                 color: template.isEnabled
-                    ? Colors.grey.shade300
-                    : Colors.grey.shade200,
+                    ? grey300
+                    : grey200,
                 width: 1,
               ),
             ),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                color: template.isEnabled ? Colors.white : Colors.grey.shade50,
+                color: template.isEnabled ? colorWhite : grey50,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -184,7 +184,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                           template.icon,
                           size: 32,
                           color:
-                              template.isEnabled ? template.color : Colors.grey,
+                              template.isEnabled ? template.color : grey500,
                         ),
                       ),
                     ),
@@ -208,7 +208,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                                   fontSize: 14,
                                   color: template.isEnabled
                                       ? colorBlack
-                                      : Colors.grey.shade600,
+                                      : grey600,
                                 ),
                                 textAlign: TextAlign.center,
                                 maxLines: isCompactHeight ? 2 : 2,
@@ -223,8 +223,8 @@ class CardTemplateSelectionView extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 10,
                             color: template.isEnabled
-                                ? Colors.grey.shade600
-                                : Colors.grey.shade500,
+                                ? grey600
+                                : grey500,
                             height: 1.3,
                           ),
                           textAlign: TextAlign.center,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/util/orientation_util.dart';
@@ -31,11 +32,11 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: colorWhite,
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: const [
                     BoxShadow(
-                      color: Colors.grey,
+                      color: grey500,
                       offset: Offset(0, 1),
                       blurRadius: 2.0,
                     ),
@@ -52,7 +53,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                         style: GoogleFonts.sora(
                           wordSpacing: 3,
                           fontWeight: FontWeight.w400,
-                          color: Colors.black,
+                          color: colorBlack,
                           fontSize: 14,
                         ),
                         softWrap: true,
@@ -64,11 +65,11 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
               const SizedBox(height: 10),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: colorWhite,
                   boxShadow: const [
                     BoxShadow(
                       blurRadius: 1,
-                      color: Colors.grey,
+                      color: grey500,
                       offset: Offset(0, 1),
                     )
                   ],
@@ -84,7 +85,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                         style: GoogleFonts.sora(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
-                          color: Colors.grey,
+                          color: grey500,
                         ),
                       ),
                     ),
@@ -99,7 +100,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                         style: GoogleFonts.sora(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
-                          color: Colors.black,
+                          color: colorBlack,
                         ),
                       ),
                       subtitle: Text(
@@ -107,7 +108,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                         style: GoogleFonts.sora(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: Colors.grey,
+                          color: grey500,
                         ),
                         softWrap: true,
                       ),
@@ -124,7 +125,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                         style: GoogleFonts.sora(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
-                          color: Colors.black,
+                          color: colorBlack,
                         ),
                       ),
                       subtitle: Text(
@@ -132,7 +133,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                         style: GoogleFonts.sora(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: Colors.grey,
+                          color: grey500,
                         ),
                         softWrap: true,
                       ),

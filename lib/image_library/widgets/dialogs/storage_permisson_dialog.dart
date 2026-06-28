@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 
 class StoragePermissionDialog extends StatelessWidget {
   final VoidCallback? onGrantPermission;
@@ -24,7 +25,7 @@ class StoragePermissionDialog extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorWhite,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -58,7 +59,7 @@ class StoragePermissionDialog extends StatelessWidget {
               'To save images and access your photo library, we need storage permission. Please grant permission to continue.',
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.grey,
+                color: grey500,
                 height: 1.4,
               ),
               textAlign: TextAlign.center,
@@ -74,7 +75,7 @@ class StoragePermissionDialog extends StatelessWidget {
                     child: const Text(
                       'Cancel',
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: grey500,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),

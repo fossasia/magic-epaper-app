@@ -141,7 +141,7 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colorWhite,
       appBar: LibraryAppBar(
         isDeleteMode: _isDeleteMode,
         selectedCount: _selectedImages.length,

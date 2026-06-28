@@ -244,7 +244,7 @@ class _ImageEditorState extends State<ImageEditor> {
       }
 
       final nonWhiteColors =
-          widget.device.colors.where((c) => c != Colors.white);
+          widget.device.colors.where((c) => c != colorWhite);
 
       int exportedCount = 0;
       for (final color in nonWhiteColors) {
@@ -296,7 +296,7 @@ class _ImageEditorState extends State<ImageEditor> {
     final epd = widget.device as Epd;
     const double controlHeight = 32.0;
     const TextStyle itemTextStyle = TextStyle(
-      color: Colors.white,
+      color: colorWhite,
       fontSize: 13,
       fontWeight: FontWeight.w500,
     );
@@ -328,7 +328,7 @@ class _ImageEditorState extends State<ImageEditor> {
               height: controlHeight,
               decoration: BoxDecoration(
                 color: colorAccent,
-                border: Border.all(color: Colors.white, width: 1),
+                border: Border.all(color: colorWhite, width: 1),
                 borderRadius: BorderRadius.circular(8),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -347,7 +347,7 @@ class _ImageEditorState extends State<ImageEditor> {
                   style: itemTextStyle,
                   borderRadius: BorderRadius.circular(8),
                   icon: const Icon(Icons.keyboard_arrow_down,
-                      color: Colors.white, size: 18),
+                      color: colorWhite, size: 18),
                   items: dropdownItems,
                   onChanged: (String? newName) {
                     setState(() {
@@ -388,7 +388,7 @@ class _ImageEditorState extends State<ImageEditor> {
           child: const SizedBox(
             height: controlHeight,
             width: controlHeight,
-            child: Icon(Icons.info_outline, color: Colors.white, size: 20),
+            child: Icon(Icons.info_outline, color: colorWhite, size: 20),
           ),
         ),
       ],
@@ -419,7 +419,7 @@ class _ImageEditorState extends State<ImageEditor> {
             },
       style: TextButton.styleFrom(
         backgroundColor: colorAccent,
-        foregroundColor: Colors.white,
+        foregroundColor: colorWhite,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         // Visual height stays compact (32), but the default padded
         // tapTargetSize keeps the touch target at the 48dp guideline.
@@ -427,7 +427,7 @@ class _ImageEditorState extends State<ImageEditor> {
         textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
-          side: const BorderSide(color: Colors.white, width: 1),
+          side: const BorderSide(color: colorWhite, width: 1),
         ),
       ),
       child: Text(
@@ -517,9 +517,9 @@ class _ImageEditorState extends State<ImageEditor> {
         hasActions && widget.device is Epd && !widget.isExportOnly;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colorWhite,
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: colorWhite),
         titleSpacing: 0.0,
         backgroundColor: colorAccent,
         elevation: 0,
@@ -528,7 +528,7 @@ class _ImageEditorState extends State<ImageEditor> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
-            color: Colors.white,
+            color: colorWhite,
             fontWeight: FontWeight.w600,
             fontSize: 15.0,
           ),
@@ -590,7 +590,7 @@ class _ImageEditorState extends State<ImageEditor> {
                         child: Text(
                           appLocalizations.importStartingImageFeedback,
                           style:
-                              const TextStyle(color: Colors.grey, fontSize: 16),
+                              const TextStyle(color: grey500, fontSize: 16),
                         ),
                       ),
               ),
@@ -640,7 +640,7 @@ class BottomActionMenu extends StatelessWidget {
       child: Container(
         height: barHeight,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorWhite,
           boxShadow: [
             BoxShadow(
               color: colorBlack.withValues(alpha: .1),

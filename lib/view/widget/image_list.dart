@@ -193,7 +193,7 @@ class FilterCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
         height: 100,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorWhite,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? colorPrimary : mdGrey400,

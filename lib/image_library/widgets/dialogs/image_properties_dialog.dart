@@ -54,7 +54,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: colorWhite,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
@@ -87,13 +87,13 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
       ),
       child: Row(
         children: [
-          const Icon(Icons.info_outline, color: Colors.white, size: 24),
+          const Icon(Icons.info_outline, color: colorWhite, size: 24),
           const SizedBox(width: 8),
           const Expanded(
             child: Text(
               'Image Properties',
               style: TextStyle(
-                color: Colors.white,
+                color: colorWhite,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -101,7 +101,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
           ),
           IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.close, color: Colors.white),
+            icon: const Icon(Icons.close, color: colorWhite),
           ),
         ],
       ),
@@ -140,7 +140,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
         width: 120,
         height: 120,
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
+          border: Border.all(color: grey300),
           borderRadius: BorderRadius.circular(8),
         ),
         child: ClipRRect(
@@ -150,11 +150,11 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
               return Container(
-                color: Colors.grey.shade100,
+                color: grey100,
                 child: const Icon(
                   Icons.broken_image,
                   size: 40,
-                  color: Colors.grey,
+                  color: grey500,
                 ),
               );
             },
@@ -179,9 +179,9 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: grey50,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: grey200),
       ),
       child: Column(
         children: [
@@ -256,9 +256,9 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorWhite,
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: grey200),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -272,7 +272,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
                   label,
                   style: TextStyle(
                     fontSize: 11,
-                    color: Colors.grey.shade600,
+                    color: grey600,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -303,7 +303,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
             label,
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              color: Colors.grey.shade700,
+              color: grey700,
               fontSize: 13,
             ),
           ),

@@ -48,12 +48,12 @@ class DisplayCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(12 * scale),
       splashColor: Colors.redAccent.withAlpha(51),
       child: Card(
-        color: Colors.white,
+        color: colorWhite,
         elevation: isSelected ? 4 : 1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12 * scale),
           side: BorderSide(
-            color: isSelected ? colorPrimary : Colors.grey.shade300,
+            color: isSelected ? colorPrimary : grey300,
             width: isSelected ? 2.0 : 1.0,
           ),
         ),
@@ -71,7 +71,7 @@ class DisplayCard extends StatelessWidget {
                 ),
                 child: Container(
                   width: double.infinity,
-                  color: Colors.white,
+                  color: colorWhite,
                   child: Padding(
                     padding: EdgeInsets.all(4.0 * scale),
                     child: Image.asset(
@@ -82,7 +82,7 @@ class DisplayCard extends StatelessWidget {
                           child: Icon(
                             Icons.display_settings,
                             size: 60 * scale,
-                            color: Colors.grey.shade400,
+                            color: grey400,
                           ),
                         );
                       },
@@ -130,7 +130,7 @@ class DisplayCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 10 * scale,
-                      color: Colors.grey,
+                      color: grey500,
                     ),
                   ),
                   SizedBox(height: 8 * scale),
@@ -191,7 +191,7 @@ class DisplayCard extends StatelessWidget {
               label,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 10 * scale, color: Colors.grey),
+              style: TextStyle(fontSize: 10 * scale, color: grey500),
             ),
           ),
           SizedBox(width: 8 * scale),

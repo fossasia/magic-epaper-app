@@ -48,11 +48,11 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
           padding: const EdgeInsets.all(24),
           margin: const EdgeInsets.symmetric(vertical: 48),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colorWhite,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: colorBlack.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -111,7 +111,7 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
                 appLocalizations.saveFilteredImageToLibrary,
                 style: const TextStyle(
                   fontSize: 14,
-                  color: Colors.grey,
+                  color: grey500,
                 ),
               ),
             ],
@@ -127,9 +127,9 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
       height: 120,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: grey50,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: grey200),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
@@ -161,14 +161,14 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
           decoration: InputDecoration(
             hintText: appLocalizations.enterImageName,
             filled: true,
-            fillColor: Colors.grey.shade50,
+            fillColor: grey50,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade300),
+              borderSide: BorderSide(color: grey300),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade300),
+              borderSide: BorderSide(color: grey300),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -180,7 +180,7 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
             ),
             prefixIcon: const Icon(
               Icons.photo_library_outlined,
-              color: Colors.grey,
+              color: grey500,
             ),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
@@ -282,7 +282,7 @@ class SnackBarUtils {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(colorWhite),
               ),
             ),
             const SizedBox(width: 12),
@@ -300,7 +300,7 @@ class SnackBarUtils {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle, color: Colors.white, size: 20),
+            const Icon(Icons.check_circle, color: colorWhite, size: 20),
             const SizedBox(width: 12),
             Text(message),
           ],
@@ -317,7 +317,7 @@ class SnackBarUtils {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.error, color: Colors.white, size: 20),
+            const Icon(Icons.error, color: colorWhite, size: 20),
             const SizedBox(width: 12),
             Text(message),
           ],

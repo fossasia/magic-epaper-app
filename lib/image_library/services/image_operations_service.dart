@@ -76,7 +76,7 @@ class ImageOperationsService {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle, color: Colors.white, size: 20),
+            const Icon(Icons.check_circle, color: colorWhite, size: 20),
             const SizedBox(width: 12),
             Text(appLocalizations.allDataCleared),
           ],
@@ -98,7 +98,7 @@ class ImageOperationsService {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(colorWhite),
               ),
             ),
             const SizedBox(width: 12),
@@ -256,7 +256,7 @@ class ImageOperationsService {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(colorWhite),
               ),
             ),
             const SizedBox(width: 12),
@@ -274,7 +274,7 @@ class ImageOperationsService {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle, color: Colors.white, size: 20),
+            const Icon(Icons.check_circle, color: colorWhite, size: 20),
             const SizedBox(width: 12),
             Expanded(child: Text(message)),
           ],
@@ -291,7 +291,7 @@ class ImageOperationsService {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.delete_sweep, color: Colors.white, size: 20),
+            const Icon(Icons.delete_sweep, color: colorWhite, size: 20),
             const SizedBox(width: 12),
             Expanded(child: Text(message)),
           ],
@@ -313,7 +313,7 @@ class ImageOperationsService {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(colorWhite),
               ),
             ),
             const SizedBox(width: 12),
@@ -333,7 +333,7 @@ class ImageOperationsService {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.delete_sweep, color: Colors.white, size: 20),
+            const Icon(Icons.delete_sweep, color: colorWhite, size: 20),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -354,7 +354,7 @@ class ImageOperationsService {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.error, color: Colors.white, size: 20),
+            const Icon(Icons.error, color: colorWhite, size: 20),
             const SizedBox(width: 12),
             Expanded(child: Text(message)),
           ],
@@ -376,7 +376,7 @@ class ImageOperationsService {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(colorWhite),
               ),
             ),
             const SizedBox(width: 12),
@@ -396,7 +396,7 @@ class ImageOperationsService {
           children: [
             const Icon(
               Icons.check_circle,
-              color: Colors.white,
+              color: colorWhite,
               size: 20,
             ),
             const SizedBox(width: 12),
@@ -419,7 +419,7 @@ class ImageOperationsService {
           children: [
             const Icon(
               Icons.error,
-              color: Colors.white,
+              color: colorWhite,
               size: 20,
             ),
             const SizedBox(width: 12),
