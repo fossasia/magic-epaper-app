@@ -159,7 +159,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
               ),
               const SizedBox(height: 24),
               const Text(
-                appLocalizations.holdPhoneNearDisplay,
+                      appLocalizations.holdPhoneNearDisplay,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16),
               ),
