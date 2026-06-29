@@ -158,8 +158,8 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
                 child: const Icon(Icons.nfc, size: 60, color: colorPrimary),
               ),
               const SizedBox(height: 24),
-              const Text(
-                      appLocalizations.holdPhoneNearDisplay,
+              Text(
+                appLocalizations.holdPhoneNearDisplay,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16),
               ),
