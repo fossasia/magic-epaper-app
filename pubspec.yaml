@@ -8,7 +8,7 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=3.3.4 <4.0.0"
-  flutter: '3.44.1'
+  flutter: '3.44.2'
 
 dependencies:
   flutter:
@@ -98,9 +98,9 @@ flutter_launcher_icons:
 
   windows:
     generate: true
-    image_path: "assets/icons/app_icon.png"
+    image_path: "assets/icons/app_icon_desktop.png"
     icon_size: 48
 
   macos:
     generate: true
-    image_path: "assets/icons/app_icon.png"
+    image_path: "assets/icons/app_icon_macos.png"
