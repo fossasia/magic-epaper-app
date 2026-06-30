@@ -15,17 +15,26 @@ class DisplayCard extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  final double width;
+  final double? width;
+  final bool fill;
 
   static const double _referenceWidth = 300.0;
 
-  const DisplayCard({
+  const DisplayCard.fill({
     super.key,
     required this.display,
     required this.isSelected,
     required this.onTap,
-    this.width = _referenceWidth,
-  });
+  })  : width = null,
+        fill = true;
+
+  const DisplayCard.scaled({
+    super.key,
+    required this.display,
+    required this.isSelected,
+    required this.onTap,
+    required this.width,
+  }) : fill = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +49,36 @@ class DisplayCard extends StatelessWidget {
 
     final chips = display.displayChips;
 
-    final double scale = (width / _referenceWidth).clamp(0.5, 1.0);
+    final double scale =
+        fill ? 1.0 : (width! / _referenceWidth).clamp(0.5, 1.0);
+
+    final Widget imageArea = ClipRRect(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(11 * scale),
+        topRight: Radius.circular(11 * scale),
+      ),
+      child: Container(
+        width: double.infinity,
+        color: colorWhite,
+        child: Padding(
+          padding: EdgeInsets.all(4.0 * scale),
+          child: Image.asset(
+            display.imgPath,
+            fit: BoxFit.contain,
+            height: fill ? 160 : null,
+            errorBuilder: (context, error, stackTrace) {
+              return Center(
+                child: Icon(
+                  Icons.display_settings,
+                  size: 60 * scale,
+                  color: grey400,
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
 
     return InkWell(
       onTap: onTap,
@@ -58,39 +96,16 @@ class DisplayCard extends StatelessWidget {
           ),
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: fill ? MainAxisSize.max : MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 120 * scale,
-              width: double.infinity,
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(11 * scale),
-                  topRight: Radius.circular(11 * scale),
-                ),
-                child: Container(
-                  width: double.infinity,
-                  color: colorWhite,
-                  child: Padding(
-                    padding: EdgeInsets.all(4.0 * scale),
-                    child: Image.asset(
-                      display.imgPath,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Center(
-                          child: Icon(
-                            Icons.display_settings,
-                            size: 60 * scale,
-                            color: grey400,
-                          ),
-                        );
-                      },
-                    ),
+            fill
+                ? Expanded(child: imageArea)
+                : SizedBox(
+                    height: 120 * scale,
+                    width: double.infinity,
+                    child: imageArea,
                   ),
-                ),
-              ),
-            ),
             Padding(
               padding: EdgeInsets.all(12.0 * scale),
               child: Column(
