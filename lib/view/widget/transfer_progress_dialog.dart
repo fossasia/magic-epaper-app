@@ -330,7 +330,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
         ),
         const SizedBox(height: 8),
         Text(
-          "Data transfer successful. The display will now refresh.",
+          appLocalizations.dataTransferSuccessfulMessage,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 14,
