@@ -290,7 +290,9 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     final minLen = _effectiveMinLength(b);
     final maxLen = _effectiveMaxLength(b);
     if (maxLen == null) {
-      return minLen <= 1 ? _l10n.barcodeAnyLength : _l10n.barcodeAtLeastCharacters(minLen);
+      return minLen <= 1
+          ? _l10n.barcodeAnyLength
+          : _l10n.barcodeAtLeastCharacters(minLen);
     }
     if (minLen == maxLen) return _l10n.barcodeExactlyCharacters(maxLen);
     return _l10n.barcodeRangeCharacters(minLen, maxLen);
@@ -464,9 +466,9 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
 
       if (detected == null) {
         _showSnackBar(
-        _l10n.barcodeCouldNotAutoDetect,
-        background: Colors.orange.shade700,
-      );
+          _l10n.barcodeCouldNotAutoDetect,
+          background: Colors.orange.shade700,
+        );
       }
     }
   }
