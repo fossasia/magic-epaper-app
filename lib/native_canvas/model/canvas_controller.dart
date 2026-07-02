@@ -15,8 +15,8 @@ class CanvasController extends ChangeNotifier {
     required this.canvasSize,
     required this.palette,
     Color? canvasColor,
-  }) : _canvasColor = canvasColor ??
-            (palette.isNotEmpty ? palette.first : Colors.white);
+  }) : _canvasColor =
+            canvasColor ?? (palette.isNotEmpty ? palette.first : Colors.white);
 
   final Size canvasSize;
 

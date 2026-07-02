@@ -53,11 +53,14 @@ class _Swatch extends StatelessWidget {
           color: color,
           shape: BoxShape.circle,
           border: Border.all(
-            color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey.shade400,
+            color: isSelected
+                ? Theme.of(context).colorScheme.primary
+                : Colors.grey.shade400,
             width: isSelected ? 3 : 1,
           ),
         ),
-        child: isSelected ? Icon(Icons.check, size: 20, color: checkColor) : null,
+        child:
+            isSelected ? Icon(Icons.check, size: 20, color: checkColor) : null,
       ),
     );
   }

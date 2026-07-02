@@ -69,8 +69,7 @@ class _EditableElementState extends State<EditableElement> {
     if (box == null) return;
     final focalLocal = box.globalToLocal(d.focalPoint);
     final deltaLogical = (focalLocal - _gestureStartFocalLocal) / _ds;
-    final newScale =
-        (_gestureStartScale * d.scale).clamp(_minScale, _maxScale);
+    final newScale = (_gestureStartScale * d.scale).clamp(_minScale, _maxScale);
     final newRotation = _gestureStartRotation + d.rotation;
     widget.controller.updateElement(
       widget.element.copyWith(
@@ -97,8 +96,8 @@ class _EditableElementState extends State<EditableElement> {
   void _onTransformUpdate(DragUpdateDetails d) {
     if (_startVector.distance == 0) return;
     final vector = d.globalPosition - _centerGlobal;
-    final newScale =
-        (_startScale * vector.distance / _startVector.distance).clamp(_minScale, _maxScale);
+    final newScale = (_startScale * vector.distance / _startVector.distance)
+        .clamp(_minScale, _maxScale);
     final newRotation =
         _startRotation + (vector.direction - _startVector.direction);
     widget.controller.updateElement(
@@ -224,7 +223,8 @@ class _ElementContent extends StatelessWidget {
             textAlign: element.textAlign,
             style: element.fontFamily == null
                 ? baseStyle
-                : GoogleFonts.getFont(element.fontFamily!, textStyle: baseStyle),
+                : GoogleFonts.getFont(element.fontFamily!,
+                    textStyle: baseStyle),
           ),
         );
       case CanvasElementKind.image:
@@ -247,7 +247,9 @@ class _ElementContent extends StatelessWidget {
           ),
         );
       case CanvasElementKind.widget:
-        return FittedBox(fit: BoxFit.contain, child: element.child ?? const SizedBox.shrink());
+        return FittedBox(
+            fit: BoxFit.contain,
+            child: element.child ?? const SizedBox.shrink());
     }
   }
 }
