@@ -54,11 +54,11 @@ class CardTemplateSelectionView extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 24, 16.0, 16.0),
           child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.6,
-              mainAxisSpacing: 8,
-              crossAxisSpacing: 8,
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 240,
+              childAspectRatio: 0.7,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
             ),
             itemCount: _getTemplates().length,
             itemBuilder: (context, index) {
