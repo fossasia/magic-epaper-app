@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 
 class FilterChipWidget extends StatelessWidget {
   final String label;
@@ -18,7 +19,7 @@ class FilterChipWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 8),
+      padding: const EdgeInsets.only(right: Dimens.spacingS),
       child: FilterChip(
         label: Text(label),
         selected: isSelected,
@@ -27,7 +28,7 @@ class FilterChipWidget extends StatelessWidget {
         checkmarkColor: colorAccent,
         backgroundColor: Colors.grey.shade100,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(Dimens.radiusRound),
         ),
       ),
     );
