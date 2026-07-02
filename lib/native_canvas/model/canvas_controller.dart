@@ -103,11 +103,37 @@ class CanvasController extends ChangeNotifier {
   }
 
   void eraseAt(Offset point, double radius) {
-    final before = _strokes.length;
-    _strokes.removeWhere(
-      (s) => s.points.any((p) => (p - point).distance <= radius + s.width / 2),
-    );
-    if (_strokes.length != before) notifyListeners();
+    bool changed = false;
+    final List<Stroke> next = [];
+    for (final s in _strokes) {
+      final threshold = radius + s.width / 2;
+      final hits = s.points.any((p) => (p - point).distance <= threshold);
+      if (!hits) {
+        next.add(s);
+        continue;
+      }
+      changed = true;
+      List<Offset> segment = [];
+      for (final p in s.points) {
+        if ((p - point).distance <= threshold) {
+          if (segment.isNotEmpty) {
+            next.add(Stroke(points: segment, color: s.color, width: s.width));
+            segment = [];
+          }
+        } else {
+          segment.add(p);
+        }
+      }
+      if (segment.isNotEmpty) {
+        next.add(Stroke(points: segment, color: s.color, width: s.width));
+      }
+    }
+    if (changed) {
+      _strokes
+        ..clear()
+        ..addAll(next);
+      notifyListeners();
+    }
   }
 
   void select(String? id) {
