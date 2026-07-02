@@ -116,20 +116,32 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   }
 
 
+  static const double _templateRefWidth = 416;
+  static const double _templateRefHeight = 240;
+  static const double _templateStickerUnit = 20;
+
   void _seedInitialLayers() {
     final layers = widget.initialLayers;
     if (layers == null) return;
+    final sx = widget.width / _templateRefWidth;
+    final sy = widget.height / _templateRefHeight;
+    final minSide =
+        (widget.width < widget.height ? widget.width : widget.height).toDouble();
     for (final spec in layers) {
-      final position = _canvasCenter + spec.offset;
+      final position = Offset(
+        widget.width / 2 + spec.offset.dx * sx,
+        widget.height / 2 + spec.offset.dy * sy,
+      );
       if (spec.text != null) {
         final fontSize = spec.textStyle?.fontSize ?? 24;
         final color = _sanitizeColor(spec.textColor ?? spec.textStyle?.color);
+        final measured = _measureText(spec.text!, fontSize, FontWeight.normal);
         _controller.addElement(
           CanvasElement(
             id: _nextId(),
             kind: CanvasElementKind.text,
             position: position,
-            baseSize: _measureText(spec.text!, fontSize, FontWeight.normal),
+            baseSize: Size(measured.width * sy, measured.height * sy),
             scale: spec.scale,
             rotation: spec.rotation,
             color: color,
@@ -141,14 +153,14 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
           record: false,
         );
       } else if (spec.widget != null) {
-        final side = (widget.width < widget.height ? widget.width : widget.height) * 0.35;
+        final side = minSide / _templateStickerUnit * spec.scale;
         _controller.addElement(
           CanvasElement(
             id: _nextId(),
             kind: CanvasElementKind.widget,
             position: position,
             baseSize: Size(side, side),
-            scale: spec.scale,
+            scale: 1.0,
             rotation: spec.rotation,
             child: spec.widget,
             elementId: spec.elementId,
@@ -450,9 +462,11 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                         selected: _controller.selectedId == element.id,
                         controller: _controller,
                         canvasKey: _canvasKey,
-                        onRequestEdit: element.kind == CanvasElementKind.text
-                            ? () => _editText(element)
-                            : null,
+                        onRequestEdit: element.elementId != null
+                            ? () => Navigator.pop(context, element.elementId)
+                            : element.kind == CanvasElementKind.text
+                                ? () => _editText(element)
+                                : null,
                         onCrop: element.kind == CanvasElementKind.image
                             ? () => _cropImage(element)
                             : null,
