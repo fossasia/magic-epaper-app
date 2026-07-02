@@ -13,15 +13,22 @@ import 'package:pro_image_editor/core/models/layers/layer_interaction.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 
 class BarcodeEditor extends StatefulWidget {
-  final Function(WidgetLayer) onBarcodeCreated;
+  /// Legacy callback that hands back a `pro_image_editor` [WidgetLayer].
+  final Function(WidgetLayer)? onBarcodeCreated;
+
+  /// Library-agnostic callback: hands back the chosen [Barcode] and its data
+  /// string so any canvas (incl. the in-house one) can build its own element.
+  final void Function(Barcode barcode, String data)? onBarcodeConfirmed;
 
   final double initialScale;
 
   const BarcodeEditor({
     super.key,
-    required this.onBarcodeCreated,
+    this.onBarcodeCreated,
+    this.onBarcodeConfirmed,
     this.initialScale = 6.0,
-  });
+  }) : assert(onBarcodeCreated != null || onBarcodeConfirmed != null,
+            'Provide onBarcodeCreated or onBarcodeConfirmed');
 
   /// All barcode formats offered by the editor, keyed by their display label.
   static Map<String, Barcode> get availableFormats => {
@@ -572,6 +579,16 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       return;
     }
 
+    // Library-agnostic path: hand the raw barcode + data to the caller.
+    if (widget.onBarcodeConfirmed != null) {
+      widget.onBarcodeConfirmed!(_selectedBarcode, _barcodeData);
+      _barcodeController.clear();
+      _barcodeData = '';
+      _debouncedBarcodeData = '';
+      _validationDebounce?.cancel();
+      return;
+    }
+
     final barcodeWidget = BarcodeWidget(
       barcode: _selectedBarcode,
       data: _barcodeData,
@@ -598,7 +615,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       ),
     );
 
-    widget.onBarcodeCreated(layer);
+    widget.onBarcodeCreated!(layer);
 
     _barcodeController.clear();
     _barcodeData = '';
