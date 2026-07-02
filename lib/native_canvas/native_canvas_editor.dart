@@ -20,6 +20,7 @@ import 'package:magicepaperapp/pro_image_editor/features/barcode_editor.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/template_util.dart';
+import 'package:magicepaperapp/util/image_source_picker.dart';
 
 class NativeCanvasEditor extends StatefulWidget {
   const NativeCanvasEditor({
@@ -57,7 +58,6 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
 
   static const List<String?> _fonts = [
     null,
-    'Roboto',
     'Lato',
     'Montserrat',
     'Oswald',
@@ -227,7 +227,9 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   }
 
   Future<void> _addImage() async {
-    final picked = await _picker.pickImage(source: ImageSource.gallery);
+    final source = await chooseImageSource(context);
+    if (source == null) return;
+    final picked = await _picker.pickImage(source: source);
     if (picked == null) return;
     final bytes = await picked.readAsBytes();
     final decoded = img.decodeImage(bytes);
@@ -262,14 +264,24 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     await file.writeAsBytes(bytes);
     final cropped = await ImageCropper().cropImage(
       sourcePath: file.path,
+      compressFormat: ImageCompressFormat.png,
+      compressQuality: 100,
       uiSettings: [
         AndroidUiSettings(
           toolbarTitle: 'Crop',
           toolbarColor: colorAccent,
           toolbarWidgetColor: Colors.white,
+          activeControlsWidgetColor: colorAccent,
+          backgroundColor: Colors.black,
+          initAspectRatio: CropAspectRatioPreset.original,
           lockAspectRatio: false,
+          hideBottomControls: false,
         ),
-        IOSUiSettings(title: 'Crop'),
+        IOSUiSettings(
+          title: 'Crop',
+          aspectRatioLockEnabled: false,
+          resetAspectRatioEnabled: true,
+        ),
       ],
     );
     if (cropped == null) return;
