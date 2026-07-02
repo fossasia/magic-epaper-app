@@ -16,7 +16,7 @@ import 'package:magicepaperapp/native_canvas/widgets/badge_color_picker.dart';
 import 'package:magicepaperapp/native_canvas/widgets/editable_element.dart';
 import 'package:magicepaperapp/native_canvas/widgets/stroke_painter.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import 'package:magicepaperapp/pro_image_editor/features/barcode_editor.dart';
+import 'package:magicepaperapp/native_canvas/widgets/barcode_editor.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/template_util.dart';

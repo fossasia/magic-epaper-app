@@ -4,31 +4,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/util/template_util.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart' as scanner;
-import 'package:pro_image_editor/core/models/layers/layer_interaction.dart';
-import 'package:pro_image_editor/pro_image_editor.dart';
 
 class BarcodeEditor extends StatefulWidget {
-  /// Legacy callback that hands back a `pro_image_editor` [WidgetLayer].
-  final Function(WidgetLayer)? onBarcodeCreated;
-
   /// Library-agnostic callback: hands back the chosen [Barcode] and its data
-  /// string so any canvas (incl. the in-house one) can build its own element.
-  final void Function(Barcode barcode, String data)? onBarcodeConfirmed;
-
-  final double initialScale;
+  /// string so any canvas can build its own element.
+  final void Function(Barcode barcode, String data) onBarcodeConfirmed;
 
   const BarcodeEditor({
     super.key,
-    this.onBarcodeCreated,
-    this.onBarcodeConfirmed,
-    this.initialScale = 6.0,
-  }) : assert(onBarcodeCreated != null || onBarcodeConfirmed != null,
-            'Provide onBarcodeCreated or onBarcodeConfirmed');
+    required this.onBarcodeConfirmed,
+  });
 
   /// All barcode formats offered by the editor, keyed by their display label.
   static Map<String, Barcode> get availableFormats => {
@@ -579,44 +568,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       return;
     }
 
-    // Library-agnostic path: hand the raw barcode + data to the caller.
-    if (widget.onBarcodeConfirmed != null) {
-      widget.onBarcodeConfirmed!(_selectedBarcode, _barcodeData);
-      _barcodeController.clear();
-      _barcodeData = '';
-      _debouncedBarcodeData = '';
-      _validationDebounce?.cancel();
-      return;
-    }
-
-    final barcodeWidget = BarcodeWidget(
-      barcode: _selectedBarcode,
-      data: _barcodeData,
-      style: const TextStyle(color: Colors.black),
-      backgroundColor: Colors.white,
-      padding: const EdgeInsets.all(2),
-    );
-
-    final layer = WidgetLayer(
-      offset: Offset.zero,
-      scale: widget.initialScale,
-      meta: {
-        LayerMetaKeys.kind: LayerKind.barcode.name,
-      },
-      widget: Container(
-        child: barcodeWidget,
-      ),
-      interaction: LayerInteraction(
-        enableEdit: true,
-        enableMove: true,
-        enableRotate: true,
-        enableScale: true,
-        enableSelection: true,
-      ),
-    );
-
-    widget.onBarcodeCreated!(layer);
-
+    widget.onBarcodeConfirmed(_selectedBarcode, _barcodeData);
     _barcodeController.clear();
     _barcodeData = '';
     _debouncedBarcodeData = '';
