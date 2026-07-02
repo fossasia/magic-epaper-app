@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
@@ -164,7 +165,7 @@ class _NFCReadScreenState extends State<NFCReadScreen>
       index: 1,
       actions: [
         IconButton(
-          icon: const Icon(Icons.delete_sweep, color: Colors.white),
+          icon: const Icon(Icons.delete_sweep, color: colorWhite),
           onPressed: () {
             if (_nfcController.result.isNotEmpty) {
               _nfcController.clearResult();
@@ -241,11 +242,11 @@ class _NFCReadScreenState extends State<NFCReadScreen>
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 8.0),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: colorWhite,
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
+                        color: colorBlack.withValues(alpha: 0.08),
                         spreadRadius: 0,
                         blurRadius: 10,
                         offset: const Offset(0, 2),
@@ -284,7 +285,7 @@ class _NFCReadScreenState extends State<NFCReadScreen>
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.grey[600],
+                            color: grey600,
                             height: 1.4,
                           ),
                         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
@@ -23,11 +24,11 @@ class ClearAllConfirmationDialog extends StatelessWidget {
           padding: const EdgeInsets.all(24),
           margin: const EdgeInsets.symmetric(vertical: 48),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colorWhite,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: colorBlack.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),

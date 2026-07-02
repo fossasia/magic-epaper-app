@@ -217,7 +217,7 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                           appLocalizations.writeAllNonEmptyFieldsDescription,
                           style: TextStyle(
                             fontSize: 13,
-                            color: Colors.grey[600],
+                            color: grey600,
                             height: 1.4,
                           ),
                         ),
@@ -294,7 +294,7 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: grey50,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: mdGrey400.withValues(alpha: 0.3)),
       ),
@@ -337,7 +337,7 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
       style: const TextStyle(fontSize: 14),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
+        hintStyle: TextStyle(color: grey500, fontSize: 14),
         prefixIcon: Icon(prefixIcon, color: colorAccent, size: 20),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -377,8 +377,8 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
           ),
         ),
         style: ElevatedButton.styleFrom(
-          disabledBackgroundColor: Colors.grey[300],
-          disabledForegroundColor: Colors.grey[600],
+          disabledBackgroundColor: grey300,
+          disabledForegroundColor: grey600,
         ),
       ),
     );

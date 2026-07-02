@@ -23,7 +23,7 @@ class SearchAndFilterWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorWhite,
         boxShadow: [
           BoxShadow(
             color: colorBlack.withValues(alpha: 0.05),

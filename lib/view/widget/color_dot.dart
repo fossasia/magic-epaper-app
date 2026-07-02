@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 
 class ColorDot extends StatelessWidget {
   final Color color;
@@ -20,7 +21,7 @@ class ColorDot extends StatelessWidget {
         color: color,
         shape: BoxShape.circle,
         border: Border.all(
-          color: Colors.grey.shade300,
+          color: grey300,
           width: 1.0,
         ),
       ),

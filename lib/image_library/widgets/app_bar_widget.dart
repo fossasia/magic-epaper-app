@@ -26,15 +26,14 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      iconTheme: const IconThemeData(color: Colors.white),
+      iconTheme: const IconThemeData(color: colorWhite),
       backgroundColor: colorAccent,
       elevation: 0,
       title: Text(
         isDeleteMode
             ? appLocalizations.selectImagesToDelete
             : appLocalizations.imageLibrary,
-        style:
-            const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        style: const TextStyle(color: colorWhite, fontWeight: FontWeight.bold),
       ),
       actions: [
         if (isDeleteMode) ...[
@@ -45,10 +44,10 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
                 onPressed: onDeletePressed,
                 style: TextButton.styleFrom(
                   backgroundColor: colorAccent,
-                  foregroundColor: Colors.white,
+                  foregroundColor: colorWhite,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
-                    side: const BorderSide(color: Colors.white, width: 1),
+                    side: const BorderSide(color: colorWhite, width: 1),
                   ),
                 ),
                 child: Text('${appLocalizations.delete} ($selectedCount)'),
@@ -65,7 +64,7 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
             tooltip: appLocalizations.deleteMode,
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
+            icon: const Icon(Icons.more_vert, color: colorWhite),
             onSelected: (value) {
               switch (value) {
                 case 'clear_all':
@@ -76,9 +75,9 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            color: Colors.white,
+            color: colorWhite,
             elevation: 8,
-            shadowColor: Colors.black.withValues(alpha: 0.1),
+            shadowColor: colorBlack.withValues(alpha: 0.1),
             offset: const Offset(0, 10),
             itemBuilder: (context) => [
               PopupMenuItem(
@@ -125,7 +124,7 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
                               appLocalizations.removeAllImages,
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.grey.shade600,
+                                color: grey600,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),

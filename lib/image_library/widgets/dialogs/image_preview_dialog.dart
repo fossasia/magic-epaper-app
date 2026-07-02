@@ -32,7 +32,7 @@ class ImagePreviewDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: colorWhite,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
@@ -66,7 +66,7 @@ class ImagePreviewDialog extends StatelessWidget {
             child: Text(
               image.name,
               style: const TextStyle(
-                color: Colors.white,
+                color: colorWhite,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -74,12 +74,12 @@ class ImagePreviewDialog extends StatelessWidget {
           ),
           IconButton(
             onPressed: () => _showPropertiesDialog(context),
-            icon: const Icon(Icons.info_outline, color: Colors.white),
+            icon: const Icon(Icons.info_outline, color: colorWhite),
             tooltip: appLocalizations.imageProperties,
           ),
           IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.close, color: Colors.white),
+            icon: const Icon(Icons.close, color: colorWhite),
           ),
         ],
       ),
@@ -148,11 +148,11 @@ class ImagePreviewDialog extends StatelessWidget {
   Widget _buildInfoRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: Colors.grey.shade600),
+        Icon(icon, size: 16, color: grey600),
         const SizedBox(width: 4),
         Text(
           text,
-          style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+          style: TextStyle(color: grey600, fontSize: 12),
         ),
       ],
     );
