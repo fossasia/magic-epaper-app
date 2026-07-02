@@ -17,6 +17,16 @@
   "aboutUs": "About Us",
   "other": "Other",
   "getBadge": "Get Badge",
+  "privacyPolicy": "Privacy Policy",
+  "flipHorizontally": "Flip Horizontally",
+  "flipVertically": "Flip Vertically",
+  "saveToLibrary": "Save to Library",
+  "buyBadgeIntro": "Thank you for your interest in the FOSSASIA Badges. Currently the Magic ePaper Badge is still in prototype stage. You can order in future on FOSSASIA.com. In the meantime please check out our prototypes on the Git repository.",
+  "buyBadgeLinks": "Links",
+  "buyBadgeFossasiaWebsite": "FOSSASIA Website",
+  "buyBadgeFossasiaWebsiteSubtitle": "Visit fossasia.com for future badge orders",
+  "buyBadgeHardwareRepository": "Hardware Repository",
+  "buyBadgeHardwareRepositorySubtitle": "Check out our badge prototypes and hardware designs",
   "feedbackBugReports": "Feedback/Bug Reports",
   "continueButton": "Continue",
   "noImageSelectedFeedback": "Import an image first!",
@@ -253,6 +263,110 @@
   "exportedXbmFiles": "Exported XBM file(s) to MagicEpaper/XBM/",
   "exported": "Exported",
   "xbmFilesToMagicEpaper": "XBM file(s) to MagicEpaper/XBM/",
+  "barcodeCharacterNotAllowed": "Character not allowed",
+  "barcodeCharacterNotAllowedDetail": "{format} doesn't allow '{character}'.\nAllowed: {allowed}",
+  "@barcodeCharacterNotAllowedDetail": {
+    "description": "Shown when a barcode contains disallowed characters",
+    "placeholders": {
+      "format": { "type": "String" },
+      "character": { "type": "String" },
+      "allowed": { "type": "String" }
+    }
+  },
+  "barcodeDataTooShort": "Data too short",
+  "barcodeDataTooShortDetail": "{format} needs {requirement}.\nYou entered {length} — add {needed} more.",
+  "@barcodeDataTooShortDetail": {
+    "description": "Shown when barcode data is shorter than required",
+    "placeholders": {
+      "format": { "type": "String" },
+      "requirement": { "type": "String" },
+      "length": { "type": "int" },
+      "needed": { "type": "int" }
+    }
+  },
+  "barcodeDataTooLong": "Data too long",
+  "barcodeDataTooLongDetail": "{format} fits {requirement}.\nYou entered {length} — that's {extra} too many.",
+  "@barcodeDataTooLongDetail": {
+    "description": "Shown when barcode data exceeds the maximum allowed length",
+    "placeholders": {
+      "format": { "type": "String" },
+      "requirement": { "type": "String" },
+      "length": { "type": "int" },
+      "extra": { "type": "int" }
+    }
+  },
+  "barcodeInvalidDataTitle": "Invalid {format} data",
+  "@barcodeInvalidDataTitle": {
+    "description": "Title shown for invalid barcode data",
+    "placeholders": { "format": { "type": "String" } }
+  },
+  "barcodeInvalidDataDetail": "{detail}",
+  "@barcodeInvalidDataDetail": {
+    "description": "Detail shown for invalid barcode data",
+    "placeholders": { "detail": { "type": "String" } }
+  },
+  "barcodeCannotEncodeValue": "This value can't be encoded as {format}. Please check it.",
+  "@barcodeCannotEncodeValue": {
+    "description": "Fallback detail shown when barcode data cannot be encoded",
+    "placeholders": { "format": { "type": "String" } }
+  },
+  "barcodeSuggestionItf": "ITF needs an even number of digits. Add or remove one digit.",
+  "barcodeSuggestionCodabar": "Start and stop letters are added automatically. Use only digits and ($ . / : +).",
+  "barcodeSuggestionUpcA": "This looks like a compressed UPC-E code. Enter the full 11-digit UPC-A version to edit it here.",
+  "barcodeChecksumHint": "The last digit is a check digit. You entered \"{entered}\" but it should be \"{expected}\".\nTip: enter one fewer digit and we'll calculate it for you.",
+  "@barcodeChecksumHint": {
+    "description": "Hint shown for barcode checksum mismatches",
+    "placeholders": {
+      "entered": { "type": "String" },
+      "expected": { "type": "String" }
+    }
+  },
+  "barcodeAnyText": "Any text",
+  "barcodeAllowedCharsCodabar": "digits and - $ . / : +",
+  "barcodeAllowedCharsCode128": "Any printable ASCII",
+  "barcodeAllowedCharsCode39": "0–9, A–Z, space, - . $ / + %",
+  "barcodeAllowedCharsNumeric": "0 to 9",
+  "barcodeAllowedCharsFallback": "See barcode rules",
+  "barcodeFormatHintPrintableAscii": "Any printable ASCII",
+  "barcodeFormatHintUppercaseAlphanumeric": "A to Z, 0 to 9, and (space . $ / + %)",
+  "barcodeFormatHintDigitsAndSymbols": "Digits and ($ . / : +)",
+  "barcodeFormatHintEan13": "12 digits (check digit added automatically)",
+  "barcodeFormatHintEan8": "7 digits (check digit added automatically)",
+  "barcodeFormatHintUpcA": "11 digits (check digit added automatically)",
+  "barcodeFormatHintItf": "Even number of digits",
+  "barcodeExampleQrCode": "e.g. https://example.com",
+  "barcodeExampleDataMatrix": "e.g. Order #12345",
+  "barcodeExampleAztec": "e.g. AZTEC-DATA-001",
+  "barcodeExamplePdf417": "e.g. PDF417 payload",
+  "barcodeExampleCode128": "e.g. ABC-1234",
+  "barcodeExampleCode39": "e.g. HELLO-123",
+  "barcodeExampleCode93": "e.g. HELLO-123",
+  "barcodeExampleCodabar": "e.g. 1234-5678",
+  "barcodeExampleEan13": "e.g. 590123412345",
+  "barcodeExampleEan8": "e.g. 1234567",
+  "barcodeExampleUpcA": "e.g. 03600029145",
+  "barcodeExampleItf": "e.g. 12345678",
+  "barcodeExampleDefault": "Enter barcode data",
+  "barcodeAnyLength": "any length",
+  "barcodeAtLeastCharacters": "at least {count} characters",
+  "@barcodeAtLeastCharacters": {
+    "description": "Length requirement for barcodes",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "barcodeExactlyCharacters": "{count} characters",
+  "@barcodeExactlyCharacters": {
+    "description": "Exact length requirement for barcodes",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "barcodeRangeCharacters": "{min}–{max} characters",
+  "@barcodeRangeCharacters": {
+    "description": "Range length requirement for barcodes",
+    "placeholders": {
+      "min": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "barcodeCouldNotAutoDetect": "Data filled in. Format could not be auto-detected — please pick the correct format from the dropdown.",
 
   "floydSteinberg": "Classic",
   "stucki": "Sharp",

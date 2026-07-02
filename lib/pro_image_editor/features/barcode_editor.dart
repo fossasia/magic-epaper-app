@@ -91,20 +91,29 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     scanner.BarcodeFormat.itf,
   ];
 
-  final Map<String, String> barcodeFormatToSupportedChars = {
-    'Aztec': 'Any text',
-    'CODABAR': 'digits and - \$ . / : +',
-    'CODE 128': 'Any printable ASCII',
-    'CODE 39': '0–9, A–Z, space, - . \$ / + %',
-    'CODE 93': '0–9, A–Z, space, - . \$ / + %',
-    'Data Matrix': 'Any text',
-    'EAN 13': '0 to 9',
-    'EAN 8': '0 to 9',
-    'ITF': '0 to 9',
-    'PDF417': 'Any text',
-    'QR Code': 'Any text',
-    'UPC A': '0 to 9',
-  };
+  String _allowedCharactersDescription(Barcode barcode) {
+    switch (barcode.name) {
+      case 'Aztec':
+      case 'Data Matrix':
+      case 'PDF417':
+      case 'QR Code':
+        return _l10n.barcodeAnyText;
+      case 'CODABAR':
+        return _l10n.barcodeAllowedCharsCodabar;
+      case 'CODE 128':
+        return _l10n.barcodeAllowedCharsCode128;
+      case 'CODE 39':
+      case 'CODE 93':
+        return _l10n.barcodeAllowedCharsCode39;
+      case 'EAN 13':
+      case 'EAN 8':
+      case 'ITF':
+      case 'UPC A':
+        return _l10n.barcodeAllowedCharsNumeric;
+      default:
+        return _l10n.barcodeAllowedCharsFallback;
+    }
+  }
 
   static const Set<String> _autoChecksumFormats = {
     'EAN 13',
@@ -176,11 +185,14 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       for (final rune in data.runes) {
         if (!allowedChars.contains(rune)) {
           final char = String.fromCharCode(rune);
-          final allowed = barcodeFormatToSupportedChars[barcode.name] ??
-              'See barcode rules';
+          final allowed = _allowedCharactersDescription(barcode);
           return _ValidationError(
-            title: 'Character not allowed',
-            detail: "$friendly doesn't allow '$char'.\nAllowed: $allowed",
+            title: _l10n.barcodeCharacterNotAllowed,
+            detail: _l10n.barcodeCharacterNotAllowedDetail(
+              friendly,
+              char,
+              allowed,
+            ),
           );
         }
       }
@@ -191,9 +203,13 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       final needed = minLen - data.length;
       final suggestion = _suggestionFor(barcode, data, '');
       return _ValidationError(
-        title: 'Data too short',
-        detail:
-            '$friendly needs ${_lengthRequirement(barcode)}.\nYou entered ${data.length} — add $needed more.',
+        title: _l10n.barcodeDataTooShort,
+        detail: _l10n.barcodeDataTooShortDetail(
+          friendly,
+          _lengthRequirement(barcode),
+          data.length,
+          needed,
+        ),
         suggestion: suggestion,
         showInPreview: suggestion != null,
       );
@@ -203,9 +219,13 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     if (effMax != null && data.length > effMax) {
       final extra = data.length - effMax;
       return _ValidationError(
-        title: 'Data too long',
-        detail:
-            '$friendly fits ${_lengthRequirement(barcode)}.\nYou entered ${data.length} — that\'s $extra too many.',
+        title: _l10n.barcodeDataTooLong,
+        detail: _l10n.barcodeDataTooLongDetail(
+          friendly,
+          _lengthRequirement(barcode),
+          data.length,
+          extra,
+        ),
       );
     }
 
@@ -213,14 +233,18 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       barcode.verify(data);
     } on BarcodeException catch (e) {
       return _ValidationError(
-        title: 'Invalid $friendly data',
-        detail: _humanizeEncodeError(e.message, friendly),
+        title: _l10n.barcodeInvalidDataTitle(friendly),
+        detail: _l10n.barcodeInvalidDataDetail(
+          _humanizeEncodeError(e.message, friendly),
+        ),
         suggestion: _suggestionFor(barcode, data, e.message),
       );
     } catch (_) {
       return _ValidationError(
-        title: 'Invalid $friendly data',
-        detail: 'This value can\'t be encoded as $friendly. Please check it.',
+        title: _l10n.barcodeInvalidDataTitle(friendly),
+        detail: _l10n.barcodeInvalidDataDetail(
+          _l10n.barcodeCannotEncodeValue(friendly),
+        ),
       );
     }
 
@@ -229,23 +253,15 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
 
   _Suggestion? _suggestionFor(Barcode b, String data, String rawError) {
     if (b.name == 'ITF' && data.length.isOdd) {
-      return const _Suggestion(
-        text: 'ITF needs an even number of digits. Add or remove one digit.',
-      );
+      return _Suggestion(text: _l10n.barcodeSuggestionItf);
     }
 
     if (b.name == 'CODABAR' && RegExp(r'[A-Za-z]').hasMatch(data)) {
-      return const _Suggestion(
-        text:
-            'Start and stop letters are added automatically. Use only digits and (\$ . / : +).',
-      );
+      return _Suggestion(text: _l10n.barcodeSuggestionCodabar);
     }
 
     if (b.name == 'UPC A' && data.length == 8) {
-      return const _Suggestion(
-        text:
-            'This looks like a compressed UPC-E code. Enter the full 11-digit UPC-A version to edit it here.',
-      );
+      return _Suggestion(text: _l10n.barcodeSuggestionUpcA);
     }
 
     return null;
@@ -259,7 +275,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     if (match != null) {
       final entered = match.group(1);
       final expected = match.group(2);
-      return 'The last digit is a check digit. You entered "$entered" but it should be "$expected".\nTip: enter one fewer digit and we\'ll calculate it for you.';
+      return _l10n.barcodeChecksumHint(entered ?? '', expected ?? '');
     }
     if (raw.contains('not ') && raw.contains('digits')) {
       return raw
@@ -274,10 +290,12 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     final minLen = _effectiveMinLength(b);
     final maxLen = _effectiveMaxLength(b);
     if (maxLen == null) {
-      return minLen <= 1 ? 'any length' : 'at least $minLen characters';
+      return minLen <= 1
+          ? _l10n.barcodeAnyLength
+          : _l10n.barcodeAtLeastCharacters(minLen);
     }
-    if (minLen == maxLen) return '$maxLen characters';
-    return '$minLen–$maxLen characters';
+    if (minLen == maxLen) return _l10n.barcodeExactlyCharacters(maxLen);
+    return _l10n.barcodeRangeCharacters(minLen, maxLen);
   }
 
   int? _effectiveMaxLength(Barcode b) {
@@ -291,40 +309,63 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     return b.minLength;
   }
 
-  static const Map<String, String> _formatHints = {
-    'QR-Code': 'Any text',
-    'Data Matrix': 'Any text',
-    'Aztec': 'Any text',
-    'PDF417': 'Any text',
-    'CODE 128': 'Any printable ASCII',
-    'CODE 39': 'A to Z, 0 to 9, and (space . \$ / + %)',
-    'CODE 93': 'A to Z, 0 to 9, and (space . \$ / + %)',
-    'CODABAR': 'Digits and (\$ . / : +)',
-    'EAN 13': '12 digits (check digit added automatically)',
-    'EAN 8': '7 digits (check digit added automatically)',
-    'UPC A': '11 digits (check digit added automatically)',
-    'ITF': 'Even number of digits',
-  };
+  String _formatHint(Barcode b) {
+    switch (b.name) {
+      case 'QR-Code':
+      case 'Data Matrix':
+      case 'Aztec':
+      case 'PDF417':
+        return _l10n.barcodeAnyText;
+      case 'CODE 128':
+        return _l10n.barcodeFormatHintPrintableAscii;
+      case 'CODE 39':
+      case 'CODE 93':
+        return _l10n.barcodeFormatHintUppercaseAlphanumeric;
+      case 'CODABAR':
+        return _l10n.barcodeFormatHintDigitsAndSymbols;
+      case 'EAN 13':
+        return _l10n.barcodeFormatHintEan13;
+      case 'EAN 8':
+        return _l10n.barcodeFormatHintEan8;
+      case 'UPC A':
+        return _l10n.barcodeFormatHintUpcA;
+      case 'ITF':
+        return _l10n.barcodeFormatHintItf;
+      default:
+        return _l10n.barcodeAnyText;
+    }
+  }
 
-  static const Map<String, String> _formatExamples = {
-    'QR-Code': 'e.g. https://example.com',
-    'Data Matrix': 'e.g. Order #12345',
-    'Aztec': 'e.g. AZTEC-DATA-001',
-    'PDF417': 'e.g. PDF417 payload',
-    'CODE 128': 'e.g. ABC-1234',
-    'CODE 39': 'e.g. HELLO-123',
-    'CODE 93': 'e.g. HELLO-123',
-    'CODABAR': 'e.g. 1234-5678',
-    'EAN 13': 'e.g. 590123412345',
-    'EAN 8': 'e.g. 1234567',
-    'UPC A': 'e.g. 03600029145',
-    'ITF': 'e.g. 12345678',
-  };
-
-  String _formatHint(Barcode b) => _formatHints[b.name] ?? 'Any text';
-
-  String _formatExample(Barcode b) =>
-      _formatExamples[b.name] ?? 'Enter barcode data';
+  String _formatExample(Barcode b) {
+    switch (b.name) {
+      case 'QR-Code':
+        return _l10n.barcodeExampleQrCode;
+      case 'Data Matrix':
+        return _l10n.barcodeExampleDataMatrix;
+      case 'Aztec':
+        return _l10n.barcodeExampleAztec;
+      case 'PDF417':
+        return _l10n.barcodeExamplePdf417;
+      case 'CODE 128':
+        return _l10n.barcodeExampleCode128;
+      case 'CODE 39':
+        return _l10n.barcodeExampleCode39;
+      case 'CODE 93':
+        return _l10n.barcodeExampleCode93;
+      case 'CODABAR':
+        return _l10n.barcodeExampleCodabar;
+      case 'EAN 13':
+        return _l10n.barcodeExampleEan13;
+      case 'EAN 8':
+        return _l10n.barcodeExampleEan8;
+      case 'UPC A':
+        return _l10n.barcodeExampleUpcA;
+      case 'ITF':
+        return _l10n.barcodeExampleItf;
+      default:
+        return _l10n.barcodeExampleDefault;
+    }
+  }
 
   List<TextInputFormatter> _inputFormattersFor(Barcode b) {
     final formatters = <TextInputFormatter>[];
@@ -425,7 +466,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
 
       if (detected == null) {
         _showSnackBar(
-          'Data filled in. Format could not be auto-detected — please pick the correct format from the dropdown.',
+          _l10n.barcodeCouldNotAutoDetect,
           background: Colors.orange.shade700,
         );
       }
@@ -687,7 +728,9 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
             drawText: !is2D,
             errorBuilder: (context, error) => _buildPreviewErrorCard(
               _ValidationError(
-                title: 'Invalid ${_friendlyName(_selectedBarcode)} data',
+                title: _l10n.barcodeInvalidDataTitle(
+                  _friendlyName(_selectedBarcode),
+                ),
                 detail: _humanizeEncodeError(
                     error, _friendlyName(_selectedBarcode)),
                 suggestion: _suggestionFor(
