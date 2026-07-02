@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:barcode_widget/barcode_widget.dart';
@@ -385,9 +386,20 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   Future<void> _addImage() async {
     final source = await chooseImageSource(context);
     if (source == null) return;
-    final picked = await _picker.pickImage(source: source);
-    if (picked == null) return;
-    final bytes = await picked.readAsBytes();
+    if (source == ImageSource.gallery) {
+      final picked = await _picker.pickMultiImage();
+      if (picked.isEmpty) return;
+      for (final file in picked) {
+        _placeImage(await file.readAsBytes());
+      }
+    } else {
+      final picked = await _picker.pickImage(source: source);
+      if (picked == null) return;
+      _placeImage(await picked.readAsBytes());
+    }
+  }
+
+  void _placeImage(Uint8List bytes) {
     final decoded = img.decodeImage(bytes);
     final aspect = (decoded == null || decoded.height == 0)
         ? 1.0
