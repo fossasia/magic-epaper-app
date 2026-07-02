@@ -198,7 +198,7 @@ class _AppDrawerState extends State<AppDrawer> {
           _buildListTile(
             index: 8,
             icon: Icons.article,
-            title: 'Privacy Policy',
+            title: appLocalizations.privacyPolicy,
             routeName: '/feedback',
             externalLink: 'https://badgemagic.fossasia.org/privacy/',
           ),

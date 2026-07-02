@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/image_library/services/image_filter_helper.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/util/epd/configurable_editor.dart';
@@ -49,6 +50,7 @@ class ImageList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final double aspectRatio = height / width;
     return Column(
       children: [
@@ -87,21 +89,21 @@ class ImageList extends StatelessWidget {
             _buildFlipButton(
               assetPath: ImageAssets.flipHorizontal,
               onPressed: onFlipHorizontal,
-              tooltip: 'Flip Horizontally',
+              tooltip: appLocalizations.flipHorizontally,
               rotation: -1.5708,
             ),
             const SizedBox(width: 16),
             _buildFlipButton(
               assetPath: ImageAssets.flipHorizontal,
               onPressed: onFlipVertical,
-              tooltip: 'Flip Vertically',
+              tooltip: appLocalizations.flipVertically,
             ),
             if (onSave != null) ...[
               const SizedBox(width: 16),
               _buildFlipButton(
                 icon: Icons.save_outlined,
                 onPressed: onSave!,
-                tooltip: 'Save to Library',
+                tooltip: appLocalizations.saveToLibrary,
               ),
             ],
           ],
