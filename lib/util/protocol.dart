@@ -109,31 +109,41 @@ class Protocol {
     return chunks;
   }
 
+  Future<bool> ensureNfcAvailable() async {
+    final availability = await FlutterNfcKit.nfcAvailability;
+
+    switch (availability) {
+      case NFCAvailability.available:
+        return true;
+
+      case NFCAvailability.disabled:
+        Fluttertoast.showToast(
+          msg: appLocalizations.nfcIsDisabledPleaseEnableIt,
+        );
+
+        if (Platform.isAndroid) {
+          await NFCSettingsLauncher.openNFCSettings();
+        } else if (Platform.isIOS) {
+          await AppSettings.openAppSettings();
+        }
+
+        return false;
+
+      case NFCAvailability.not_supported:
+        Fluttertoast.showToast(
+          msg: appLocalizations.thisDeviceDoesNotSupportNfc,
+        );
+        return false;
+    }
+  }
+
   Future<void> writeImages(
     img.Image image, {
     ProgressCallback? onProgress,
     TagDetectedCallback? onTagDetected,
     Waveform? waveform,
   }) async {
-    var availability = await FlutterNfcKit.nfcAvailability;
-    switch (availability) {
-      case NFCAvailability.available:
-        break;
-      case NFCAvailability.disabled:
-        Fluttertoast.showToast(
-            msg: appLocalizations.nfcIsDisabledPleaseEnableIt);
-        if (Platform.isAndroid) {
-          await NFCSettingsLauncher.openNFCSettings();
-        } else if (Platform.isIOS) {
-          await AppSettings.openAppSettings();
-        }
-        return;
-      case NFCAvailability.not_supported:
-        Fluttertoast.showToast(
-            msg: appLocalizations.thisDeviceDoesNotSupportNfc);
-        return;
-    }
-
+    if (!await ensureNfcAvailable()) return;
     onProgress?.call(0.0, appLocalizations.waitingForNfcTag);
     Fluttertoast.showToast(
         msg: appLocalizations.bringPhoneNearMagicEpaperHardware);
