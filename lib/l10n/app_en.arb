@@ -726,5 +726,9 @@
   "notABarcode": "This doesn't look like a barcode. Please upload a clear barcode image.",
   "addBarcode": "Add Barcode",
   "readyToTransfer": "Ready to Transfer",
-  "holdPhoneNearDisplay": "Hold your phone near the display to begin."
+  "holdPhoneNearDisplay": "Hold your phone near the display to begin.",
+  "adjustImage": "Adjust Image",
+  "brightness": "Brightness",
+  "contrast": "Contrast",
+  "resetToDefault": "Reset to default"
 }
