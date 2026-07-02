@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +49,10 @@ class _ImageEditorState extends State<ImageEditor> {
   ImageSaveHandler? _imageSaveHandler;
   bool _isProcessingImages = false;
   bool _isInitializing = true;
+  Timer? _colorDebounce;
+  double _currentBrightness = 1.0;
+  double _currentContrast = 1.0;
+  img.Image? _pristineImage;
 
   @override
   void initState() {
@@ -155,7 +161,7 @@ class _ImageEditorState extends State<ImageEditor> {
     if (_processedSourceImage == sourceImage) {
       return;
     }
-
+    _pristineImage ??= img.Image.from(sourceImage);
     _processImagesAsync(sourceImage);
   }
 
@@ -502,6 +508,151 @@ class _ImageEditorState extends State<ImageEditor> {
     );
   }
 
+  void _showColorAdjustmentDialog(BuildContext context, ImageLoader imgLoader) {
+    if (imgLoader.image == null) return;
+
+    _pristineImage ??= img.Image.from(imgLoader.image!);
+
+    void applyFiltersRealtime() {
+      if (_colorDebounce?.isActive ?? false) _colorDebounce!.cancel();
+
+      _colorDebounce = Timer(const Duration(milliseconds: 300), () async {
+        final adjusted = img.adjustColor(
+          img.Image.from(_pristineImage!),
+          brightness: _currentBrightness,
+          contrast: _currentContrast,
+        );
+
+        final bytes = Uint8List.fromList(img.encodePng(adjusted));
+
+        await imgLoader.updateImage(
+            bytes: bytes,
+            width: widget.device.width,
+            height: widget.device.height);
+      });
+    }
+
+    showModalBottomSheet(
+      isDismissible: false,
+      context: context,
+      backgroundColor: Colors.white,
+      barrierColor: Colors.black.withValues(alpha: 0.2),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    appLocalizations.adjustImage,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      const Icon(Icons.light_mode_outlined),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                "${appLocalizations.brightness}: ${_currentBrightness.toStringAsFixed(2)}"),
+                            Slider(
+                              value: _currentBrightness,
+                              min: 0.0,
+                              max: 2.0,
+                              activeColor: colorAccent,
+                              onChanged: (val) {
+                                setModalState(() => _currentBrightness = val);
+                                applyFiltersRealtime();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      const Icon(Icons.contrast_outlined),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                "${appLocalizations.contrast}: ${_currentContrast.toStringAsFixed(2)}"),
+                            Slider(
+                              value: _currentContrast,
+                              min: 0.0,
+                              max: 2.0,
+                              activeColor: colorAccent,
+                              onChanged: (val) {
+                                setModalState(() => _currentContrast = val);
+                                applyFiltersRealtime();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: colorAccent,
+                            side: const BorderSide(color: colorAccent),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          onPressed: () {
+                            setModalState(() {
+                              _currentBrightness = 1.0;
+                              _currentContrast = 1.0;
+                            });
+                            applyFiltersRealtime();
+                          },
+                          child: Text(
+                            appLocalizations.resetToDefault,
+                            style: const TextStyle(fontSize: 14),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: colorAccent,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                          child: Text(appLocalizations.done,
+                              style: const TextStyle(fontSize: 14)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context)!;
@@ -585,6 +736,8 @@ class _ImageEditorState extends State<ImageEditor> {
                         onFlipHorizontal: toggleFlipHorizontal,
                         onFlipVertical: toggleFlipVertical,
                         onSave: _saveCurrentImage,
+                        onAdjustColors: () =>
+                            _showColorAdjustmentDialog(context, imgLoader),
                       )
                     : Center(
                         child: Text(
@@ -601,6 +754,9 @@ class _ImageEditorState extends State<ImageEditor> {
           imageSaveHandler: _imageSaveHandler,
           onSourceChanged: (String source) {
             setState(() {
+              _currentBrightness = 1.0;
+              _currentContrast = 1.0;
+              _pristineImage = null;
               _currentImageSource = source;
             });
           }),

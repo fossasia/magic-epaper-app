@@ -16,6 +16,7 @@ class ImageList extends StatelessWidget {
   final Function() onFlipHorizontal;
   final Function() onFlipVertical;
   final Function()? onSave;
+  final VoidCallback? onAdjustColors;
   final int width;
   final int height;
 
@@ -32,6 +33,7 @@ class ImageList extends StatelessWidget {
     required this.width,
     required this.height,
     this.onSave,
+    this.onAdjustColors,
   });
 
   String getFilterNameByIndex(int index) {
@@ -96,6 +98,14 @@ class ImageList extends StatelessWidget {
               onPressed: onFlipVertical,
               tooltip: 'Flip Vertically',
             ),
+            if (onAdjustColors != null) ...[
+              const SizedBox(width: 16),
+              _buildFlipButton(
+                icon: Icons.tune_rounded,
+                onPressed: onAdjustColors!,
+                tooltip: 'Adjust Brightness & Contrast',
+              ),
+            ],
             if (onSave != null) ...[
               const SizedBox(width: 16),
               _buildFlipButton(
