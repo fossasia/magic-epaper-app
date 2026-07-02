@@ -13,7 +13,7 @@ Guidance for AI coding agents (Claude Code, Cursor, Aider, Copilot, Codex, and o
 - **State Management**: Provider pattern (`provider` package)
 - **Dependency Injection**: GetIt (service locator pattern)
 - **NFC**: `flutter_nfc_kit`, `ndef`
-- **Image editing**: `pro_image_editor`, `image`, `image_cropper`, `image_picker`
+- **Image editing**: in-house `native_canvas` editor, `image`, `image_cropper`, `image_picker`
 - **Supported Platforms**: Android, iOS, Linux, macOS, Windows, Web
 
 ## Repository Structure
@@ -32,7 +32,7 @@ magic-epaper-app/
 │   ├── image_library/    # Saved-image storage, provider, services, dialogs
 │   ├── l10n/             # Localization (ARB + generated AppLocalizations)
 │   ├── ndef_screen/      # NFC/NDEF screens, controller, services, models
-│   ├── pro_image_editor/ # Canvas/image editor features built on pro_image_editor
+│   ├── native_canvas/    # In-house canvas/image editor (text, image, barcode, draw)
 │   ├── provider/         # ChangeNotifier providers + GetIt locator
 │   ├── util/             # EPD drivers, image processing, protocol, helpers
 │   ├── view/             # Top-level screens and shared widgets

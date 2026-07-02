@@ -102,19 +102,18 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     return Colors.black;
   }
 
-  Offset get _canvasCenter =>
-      Offset(widget.width / 2, widget.height / 2);
+  Offset get _canvasCenter => Offset(widget.width / 2, widget.height / 2);
 
   int _spawnCount = 0;
 
   Offset _nextSpawnPosition() {
     final minSide =
-        (widget.width < widget.height ? widget.width : widget.height).toDouble();
+        (widget.width < widget.height ? widget.width : widget.height)
+            .toDouble();
     final step = minSide * 0.08;
     final index = _spawnCount++ % 6;
     return _canvasCenter + Offset(step * index, step * index);
   }
-
 
   static const double _templateRefWidth = 416;
   static const double _templateRefHeight = 240;
@@ -123,10 +122,149 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   void _seedInitialLayers() {
     final layers = widget.initialLayers;
     if (layers == null) return;
+    if (layers.any((s) => s.elementId == 'qr')) {
+      _seedCardLayout(layers);
+    } else {
+      _seedOffsetLayers(layers);
+    }
+  }
+
+  void _seedCardLayout(List<LayerSpec> layers) {
+    final w = widget.width.toDouble();
+    final h = widget.height.toDouble();
+    final marginX = w * 0.045;
+    final marginY = h * 0.035;
+    final contentH = h - 2 * marginY;
+
+    LayerSpec? photo;
+    LayerSpec? qr;
+    final texts = <LayerSpec>[];
+    for (final s in layers) {
+      if (s.elementId == 'profileImage' || s.kind == LayerKind.image) {
+        photo = s;
+      } else if (s.elementId == 'qr' || s.kind == LayerKind.barcode) {
+        qr = s;
+      } else if (s.text != null) {
+        texts.add(s);
+      }
+    }
+
+    LayerSpec? title;
+    for (final s in texts) {
+      final f = s.textStyle?.fontSize ?? 0;
+      if (title == null || f > (title.textStyle?.fontSize ?? 0)) title = s;
+    }
+    final details = texts.where((s) => s != title).toList();
+
+    final photoSize = contentH * 0.52;
+    final qrSize = contentH * 0.44;
+    final gap = contentH * 0.04;
+    final leftColX = marginX + photoSize / 2;
+
+    if (photo?.widget != null) {
+      _seedWidgetElement(
+          photo!, Offset(leftColX, marginY + photoSize / 2), photoSize);
+    }
+    if (qr?.widget != null) {
+      _seedWidgetElement(
+        qr!,
+        Offset(leftColX, marginY + photoSize + gap + qrSize / 2),
+        qrSize,
+      );
+    }
+
+    final colGapX = w * 0.05;
+    final textLeftX = marginX + photoSize + colGapX;
+    final textColW = w - textLeftX - marginX;
+
+    final titleH = contentH * 0.18;
+    final detailH = contentH * 0.14;
+    final lineGap = contentH * 0.045;
+
+    double detailWidth(LayerSpec s) {
+      final fs = s.textStyle?.fontSize ?? 24;
+      final fw = s.textStyle?.fontWeight ?? FontWeight.normal;
+      final m = _measureText(s.text!, fs, fw);
+      final aspect = m.height == 0 ? 6.0 : m.width / m.height;
+      return detailH * aspect;
+    }
+
+    var detailsW = 0.0;
+    for (final d in details) {
+      final dw = detailWidth(d);
+      if (dw > detailsW) detailsW = dw;
+    }
+    if (detailsW > textColW) detailsW = textColW;
+    final detailsLeftX = textLeftX + (textColW - detailsW) / 2;
+
+    final blockH = (title != null ? titleH + lineGap : 0) +
+        details.length * (detailH + lineGap);
+    var y = marginY + (contentH - blockH) / 2;
+    if (title != null) {
+      _seedTextElement(title, textLeftX, y, titleH,
+          columnWidth: textColW, center: true);
+      y += titleH + lineGap;
+    }
+    for (final d in details) {
+      _seedTextElement(d, detailsLeftX, y, detailH, columnWidth: detailsW);
+      y += detailH + lineGap;
+    }
+  }
+
+  void _seedWidgetElement(LayerSpec spec, Offset center, double side) {
+    _controller.addElement(
+      CanvasElement(
+        id: _nextId(),
+        kind: CanvasElementKind.widget,
+        position: center,
+        baseSize: Size(side, side),
+        scale: 1.0,
+        child: spec.widget,
+        elementId: spec.elementId,
+      ),
+      record: false,
+    );
+  }
+
+  void _seedTextElement(
+      LayerSpec spec, double leftX, double topY, double targetH,
+      {double? columnWidth, bool center = false}) {
+    final fontSize = spec.textStyle?.fontSize ?? 24;
+    final weight = spec.textStyle?.fontWeight ?? FontWeight.normal;
+    final color = _sanitizeColor(spec.textColor ?? spec.textStyle?.color);
+    final measured = _measureText(spec.text!, fontSize, weight);
+    final aspect =
+        measured.height == 0 ? 6.0 : measured.width / measured.height;
+    final availW = columnWidth ?? (widget.width - leftX - widget.width * 0.05);
+    var boxH = targetH;
+    var boxW = boxH * aspect;
+    if (boxW > availW) {
+      boxW = availW;
+      boxH = boxW / aspect;
+    }
+    final posX = center ? leftX + availW / 2 : leftX + boxW / 2;
+    _controller.addElement(
+      CanvasElement(
+        id: _nextId(),
+        kind: CanvasElementKind.text,
+        position: Offset(posX, topY + boxH / 2),
+        baseSize: Size(boxW, boxH),
+        scale: 1.0,
+        color: color,
+        text: spec.text,
+        fontSize: fontSize,
+        fontWeight: weight,
+        textAlign: center ? TextAlign.center : TextAlign.left,
+        followCanvasTheme: spec.followCanvasTheme,
+        elementId: spec.elementId,
+      ),
+      record: false,
+    );
+  }
+
+  void _seedOffsetLayers(List<LayerSpec> layers) {
     final sx = widget.width / _templateRefWidth;
     final sy = widget.height / _templateRefHeight;
-    final minSide =
-        (widget.width < widget.height ? widget.width : widget.height).toDouble();
     for (final spec in layers) {
       final position = Offset(
         widget.width / 2 + spec.offset.dx * sx,
@@ -135,25 +273,31 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
       if (spec.text != null) {
         final fontSize = spec.textStyle?.fontSize ?? 24;
         final color = _sanitizeColor(spec.textColor ?? spec.textStyle?.color);
+        final align = spec.textAlign ?? TextAlign.center;
         final measured = _measureText(spec.text!, fontSize, FontWeight.normal);
+        final baseW = measured.width * sy;
+        final baseH = measured.height * sy;
+        final textPos = align == TextAlign.left
+            ? Offset(position.dx + baseW * spec.scale / 2, position.dy)
+            : position;
         _controller.addElement(
           CanvasElement(
             id: _nextId(),
             kind: CanvasElementKind.text,
-            position: position,
-            baseSize: Size(measured.width * sy, measured.height * sy),
+            position: textPos,
+            baseSize: Size(baseW, baseH),
             scale: spec.scale,
             rotation: spec.rotation,
             color: color,
             text: spec.text,
             fontSize: fontSize,
-            textAlign: spec.textAlign ?? TextAlign.center,
+            textAlign: align,
             elementId: spec.elementId,
           ),
           record: false,
         );
       } else if (spec.widget != null) {
-        final side = minSide / _templateStickerUnit * spec.scale;
+        final side = widget.width / _templateStickerUnit * spec.scale;
         _controller.addElement(
           CanvasElement(
             id: _nextId(),
@@ -245,8 +389,9 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     if (picked == null) return;
     final bytes = await picked.readAsBytes();
     final decoded = img.decodeImage(bytes);
-    final aspect =
-        (decoded == null || decoded.height == 0) ? 1.0 : decoded.width / decoded.height;
+    final aspect = (decoded == null || decoded.height == 0)
+        ? 1.0
+        : decoded.width / decoded.height;
     final maxW = widget.width * 0.6;
     final maxH = widget.height * 0.6;
     double w = maxW;
@@ -263,6 +408,23 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
         baseSize: Size(w, h),
         imageBytes: bytes,
       ),
+    );
+  }
+
+  Future<void> _replaceImage(CanvasElement element) async {
+    final source = await chooseImageSource(context);
+    if (source == null) return;
+    final picked = await _picker.pickImage(source: source);
+    if (picked == null) return;
+    final bytes = await picked.readAsBytes();
+    final decoded = img.decodeImage(bytes);
+    final aspect = (decoded == null || decoded.height == 0)
+        ? 1.0
+        : decoded.width / decoded.height;
+    final w = element.baseSize.width;
+    _controller.beginChange();
+    _controller.updateElement(
+      element.copyWith(imageBytes: bytes, baseSize: Size(w, w / aspect)),
     );
   }
 
@@ -333,10 +495,33 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     );
   }
 
+  Future<void> _editBarcode(CanvasElement element) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (sheetContext) => BarcodeEditor(
+        initialBarcode: element.barcode,
+        initialData: element.barcodeData,
+        onBarcodeConfirmed: (barcode, data) {
+          _controller.beginChange();
+          _controller.updateElement(
+            element.copyWith(barcode: barcode, barcodeData: data),
+          );
+          Navigator.pop(sheetContext);
+        },
+      ),
+    );
+  }
+
   void _placeBarcode(Barcode barcode, String data) {
     final is2D = _twoDBarcodeNames.contains(barcode.name);
     final minSide =
-        (widget.width < widget.height ? widget.width : widget.height).toDouble();
+        (widget.width < widget.height ? widget.width : widget.height)
+            .toDouble();
     final baseSize = is2D
         ? Size(minSide * 0.5, minSide * 0.5)
         : Size(widget.width * 0.6, widget.width * 0.6 / 3);
@@ -361,8 +546,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     await WidgetsBinding.instance.endOfFrame;
     if (!mounted) return;
     try {
-      final boundary =
-          _boundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      final boundary = _boundaryKey.currentContext!.findRenderObject()
+          as RenderRepaintBoundary;
       final image = await boundary.toImage(pixelRatio: 1 / _displayScale);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       image.dispose();
@@ -374,9 +559,9 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   }
 
   void _snack(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -464,9 +649,15 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                         canvasKey: _canvasKey,
                         onRequestEdit: element.elementId != null
                             ? () => Navigator.pop(context, element.elementId)
-                            : element.kind == CanvasElementKind.text
-                                ? () => _editText(element)
-                                : null,
+                            : switch (element.kind) {
+                                CanvasElementKind.text => () =>
+                                    _editText(element),
+                                CanvasElementKind.image => () =>
+                                    _replaceImage(element),
+                                CanvasElementKind.barcode => () =>
+                                    _editBarcode(element),
+                                CanvasElementKind.widget => null,
+                              },
                         onCrop: element.kind == CanvasElementKind.image
                             ? () => _cropImage(element)
                             : null,
@@ -601,7 +792,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     width: 56,
                     child: Text(
                       'Size',
-                      style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                      style:
+                          TextStyle(color: Colors.grey.shade600, fontSize: 13),
                     ),
                   ),
                   for (final w in _brushWidths)
@@ -643,8 +835,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                       width: 56,
                       child: Text(
                         'Colour',
-                        style:
-                            TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                        style: TextStyle(
+                            color: Colors.grey.shade600, fontSize: 13),
                       ),
                     ),
                     for (final c in _controller.palette)
@@ -661,8 +853,9 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                               color: c.toARGB32() == _brushColor.toARGB32()
                                   ? colorAccent
                                   : Colors.black38,
-                              width:
-                                  c.toARGB32() == _brushColor.toARGB32() ? 3 : 1,
+                              width: c.toARGB32() == _brushColor.toARGB32()
+                                  ? 3
+                                  : 1,
                             ),
                           ),
                         ),
@@ -712,8 +905,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   Future<_TextResult?> _showTextSheet({CanvasElement? existing}) {
     final textCtrl = TextEditingController(text: existing?.text ?? '');
     double fontSize = existing?.fontSize ?? 24;
-    Color color = existing?.color ??
-        _controller.contrastColor(_controller.canvasColor);
+    Color color =
+        existing?.color ?? _controller.contrastColor(_controller.canvasColor);
     bool manualColor = existing != null ? !existing.followCanvasTheme : false;
     String? fontFamily = existing?.fontFamily;
     return showModalBottomSheet<_TextResult>(
@@ -765,9 +958,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                               selected: f == fontFamily,
                               label: Text(
                                 f ?? 'Default',
-                                style: f == null
-                                    ? null
-                                    : GoogleFonts.getFont(f),
+                                style:
+                                    f == null ? null : GoogleFonts.getFont(f),
                               ),
                               onSelected: (_) => setSheet(() => fontFamily = f),
                             ),

@@ -14,9 +14,14 @@ class BarcodeEditor extends StatefulWidget {
   /// string so any canvas can build its own element.
   final void Function(Barcode barcode, String data) onBarcodeConfirmed;
 
+  final Barcode? initialBarcode;
+  final String? initialData;
+
   const BarcodeEditor({
     super.key,
     required this.onBarcodeConfirmed,
+    this.initialBarcode,
+    this.initialData,
   });
 
   /// All barcode formats offered by the editor, keyed by their display label.
@@ -116,6 +121,15 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
   @override
   void initState() {
     super.initState();
+    if (widget.initialBarcode != null) {
+      _selectedBarcode = widget.initialBarcode!;
+    }
+    final initialData = widget.initialData;
+    if (initialData != null && initialData.isNotEmpty) {
+      _barcodeController.text = initialData;
+      _barcodeData = initialData;
+      _debouncedBarcodeData = initialData;
+    }
     _barcodeController.addListener(() {
       final text = _barcodeController.text;
       if (text == _barcodeData) return;
