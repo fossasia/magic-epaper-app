@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/image_library/services/image_save_handler.dart';
-import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
+import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:magicepaperapp/card_templates/card_template_selection_view.dart';
 import 'package:magicepaperapp/util/color_util.dart';
 import 'package:magicepaperapp/util/epd/driver/waveform.dart';
@@ -687,7 +687,7 @@ class BottomActionMenu extends StatelessWidget {
                   final canvasBytes =
                       await Navigator.of(context).push<Uint8List>(
                     buildOpaqueSlideRoute(
-                      MovableBackgroundImageExample(
+                      NativeCanvasEditor(
                         width: epd.width,
                         height: epd.height,
                       ),

@@ -7,7 +7,7 @@ import 'package:magicepaperapp/card_templates/event_badge_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
-import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
+import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:magicepaperapp/util/template_util.dart';
 import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
@@ -253,7 +253,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
 
       final result = await Navigator.of(context).push<Object>(
         MaterialPageRoute(
-          builder: (context) => MovableBackgroundImageExample(
+          builder: (context) => NativeCanvasEditor(
             width: widget.width,
             height: widget.height,
             initialLayers: layers,
