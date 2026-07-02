@@ -128,6 +128,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     } else {
       _seedOffsetLayers(layers);
     }
+    _controller.select(null);
   }
 
   void _seedCardLayout(List<LayerSpec> layers) {
