@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/ndef_screen/app_launcher_card.dart';
@@ -231,7 +232,7 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
                 availability: _nfcController.availability,
                 onRefresh: _checkNFCAvailability,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
               if (_nfcController.availability == NFCAvailability.available) ...[
                 NFCWriteCard(
                   isWriting: _nfcController.isWriting,
@@ -291,13 +292,14 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
                   isWriting: _nfcController.isWriting,
                   onWriteAppLauncher: _writeAppLauncher,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: Dimens.spacingL),
               ] else ...[
                 Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: Dimens.spacingS),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(Dimens.radiusXl),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.08),
@@ -308,11 +310,11 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
                     ],
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(24.0),
+                    padding: const EdgeInsets.all(Dimens.spacingXxl),
                     child: Column(
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(Dimens.spacingL),
                           decoration: BoxDecoration(
                             color: Colors.orange.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(50),
@@ -323,22 +325,22 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
                             color: Colors.orange,
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: Dimens.spacingXxl),
                         Text(
                           appLocalizations.nfcNotAvailable,
                           style: const TextStyle(
-                            fontSize: 20,
+                            fontSize: Dimens.fontSizeXxl,
                             fontWeight: FontWeight.bold,
                             color: Colors.black87,
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: Dimens.spacingM),
                         Text(
                           appLocalizations.enableNfcMessage,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: Dimens.fontSizeL,
                             color: Colors.grey[600],
                             height: 1.4,
                           ),
@@ -348,7 +350,7 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
                   ),
                 ),
               ],
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
             ],
           ),
         ),
