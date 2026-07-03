@@ -209,7 +209,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           fit: BoxFit.contain,
                         ),
                         title: Text(
-                          appLocalizations.license,
+                          appLocalizations.appLicense,
                           style: GoogleFonts.sora(
                             fontSize: Dimens.fontSizeL,
                             fontWeight: FontWeight.w500,
@@ -228,6 +228,44 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         onTap: () => openUrl(
                           context,
                           'https://github.com/fossasia/magic-epaper-app/blob/main/LICENSE.md',
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Icon(
+                          Icons.article_outlined,
+                          size: 40,
+                          color: Colors.grey,
+                        ),
+                        title: Text(
+                          appLocalizations.openSourceLicenses,
+                          style: GoogleFonts.sora(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
+                        ),
+                        subtitle: Text(
+                          appLocalizations.openSourceLicensesSubtitle,
+                          style: GoogleFonts.sora(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey,
+                          ),
+                          softWrap: true,
+                        ),
+                        onTap: () => showLicensePage(
+                          context: context,
+                          applicationName: appLocalizations.appName,
+                          applicationIcon: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Image.asset(
+                              ImageAssets.appIcon,
+                              height: 64,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                          applicationLegalese:
+                              appLocalizations.openSourceLicensesLegalese,
                         ),
                       ),
                     ],
