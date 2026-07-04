@@ -943,9 +943,41 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     controller: textCtrl,
                     autofocus: true,
                     textCapitalization: TextCapitalization.sentences,
+                    onChanged: (_) => setSheet(() {}),
+                    style: fontFamily == null
+                        ? null
+                        : GoogleFonts.getFont(fontFamily!),
                     decoration: const InputDecoration(
                       labelText: 'Text',
                       border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    width: double.infinity,
+                    height: 72,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: _controller.canvasColor,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          textCtrl.text.isEmpty ? 'Preview' : textCtrl.text,
+                          style: fontFamily == null
+                              ? TextStyle(fontSize: fontSize, color: color)
+                              : GoogleFonts.getFont(
+                                  fontFamily!,
+                                  textStyle: TextStyle(
+                                      fontSize: fontSize, color: color),
+                                ),
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
