@@ -12,6 +12,7 @@ import 'package:magicepaperapp/util/magic_epaper_firmware.dart';
 import 'package:magicepaperapp/util/nfc_settings_launcher.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/ndef_screen/services/nfc_availability_service.dart';
 import 'app_logger.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
@@ -110,7 +111,7 @@ class Protocol {
   }
 
   Future<bool> ensureNfcAvailable() async {
-    final availability = await FlutterNfcKit.nfcAvailability;
+    final availability = await NFCAvailabilityService.checkAvailability();
 
     switch (availability) {
       case NFCAvailability.available:
