@@ -176,7 +176,7 @@ class TextFitEditorState extends State<TextFitEditor> {
                     autofocus: true,
                     textCapitalization: TextCapitalization.sentences,
                     onChanged: (value) => setState(() {
-                      if (_errorText != null && value.trim().isNotEmpty) {
+                      if (value.trim().isNotEmpty) {
                         _errorText = null;
                       }
                     }),
@@ -192,9 +192,19 @@ class TextFitEditorState extends State<TextFitEditor> {
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: _errorText == null
-                            ? BorderSide.none
-                            : const BorderSide(color: Colors.red, width: 1),
+                        borderSide: BorderSide.none,
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.error,
+                            width: 1),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.error,
+                            width: 1),
                       ),
                     ),
                   ),
