@@ -148,7 +148,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
           key: 'waiting',
           icon: Icons.nfc,
           color: colorPrimary,
-          title: "Ready to Transfer",
+          title: appLocalizations.readyToTransfer,
           child: Column(
             children: [
               AnimatedBuilder(
@@ -158,8 +158,8 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
                 child: const Icon(Icons.nfc, size: 60, color: colorPrimary),
               ),
               const SizedBox(height: 24),
-              const Text(
-                "Hold your phone near the display to begin.",
+              Text(
+                appLocalizations.holdPhoneNearDisplay,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16),
               ),
