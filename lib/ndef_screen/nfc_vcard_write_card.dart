@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:magicepaperapp/theme/colors.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/v_card_form.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
@@ -31,7 +32,7 @@ class _NFCVCardWriteCardState extends State<NFCVCardWriteCard> {
     return Card(
       elevation: 4,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(Dimens.spacingL),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -39,12 +40,12 @@ class _NFCVCardWriteCardState extends State<NFCVCardWriteCard> {
               appLocalizations.vCardContact,
               style: Theme.of(context).textTheme.headlineSmall,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: Dimens.spacingL),
             VCardFormWidget(
               initialData: widget.vCardData,
               onVCardChanged: widget.onVCardChanged,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: Dimens.spacingL),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
@@ -60,7 +61,8 @@ class _NFCVCardWriteCardState extends State<NFCVCardWriteCard> {
                     ? appLocalizations.writingVCard
                     : appLocalizations.writeVCard),
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: Dimens.spacingM),
                   backgroundColor: Colors.blue,
                   foregroundColor: colorWhite,
                 ),

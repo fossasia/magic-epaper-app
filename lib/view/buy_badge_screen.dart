@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:magicepaperapp/theme/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/util/orientation_util.dart';
 import 'package:magicepaperapp/util/url_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
@@ -26,14 +27,14 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
       index: 6,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(Dimens.spacingS),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 decoration: BoxDecoration(
                   color: colorWhite,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(Dimens.radiusL),
                   boxShadow: const [
                     BoxShadow(
                       color: grey500,
@@ -43,10 +44,10 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                   ],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(Dimens.spacingL),
                   child: Column(
                     children: [
-                      const SizedBox(height: 20),
+                      const SizedBox(height: Dimens.spacingXl),
                       Text(
                         'Thank you for your interest in the FOSSASIA Badges. Currently the Magic ePaper Badge is still in prototype stage. You can order in future on FOSSASIA.com. In the meantime please check out our prototypes on the Git repository.',
                         textAlign: TextAlign.justify,
@@ -54,7 +55,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                           wordSpacing: 3,
                           fontWeight: FontWeight.w400,
                           color: colorBlack,
-                          fontSize: 14,
+                          fontSize: Dimens.fontSizeM,
                         ),
                         softWrap: true,
                       ),
@@ -62,7 +63,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: Dimens.spacingMd),
               Container(
                 decoration: BoxDecoration(
                   color: colorWhite,
@@ -73,17 +74,18 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                       offset: Offset(0, 1),
                     )
                   ],
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(Dimens.radiusS),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 12.0, top: 12.0),
+                      padding: const EdgeInsets.only(
+                          left: Dimens.spacingM, top: Dimens.spacingM),
                       child: Text(
                         'Links',
                         style: GoogleFonts.sora(
-                          fontSize: 16,
+                          fontSize: Dimens.fontSizeL,
                           fontWeight: FontWeight.w500,
                           color: grey500,
                         ),
@@ -98,7 +100,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                       title: Text(
                         'FOSSASIA Website',
                         style: GoogleFonts.sora(
-                          fontSize: 16,
+                          fontSize: Dimens.fontSizeL,
                           fontWeight: FontWeight.w500,
                           color: colorBlack,
                         ),
@@ -106,7 +108,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                       subtitle: Text(
                         'Visit fossasia.com for future badge orders',
                         style: GoogleFonts.sora(
-                          fontSize: 12,
+                          fontSize: Dimens.fontSizeS,
                           fontWeight: FontWeight.w500,
                           color: grey500,
                         ),
@@ -123,7 +125,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                       title: Text(
                         'Hardware Repository',
                         style: GoogleFonts.sora(
-                          fontSize: 16,
+                          fontSize: Dimens.fontSizeL,
                           fontWeight: FontWeight.w500,
                           color: colorBlack,
                         ),
@@ -131,7 +133,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                       subtitle: Text(
                         'Check out our badge prototypes and hardware designs',
                         style: GoogleFonts.sora(
-                          fontSize: 12,
+                          fontSize: Dimens.fontSizeS,
                           fontWeight: FontWeight.w500,
                           color: grey500,
                         ),

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
@@ -45,11 +46,11 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
       backgroundColor: Colors.transparent,
       child: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(Dimens.spacingXxl),
           margin: const EdgeInsets.symmetric(vertical: 48),
           decoration: BoxDecoration(
             color: colorWhite,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(Dimens.radiusRound),
             boxShadow: [
               BoxShadow(
                 color: colorBlack.withValues(alpha: 0.1),
@@ -63,13 +64,13 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHeader(),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
               _buildImagePreview(),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
               _buildTextFieldSection(),
-              const SizedBox(height: 24),
+              const SizedBox(height: Dimens.spacingXxl),
               _buildFilterInfoChip(),
-              const SizedBox(height: 20),
+              const SizedBox(height: Dimens.spacingXl),
               _buildActionButtons(context),
             ],
           ),
@@ -82,18 +83,18 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(Dimens.spacingM),
           decoration: BoxDecoration(
             color: colorAccent.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(Dimens.radiusXl),
           ),
           child: const Icon(
             Icons.save_outlined,
             color: colorAccent,
-            size: 24,
+            size: Dimens.iconSizeL,
           ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: Dimens.spacingL),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,16 +102,16 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
               Text(
                 appLocalizations.saveImage,
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: Dimens.fontSizeXxl,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: Dimens.spacingXs),
               Text(
                 appLocalizations.saveFilteredImageToLibrary,
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: Dimens.fontSizeM,
                   color: grey500,
                 ),
               ),
@@ -125,14 +126,14 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
     return Container(
       width: double.infinity,
       height: 120,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(horizontal: Dimens.spacingM),
       decoration: BoxDecoration(
         color: grey50,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(Dimens.radiusXxl),
         border: Border.all(color: grey200),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(Dimens.radiusXl),
         child: Image.memory(
           widget.imageData,
           fit: BoxFit.contain,
@@ -148,12 +149,12 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
         Text(
           appLocalizations.imageName,
           style: const TextStyle(
-            fontSize: 14,
+            fontSize: Dimens.fontSizeM,
             fontWeight: FontWeight.w600,
             color: Colors.black87,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: Dimens.spacingS),
         TextField(
           controller: _nameController,
           autofocus: true,
@@ -163,19 +164,19 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
             filled: true,
             fillColor: grey50,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(Dimens.radiusXl),
               borderSide: BorderSide(color: grey300),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(Dimens.radiusXl),
               borderSide: BorderSide(color: grey300),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(Dimens.radiusXl),
               borderSide: const BorderSide(color: colorAccent, width: 2),
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(Dimens.radiusXl),
               borderSide: const BorderSide(color: Colors.red, width: 2),
             ),
             prefixIcon: const Icon(
@@ -183,8 +184,8 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
               color: grey500,
             ),
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
+              horizontal: Dimens.spacingL,
+              vertical: Dimens.spacingL,
             ),
           ),
           textCapitalization: TextCapitalization.words,
@@ -196,10 +197,11 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
 
   Widget _buildFilterInfoChip() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(
+          horizontal: Dimens.spacingM, vertical: Dimens.spacingS),
       decoration: BoxDecoration(
         color: colorAccent.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(Dimens.radiusRound),
         border: Border.all(color: colorAccent.withValues(alpha: 0.2)),
       ),
       child: Row(
@@ -207,14 +209,14 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
         children: [
           Icon(
             Icons.filter_alt_outlined,
-            size: 16,
+            size: Dimens.iconSizeS,
             color: colorAccent,
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: Dimens.spacingSm),
           Text(
             '${appLocalizations.filterApplied} ${widget.filterName}',
             style: TextStyle(
-              fontSize: 12,
+              fontSize: Dimens.fontSizeS,
               fontWeight: FontWeight.w500,
               color: colorAccent,
             ),
@@ -233,25 +235,25 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
             child: Text(
               appLocalizations.cancel,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: Dimens.fontSizeL,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: Dimens.spacingM),
         Expanded(
           child: ElevatedButton(
             onPressed: () => _handleSave(),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.download, size: 20),
-                const SizedBox(width: 8),
+                const Icon(Icons.download, size: Dimens.iconSizeM),
+                const SizedBox(width: Dimens.spacingS),
                 Text(
                   appLocalizations.save,
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: Dimens.fontSizeL,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -285,7 +287,7 @@ class SnackBarUtils {
                 valueColor: AlwaysStoppedAnimation<Color>(colorWhite),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: Dimens.spacingM),
             Text(message),
           ],
         ),
@@ -300,14 +302,16 @@ class SnackBarUtils {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle, color: colorWhite, size: 20),
-            const SizedBox(width: 12),
+            const Icon(Icons.check_circle,
+                color: colorWhite, size: Dimens.iconSizeM),
+            const SizedBox(width: Dimens.spacingM),
             Text(message),
           ],
         ),
         backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusL)),
       ),
     );
   }
@@ -317,14 +321,15 @@ class SnackBarUtils {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.error, color: colorWhite, size: 20),
-            const SizedBox(width: 12),
+            const Icon(Icons.error, color: colorWhite, size: Dimens.iconSizeM),
+            const SizedBox(width: Dimens.spacingM),
             Text(message),
           ],
         ),
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusL)),
       ),
     );
   }

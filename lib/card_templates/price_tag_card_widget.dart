@@ -4,6 +4,7 @@ import 'package:magicepaperapp/theme/colors.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/card_templates/price_tag_model.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
@@ -22,7 +23,7 @@ class PriceTagCardWidget extends StatelessWidget {
         height: 180,
         decoration: BoxDecoration(
           color: colorWhite,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(Dimens.radiusXl),
           border: Border.all(color: grey300, width: 1),
           boxShadow: [
             BoxShadow(
@@ -32,7 +33,7 @@ class PriceTagCardWidget extends StatelessWidget {
             ),
           ],
         ),
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(Dimens.spacingS),
         child: Column(
           children: [
             Expanded(
@@ -49,7 +50,7 @@ class PriceTagCardWidget extends StatelessWidget {
                         color: data.productImage != null
                             ? Colors.transparent
                             : grey50,
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius: BorderRadius.circular(Dimens.radiusM),
                         border: Border.all(
                           color: data.productImage != null
                               ? Colors.transparent
@@ -59,7 +60,8 @@ class PriceTagCardWidget extends StatelessWidget {
                       ),
                       child: data.productImage != null
                           ? ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius:
+                                  BorderRadius.circular(Dimens.radiusM),
                               child: Image.file(
                                 File(data.productImage!.path),
                                 fit: BoxFit.cover,
@@ -75,12 +77,12 @@ class PriceTagCardWidget extends StatelessWidget {
                                   size: 28,
                                   color: grey400,
                                 ),
-                                const SizedBox(height: 4),
+                                const SizedBox(height: Dimens.spacingXs),
                                 Text(
                                   appLocalizations.productImage,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 10,
+                                    fontSize: Dimens.fontSizeXs,
                                     color: grey500,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -89,12 +91,13 @@ class PriceTagCardWidget extends StatelessWidget {
                             ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: Dimens.spacingS),
                   Expanded(
                     flex: 3,
                     child: Container(
                       height: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: Dimens.spacingXs),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,7 +108,7 @@ class PriceTagCardWidget extends StatelessWidget {
                                 ? Text(
                                     data.productName,
                                     style: const TextStyle(
-                                      fontSize: 16,
+                                      fontSize: Dimens.fontSizeL,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black87,
                                     ),
@@ -117,19 +120,19 @@ class PriceTagCardWidget extends StatelessWidget {
                                     child: Text(
                                       appLocalizations.productName,
                                       style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: Dimens.fontSizeM,
                                         color: grey400,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ),
                           ),
-                          const SizedBox(height: 6),
+                          const SizedBox(height: Dimens.spacingSm),
                           data.productDescription.isNotEmpty
                               ? Text(
                                   data.productDescription,
                                   style: const TextStyle(
-                                    fontSize: 12,
+                                    fontSize: Dimens.fontSizeS,
                                     color: Colors.black87,
                                     fontWeight: FontWeight.w400,
                                   ),
@@ -151,7 +154,7 @@ class PriceTagCardWidget extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: Dimens.spacingS),
             Expanded(
               flex: 2,
               child: Row(
@@ -163,7 +166,7 @@ class PriceTagCardWidget extends StatelessWidget {
                       decoration: BoxDecoration(
                         color:
                             data.barcodeData.isNotEmpty ? colorWhite : grey50,
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(Dimens.radiusS),
                         border: Border.all(
                           color: data.barcodeData.isNotEmpty
                               ? Colors.transparent
@@ -173,7 +176,7 @@ class PriceTagCardWidget extends StatelessWidget {
                       ),
                       child: data.barcodeData.isNotEmpty
                           ? Padding(
-                              padding: const EdgeInsets.all(2),
+                              padding: const EdgeInsets.all(Dimens.spacingXxs),
                               child: BarcodeWidget(
                                 barcode: Barcode.code128(),
                                 data: data.barcodeData,
@@ -186,10 +189,10 @@ class PriceTagCardWidget extends StatelessWidget {
                               children: [
                                 Icon(
                                   Icons.qr_code_scanner_outlined,
-                                  size: 20,
+                                  size: Dimens.iconSizeM,
                                   color: grey400,
                                 ),
-                                const SizedBox(height: 2),
+                                const SizedBox(height: Dimens.spacingXxs),
                                 Text(
                                   appLocalizations.barcode,
                                   style: TextStyle(
@@ -202,12 +205,13 @@ class PriceTagCardWidget extends StatelessWidget {
                             ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: Dimens.spacingS),
                   Expanded(
                     flex: 2,
                     child: Container(
                       height: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: Dimens.spacingSm),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,7 +232,7 @@ class PriceTagCardWidget extends StatelessWidget {
                                       size: 18,
                                       color: grey400,
                                     ),
-                                    const SizedBox(width: 6),
+                                    const SizedBox(width: Dimens.spacingSm),
                                     Text(
                                       appLocalizations.price,
                                       style: TextStyle(
@@ -239,12 +243,12 @@ class PriceTagCardWidget extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                          const SizedBox(height: 6),
+                          const SizedBox(height: Dimens.spacingSm),
                           data.quantity.isNotEmpty
                               ? Text(
                                   data.quantity,
                                   style: const TextStyle(
-                                    fontSize: 12,
+                                    fontSize: Dimens.fontSizeS,
                                     color: grey500,
                                     fontWeight: FontWeight.w500,
                                   ),

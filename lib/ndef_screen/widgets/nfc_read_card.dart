@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
@@ -28,10 +29,10 @@ class NFCReadCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+      margin: const EdgeInsets.symmetric(horizontal: Dimens.spacingS),
       decoration: BoxDecoration(
         color: colorWhite,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(Dimens.radiusXl),
         boxShadow: [
           BoxShadow(
             color: colorBlack.withValues(alpha: 0.08),
@@ -42,30 +43,30 @@ class NFCReadCard extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(Dimens.spacingL),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
                 const Icon(Icons.nfc, color: colorAccent, size: 22),
-                const SizedBox(width: 8),
+                const SizedBox(width: Dimens.spacingS),
                 Text(
                   appLocalizations.readNdefTags,
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: Dimens.fontSizeXl,
                     fontWeight: FontWeight.bold,
                     color: colorBlack,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: Dimens.spacingXl),
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(Dimens.spacingL),
               decoration: BoxDecoration(
                 color: grey50,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(Dimens.radiusL),
                 border: Border.all(color: mdGrey400.withValues(alpha: 0.2)),
               ),
               child: Column(
@@ -92,7 +93,7 @@ class NFCReadCard extends StatelessWidget {
                           backgroundColor: colorAccent,
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: Dimens.spacingM),
                       _buildActionButton(
                         onPressed: onVerify,
                         icon: const Icon(Icons.search, color: colorWhite),
@@ -102,7 +103,7 @@ class NFCReadCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: Dimens.spacingM),
                   SizedBox(
                     width: double.infinity,
                     child: _buildActionButton(
@@ -128,29 +129,30 @@ class NFCReadCard extends StatelessWidget {
               ),
             ),
             if (result.isNotEmpty) ...[
-              const SizedBox(height: 20),
+              const SizedBox(height: Dimens.spacingXl),
               const Row(
                 children: [
-                  Icon(Icons.receipt_long, color: colorAccent, size: 20),
-                  SizedBox(width: 8),
+                  Icon(Icons.receipt_long,
+                      color: colorAccent, size: Dimens.iconSizeM),
+                  SizedBox(width: Dimens.spacingS),
                   Text(
                     'Read Results',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: Dimens.fontSizeL,
                       fontWeight: FontWeight.w600,
                       color: colorBlack,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: Dimens.spacingM),
               Container(
                 width: double.infinity,
                 constraints: const BoxConstraints(maxHeight: 300),
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(Dimens.spacingL),
                 decoration: BoxDecoration(
                   color: grey50,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(Dimens.radiusM),
                   border: Border.all(color: mdGrey400.withValues(alpha: 0.3)),
                 ),
                 child: SingleChildScrollView(
@@ -158,7 +160,7 @@ class NFCReadCard extends StatelessWidget {
                     result,
                     style: TextStyle(
                       fontFamily: appLocalizations.monospaceFontFamily,
-                      fontSize: 12,
+                      fontSize: Dimens.fontSizeS,
                       color: colorBlack,
                       height: 1.4,
                     ),
@@ -185,7 +187,7 @@ class NFCReadCard extends StatelessWidget {
       label: Text(
         label,
         style: const TextStyle(
-          fontSize: 14,
+          fontSize: Dimens.fontSizeM,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -200,7 +202,7 @@ class NFCReadCard extends StatelessWidget {
         disabledForegroundColor: grey600,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
         ),
       ),
     );

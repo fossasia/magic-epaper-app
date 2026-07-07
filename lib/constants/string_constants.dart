@@ -29,6 +29,9 @@ class StringConstants {
   static const String openEditor = 'Open Editor';
   static const String importStartingImageFeedback = "Import an image to begin";
   static const String transferButtonLabel = 'Transfer';
+  static const String initializing = 'Initializing...';
+  static const String dataTransferSuccessful =
+      'Data transfer successful. The display will now refresh.';
   static const String filterScreenTitle = 'Select a Filter';
 
   static const String scanningForNfcTag = 'Scanning for NFC tag...';

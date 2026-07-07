@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:magicepaperapp/theme/colors.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
@@ -12,6 +12,7 @@ import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'package:magicepaperapp/view/widget/display_card.dart';
 import 'package:provider/provider.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 
 class DisplaySelectionScreen extends StatefulWidget {
   const DisplaySelectionScreen({super.key});
@@ -47,13 +48,14 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
 
   Widget _buildMobileGrid(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10.0, 14, 16.0, 16.0),
+      padding: const EdgeInsets.fromLTRB(
+          Dimens.spacingMd, 14, Dimens.spacingL, Dimens.spacingL),
       child: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 0.6,
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
+          mainAxisSpacing: Dimens.spacingS,
+          crossAxisSpacing: Dimens.spacingS,
         ),
         itemCount: displays.length,
         itemBuilder: (context, index) {
@@ -177,7 +179,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
               }
 
               return Padding(
-                padding: const EdgeInsets.only(left: 5, right: 16),
+                padding: const EdgeInsets.only(left: 5, right: Dimens.spacingL),
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.centerLeft,
@@ -189,17 +191,17 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                       Text(
                         appLocalizations.appName,
                         style: const TextStyle(
-                          fontSize: 24,
+                          fontSize: Dimens.fontSizeDisplay,
                           fontWeight: FontWeight.bold,
                           color: colorWhite,
                         ),
                       ),
                       if (showSubtitle) ...[
-                        const SizedBox(height: 8),
+                        const SizedBox(height: Dimens.spacingS),
                         Text(
                           appLocalizations.selectDisplayType,
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: Dimens.fontSizeL,
                             color: colorWhite,
                           ),
                         ),
@@ -266,10 +268,11 @@ class _LoadingWrapperState extends State<_LoadingWrapper> {
               const CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2196F3)),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
               Text(
                 AppLocalizations.of(context)?.loading ?? 'Loading...',
-                style: const TextStyle(color: colorBlack, fontSize: 14),
+                style: const TextStyle(
+                    color: colorBlack, fontSize: Dimens.fontSizeM),
               ),
             ],
           ),

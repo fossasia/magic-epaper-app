@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/theme/colors.dart';
 
 class ColorDot extends StatelessWidget {
@@ -16,13 +17,13 @@ class ColorDot extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      margin: const EdgeInsets.symmetric(horizontal: 2.0),
+      margin: const EdgeInsets.symmetric(horizontal: Dimens.spacingXxs),
       decoration: BoxDecoration(
         color: color,
         shape: BoxShape.circle,
         border: Border.all(
           color: grey300,
-          width: 1.0,
+          width: Dimens.borderWidthThin,
         ),
       ),
     );

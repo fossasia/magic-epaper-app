@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
@@ -112,18 +113,18 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
         Row(
           children: [
             const Icon(Icons.contact_page, color: colorAccent, size: 22),
-            const SizedBox(width: 8),
+            const SizedBox(width: Dimens.spacingS),
             Text(
               appLocalizations.vCardContactInformation,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: Dimens.fontSizeL,
                 fontWeight: FontWeight.w600,
                 color: colorBlack,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: Dimens.spacingL),
         _buildSectionContainer(
           title: appLocalizations.personalInformation,
           icon: Icons.person,
@@ -137,7 +138,7 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
                     prefixIcon: Icons.person_outline,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: Dimens.spacingM),
                 Expanded(
                   child: _buildTextField(
                     controller: _lastNameController,
@@ -148,7 +149,7 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: Dimens.spacingL),
         _buildSectionContainer(
           title: appLocalizations.workInformation,
           icon: Icons.work,
@@ -162,7 +163,7 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
                     prefixIcon: Icons.business,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: Dimens.spacingM),
                 Expanded(
                   child: _buildTextField(
                     controller: _titleController,
@@ -173,7 +174,7 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: Dimens.spacingL),
         _buildSectionContainer(
           title: appLocalizations.contactInformation,
           icon: Icons.contact_phone,
@@ -184,14 +185,14 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
               prefixIcon: Icons.phone,
               keyboardType: TextInputType.phone,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimens.spacingM),
             _buildTextField(
               controller: _emailController,
               labelText: appLocalizations.emailAddress,
               prefixIcon: Icons.email,
               keyboardType: TextInputType.emailAddress,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimens.spacingM),
             _buildTextField(
               controller: _websiteController,
               labelText: appLocalizations.website,
@@ -200,7 +201,7 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: Dimens.spacingL),
         _buildSectionContainer(
           title: appLocalizations.addressInformation,
           icon: Icons.location_on,
@@ -210,7 +211,7 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
               labelText: appLocalizations.streetAddress,
               prefixIcon: Icons.home,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimens.spacingM),
             Row(
               children: [
                 Expanded(
@@ -220,7 +221,7 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
                     labelText: appLocalizations.city,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: Dimens.spacingM),
                 Expanded(
                   child: _buildTextField(
                     controller: _zipCodeController,
@@ -230,7 +231,7 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimens.spacingM),
             _buildTextField(
               controller: _countryController,
               labelText: appLocalizations.country,
@@ -247,10 +248,10 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
     required List<Widget> children,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
         color: grey50,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(Dimens.radiusL),
         border: Border.all(color: mdGrey400.withValues(alpha: 0.2)),
       ),
       child: Column(
@@ -259,18 +260,18 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
           Row(
             children: [
               Icon(icon, size: 18, color: colorAccent),
-              const SizedBox(width: 8),
+              const SizedBox(width: Dimens.spacingS),
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: Dimens.fontSizeM,
                   fontWeight: FontWeight.w600,
                   color: colorBlack,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: Dimens.spacingM),
           ...children,
         ],
       ),
@@ -286,32 +287,32 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
-      style: const TextStyle(fontSize: 14),
+      style: const TextStyle(fontSize: Dimens.fontSizeM),
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: TextStyle(
           color: grey600,
-          fontSize: 14,
+          fontSize: Dimens.fontSizeM,
         ),
         prefixIcon: prefixIcon != null
-            ? Icon(prefixIcon, color: colorAccent, size: 20)
+            ? Icon(prefixIcon, color: colorAccent, size: Dimens.iconSizeM)
             : null,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
           borderSide: const BorderSide(color: mdGrey400),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
           borderSide: BorderSide(color: mdGrey400.withValues(alpha: 0.4)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
           borderSide: const BorderSide(color: colorAccent, width: 2),
         ),
         filled: true,
         fillColor: colorWhite,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+            horizontal: Dimens.spacingL, vertical: Dimens.spacingM),
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
     );

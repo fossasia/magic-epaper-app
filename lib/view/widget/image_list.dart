@@ -4,6 +4,7 @@ import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/image_library/services/image_filter_helper.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/util/epd/configurable_editor.dart';
 
 class ImageList extends StatelessWidget {
@@ -52,7 +53,7 @@ class ImageList extends StatelessWidget {
     final double aspectRatio = height / width;
     return Column(
       children: [
-        const SizedBox(height: 8),
+        const SizedBox(height: Dimens.spacingS),
         ConstrainedBox(
           constraints: const BoxConstraints(maxHeight: 202),
           child: AspectRatio(
@@ -61,7 +62,7 @@ class ImageList extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 border: Border.all(color: mdGrey400),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(Dimens.radiusM),
               ),
               child: Transform(
                 alignment: Alignment.center,
@@ -80,7 +81,7 @@ class ImageList extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: Dimens.spacingS),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -90,14 +91,14 @@ class ImageList extends StatelessWidget {
               tooltip: 'Flip Horizontally',
               rotation: -1.5708,
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: Dimens.spacingL),
             _buildFlipButton(
               assetPath: ImageAssets.flipHorizontal,
               onPressed: onFlipVertical,
               tooltip: 'Flip Vertically',
             ),
             if (onSave != null) ...[
-              const SizedBox(width: 16),
+              const SizedBox(width: Dimens.spacingL),
               _buildFlipButton(
                 icon: Icons.save_outlined,
                 onPressed: onSave!,
@@ -106,13 +107,13 @@ class ImageList extends StatelessWidget {
             ],
           ],
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: Dimens.spacingXs),
         const Divider(
           thickness: 0.4,
         ),
         Expanded(
           child: ListView.builder(
-            padding: const EdgeInsets.only(bottom: 4),
+            padding: const EdgeInsets.only(bottom: Dimens.spacingXs),
             itemCount: processedPngs.length,
             itemBuilder: (context, index) {
               return FilterCard(
@@ -156,8 +157,9 @@ class ImageList extends StatelessWidget {
         icon: Transform.rotate(
           angle: rotation,
           child: assetPath != null
-              ? Image.asset(assetPath, height: 24, width: 24)
-              : Icon(icon, size: 24, color: colorBlack),
+              ? Image.asset(assetPath,
+                  height: Dimens.iconSizeL, width: Dimens.iconSizeL)
+              : Icon(icon, size: Dimens.iconSizeL, color: colorBlack),
         ),
         onPressed: onPressed,
         tooltip: tooltip,
@@ -190,14 +192,15 @@ class FilterCard extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+        margin: const EdgeInsets.symmetric(
+            vertical: 5, horizontal: Dimens.spacingS),
         height: 100,
         decoration: BoxDecoration(
           color: colorWhite,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(Dimens.radiusXl),
           border: Border.all(
             color: isSelected ? colorPrimary : mdGrey400,
-            width: isSelected ? 2.5 : 1,
+            width: isSelected ? 2.5 : Dimens.borderWidthThin,
           ),
           boxShadow: isSelected
               ? [
@@ -210,19 +213,19 @@ class FilterCard extends StatelessWidget {
               : [],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(Dimens.spacingS),
           child: Row(
             children: [
               Expanded(
                 flex: 2,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
+                  padding: const EdgeInsets.only(left: Dimens.spacingS),
                   child: Text(
                     filterName,
                     style: TextStyle(
                       fontWeight:
                           isSelected ? FontWeight.bold : FontWeight.normal,
-                      fontSize: 14,
+                      fontSize: Dimens.fontSizeM,
                       color: isSelected ? colorPrimary : colorBlack,
                     ),
                   ),
@@ -232,8 +235,9 @@ class FilterCard extends StatelessWidget {
                 flex: 2,
                 child: Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: mdGrey400, width: 1),
-                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(
+                        color: mdGrey400, width: Dimens.borderWidthThin),
+                    borderRadius: BorderRadius.circular(Dimens.radiusS),
                   ),
                   child: Transform(
                     alignment: Alignment.center,

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// This drives in-editor editability: the editor uses the kind (carried over
 /// to the underlying editor layer via its `meta`) to decide what happens when
 /// the user taps a layer to edit it (re-pick an image, re-open the barcode
-/// editor, etc.). See `MovableBackgroundImageExample`.
+/// editor, etc.). See `NativeCanvasEditor`.
 enum LayerKind {
   /// Plain text. Already editable via the built-in text editor.
   text,
