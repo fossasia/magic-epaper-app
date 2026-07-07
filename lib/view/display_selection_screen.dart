@@ -269,7 +269,7 @@ class _LoadingWrapperState extends State<_LoadingWrapper> {
               ),
               const SizedBox(height: Dimens.spacingL),
               Text(
-                AppLocalizations.of(context)?.loading ?? 'Loading...',
+                AppLocalizations.of(context)!.loading,
                 style: const TextStyle(
                     color: Colors.black, fontSize: Dimens.fontSizeM),
               ),
