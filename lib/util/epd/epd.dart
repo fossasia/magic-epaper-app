@@ -17,19 +17,15 @@ abstract class Epd extends DisplayDevice {
   Future<void> transfer(BuildContext context, img.Image image,
       {Waveform? waveform}) async {
     if (!context.mounted) return;
-    final protocol = Protocol(epd: this);
 
-    if (!await protocol.ensureNfcAvailable()) {
-      return;
-    }
-    if (!context.mounted) return;
     final rotatedImage = img.copyRotate(image, angle: 90);
     await TransferProgressDialog.show(
       context: context,
       finalImg: rotatedImage,
       transferFunction: (img, onProgress, onTagDetected) async {
         if (!context.mounted) return;
-        return await protocol.writeImages(
+        final currentEpdDevice = this;
+        return await Protocol(epd: currentEpdDevice).writeImages(
           img,
           onProgress: onProgress,
           onTagDetected: onTagDetected,
