@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
@@ -22,11 +23,11 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
       backgroundColor: Colors.transparent,
       child: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(Dimens.spacingXxl),
           margin: const EdgeInsets.symmetric(vertical: 48),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(Dimens.radiusRound),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.1),
@@ -40,11 +41,11 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHeader(),
-              const SizedBox(height: 24),
+              const SizedBox(height: Dimens.spacingXxl),
               _buildImagesPreview(),
-              const SizedBox(height: 20),
+              const SizedBox(height: Dimens.spacingXl),
               _buildWarningMessage(),
-              const SizedBox(height: 24),
+              const SizedBox(height: Dimens.spacingXxl),
               _buildActionButtons(context),
             ],
           ),
@@ -57,15 +58,15 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(Dimens.spacingM),
           decoration: BoxDecoration(
             color: Colors.red.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(Dimens.radiusXl),
           ),
           child: const Icon(Icons.delete_sweep_outlined,
-              color: Colors.red, size: 24),
+              color: Colors.red, size: Dimens.iconSizeL),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: Dimens.spacingL),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,16 +74,16 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
               Text(
                 appLocalizations.deleteMultipleImages,
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: Dimens.fontSizeXxl,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: Dimens.spacingXs),
               Text(
                 appLocalizations.imagesSelected(selectedImages.length),
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: Dimens.fontSizeM,
                   color: Colors.red,
                   fontWeight: FontWeight.w500,
                 ),
@@ -97,10 +98,10 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
   Widget _buildImagesPreview() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
         color: Colors.red.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(Dimens.radiusXxl),
         border: Border.all(color: Colors.red.withValues(alpha: 0.2)),
       ),
       child: Column(
@@ -113,16 +114,16 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
                 children: [
                   ...selectedImages.take(3).map(
                         (image) => Container(
-                          margin: const EdgeInsets.only(right: 8),
+                          margin: const EdgeInsets.only(right: Dimens.spacingS),
                           height: 60,
                           width: 60,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(Dimens.radiusM),
                             border: Border.all(
                                 color: Colors.red.withValues(alpha: 0.3)),
                           ),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(Dimens.radiusM),
                             child: Image.file(File(image.filePath),
                                 fit: BoxFit.cover),
                           ),
@@ -134,7 +135,7 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
                       width: 60,
                       decoration: BoxDecoration(
                         color: Colors.grey.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(Dimens.radiusM),
                         border: Border.all(
                             color: Colors.grey.withValues(alpha: 0.3)),
                       ),
@@ -142,7 +143,7 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
                         child: Text(
                           '+${selectedImages.length - 3}',
                           style: const TextStyle(
-                            fontSize: 14,
+                            fontSize: Dimens.fontSizeM,
                             fontWeight: FontWeight.bold,
                             color: Colors.grey,
                           ),
@@ -152,11 +153,11 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
                 ],
               ),
             ),
-          const SizedBox(height: 12),
+          const SizedBox(height: Dimens.spacingM),
           Text(
             appLocalizations.imagesSelectedForDeletion(selectedImages.length),
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: Dimens.fontSizeL,
               fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),
@@ -169,24 +170,24 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
 
   Widget _buildWarningMessage() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
         color: Colors.amber.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(Dimens.radiusXl),
         border: Border.all(color: Colors.amber.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
           Icon(Icons.warning_amber_outlined,
-              color: Colors.amber.shade700, size: 20),
-          const SizedBox(width: 12),
+              color: Colors.amber.shade700, size: Dimens.iconSizeM),
+          const SizedBox(width: Dimens.spacingM),
           Expanded(
             child: Text(
               selectedImages.length > 1
                   ? 'Are you sure you want to delete these ${selectedImages.length} images? This action cannot be undone.'
                   : appLocalizations.areYouSureDeleteSingleImage,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: Dimens.fontSizeM,
                 color: Colors.amber.shade800,
                 fontWeight: FontWeight.w500,
               ),
@@ -205,25 +206,26 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
             child: Text(
               appLocalizations.cancel,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                  fontSize: Dimens.fontSizeL, fontWeight: FontWeight.w600),
             ),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: Dimens.spacingM),
         Expanded(
           child: ElevatedButton(
             onPressed: onConfirm,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.delete_forever, size: 20),
-                const SizedBox(width: 8),
+                const Icon(Icons.delete_forever, size: Dimens.iconSizeM),
+                const SizedBox(width: Dimens.spacingS),
                 Text(
                   selectedImages.length > 1
                       ? appLocalizations.deleteAll
                       : appLocalizations.delete,
                   style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w600),
+                      fontSize: Dimens.fontSizeL, fontWeight: FontWeight.w600),
                 ),
               ],
             ),

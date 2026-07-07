@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
+import 'package:magicepaperapp/constants/dimens.dart';
+import 'package:magicepaperapp/constants/string_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
@@ -51,7 +53,7 @@ class TransferProgressDialog extends StatefulWidget {
 class _TransferProgressDialogState extends State<TransferProgressDialog>
     with TickerProviderStateMixin {
   double progress = 0.0;
-  String status = "Initializing...";
+  String status = StringConstants.initializing;
   bool tagDetected = false;
   bool transferComplete = false;
   bool showRefreshingMessage = false;
@@ -198,13 +200,13 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
             return Transform.scale(
               scale: _pulseAnimation.value,
               child: Container(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(Dimens.spacingXl),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: widget.colorAccent.withValues(alpha: 0.1),
                   border: Border.all(
                     color: widget.colorAccent.withValues(alpha: 0.3),
-                    width: 2,
+                    width: Dimens.borderWidthThick,
                   ),
                 ),
                 child: Icon(
@@ -216,18 +218,18 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
             );
           },
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: Dimens.spacingXxl),
         Text(
           appLocalizations.pleaseBringPhoneClose,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: Dimens.fontSizeL,
             fontWeight: FontWeight.w500,
             color: Colors.grey[800],
             height: 1.4,
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: Dimens.spacingXl),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(3, (index) {
@@ -237,12 +239,13 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                 final delay = index * 0.3;
                 final animationValue = (_pulseController.value + delay) % 1.0;
                 return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: Dimens.spacingXs),
                   child: Opacity(
                     opacity: animationValue > 0.5 ? 1.0 : 0.3,
                     child: Container(
-                      width: 8,
-                      height: 8,
+                      width: Dimens.spacingS,
+                      height: Dimens.spacingS,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: widget.colorAccent,
@@ -278,19 +281,19 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
             Text(
               "${(progress * 100).toInt()}%",
               style: TextStyle(
-                fontSize: 18,
+                fontSize: Dimens.fontSizeXl,
                 fontWeight: FontWeight.bold,
                 color: widget.colorAccent,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: Dimens.spacingL),
         Text(
           status,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 14,
+            fontSize: Dimens.fontSizeM,
             color: Colors.grey[700],
             fontWeight: FontWeight.w500,
           ),
@@ -306,7 +309,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
         ScaleTransition(
           scale: _scaleAnimation,
           child: Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(Dimens.spacingXl),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.green.shade50,
@@ -319,21 +322,21 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
             ),
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: Dimens.spacingL),
         Text(
           appLocalizations.transferComplete,
           style: TextStyle(
-            fontSize: 18,
+            fontSize: Dimens.fontSizeXl,
             fontWeight: FontWeight.bold,
             color: Colors.green.shade800,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: Dimens.spacingS),
         Text(
-          "Data transfer successful. The display will now refresh.",
+          StringConstants.dataTransferSuccessful,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 14,
+            fontSize: Dimens.fontSizeM,
             color: Colors.grey[700],
             height: 1.3,
           ),
@@ -352,13 +355,13 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
             return Transform.scale(
               scale: _holdStillPulseAnimation.value,
               child: Container(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(Dimens.spacingXl),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.orange.shade50,
                   border: Border.all(
                     color: Colors.orange.shade300,
-                    width: 2,
+                    width: Dimens.borderWidthThick,
                   ),
                 ),
                 child: Icon(
@@ -370,22 +373,22 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
             );
           },
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: Dimens.spacingXxl),
         Text(
           appLocalizations.keepPhoneClose,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 18,
+            fontSize: Dimens.fontSizeXl,
             fontWeight: FontWeight.bold,
             color: Colors.orange.shade800,
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: Dimens.spacingM),
         Text(
           appLocalizations.displayRefreshingMessage,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 14,
+            fontSize: Dimens.fontSizeM,
             color: Colors.grey[700],
             height: 1.4,
           ),
@@ -396,10 +399,10 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
 
   Widget _buildErrorState() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
         color: Colors.red.shade50,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(Dimens.radiusXl),
         border: Border.all(color: Colors.red.shade200),
       ),
       child: Column(
@@ -410,22 +413,22 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
             color: Colors.red.shade600,
             size: 48,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: Dimens.spacingM),
           Text(
             appLocalizations.transferFailed,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: Dimens.fontSizeL,
               fontWeight: FontWeight.bold,
               color: Colors.red.shade800,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: Dimens.spacingS),
           Text(
             errorMessage!,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.red.shade700,
-              fontSize: 14,
+              fontSize: Dimens.fontSizeM,
               height: 1.3,
             ),
           ),
@@ -441,12 +444,12 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
       child: Dialog(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(Dimens.radiusRound),
         ),
         elevation: 10,
         child: Container(
           constraints: const BoxConstraints(maxWidth: 400),
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(Dimens.spacingXxl),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -479,7 +482,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                       size: 28,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: Dimens.spacingM),
                   Expanded(
                     child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
@@ -499,7 +502,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                                     ? 'complete'
                                     : 'write'),
                         style: const TextStyle(
-                          fontSize: 20,
+                          fontSize: Dimens.fontSizeXxl,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -507,7 +510,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: Dimens.spacingXxl),
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 500),
                 child: errorMessage != null
@@ -521,7 +524,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                                 : _buildTransferProgressState(),
               ),
               if (showRefreshingMessage || errorMessage != null) ...[
-                const SizedBox(height: 24),
+                const SizedBox(height: Dimens.spacingXxl),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -531,9 +534,10 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                           ? Colors.orange.shade600
                           : Colors.red.shade600,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      padding:
+                          const EdgeInsets.symmetric(vertical: Dimens.spacingL),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(Dimens.radiusXl),
                       ),
                       elevation: 2,
                     ),
@@ -542,7 +546,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                           ? appLocalizations.done
                           : appLocalizations.close,
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: Dimens.fontSizeL,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
