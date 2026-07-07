@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
@@ -39,7 +40,7 @@ class TemplateCardPreview extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(Dimens.radiusXl),
             border: Border.all(color: Colors.grey.shade300),
             boxShadow: [
               BoxShadow(
@@ -49,7 +50,7 @@ class TemplateCardPreview extends StatelessWidget {
               ),
             ],
           ),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(Dimens.spacingL),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -57,7 +58,7 @@ class TemplateCardPreview extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _buildAvatar(),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: Dimens.spacingMd),
                   _buildQr(),
                 ],
               ),
@@ -78,7 +79,7 @@ class TemplateCardPreview extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: Dimens.spacingS),
                     ...fields.map(_buildInfoRow),
                   ],
                 ),
@@ -112,7 +113,7 @@ class TemplateCardPreview extends StatelessWidget {
       height: 64,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(Dimens.radiusS),
         border: Border.all(color: Colors.grey.shade300),
       ),
       clipBehavior: Clip.antiAlias,
@@ -125,14 +126,15 @@ class TemplateCardPreview extends StatelessWidget {
                 drawText: false,
               ),
             )
-          : Icon(Icons.qr_code_2, size: 32, color: Colors.grey.shade400),
+          : Icon(Icons.qr_code_2,
+              size: Dimens.iconSizeXl, color: Colors.grey.shade400),
     );
   }
 
   Widget _buildInfoRow(TemplateInfoField field) {
     final bool hasValue = field.value.trim().isNotEmpty;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.only(bottom: Dimens.spacingXs),
       child: Text.rich(
         TextSpan(
           children: [

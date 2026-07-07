@@ -5,6 +5,7 @@ import 'package:magicepaperapp/card_templates/util/image_picker_util.dart';
 import 'package:magicepaperapp/card_templates/event_badge_card_widget.dart';
 import 'package:magicepaperapp/card_templates/event_badge_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
@@ -237,7 +238,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
       if (_badgeData.qrData.isNotEmpty) {
         layers.add(LayerSpec.widget(
           widget: BarcodeWidget(
-            padding: const EdgeInsets.all(2),
+            padding: const EdgeInsets.all(Dimens.spacingXxs),
             backgroundColor: colorWhite,
             barcode: Barcode.qrCode(),
             data: _badgeData.qrData,
@@ -286,7 +287,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
       titleWidget: Text(
         appLocalizations.eventBadgeTitle,
         style: const TextStyle(
-          fontSize: 20,
+          fontSize: Dimens.fontSizeXxl,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
@@ -297,7 +298,8 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
         top: false,
         bottom: true,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16.0, 16, 16.0, 16.0),
+          padding: const EdgeInsets.fromLTRB(Dimens.spacingL, Dimens.spacingL,
+              Dimens.spacingL, Dimens.spacingL),
           child: Column(
             children: [
               Align(
@@ -305,26 +307,26 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                 child: Text(
                   appLocalizations.previewBadge,
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: Dimens.fontSizeL,
                     fontWeight: FontWeight.bold,
                     color: colorBlack,
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: Dimens.spacingM),
               EventBadgeCardWidget(data: _badgeData),
-              const SizedBox(height: 20),
+              const SizedBox(height: Dimens.spacingXl),
               const Divider(height: 1, color: Colors.grey),
-              const SizedBox(height: 20),
+              const SizedBox(height: Dimens.spacingXl),
               Card(
                 color: Colors.white,
                 elevation: 2,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(Dimens.radiusXl),
                   side: BorderSide(color: Colors.grey.shade300, width: 1),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(Dimens.spacingXl),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -333,27 +335,27 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                         Row(
                           children: [
                             const Icon(Icons.edit_outlined,
-                                color: colorAccent, size: 20),
-                            const SizedBox(width: 8),
+                                color: colorAccent, size: Dimens.iconSizeM),
+                            const SizedBox(width: Dimens.spacingS),
                             Text(
                               appLocalizations.eventBadgeDetails,
                               style: const TextStyle(
-                                fontSize: 18,
+                                fontSize: Dimens.fontSizeXl,
                                 fontWeight: FontWeight.bold,
                                 color: colorBlack,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: Dimens.spacingSm),
                         Text(
                           appLocalizations.fillDetailsToCreateBadge,
                           style: TextStyle(
                               fontSize: 13, color: Colors.grey.shade600),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: Dimens.spacingXl),
                         _buildPhotoSection(),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: Dimens.spacingXl),
                         _buildTextFormField(
                           controller: _eventNameController,
                           focusNode: _fieldFocusNodes['eventName'],
@@ -365,7 +367,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                                   ? appLocalizations.pleaseEnterEventName
                                   : null,
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimens.spacingL),
                         _buildTextFormField(
                           controller: _attendeeNameController,
                           focusNode: _fieldFocusNodes['attendeeName'],
@@ -377,7 +379,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                                   ? appLocalizations.pleaseEnterAttendeeName
                                   : null,
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimens.spacingL),
                         _buildTextFormField(
                           controller: _roleController,
                           focusNode: _fieldFocusNodes['role'],
@@ -385,7 +387,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                           hint: appLocalizations.enterRole,
                           icon: Icons.work_outline,
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimens.spacingL),
                         _buildTextFormField(
                           controller: _organizationController,
                           focusNode: _fieldFocusNodes['organization'],
@@ -393,7 +395,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                           hint: appLocalizations.enterOrganization,
                           icon: Icons.business_outlined,
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimens.spacingL),
                         _buildTextFormField(
                           controller: _ticketIdController,
                           focusNode: _fieldFocusNodes['ticketId'],
@@ -401,7 +403,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                           hint: appLocalizations.enterTicketId,
                           icon: Icons.confirmation_number_outlined,
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimens.spacingL),
                         _buildTextFormField(
                           controller: _qrDataController,
                           focusNode: _fieldFocusNodes['qr'],
@@ -417,7 +419,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: Dimens.spacingXxl),
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -431,7 +433,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                     elevation: _isGenerating ? 0 : 2,
                     shadowColor: colorPrimary.withValues(alpha: 0.3),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(Dimens.radiusM),
                     ),
                   ),
                   child: _isGenerating
@@ -447,11 +449,12 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                                     AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: Dimens.spacingM),
                             Text(
                               appLocalizations.generatingBadge,
                               style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
+                                  fontSize: Dimens.fontSizeL,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ],
                         )
@@ -459,11 +462,12 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Icon(Icons.badge_outlined, size: 18),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: Dimens.spacingS),
                             Text(
                               appLocalizations.generateBadge,
                               style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
+                                  fontSize: Dimens.fontSizeL,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -506,7 +510,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
         maxLines: maxLines,
         maxLength: maxLength,
         style: const TextStyle(
-          fontSize: 16,
+          fontSize: Dimens.fontSizeL,
           color: colorBlack,
           fontWeight: FontWeight.w500,
         ),
@@ -515,7 +519,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
           counterText: '',
           labelText: label,
           hintText: hint,
-          prefixIcon: Icon(icon, color: colorAccent, size: 20),
+          prefixIcon: Icon(icon, color: colorAccent, size: Dimens.iconSizeM),
           suffixIcon: onScan != null
               ? IconButton(
                   tooltip: appLocalizations.scanQrCode,
@@ -525,41 +529,41 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
               : null,
           labelStyle: TextStyle(
             color: colorBlack.withValues(alpha: 0.7),
-            fontSize: 14,
+            fontSize: Dimens.fontSizeM,
             fontWeight: FontWeight.w500,
           ),
           hintStyle: TextStyle(
             color: Colors.grey.shade500,
-            fontSize: 14,
+            fontSize: Dimens.fontSizeM,
             fontWeight: FontWeight.w400,
           ),
           floatingLabelStyle: const TextStyle(
             color: colorPrimary,
-            fontSize: 14,
+            fontSize: Dimens.fontSizeM,
             fontWeight: FontWeight.w600,
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(Dimens.radiusM),
             borderSide: BorderSide(color: Colors.grey.shade300),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(Dimens.radiusM),
             borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(Dimens.radiusM),
             borderSide: const BorderSide(color: colorPrimary, width: 2),
           ),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(Dimens.radiusM),
             borderSide: const BorderSide(color: Colors.red, width: 1.5),
           ),
           focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(Dimens.radiusM),
             borderSide: const BorderSide(color: Colors.red, width: 2),
           ),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+              horizontal: Dimens.spacingL, vertical: 14),
           filled: true,
           fillColor: Colors.grey.shade50,
         ),
@@ -572,11 +576,11 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
       color: Colors.grey.shade50,
       elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(Dimens.radiusM),
         side: BorderSide(color: Colors.grey.shade300, width: 1),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(Dimens.spacingL),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -584,11 +588,11 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
               children: [
                 const Icon(Icons.photo_camera_outlined,
                     color: colorAccent, size: 18),
-                const SizedBox(width: 8),
+                const SizedBox(width: Dimens.spacingS),
                 Text(
                   appLocalizations.profilePhoto,
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: Dimens.fontSizeM,
                     fontWeight: FontWeight.w600,
                     color: colorBlack,
                   ),
@@ -596,16 +600,17 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                 const Spacer(),
                 if (_profileImage != null)
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: Dimens.spacingS,
+                        vertical: Dimens.spacingXs),
                     decoration: BoxDecoration(
                       color: colorPrimary.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(Dimens.radiusXl),
                     ),
                     child: Text(
                       appLocalizations.selected,
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: Dimens.fontSizeS,
                         color: colorPrimary,
                         fontWeight: FontWeight.w600,
                       ),
@@ -613,18 +618,18 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                   ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimens.spacingM),
             InkWell(
               onTap: _pickImage,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(Dimens.radiusM),
               splashColor: colorAccent.withValues(alpha: 0.1),
               highlightColor: colorAccent.withValues(alpha: 0.05),
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(Dimens.spacingL),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(Dimens.radiusM),
                   border: Border.all(
                     color: _profileImage != null
                         ? colorPrimary
@@ -663,9 +668,11 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: colorPrimary,
-                                      borderRadius: BorderRadius.circular(8),
+                                      borderRadius:
+                                          BorderRadius.circular(Dimens.radiusM),
                                     ),
-                                    padding: const EdgeInsets.all(2),
+                                    padding:
+                                        const EdgeInsets.all(Dimens.spacingXxs),
                                     child: const Icon(
                                       Icons.check,
                                       size: 12,
@@ -681,7 +688,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                               color: Colors.grey.shade400,
                             ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: Dimens.spacingL),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -691,20 +698,20 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                                 ? appLocalizations.photoSelected
                                 : appLocalizations.selectProfilePhoto,
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: Dimens.fontSizeM,
                               fontWeight: FontWeight.w600,
                               color: _profileImage != null
                                   ? colorPrimary
                                   : colorBlack,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: Dimens.spacingXs),
                           Text(
                             _profileImage != null
                                 ? appLocalizations.tapToChangePhoto
                                 : appLocalizations.tapToSelectFromGallery,
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: Dimens.fontSizeS,
                               color: Colors.grey.shade600,
                             ),
                           ),
@@ -712,12 +719,12 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(Dimens.spacingS),
                       decoration: BoxDecoration(
                         color: _profileImage != null
                             ? colorPrimary.withValues(alpha: 0.3)
                             : Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(Dimens.radiusRound),
                       ),
                       child: Icon(
                         _profileImage != null
