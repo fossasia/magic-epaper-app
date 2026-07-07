@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/image_library/widgets/filter_chip_widget.dart';
 import 'package:magicepaperapp/image_library/widgets/search_field_widget.dart';
@@ -21,7 +22,7 @@ class SearchAndFilterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -42,12 +43,12 @@ class SearchAndFilterWidget extends StatelessWidget {
               provider.updateSearchQuery('');
             },
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: Dimens.spacingM),
           Row(
             children: [
               Text(appLocalizations.filter,
                   style: const TextStyle(fontWeight: FontWeight.w500)),
-              const SizedBox(width: 8),
+              const SizedBox(width: Dimens.spacingS),
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,

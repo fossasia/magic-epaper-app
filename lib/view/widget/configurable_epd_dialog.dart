@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/color_util.dart';
@@ -351,7 +352,7 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                     InputDecoration(labelText: appLocalizations.displayPreset),
                 isExpanded: true,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
               Row(
                 children: [
                   Expanded(
@@ -368,7 +369,7 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                           : null,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: Dimens.spacingM),
                   Expanded(
                     child: TextFormField(
                       controller: _heightController,
@@ -385,13 +386,13 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
               Text(appLocalizations.colorsLabel,
                   style: Theme.of(context).textTheme.titleSmall),
-              const SizedBox(height: 8),
+              const SizedBox(height: Dimens.spacingS),
               Wrap(
-                spacing: 8,
-                runSpacing: 4,
+                spacing: Dimens.spacingS,
+                runSpacing: Dimens.spacingXs,
                 children: _currentColors.map((color) {
                   return Chip(
                     avatar: CircleAvatar(backgroundColor: color, radius: 12),
@@ -405,7 +406,7 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                             color != Colors.black)
                         ? () => _removeColor(color)
                         : null,
-                    deleteIcon: const Icon(Icons.close, size: 16),
+                    deleteIcon: const Icon(Icons.close, size: Dimens.iconSizeS),
                   );
                 }).toList(),
               ),
@@ -415,16 +416,16 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2.0),
+          padding: const EdgeInsets.symmetric(vertical: Dimens.spacingXxs),
           child: Wrap(
-            spacing: 8,
-            runSpacing: 4,
+            spacing: Dimens.spacingS,
+            runSpacing: Dimens.spacingXs,
             alignment: WrapAlignment.spaceBetween,
             children: [
               if (_isCustom)
                 ElevatedButton.icon(
                   onPressed: _addColor,
-                  icon: const Icon(Icons.add, size: 16),
+                  icon: const Icon(Icons.add, size: Dimens.iconSizeS),
                   label: Text(appLocalizations.addColor),
                 ),
               OutlinedButton(
