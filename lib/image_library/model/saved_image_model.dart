@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
 import '../../util/app_logger.dart';
 
 class SavedImage {
@@ -52,6 +54,24 @@ class SavedImage {
       AppLogger.error('Error reading image file: $e');
       return null;
     }
+  }
+
+  bool get hasCanvasDocument => metadata?['canvasDocument'] != null;
+
+  String get imageCacheKey =>
+      '$filePath#${metadata?['updatedAt'] ?? createdAt.millisecondsSinceEpoch}';
+
+  Uint8List? get sourceImageBytes {
+    final raw = metadata?['sourceImage'];
+    return raw is String ? base64Decode(raw) : null;
+  }
+
+  CanvasDocument? get canvasDocument {
+    final raw = metadata?['canvasDocument'];
+    if (raw is Map) {
+      return CanvasDocument.fromJson(Map<String, dynamic>.from(raw));
+    }
+    return null;
   }
 
   Future<bool> fileExists() async {

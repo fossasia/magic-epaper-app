@@ -152,6 +152,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
           borderRadius: BorderRadius.circular(Dimens.radiusM),
           child: Image.file(
             File(widget.image.filePath),
+            key: ValueKey(widget.image.imageCacheKey),
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
               return Container(

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/image_library/services/image_save_handler.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
+import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
 import 'package:magicepaperapp/card_templates/card_template_selection_view.dart';
 import 'package:magicepaperapp/util/color_util.dart';
 import 'package:magicepaperapp/util/epd/driver/waveform.dart';
@@ -28,8 +29,24 @@ import '../util/app_logger.dart';
 class ImageEditor extends StatefulWidget {
   final DisplayDevice device;
   final bool isExportOnly;
-  const ImageEditor(
-      {super.key, required this.device, this.isExportOnly = false});
+
+  final Map<String, dynamic>? pendingCanvasDocument;
+  final String? editingImageId;
+
+  final int? initialFilterIndex;
+  final bool initialFlipHorizontal;
+  final bool initialFlipVertical;
+
+  const ImageEditor({
+    super.key,
+    required this.device,
+    this.isExportOnly = false,
+    this.pendingCanvasDocument,
+    this.editingImageId,
+    this.initialFilterIndex,
+    this.initialFlipHorizontal = false,
+    this.initialFlipVertical = false,
+  });
 
   @override
   State<ImageEditor> createState() => _ImageEditorState();
@@ -50,6 +67,13 @@ class _ImageEditorState extends State<ImageEditor> {
   bool _isProcessingImages = false;
   bool _isInitializing = true;
 
+  Map<String, dynamic>? _pendingCanvasDocument;
+  String? _editingLibraryImageId;
+  int? _pendingInitialFilterIndex;
+  bool _pendingInitialFlipH = false;
+  bool _pendingInitialFlipV = false;
+  bool _hasPendingInitialState = false;
+
   @override
   void initState() {
     AppLogger.info('DEBUG: ImageEditor initState called');
@@ -57,6 +81,13 @@ class _ImageEditorState extends State<ImageEditor> {
     super.initState();
     _selectedWaveform = null;
     _selectedWaveformName = null;
+    _pendingCanvasDocument = widget.pendingCanvasDocument;
+    _editingLibraryImageId = widget.editingImageId;
+    _pendingInitialFilterIndex = widget.initialFilterIndex;
+    _pendingInitialFlipH = widget.initialFlipHorizontal;
+    _pendingInitialFlipV = widget.initialFlipVertical;
+    _hasPendingInitialState = widget.editingImageId != null;
+    if (widget.editingImageId != null) _currentImageSource = 'editor';
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
@@ -109,6 +140,17 @@ class _ImageEditorState extends State<ImageEditor> {
   void _saveCurrentImage() async {
     if (_imageSaveHandler == null) return;
 
+    Uint8List? sourceBytes;
+    final src = _processedSourceImage;
+    if (src != null) {
+      final resized = img.copyResize(
+        src,
+        width: widget.device.width,
+        height: widget.device.height,
+      );
+      sourceBytes = Uint8List.fromList(img.encodePng(resized));
+    }
+
     await _imageSaveHandler!.saveCurrentImage(
       rawImages: _rawImages,
       selectedFilterIndex: _selectedFilterIndex,
@@ -117,6 +159,12 @@ class _ImageEditorState extends State<ImageEditor> {
       currentImageSource: _currentImageSource,
       processingMethods: widget.device.processingMethods,
       modelId: widget.device.modelId,
+      deviceWidth: widget.device.width,
+      deviceHeight: widget.device.height,
+      deviceColors: widget.device.colors,
+      canvasDocument: _pendingCanvasDocument,
+      sourceImage: sourceBytes,
+      existingImageId: _editingLibraryImageId,
     );
   }
 
@@ -217,6 +265,21 @@ class _ImageEditorState extends State<ImageEditor> {
       AppLogger.error('Exception in Rust processing: $e');
       if (mounted) setState(() => _isProcessingImages = false);
     }
+    _applyPendingInitialState(sourceImage);
+  }
+
+  void _applyPendingInitialState(img.Image sourceImage) {
+    if (!_hasPendingInitialState) return;
+    _hasPendingInitialState = false;
+    if (!mounted || _processedSourceImage != sourceImage) return;
+    final idx = _pendingInitialFilterIndex;
+    setState(() {
+      if (idx != null && idx > 0 && idx < _processedPngs.length) {
+        _selectedFilterIndex = idx;
+      }
+      flipHorizontal = _pendingInitialFlipH;
+      flipVertical = _pendingInitialFlipV;
+    });
   }
 
   Future<void> _exportXbmFiles() async {
@@ -606,9 +669,17 @@ class _ImageEditorState extends State<ImageEditor> {
           epd: widget.device,
           imgLoader: imgLoader,
           imageSaveHandler: _imageSaveHandler,
+          onCanvasDocument: (doc) {
+            setState(() {
+              _pendingCanvasDocument = doc;
+            });
+          },
           onSourceChanged: (String source) {
             setState(() {
               _currentImageSource = source;
+              if (source != 'editor') {
+                _pendingCanvasDocument = null;
+              }
             });
           }),
     );
@@ -620,6 +691,7 @@ class BottomActionMenu extends StatelessWidget {
   final ImageLoader imgLoader;
   final ImageSaveHandler? imageSaveHandler;
   final Function(String)? onSourceChanged;
+  final Function(Map<String, dynamic>)? onCanvasDocument;
 
   const BottomActionMenu({
     super.key,
@@ -627,6 +699,7 @@ class BottomActionMenu extends StatelessWidget {
     required this.imgLoader,
     required this.imageSaveHandler,
     this.onSourceChanged,
+    this.onCanvasDocument,
   });
 
   @override
@@ -692,24 +765,25 @@ class BottomActionMenu extends StatelessWidget {
                 fontSize: fontSize,
                 label: appLocalizations.openEditor,
                 onTap: () async {
-                  final canvasBytes =
-                      await Navigator.of(context).push<Uint8List>(
+                  final result =
+                      await Navigator.of(context).push<CanvasEditorResult>(
                     buildOpaqueSlideRoute(
                       NativeCanvasEditor(
                         width: epd.width,
                         height: epd.height,
+                        returnDocument: true,
                       ),
                     ),
                   );
-                  if (canvasBytes != null) {
-                    await imgLoader.updateImage(
-                      bytes: canvasBytes,
-                      width: epd.width,
-                      height: epd.height,
-                    );
-                    await imgLoader.saveFinalizedImageBytes(canvasBytes);
-                    onSourceChanged?.call('editor');
-                  }
+                  if (result == null) return;
+                  await imgLoader.updateImage(
+                    bytes: result.png,
+                    width: epd.width,
+                    height: epd.height,
+                  );
+                  await imgLoader.saveFinalizedImageBytes(result.png);
+                  onCanvasDocument?.call(result.document.toJson());
+                  onSourceChanged?.call('editor');
                 },
               ),
               _buildActionButton(

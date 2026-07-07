@@ -25,6 +25,12 @@ class ImageSaveHandler {
     required String currentImageSource,
     required List<ImageProcessingMethod> processingMethods,
     required String modelId,
+    required int deviceWidth,
+    required int deviceHeight,
+    required List<Color> deviceColors,
+    Map<String, dynamic>? canvasDocument,
+    Uint8List? sourceImage,
+    String? existingImageId,
   }) async {
     if (rawImages.isEmpty) return;
 
@@ -35,6 +41,27 @@ class ImageSaveHandler {
 
     final pngBytes = Uint8List.fromList(img.encodePng(finalImg));
 
+    if (existingImageId != null) {
+      await imageOpsService.saveImageWithFeedback(
+        '',
+        pngBytes,
+        provider,
+        currentImageSource,
+        selectedFilterIndex,
+        processingMethods,
+        flipHorizontal,
+        flipVertical,
+        modelId,
+        deviceWidth: deviceWidth,
+        deviceHeight: deviceHeight,
+        deviceColors: deviceColors,
+        canvasDocument: canvasDocument,
+        sourceImage: sourceImage,
+        existingImageId: existingImageId,
+      );
+      return;
+    }
+
     _showSaveDialog(
       pngBytes,
       selectedFilterIndex,
@@ -43,6 +70,11 @@ class ImageSaveHandler {
       flipHorizontal,
       flipVertical,
       modelId,
+      deviceWidth,
+      deviceHeight,
+      deviceColors,
+      canvasDocument,
+      sourceImage,
     );
   }
 
@@ -65,6 +97,11 @@ class ImageSaveHandler {
     bool flipHorizontal,
     bool flipVertical,
     String modelId,
+    int deviceWidth,
+    int deviceHeight,
+    List<Color> deviceColors,
+    Map<String, dynamic>? canvasDocument,
+    Uint8List? sourceImage,
   ) {
     showDialog(
       context: context,
@@ -84,6 +121,11 @@ class ImageSaveHandler {
           flipHorizontal,
           flipVertical,
           modelId,
+          deviceWidth,
+          deviceHeight,
+          deviceColors,
+          canvasDocument,
+          sourceImage,
         ),
       ),
     );
@@ -98,6 +140,11 @@ class ImageSaveHandler {
     bool flipHorizontal,
     bool flipVertical,
     String modelId,
+    int deviceWidth,
+    int deviceHeight,
+    List<Color> deviceColors,
+    Map<String, dynamic>? canvasDocument,
+    Uint8List? sourceImage,
   ) async {
     if (context.mounted) Navigator.pop(context);
 
@@ -111,6 +158,11 @@ class ImageSaveHandler {
       flipHorizontal,
       flipVertical,
       modelId,
+      deviceWidth: deviceWidth,
+      deviceHeight: deviceHeight,
+      deviceColors: deviceColors,
+      canvasDocument: canvasDocument,
+      sourceImage: sourceImage,
     );
   }
 }
