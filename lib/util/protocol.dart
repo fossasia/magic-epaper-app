@@ -110,31 +110,23 @@ class Protocol {
     return chunks;
   }
 
-  Future<bool> ensureNfcAvailable() async {
+  Future<void> ensureNfcAvailable() async {
     final availability = await NFCAvailabilityService.checkAvailability();
 
     switch (availability) {
       case NFCAvailability.available:
-        return true;
+        return;
 
       case NFCAvailability.disabled:
-        Fluttertoast.showToast(
-          msg: appLocalizations.nfcIsDisabledPleaseEnableIt,
-        );
-
         if (Platform.isAndroid) {
           await NFCSettingsLauncher.openNFCSettings();
         } else if (Platform.isIOS) {
           await AppSettings.openAppSettings();
         }
-
-        return false;
+        throw appLocalizations.nfcIsDisabledPleaseEnableIt;
 
       case NFCAvailability.not_supported:
-        Fluttertoast.showToast(
-          msg: appLocalizations.thisDeviceDoesNotSupportNfc,
-        );
-        return false;
+        throw appLocalizations.thisDeviceDoesNotSupportNfc;
     }
   }
 
@@ -144,7 +136,7 @@ class Protocol {
     TagDetectedCallback? onTagDetected,
     Waveform? waveform,
   }) async {
-    if (!await ensureNfcAvailable()) return;
+    await ensureNfcAvailable();
     onProgress?.call(0.0, appLocalizations.waitingForNfcTag);
     Fluttertoast.showToast(
         msg: appLocalizations.bringPhoneNearMagicEpaperHardware);
