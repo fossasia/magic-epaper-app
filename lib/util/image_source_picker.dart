@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 
 Future<ImageSource?> chooseImageSource(BuildContext context) {
   final l10n = AppLocalizations.of(context)!;
   return showModalBottomSheet<ImageSource>(
     context: context,
-    backgroundColor: Colors.white,
+    backgroundColor: colorWhite,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
     ),

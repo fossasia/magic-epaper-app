@@ -104,7 +104,7 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
                 style: const TextStyle(
                   fontSize: Dimens.fontSizeXxl,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: colorBlack87,
                 ),
               ),
               const SizedBox(height: Dimens.spacingXs),
@@ -151,7 +151,7 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
           style: const TextStyle(
             fontSize: Dimens.fontSizeM,
             fontWeight: FontWeight.w600,
-            color: Colors.black87,
+            color: colorBlack87,
           ),
         ),
         const SizedBox(height: Dimens.spacingS),

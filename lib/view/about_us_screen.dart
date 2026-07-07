@@ -235,14 +235,14 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         leading: const Icon(
                           Icons.article_outlined,
                           size: 40,
-                          color: Colors.grey,
+                          color: grey500,
                         ),
                         title: Text(
                           appLocalizations.openSourceLicenses,
                           style: GoogleFonts.sora(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
-                            color: Colors.black,
+                            color: colorBlack,
                           ),
                         ),
                         subtitle: Text(
@@ -250,7 +250,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           style: GoogleFonts.sora(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: Colors.grey,
+                            color: grey500,
                           ),
                           softWrap: true,
                         ),

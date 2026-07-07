@@ -346,7 +346,7 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                           style: const TextStyle(
                             fontSize: Dimens.fontSizeXxl,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                            color: colorBlack87,
                           ),
                           textAlign: TextAlign.center,
                         ),

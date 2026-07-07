@@ -77,7 +77,7 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: Dimens.fontSizeXxl,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: colorBlack87,
                 ),
               ),
               const SizedBox(height: Dimens.spacingXs),
@@ -135,10 +135,10 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
                       height: 60,
                       width: 60,
                       decoration: BoxDecoration(
-                        color: Colors.grey.withValues(alpha: 0.2),
+                        color: grey500.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(Dimens.radiusM),
-                        border: Border.all(
-                            color: Colors.grey.withValues(alpha: 0.3)),
+                        border:
+                            Border.all(color: grey500.withValues(alpha: 0.3)),
                       ),
                       child: Center(
                         child: Text(
@@ -160,7 +160,7 @@ class BatchDeleteConfirmationDialog extends StatelessWidget {
             style: const TextStyle(
               fontSize: Dimens.fontSizeL,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: colorBlack87,
             ),
             textAlign: TextAlign.center,
           ),

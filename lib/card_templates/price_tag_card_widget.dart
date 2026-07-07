@@ -110,7 +110,7 @@ class PriceTagCardWidget extends StatelessWidget {
                                     style: const TextStyle(
                                       fontSize: Dimens.fontSizeL,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.black87,
+                                      color: colorBlack87,
                                     ),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
@@ -133,7 +133,7 @@ class PriceTagCardWidget extends StatelessWidget {
                                   data.productDescription,
                                   style: const TextStyle(
                                     fontSize: Dimens.fontSizeS,
-                                    color: Colors.black87,
+                                    color: colorBlack87,
                                     fontWeight: FontWeight.w400,
                                   ),
                                   maxLines: 2,

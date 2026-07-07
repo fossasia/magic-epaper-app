@@ -178,7 +178,7 @@ class _AppDrawerState extends State<AppDrawer> {
             child: Text(
               appLocalizations.other,
               style: const TextStyle(
-                color: Colors.black54,
+                color: colorBlack54,
                 fontWeight: FontWeight.bold,
                 fontSize: Dimens.fontSizeM,
               ),

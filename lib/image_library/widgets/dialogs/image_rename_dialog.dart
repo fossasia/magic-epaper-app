@@ -92,7 +92,7 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
                 style: const TextStyle(
                   fontSize: Dimens.fontSizeXxl,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: colorBlack87,
                 ),
               ),
               const SizedBox(height: Dimens.spacingXs),
@@ -120,7 +120,7 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
             style: const TextStyle(
               fontSize: Dimens.fontSizeM,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: colorBlack87,
             ),
           ),
           const SizedBox(height: Dimens.spacingS),

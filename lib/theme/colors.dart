@@ -22,7 +22,12 @@ const MaterialColor brandSwatch = MaterialColor(
 
 // Neutrals
 const Color colorBlack = Colors.black;
+const Color colorBlack87 = Colors.black87;
+const Color colorBlack54 = Colors.black54;
+const Color colorBlack38 = Colors.black38;
+const Color colorBlack26 = Colors.black26;
 const Color colorWhite = Colors.white;
+const Color colorWhite70 = Colors.white70;
 const Color backgroundColor = Colors.white;
 const Color surfaceColor = Colors.white;
 

@@ -77,7 +77,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: Dimens.fontSizeXxl,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: colorBlack87,
                 ),
               ),
               const SizedBox(height: Dimens.spacingXs),
@@ -125,7 +125,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
             style: const TextStyle(
               fontSize: Dimens.fontSizeL,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: colorBlack87,
             ),
             textAlign: TextAlign.center,
             maxLines: 2,
@@ -137,7 +137,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
               padding: const EdgeInsets.symmetric(
                   horizontal: Dimens.spacingS, vertical: Dimens.spacingXs),
               decoration: BoxDecoration(
-                color: Colors.grey.withValues(alpha: 0.2),
+                color: grey500.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(Dimens.radiusXl),
               ),
               child: Text(

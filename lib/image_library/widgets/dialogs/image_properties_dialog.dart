@@ -175,7 +175,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
       style: const TextStyle(
         fontSize: Dimens.fontSizeL,
         fontWeight: FontWeight.bold,
-        color: Colors.black87,
+        color: colorBlack87,
       ),
     );
   }
@@ -290,7 +290,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: colorBlack87,
             ),
           ),
         ],
@@ -318,7 +318,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
           child: Text(
             value,
             style: const TextStyle(
-              color: Colors.black87,
+              color: colorBlack87,
               fontSize: 13,
             ),
           ),

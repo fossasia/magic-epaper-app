@@ -117,7 +117,7 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
                               style: const TextStyle(
                                 fontSize: Dimens.fontSizeM,
                                 fontWeight: FontWeight.w600,
-                                color: Colors.black87,
+                                color: colorBlack87,
                               ),
                             ),
                             const SizedBox(height: Dimens.spacingXxs),

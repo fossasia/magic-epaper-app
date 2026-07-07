@@ -179,7 +179,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: template.isEnabled
                               ? template.color.withValues(alpha: 0.1)
-                              : Colors.grey.withValues(alpha: 0.1),
+                              : grey500.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(32),
                         ),
                         child: Icon(

@@ -76,7 +76,7 @@ class ClearAllConfirmationDialog extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: Dimens.fontSizeXxl,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: colorBlack87,
                 ),
               ),
               const SizedBox(height: Dimens.spacingXs),
@@ -150,7 +150,7 @@ class ClearAllConfirmationDialog extends StatelessWidget {
             style: const TextStyle(
               fontSize: Dimens.fontSizeM,
               fontWeight: FontWeight.w500,
-              color: Colors.black87,
+              color: colorBlack87,
             ),
             textAlign: TextAlign.center,
           ),
