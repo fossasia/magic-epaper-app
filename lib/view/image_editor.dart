@@ -522,13 +522,15 @@ class _ImageEditorState extends State<ImageEditor> {
       if (_colorDebounce?.isActive ?? false) _colorDebounce!.cancel();
 
       _colorDebounce = Timer(const Duration(milliseconds: 300), () async {
-        final adjusted = img.adjustColor(
-          img.Image.from(_pristineImage!),
-          brightness: _currentBrightness,
-          contrast: _currentContrast,
-        );
+        if (_pristineImage == null) return;
 
-        final bytes = Uint8List.fromList(img.encodePng(adjusted));
+        final adjusted = await compute(_applyAdjustments,
+            [_pristineImage!, _currentBrightness, _currentContrast]);
+
+        final bytes = await compute(
+            (img.Image image) => Uint8List.fromList(img.encodePng(image)),
+            adjusted);
+        if (!mounted) return;
 
         await imgLoader.updateImage(
             bytes: bytes,
@@ -769,6 +771,18 @@ class _ImageEditorState extends State<ImageEditor> {
           }),
     );
   }
+}
+
+img.Image _applyAdjustments(List<dynamic> args) {
+  final img.Image pristine = args[0];
+  final double brightness = args[1];
+  final double contrast = args[2];
+
+  return img.adjustColor(
+    img.Image.from(pristine),
+    brightness: brightness,
+    contrast: contrast,
+  );
 }
 
 class BottomActionMenu extends StatelessWidget {
