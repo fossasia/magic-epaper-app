@@ -435,7 +435,7 @@ class ImageOperationsService {
             ),
             const SizedBox(width: Dimens.spacingM),
             Expanded(
-                child: Text('${appLocalizations.failedToSaveImage}$error')),
+                child: Text(appLocalizations.failedToSaveImage(error))),
           ],
         ),
         backgroundColor: Colors.red,

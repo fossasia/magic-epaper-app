@@ -997,7 +997,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Text('${appLocalizations.size}: ${fontSize.round()}'),
+                  Text(appLocalizations.sizeWithValue(fontSize.round())),
                   Slider(
                     min: 8,
                     max: 120,

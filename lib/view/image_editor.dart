@@ -271,12 +271,12 @@ class _ImageEditorState extends State<ImageEditor> {
       messenger.showSnackBar(
         SnackBar(
           content: Text(
-              '${appLocalizations.exported} $exportedCount ${appLocalizations.xbmFilesToMagicEpaper}'),
+              appLocalizations.xbmFilesExportedSuccessfully(exportedCount)),
         ),
       );
     } catch (e) {
       messenger.showSnackBar(
-          SnackBar(content: Text('${appLocalizations.exportFailed}: $e')));
+          SnackBar(content: Text(appLocalizations.exportFailedMessage(e.toString()))));
     }
   }
 
