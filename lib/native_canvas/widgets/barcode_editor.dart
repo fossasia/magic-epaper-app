@@ -299,21 +299,6 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     return b.minLength;
   }
 
-  static const Map<String, String> _formatHints = {
-    'QR-Code': 'Any text',
-    'Data Matrix': 'Any text',
-    'Aztec': 'Any text',
-    'PDF417': 'Any text',
-    'CODE 128': 'Any printable ASCII',
-    'CODE 39': 'A to Z, 0 to 9, and (space . \$ / + %)',
-    'CODE 93': 'A to Z, 0 to 9, and (space . \$ / + %)',
-    'CODABAR': 'Digits and (\$ . / : +)',
-    'EAN 13': '12 digits (check digit added automatically)',
-    'EAN 8': '7 digits (check digit added automatically)',
-    'UPC A': '11 digits (check digit added automatically)',
-    'ITF': 'Even number of digits',
-  };
-
   static const Map<String, String> _formatExamples = {
     'QR-Code': 'e.g. https://example.com',
     'Data Matrix': 'e.g. Order #12345',
