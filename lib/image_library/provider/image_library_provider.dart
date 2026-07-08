@@ -13,6 +13,12 @@ class ImageLibraryProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  bool _hasError = false;
+  bool get hasError => _hasError;
+
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
   String _searchQuery = '';
   String get searchQuery => _searchQuery;
 
@@ -98,6 +104,8 @@ class ImageLibraryProvider extends ChangeNotifier {
 
   Future<void> loadSavedImages() async {
     _isLoading = true;
+    _hasError = false;
+    _errorMessage = null;
     notifyListeners();
     try {
       await _initializeDirectories();
@@ -137,6 +145,8 @@ class ImageLibraryProvider extends ChangeNotifier {
       _isInitialized = true;
     } catch (e) {
       AppLogger.error('Error loading saved images: $e');
+      _hasError = true;
+      _errorMessage = e.toString();
     } finally {
       _isLoading = false;
       notifyListeners();

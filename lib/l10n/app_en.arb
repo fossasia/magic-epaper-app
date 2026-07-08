@@ -731,5 +731,9 @@
   "notABarcode": "This doesn't look like a barcode. Please upload a clear barcode image.",
   "addBarcode": "Add Barcode",
   "readyToTransfer": "Ready to Transfer",
-  "holdPhoneNearDisplay": "Hold your phone near the display to begin."
+  "holdPhoneNearDisplay": "Hold your phone near the display to begin.",
+  "couldntLoadLibrary": "Couldn't load your image library",
+  "couldntLoadLibrarySubtitle": "Something went wrong while loading your saved images. Please try again.",
+  "retry": "Retry",
+  "imageUnavailable": "Image unavailable"
 }
