@@ -275,8 +275,8 @@ class _ImageEditorState extends State<ImageEditor> {
         ),
       );
     } catch (e) {
-      messenger.showSnackBar(
-          SnackBar(content: Text(appLocalizations.exportFailedMessage(e.toString()))));
+      messenger.showSnackBar(SnackBar(
+          content: Text(appLocalizations.exportFailedMessage(e.toString()))));
     }
   }
 

@@ -693,7 +693,8 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
             drawText: !is2D,
             errorBuilder: (context, error) => _buildPreviewErrorCard(
               _ValidationError(
-                title: _l10n.invalidBarcodeData(_friendlyName(_selectedBarcode)),
+                title:
+                    _l10n.invalidBarcodeData(_friendlyName(_selectedBarcode)),
                 detail: _humanizeEncodeError(
                     error, _friendlyName(_selectedBarcode)),
                 suggestion: _suggestionFor(
@@ -895,7 +896,8 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
                       const SizedBox(height: 16),
                       Text(
                         _l10n.analyzingImage,
-                        style: const TextStyle(color: Colors.white, fontSize: 14),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 14),
                       ),
                     ],
                   ),
