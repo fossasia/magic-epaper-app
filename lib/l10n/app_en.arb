@@ -261,6 +261,7 @@
   "halftone": "Newspaper",
   "threshold": "Posterize",
   "colorHalftone": "Color Newspaper",
+  "bayer": "Grid",
 
   "searchingForDevice": "Searching for Device",
   "displayRefreshing": "Display Refreshing",
