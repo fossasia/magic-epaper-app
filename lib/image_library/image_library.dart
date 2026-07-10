@@ -93,7 +93,7 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
     bool initialFlipVertical = false,
   }) {
     getIt<ColorPaletteProvider>().updateColors(epd.colors);
-    Navigator.of(context).push(
+    Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (_) => ImageEditor(
           device: epd,
