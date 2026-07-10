@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/waveshare/services/waveshare_nfc_services.dart';
@@ -122,9 +123,10 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Dimens.radiusXxl)),
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(Dimens.spacingXxl),
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           child: _buildContent(),
@@ -148,7 +150,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
           key: 'waiting',
           icon: Icons.nfc,
           color: colorPrimary,
-          title: "Ready to Transfer",
+          title: appLocalizations.readyToTransfer,
           child: Column(
             children: [
               AnimatedBuilder(
@@ -157,11 +159,11 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
                     Transform.scale(scale: _pulseAnimation.value, child: child),
                 child: const Icon(Icons.nfc, size: 60, color: colorPrimary),
               ),
-              const SizedBox(height: 24),
-              const Text(
-                "Hold your phone near the display to begin.",
+              const SizedBox(height: Dimens.spacingXxl),
+              Text(
+                appLocalizations.holdPhoneNearDisplay,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: Dimens.fontSizeL),
               ),
             ],
           ),
@@ -180,13 +182,13 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
                   backgroundColor: Colors.grey.shade300,
                   color: colorPrimary,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: Dimens.spacingM),
                 Text("${(_progress * 100).toInt()}%"),
-                const SizedBox(height: 20),
+                const SizedBox(height: Dimens.spacingXl),
                 Text(
                   appLocalizations.keepPhoneStill,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: Dimens.fontSizeL),
                 ),
               ],
             ));
@@ -200,7 +202,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
             children: [
               Text(_message ?? appLocalizations.transferCompleteMessage,
                   textAlign: TextAlign.center),
-              const SizedBox(height: 20),
+              const SizedBox(height: Dimens.spacingXl),
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(appLocalizations.done),
@@ -218,7 +220,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
             children: [
               Text(_message ?? appLocalizations.unknownErrorOccurred,
                   textAlign: TextAlign.center),
-              const SizedBox(height: 20),
+              const SizedBox(height: Dimens.spacingXl),
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(appLocalizations.close),
@@ -241,13 +243,15 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, size: 40, color: color),
-        const SizedBox(height: 16),
+        const SizedBox(height: Dimens.spacingL),
         Text(
           title,
           style: TextStyle(
-              fontSize: 20, fontWeight: FontWeight.bold, color: color),
+              fontSize: Dimens.fontSizeXxl,
+              fontWeight: FontWeight.bold,
+              color: color),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: Dimens.spacingXxl),
         child,
       ],
     );

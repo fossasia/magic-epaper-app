@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/image_library/services/image_save_handler.dart';
-import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
+import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:magicepaperapp/card_templates/card_template_selection_view.dart';
 import 'package:magicepaperapp/util/color_util.dart';
 import 'package:magicepaperapp/util/epd/driver/waveform.dart';
@@ -18,7 +18,9 @@ import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/provider/image_loader.dart';
 import 'package:magicepaperapp/util/epd/epd.dart';
+import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import '../src/rust/api/simple.dart' as rust_api;
 import '../util/app_logger.dart';
@@ -83,8 +85,7 @@ class _ImageEditorState extends State<ImageEditor> {
 
   Future<void> loadDefaultImage(ImageLoader imgLoader) async {
     try {
-      const assetPath = 'assets/images/FOSSASIA.png';
-      final byteData = await rootBundle.load(assetPath);
+      final byteData = await rootBundle.load(ImageAssets.fossasiaDefault);
       final pngBytes = byteData.buffer.asUint8List();
       await imgLoader.updateImage(
         bytes: pngBytes,
@@ -328,10 +329,11 @@ class _ImageEditorState extends State<ImageEditor> {
               height: controlHeight,
               decoration: BoxDecoration(
                 color: colorAccent,
-                border: Border.all(color: Colors.white, width: 1),
-                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                    color: Colors.white, width: Dimens.borderWidthThin),
+                borderRadius: BorderRadius.circular(Dimens.radiusM),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: Dimens.spacingS),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String?>(
                   value: _selectedWaveformName,
@@ -345,7 +347,7 @@ class _ImageEditorState extends State<ImageEditor> {
                   ),
                   dropdownColor: colorAccent,
                   style: itemTextStyle,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(Dimens.radiusM),
                   icon: const Icon(Icons.keyboard_arrow_down,
                       color: Colors.white, size: 18),
                   items: dropdownItems,
@@ -379,7 +381,7 @@ class _ImageEditorState extends State<ImageEditor> {
             ),
           ),
         ),
-        const SizedBox(width: 2),
+        const SizedBox(width: Dimens.spacingXxs),
         InkWell(
           onTap: () => _showRefreshModeInfoDialog(context),
           customBorder: const CircleBorder(),
@@ -388,7 +390,8 @@ class _ImageEditorState extends State<ImageEditor> {
           child: const SizedBox(
             height: controlHeight,
             width: controlHeight,
-            child: Icon(Icons.info_outline, color: Colors.white, size: 20),
+            child: Icon(Icons.info_outline,
+                color: Colors.white, size: Dimens.iconSizeM),
           ),
         ),
       ],
@@ -420,14 +423,16 @@ class _ImageEditorState extends State<ImageEditor> {
       style: TextButton.styleFrom(
         backgroundColor: colorAccent,
         foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        padding: const EdgeInsets.symmetric(
+            horizontal: Dimens.spacingM, vertical: Dimens.spacingXs),
         // Visual height stays compact (32), but the default padded
         // tapTargetSize keeps the touch target at the 48dp guideline.
         minimumSize: const Size(0, 32),
         textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-          side: const BorderSide(color: Colors.white, width: 1),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
+          side: const BorderSide(
+              color: Colors.white, width: Dimens.borderWidthThin),
         ),
       ),
       child: Text(
@@ -449,7 +454,7 @@ class _ImageEditorState extends State<ImageEditor> {
             appLocalizations.refreshModeInfo,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 18,
+              fontSize: Dimens.fontSizeXl,
             ),
           ),
           content: SingleChildScrollView(
@@ -461,30 +466,30 @@ class _ImageEditorState extends State<ImageEditor> {
                   appLocalizations.fullRefreshInfo,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: Dimens.fontSizeL,
                     color: colorAccent,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: Dimens.spacingS),
                 Text(
                   appLocalizations.fullRefreshDescription,
-                  style: const TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: Dimens.fontSizeM),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: Dimens.spacingL),
                 Text(
                   appLocalizations.partialRefreshInfo,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: Dimens.fontSizeL,
                     color: colorAccent,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: Dimens.spacingS),
                 Text(
                   appLocalizations.partialRefreshDescription,
-                  style: const TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: Dimens.fontSizeM),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: Dimens.spacingL),
               ],
             ),
           ),
@@ -537,12 +542,12 @@ class _ImageEditorState extends State<ImageEditor> {
             ? [
                 if (hasDropdown)
                   Padding(
-                    padding: const EdgeInsets.only(right: 6.0),
+                    padding: const EdgeInsets.only(right: Dimens.spacingSm),
                     child:
                         _buildWaveformDropdownGroup(context, appLocalizations),
                   ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
+                  padding: const EdgeInsets.only(right: Dimens.spacingS),
                   child: _buildTransferActionButton(context, appLocalizations),
                 ),
               ]
@@ -559,18 +564,20 @@ class _ImageEditorState extends State<ImageEditor> {
                     const CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(colorAccent),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: Dimens.spacingL),
                     Text(
                       _isProcessingImages
                           ? appLocalizations.processingImages
                           : appLocalizations.loading,
-                      style: const TextStyle(color: colorBlack, fontSize: 14),
+                      style: const TextStyle(
+                          color: colorBlack, fontSize: Dimens.fontSizeM),
                     ),
                   ],
                 ),
               )
             : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: Dimens.spacingS),
                 child: _processedPngs.isNotEmpty
                     ? ImageList(
                         key: ValueKey(_processedSourceImage),
@@ -589,8 +596,8 @@ class _ImageEditorState extends State<ImageEditor> {
                     : Center(
                         child: Text(
                           appLocalizations.importStartingImageFeedback,
-                          style:
-                              const TextStyle(color: Colors.grey, fontSize: 16),
+                          style: const TextStyle(
+                              color: Colors.grey, fontSize: Dimens.fontSizeL),
                         ),
                       ),
               ),
@@ -652,7 +659,8 @@ class BottomActionMenu extends StatelessWidget {
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: isNarrow ? 4.0 : 8.0, vertical: 6),
+              horizontal: isNarrow ? Dimens.spacingXs : Dimens.spacingS,
+              vertical: Dimens.spacingSm),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -687,7 +695,7 @@ class BottomActionMenu extends StatelessWidget {
                   final canvasBytes =
                       await Navigator.of(context).push<Uint8List>(
                     buildOpaqueSlideRoute(
-                      MovableBackgroundImageExample(
+                      NativeCanvasEditor(
                         width: epd.width,
                         height: epd.height,
                       ),
@@ -788,15 +796,16 @@ class BottomActionMenu extends StatelessWidget {
       child: InkWell(
         key: key,
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(Dimens.radiusXxl),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
+          padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.spacingXxs, vertical: Dimens.spacingXs),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon, color: colorAccent, size: iconSize),
-              const SizedBox(height: 2),
+              const SizedBox(height: Dimens.spacingXxs),
               Flexible(
                 child: FittedBox(
                   fit: BoxFit.scaleDown,

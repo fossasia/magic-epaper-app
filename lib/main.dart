@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
@@ -72,34 +73,34 @@ class MyApp extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(28.0),
               ),
-              actionsPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              actionsPadding: const EdgeInsets.symmetric(
+                  horizontal: Dimens.spacingL, vertical: Dimens.spacingS),
               titleTextStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 18,
+                fontSize: Dimens.fontSizeXl,
                 color: colorBlack,
               ),
             ),
             inputDecorationTheme: InputDecorationTheme(
               filled: true,
               fillColor: Colors.grey.shade50,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              contentPadding: const EdgeInsets.symmetric(
+                  horizontal: Dimens.spacingL, vertical: Dimens.spacingM),
               floatingLabelStyle: const TextStyle(color: colorAccent),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(Dimens.radiusXl),
                 borderSide: BorderSide(color: Colors.grey.shade300),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(Dimens.radiusXl),
                 borderSide: BorderSide(color: Colors.grey.shade300),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(Dimens.radiusXl),
                 borderSide: const BorderSide(color: colorAccent, width: 2),
               ),
               errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(Dimens.radiusXl),
                 borderSide: const BorderSide(color: Colors.red, width: 2),
               ),
             ),
@@ -107,9 +108,9 @@ class MyApp extends StatelessWidget {
               style: TextButton.styleFrom(
                 foregroundColor: Colors.grey[700],
                 textStyle: const TextStyle(fontWeight: FontWeight.bold),
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: Dimens.spacingM),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(Dimens.radiusM),
                   side: BorderSide(color: Colors.grey.shade300),
                 ),
               ),
@@ -120,11 +121,11 @@ class MyApp extends StatelessWidget {
                 foregroundColor: colorWhite,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0)),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                textStyle:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    borderRadius: BorderRadius.circular(Dimens.radiusXl)),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.spacingM, vertical: Dimens.spacingM),
+                textStyle: const TextStyle(
+                    fontSize: Dimens.fontSizeL, fontWeight: FontWeight.w600),
               ),
             ),
             outlinedButtonTheme: OutlinedButtonThemeData(
@@ -132,11 +133,11 @@ class MyApp extends StatelessWidget {
                 foregroundColor: Colors.grey.shade700,
                 side: BorderSide(color: Colors.grey.shade300),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0)),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                textStyle:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    borderRadius: BorderRadius.circular(Dimens.radiusXl)),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.spacingM, vertical: Dimens.spacingM),
+                textStyle: const TextStyle(
+                    fontSize: Dimens.fontSizeL, fontWeight: FontWeight.w600),
               ),
             ),
           ),

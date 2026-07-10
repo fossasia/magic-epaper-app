@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/util/app_logger.dart';
@@ -85,7 +86,7 @@ class _AppDrawerState extends State<AppDrawer> {
         title: Row(
           children: [
             const Icon(Icons.info_outline, color: Colors.blue),
-            const SizedBox(width: 8),
+            const SizedBox(width: Dimens.spacingS),
             Text(appLocalizations.arduinoExport),
           ],
         ),
@@ -172,13 +173,14 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
           const Divider(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
+            padding: const EdgeInsets.symmetric(
+                horizontal: 18.0, vertical: Dimens.spacingMd),
             child: Text(
               appLocalizations.other,
               style: const TextStyle(
                 color: Colors.black54,
                 fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontSize: Dimens.fontSizeM,
               ),
             ),
           ),
@@ -231,7 +233,7 @@ class _AppDrawerState extends State<AppDrawer> {
         style: TextStyle(
           color: currentIndex == index ? colorAccent : colorBlack,
           fontWeight: FontWeight.bold,
-          fontSize: 14,
+          fontSize: Dimens.fontSizeM,
         ),
       ),
       selected: currentIndex == index,
@@ -284,7 +286,7 @@ class _AppDrawerState extends State<AppDrawer> {
         style: TextStyle(
           color: currentIndex == index ? colorAccent : colorBlack,
           fontWeight: FontWeight.bold,
-          fontSize: 14,
+          fontSize: Dimens.fontSizeM,
         ),
       ),
       subtitle: subtitle != null
@@ -294,7 +296,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 color: currentIndex == index
                     ? colorAccent.withValues(alpha: 0.7)
                     : Colors.grey[600],
-                fontSize: 12,
+                fontSize: Dimens.fontSizeS,
               ),
             )
           : null,

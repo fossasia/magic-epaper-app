@@ -1,5 +1,6 @@
 class ImageAssets {
   static const String flipHorizontal = 'assets/images/h-flip.png';
+  static const String fossasiaDefault = 'assets/images/FOSSASIA.png';
   static const String whiteBoard = 'assets/canvas/white.png';
   static const String redBoard = 'assets/canvas/red.png';
   static const String blackBoard = 'assets/canvas/black.png';
@@ -28,6 +29,7 @@ class ImageAssets {
   static const String waveshare2_13 =
       'assets/images/displays/waveshare_2.13.webp';
   static const String tempIcon = 'assets/icons/icon.png';
+  static const String appIcon = 'assets/icons/app_icon_desktop.png';
   static const String githubIcon = 'assets/icons/github.png';
   static const String badgeIcon = 'assets/icons/badge.png';
 }
