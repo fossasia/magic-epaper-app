@@ -1,19 +1,22 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:magicepaperapp/card_templates/util/image_picker_util.dart';
 import 'package:magicepaperapp/card_templates/employee_id_card_widget.dart';
 import 'package:magicepaperapp/card_templates/employee_id_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
-import 'package:magicepaperapp/pro_image_editor/features/movable_background_image.dart';
+import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:magicepaperapp/util/page_route_util.dart';
 import 'package:magicepaperapp/util/template_util.dart';
 import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
+import 'package:magicepaperapp/card_templates/util/barcode_scanner_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class EmployeeIdForm extends StatefulWidget {
   final int width;
@@ -34,8 +37,16 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
   final _positionController = TextEditingController();
   final _qrDataController = TextEditingController();
 
+  final Map<String, FocusNode> _fieldFocusNodes = {
+    'companyName': FocusNode(),
+    'name': FocusNode(),
+    'position': FocusNode(),
+    'division': FocusNode(),
+    'idNumber': FocusNode(),
+    'qr': FocusNode(),
+  };
+
   File? _profileImage;
-  final ImagePicker _picker = ImagePicker();
   bool _isGenerating = false;
 
   late EmployeeIdModel _employeeData;
@@ -75,6 +86,10 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
     _divisionController.dispose();
     _positionController.dispose();
     _qrDataController.dispose();
+
+    for (final node in _fieldFocusNodes.values) {
+      node.dispose();
+    }
     super.dispose();
   }
 
@@ -93,16 +108,36 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _profileImage = File(pickedFile.path);
-        _updatePreview();
-      });
+    final picked = await pickAndEditImage(context);
+    if (picked != null && mounted) {
+      _profileImage = picked;
+      _updatePreview();
+    }
+  }
+
+  void _handleEditRequest(String elementId) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      FocusScope.of(context).unfocus();
+      if (elementId == 'profileImage') {
+        _pickImage();
+        return;
+      }
+      _fieldFocusNodes[elementId]?.requestFocus();
+    });
+  }
+
+  Future<void> _scanQrData() async {
+    final code = await scanCode(context);
+    if (!mounted) return;
+    if (code != null && code.isNotEmpty) {
+      _qrDataController.text = code;
     }
   }
 
   void _submitForm() async {
+    FocusScope.of(context).unfocus();
+
     setState(() {
       _isGenerating = true;
     });
@@ -115,13 +150,14 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
 
       if (_profileImage != null) {
         layers.add(LayerSpec.widget(
-          widget: ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
+          widget: ClipOval(
             child: Image.file(_profileImage!,
                 width: 200, height: 200, fit: BoxFit.cover),
           ),
           offset: layoutParams.profileImageOffset,
           scale: layoutParams.profileImageScale,
+          kind: LayerKind.image,
+          elementId: 'profileImage',
         ));
       }
 
@@ -133,11 +169,11 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
             color: Colors.black,
           ),
           text: _employeeData.companyName,
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
           textAlign: TextAlign.center,
           offset: layoutParams.companyNameOffset,
           scale: layoutParams.companyNameScale,
+          followCanvasTheme: true,
+          elementId: 'companyName',
         ));
       }
 
@@ -145,11 +181,11 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.namePrefix}${_employeeData.name}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['name']!,
           scale: layoutParams.textFieldScale,
+          followCanvasTheme: true,
+          elementId: 'name',
         ));
       }
 
@@ -157,11 +193,11 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.positionPrefix}${_employeeData.position}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['position']!,
           scale: layoutParams.textFieldScale,
+          followCanvasTheme: true,
+          elementId: 'position',
         ));
       }
 
@@ -169,11 +205,11 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.divisionPrefix}${_employeeData.division}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['division']!,
           scale: layoutParams.textFieldScale,
+          followCanvasTheme: true,
+          elementId: 'division',
         ));
       }
 
@@ -181,18 +217,18 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.idPrefix}${_employeeData.idNumber}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['idNumber']!,
           scale: layoutParams.textFieldScale,
+          followCanvasTheme: true,
+          elementId: 'idNumber',
         ));
       }
 
       if (_employeeData.qrData.isNotEmpty) {
         layers.add(LayerSpec.widget(
           widget: BarcodeWidget(
-            padding: const EdgeInsets.all(2),
+            padding: const EdgeInsets.all(Dimens.spacingXxs),
             backgroundColor: colorWhite,
             barcode: Barcode.qrCode(),
             data: _employeeData.qrData,
@@ -201,12 +237,14 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
           ),
           offset: layoutParams.qrCodeOffset,
           scale: layoutParams.qrCodeScale,
+          kind: LayerKind.barcode,
+          elementId: 'qr',
         ));
       }
 
-      final result = await Navigator.of(context).push<Uint8List>(
-        MaterialPageRoute(
-          builder: (context) => MovableBackgroundImageExample(
+      final result = await Navigator.of(context).push<Object>(
+        buildOpaqueSlideRoute(
+          NativeCanvasEditor(
             width: widget.width,
             height: widget.height,
             initialLayers: layers,
@@ -214,10 +252,13 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         ),
       );
 
-      if (result != null) {
+      if (!mounted) return;
+      if (result is Uint8List) {
         Navigator.of(context)
           ..pop()
           ..pop(result);
+      } else if (result is String) {
+        _handleEditRequest(result);
       }
     } finally {
       setState(() {
@@ -230,48 +271,50 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
   Widget build(BuildContext context) {
     return CommonScaffold(
       index: -1,
-      toolbarHeight: 85,
-      titleWidget: Padding(
-        padding: const EdgeInsets.fromLTRB(5, 16, 16, 5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              appLocalizations.employeeIdCard,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              appLocalizations.fillDetailsToCreateId,
-              style: const TextStyle(fontSize: 16, color: Colors.white),
-            ),
-          ],
+      showBackButton: true,
+      titleWidget: Text(
+        appLocalizations.employeeIdCard,
+        style: const TextStyle(
+          fontSize: Dimens.fontSizeXxl,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
       body: SafeArea(
         top: false,
         bottom: true,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16.0, 14, 16.0, 16.0),
+          padding: const EdgeInsets.fromLTRB(Dimens.spacingL, Dimens.spacingL,
+              Dimens.spacingL, Dimens.spacingL),
           child: Column(
             children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  appLocalizations.previewIdCard,
+                  style: const TextStyle(
+                    fontSize: Dimens.fontSizeL,
+                    fontWeight: FontWeight.bold,
+                    color: colorBlack,
+                  ),
+                ),
+              ),
+              const SizedBox(height: Dimens.spacingM),
               EmployeeIdCardWidget(data: _employeeData),
-              const SizedBox(height: 20),
+              const SizedBox(height: Dimens.spacingXl),
               const Divider(height: 1, color: Colors.grey),
-              const SizedBox(height: 20),
+              const SizedBox(height: Dimens.spacingXl),
               Card(
                 color: Colors.white,
                 elevation: 2,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(Dimens.radiusXl),
                   side: BorderSide(color: Colors.grey.shade300, width: 1),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(Dimens.spacingXl),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -280,69 +323,83 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         Row(
                           children: [
                             const Icon(Icons.edit_outlined,
-                                color: colorAccent, size: 20),
-                            const SizedBox(width: 8),
+                                color: colorAccent, size: Dimens.iconSizeM),
+                            const SizedBox(width: Dimens.spacingS),
                             Text(
                               appLocalizations.idCardDetails,
                               style: const TextStyle(
-                                fontSize: 18,
+                                fontSize: Dimens.fontSizeXl,
                                 fontWeight: FontWeight.bold,
                                 color: colorBlack,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: Dimens.spacingSm),
+                        Text(
+                          appLocalizations.fillDetailsToCreateId,
+                          style: TextStyle(
+                              fontSize: 13, color: Colors.grey.shade600),
+                        ),
+                        const SizedBox(height: Dimens.spacingXl),
                         _buildPhotoSection(),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: Dimens.spacingXl),
                         _buildTextFormField(
                           controller: _companyNameController,
+                          focusNode: _fieldFocusNodes['companyName'],
                           label: appLocalizations.companyName,
                           hint: appLocalizations.enterCompanyName,
                           icon: Icons.business_outlined,
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimens.spacingL),
                         _buildTextFormField(
                           controller: _nameController,
+                          focusNode: _fieldFocusNodes['name'],
                           label: appLocalizations.name,
                           hint: appLocalizations.enterEmployeeName,
                           icon: Icons.person_outline,
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimens.spacingL),
                         _buildTextFormField(
                           controller: _positionController,
+                          focusNode: _fieldFocusNodes['position'],
                           label: appLocalizations.position,
                           hint: appLocalizations.enterJobPosition,
                           icon: Icons.work_outline,
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimens.spacingL),
                         _buildTextFormField(
                           controller: _divisionController,
+                          focusNode: _fieldFocusNodes['division'],
                           label: appLocalizations.division,
                           hint: appLocalizations.enterDepartment,
                           icon: Icons.groups_outlined,
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimens.spacingL),
                         _buildTextFormField(
                           controller: _idNumberController,
+                          focusNode: _fieldFocusNodes['idNumber'],
                           label: appLocalizations.idNumber,
                           hint: appLocalizations.enterUniqueId,
                           icon: Icons.badge_outlined,
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimens.spacingL),
                         _buildTextFormField(
                           controller: _qrDataController,
+                          focusNode: _fieldFocusNodes['qr'],
                           label: appLocalizations.qrCodeData,
                           hint: appLocalizations.enterQrCodeData,
                           icon: Icons.qr_code_outlined,
                           maxLines: 2,
+                          maxLength: 250,
+                          onScan: _scanQrData,
                         ),
                       ],
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: Dimens.spacingXxl),
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -354,9 +411,9 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                     foregroundColor:
                         Colors.white.withAlpha(_isGenerating ? 178 : 255),
                     elevation: _isGenerating ? 0 : 2,
-                    shadowColor: colorPrimary.withOpacity(0.3),
+                    shadowColor: colorPrimary.withValues(alpha: 0.3),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(Dimens.radiusM),
                     ),
                   ),
                   child: _isGenerating
@@ -372,11 +429,12 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                                     AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: Dimens.spacingM),
                             Text(
                               appLocalizations.generatingIdCard,
                               style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
+                                  fontSize: Dimens.fontSizeL,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ],
                         )
@@ -384,11 +442,12 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Icon(Icons.credit_card, size: 18),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: Dimens.spacingS),
                             Text(
                               appLocalizations.generateIdCard,
                               style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
+                                  fontSize: Dimens.fontSizeL,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -408,70 +467,83 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
     required IconData icon,
     String? Function(String?)? validator,
     int maxLines = 1,
+    VoidCallback? onScan,
+    int? maxLength = 25,
+    FocusNode? focusNode,
   }) {
     return Theme(
       data: Theme.of(context).copyWith(
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: colorPrimary,
-          selectionColor: colorPrimary.withOpacity(0.2),
+          selectionColor: colorPrimary.withValues(alpha: 0.3),
           selectionHandleColor: colorPrimary,
         ),
         inputDecorationTheme: InputDecorationTheme(
           focusColor: colorPrimary,
-          hoverColor: colorPrimary.withOpacity(0.1),
+          hoverColor: colorPrimary.withValues(alpha: 0.3),
         ),
       ),
       child: TextFormField(
         controller: controller,
+        focusNode: focusNode,
         validator: validator,
         maxLines: maxLines,
+        maxLength: maxLength,
         style: const TextStyle(
-          fontSize: 16,
+          fontSize: Dimens.fontSizeL,
           color: colorBlack,
           fontWeight: FontWeight.w500,
         ),
         cursorColor: colorPrimary,
         decoration: InputDecoration(
+          counterText: '',
           labelText: label,
           hintText: hint,
-          prefixIcon: Icon(icon, color: colorAccent, size: 20),
+          prefixIcon: Icon(icon, color: colorAccent, size: Dimens.iconSizeM),
+          suffixIcon: onScan != null
+              ? IconButton(
+                  tooltip: appLocalizations.scanQrCode,
+                  icon: const Icon(Icons.qr_code_scanner, color: colorAccent),
+                  onPressed: onScan,
+                )
+              : null,
           labelStyle: TextStyle(
-            color: colorBlack.withOpacity(0.7),
-            fontSize: 14,
+            color: colorBlack.withValues(alpha: 0.7),
+            fontSize: Dimens.fontSizeM,
             fontWeight: FontWeight.w500,
           ),
           hintStyle: TextStyle(
             color: Colors.grey.shade500,
-            fontSize: 14,
+            fontSize: Dimens.fontSizeM,
             fontWeight: FontWeight.w400,
           ),
           floatingLabelStyle: const TextStyle(
             color: colorPrimary,
-            fontSize: 14,
+            fontSize: Dimens.fontSizeM,
             fontWeight: FontWeight.w600,
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(Dimens.radiusM),
             borderSide: BorderSide(color: Colors.grey.shade300),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(Dimens.radiusM),
             borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(Dimens.radiusM),
             borderSide: const BorderSide(color: colorPrimary, width: 2),
           ),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(Dimens.radiusM),
             borderSide: const BorderSide(color: Colors.red, width: 1.5),
           ),
           focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(Dimens.radiusM),
             borderSide: const BorderSide(color: Colors.red, width: 2),
           ),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+              horizontal: Dimens.spacingL, vertical: 14),
           filled: true,
           fillColor: Colors.grey.shade50,
         ),
@@ -484,11 +556,11 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
       color: Colors.grey.shade50,
       elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(Dimens.radiusM),
         side: BorderSide(color: Colors.grey.shade300, width: 1),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(Dimens.spacingL),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -496,11 +568,11 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
               children: [
                 const Icon(Icons.photo_camera_outlined,
                     color: colorAccent, size: 18),
-                const SizedBox(width: 8),
+                const SizedBox(width: Dimens.spacingS),
                 Text(
                   appLocalizations.profilePhoto,
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: Dimens.fontSizeM,
                     fontWeight: FontWeight.w600,
                     color: colorBlack,
                   ),
@@ -508,16 +580,17 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                 const Spacer(),
                 if (_profileImage != null)
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: Dimens.spacingS,
+                        vertical: Dimens.spacingXs),
                     decoration: BoxDecoration(
-                      color: colorPrimary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
+                      color: colorPrimary.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(Dimens.radiusXl),
                     ),
                     child: Text(
                       appLocalizations.selected,
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: Dimens.fontSizeS,
                         color: colorPrimary,
                         fontWeight: FontWeight.w600,
                       ),
@@ -525,18 +598,18 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                   ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimens.spacingM),
             InkWell(
               onTap: _pickImage,
-              borderRadius: BorderRadius.circular(8),
-              splashColor: colorAccent.withOpacity(0.1),
-              highlightColor: colorAccent.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(Dimens.radiusM),
+              splashColor: colorAccent.withValues(alpha: 0.1),
+              highlightColor: colorAccent.withValues(alpha: 0.05),
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(Dimens.spacingL),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(Dimens.radiusM),
                   border: Border.all(
                     color: _profileImage != null
                         ? colorPrimary
@@ -551,18 +624,17 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                       height: 60,
                       decoration: BoxDecoration(
                         color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(8),
+                        shape: BoxShape.circle,
                         border: Border.all(
                           color: _profileImage != null
-                              ? colorPrimary.withOpacity(0.3)
+                              ? colorPrimary.withValues(alpha: 0.3)
                               : Colors.grey.shade300,
                         ),
                       ),
                       child: _profileImage != null
                           ? Stack(
                               children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(7),
+                                ClipOval(
                                   child: Image.file(
                                     _profileImage!,
                                     fit: BoxFit.cover,
@@ -576,9 +648,11 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: colorPrimary,
-                                      borderRadius: BorderRadius.circular(8),
+                                      borderRadius:
+                                          BorderRadius.circular(Dimens.radiusM),
                                     ),
-                                    padding: const EdgeInsets.all(2),
+                                    padding:
+                                        const EdgeInsets.all(Dimens.spacingXxs),
                                     child: const Icon(
                                       Icons.check,
                                       size: 12,
@@ -594,7 +668,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                               color: Colors.grey.shade400,
                             ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: Dimens.spacingL),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -604,20 +678,20 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                                 ? appLocalizations.photoSelected
                                 : appLocalizations.selectProfilePhoto,
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: Dimens.fontSizeM,
                               fontWeight: FontWeight.w600,
                               color: _profileImage != null
                                   ? colorPrimary
                                   : colorBlack,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: Dimens.spacingXs),
                           Text(
                             _profileImage != null
                                 ? appLocalizations.tapToChangePhoto
                                 : appLocalizations.tapToSelectFromGallery,
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: Dimens.fontSizeS,
                               color: Colors.grey.shade600,
                             ),
                           ),
@@ -625,12 +699,12 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(Dimens.spacingS),
                       decoration: BoxDecoration(
                         color: _profileImage != null
-                            ? colorPrimary.withOpacity(0.1)
+                            ? colorPrimary.withValues(alpha: 0.3)
                             : Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(Dimens.radiusRound),
                       ),
                       child: Icon(
                         _profileImage != null

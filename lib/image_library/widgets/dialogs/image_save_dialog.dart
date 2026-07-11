@@ -1,12 +1,13 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
-class ImageSaveDialog extends StatelessWidget {
+class ImageSaveDialog extends StatefulWidget {
   final Uint8List imageData;
   final String filterName;
   final Function(String) onSave;
@@ -19,23 +20,40 @@ class ImageSaveDialog extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final nameController = TextEditingController(
+  State<ImageSaveDialog> createState() => _ImageSaveDialogState();
+}
+
+class _ImageSaveDialogState extends State<ImageSaveDialog> {
+  late final TextEditingController _nameController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(
       text: 'Filtered_${DateTime.now().millisecondsSinceEpoch}',
     );
+  }
 
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
       child: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(Dimens.spacingXxl),
           margin: const EdgeInsets.symmetric(vertical: 48),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(Dimens.radiusRound),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -46,14 +64,14 @@ class ImageSaveDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHeader(),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
               _buildImagePreview(),
-              const SizedBox(height: 16),
-              _buildTextFieldSection(nameController),
-              const SizedBox(height: 24),
+              const SizedBox(height: Dimens.spacingL),
+              _buildTextFieldSection(),
+              const SizedBox(height: Dimens.spacingXxl),
               _buildFilterInfoChip(),
-              const SizedBox(height: 20),
-              _buildActionButtons(context, nameController),
+              const SizedBox(height: Dimens.spacingXl),
+              _buildActionButtons(context),
             ],
           ),
         ),
@@ -65,18 +83,18 @@ class ImageSaveDialog extends StatelessWidget {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(Dimens.spacingM),
           decoration: BoxDecoration(
-            color: colorAccent.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
+            color: colorAccent.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(Dimens.radiusXl),
           ),
           child: const Icon(
             Icons.save_outlined,
             color: colorAccent,
-            size: 24,
+            size: Dimens.iconSizeL,
           ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: Dimens.spacingL),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,16 +102,16 @@ class ImageSaveDialog extends StatelessWidget {
               Text(
                 appLocalizations.saveImage,
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: Dimens.fontSizeXxl,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: Dimens.spacingXs),
               Text(
                 appLocalizations.saveFilteredImageToLibrary,
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: Dimens.fontSizeM,
                   color: Colors.grey,
                 ),
               ),
@@ -108,37 +126,37 @@ class ImageSaveDialog extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 120,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(horizontal: Dimens.spacingM),
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(Dimens.radiusXxl),
         border: Border.all(color: Colors.grey.shade200),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(Dimens.radiusXl),
         child: Image.memory(
-          imageData,
+          widget.imageData,
           fit: BoxFit.contain,
         ),
       ),
     );
   }
 
-  Widget _buildTextFieldSection(TextEditingController nameController) {
+  Widget _buildTextFieldSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           appLocalizations.imageName,
           style: const TextStyle(
-            fontSize: 14,
+            fontSize: Dimens.fontSizeM,
             fontWeight: FontWeight.w600,
             color: Colors.black87,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: Dimens.spacingS),
         TextField(
-          controller: nameController,
+          controller: _nameController,
           autofocus: true,
           maxLength: 50,
           decoration: InputDecoration(
@@ -146,19 +164,19 @@ class ImageSaveDialog extends StatelessWidget {
             filled: true,
             fillColor: Colors.grey.shade50,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(Dimens.radiusXl),
               borderSide: BorderSide(color: Colors.grey.shade300),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(Dimens.radiusXl),
               borderSide: BorderSide(color: Colors.grey.shade300),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(Dimens.radiusXl),
               borderSide: const BorderSide(color: colorAccent, width: 2),
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(Dimens.radiusXl),
               borderSide: const BorderSide(color: Colors.red, width: 2),
             ),
             prefixIcon: const Icon(
@@ -166,12 +184,12 @@ class ImageSaveDialog extends StatelessWidget {
               color: Colors.grey,
             ),
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
+              horizontal: Dimens.spacingL,
+              vertical: Dimens.spacingL,
             ),
           ),
           textCapitalization: TextCapitalization.words,
-          onSubmitted: (value) => _handleSave(nameController),
+          onSubmitted: (value) => _handleSave(),
         ),
       ],
     );
@@ -179,25 +197,26 @@ class ImageSaveDialog extends StatelessWidget {
 
   Widget _buildFilterInfoChip() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(
+          horizontal: Dimens.spacingM, vertical: Dimens.spacingS),
       decoration: BoxDecoration(
-        color: colorAccent.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colorAccent.withOpacity(0.2)),
+        color: colorAccent.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(Dimens.radiusRound),
+        border: Border.all(color: colorAccent.withValues(alpha: 0.2)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             Icons.filter_alt_outlined,
-            size: 16,
+            size: Dimens.iconSizeS,
             color: colorAccent,
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: Dimens.spacingSm),
           Text(
-            '${appLocalizations.filterApplied} $filterName',
+            '${appLocalizations.filterApplied} ${widget.filterName}',
             style: TextStyle(
-              fontSize: 12,
+              fontSize: Dimens.fontSizeS,
               fontWeight: FontWeight.w500,
               color: colorAccent,
             ),
@@ -207,52 +226,34 @@ class ImageSaveDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons(
-      BuildContext context, TextEditingController nameController) {
+  Widget _buildActionButtons(BuildContext context) {
     return Row(
       children: [
         Expanded(
           child: OutlinedButton(
             onPressed: () => Navigator.pop(context),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              side: BorderSide(color: Colors.grey.shade300),
-              foregroundColor: Colors.grey.shade700,
-            ),
             child: Text(
               appLocalizations.cancel,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: Dimens.fontSizeL,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: Dimens.spacingM),
         Expanded(
           child: ElevatedButton(
-            onPressed: () => _handleSave(nameController),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: colorAccent,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 0,
-            ),
+            onPressed: () => _handleSave(),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.download, size: 20),
-                const SizedBox(width: 8),
+                const Icon(Icons.download, size: Dimens.iconSizeM),
+                const SizedBox(width: Dimens.spacingS),
                 Text(
                   appLocalizations.save,
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: Dimens.fontSizeL,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -264,9 +265,9 @@ class ImageSaveDialog extends StatelessWidget {
     );
   }
 
-  void _handleSave(TextEditingController nameController) {
-    if (nameController.text.trim().isNotEmpty) {
-      onSave(nameController.text.trim());
+  void _handleSave() {
+    if (_nameController.text.trim().isNotEmpty) {
+      widget.onSave(_nameController.text.trim());
     }
   }
 }
@@ -286,7 +287,7 @@ class SnackBarUtils {
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: Dimens.spacingM),
             Text(message),
           ],
         ),
@@ -301,14 +302,16 @@ class SnackBarUtils {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
+            const Icon(Icons.check_circle,
+                color: Colors.white, size: Dimens.iconSizeM),
+            const SizedBox(width: Dimens.spacingM),
             Text(message),
           ],
         ),
         backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusL)),
       ),
     );
   }
@@ -318,14 +321,16 @@ class SnackBarUtils {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.error, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
+            const Icon(Icons.error,
+                color: Colors.white, size: Dimens.iconSizeM),
+            const SizedBox(width: Dimens.spacingM),
             Text(message),
           ],
         ),
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusL)),
       ),
     );
   }

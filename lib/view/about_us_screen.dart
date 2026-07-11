@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/orientation_util.dart';
 import 'package:magicepaperapp/util/url_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
-
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
 
 class AboutUsScreen extends StatefulWidget {
   const AboutUsScreen({super.key});
@@ -25,21 +23,27 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return CommonScaffold(
       index: 5,
+      titleWidget: Text(
+        AppLocalizations.of(context)!.appName,
+        style: const TextStyle(color: Colors.white),
+      ),
       body: SafeArea(
         top: false,
         bottom: true,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(Dimens.spacingS),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(Dimens.radiusL),
                     boxShadow: const [
                       BoxShadow(
                         color: Colors.grey,
@@ -49,12 +53,10 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                     ],
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(Dimens.spacingL),
                     child: Column(
                       children: [
-                        const SizedBox(
-                          height: 25,
-                        ),
+                        const SizedBox(height: 25),
                         Center(
                           child: Image.asset(
                             ImageAssets.tempIcon,
@@ -70,11 +72,11 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                             wordSpacing: 3,
                             fontWeight: FontWeight.w400,
                             color: Colors.black,
-                            fontSize: 12,
+                            fontSize: Dimens.fontSizeS,
                           ),
                           softWrap: true,
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimens.spacingL),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -84,16 +86,18 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                                 style: GoogleFonts.sora(
                                   fontWeight: FontWeight.w500,
                                   color: Colors.grey,
-                                  fontSize: 12,
+                                  fontSize: Dimens.fontSizeS,
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            const SizedBox(width: 10),
+                            const SizedBox(width: Dimens.spacingMd),
                             Flexible(
                               child: GestureDetector(
-                                onTap: () => openUrl(context,
-                                    'https://github.com/fossasia/magic-epaper-app/graphs/contributors'),
+                                onTap: () => openUrl(
+                                  context,
+                                  'https://github.com/fossasia/magic-epaper-app/graphs/contributors',
+                                ),
                                 child: Text(
                                   appLocalizations.fossasiaContributors,
                                   style: GoogleFonts.sora(
@@ -112,7 +116,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: Dimens.spacingMd),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -121,19 +125,20 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         blurRadius: 1,
                         color: Colors.grey,
                         offset: Offset(0, 1),
-                      )
+                      ),
                     ],
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(Dimens.radiusS),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 12.0, top: 12.0),
+                        padding: const EdgeInsets.only(
+                            left: Dimens.spacingM, top: Dimens.spacingM),
                         child: Text(
                           appLocalizations.contactWithUs,
                           style: GoogleFonts.sora(
-                            fontSize: 16,
+                            fontSize: Dimens.fontSizeL,
                             fontWeight: FontWeight.w500,
                             color: Colors.grey,
                           ),
@@ -148,7 +153,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         title: Text(
                           appLocalizations.github,
                           style: GoogleFonts.sora(
-                            fontSize: 16,
+                            fontSize: Dimens.fontSizeL,
                             fontWeight: FontWeight.w500,
                             color: Colors.black,
                           ),
@@ -156,19 +161,21 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         subtitle: Text(
                           appLocalizations.githubSubtitle,
                           style: GoogleFonts.sora(
-                            fontSize: 12,
+                            fontSize: Dimens.fontSizeS,
                             fontWeight: FontWeight.w500,
                             color: Colors.grey,
                           ),
                           softWrap: true,
                         ),
-                        onTap: () => openUrl(context,
-                            'https://github.com/fossasia/magic-epaper-app'),
+                        onTap: () => openUrl(
+                          context,
+                          'https://github.com/fossasia/magic-epaper-app',
+                        ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: Dimens.spacingMd),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -177,19 +184,19 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         blurRadius: 1,
                         color: Colors.grey,
                         offset: Offset(0, 1),
-                      )
+                      ),
                     ],
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(Dimens.radiusS),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(12.0),
+                        padding: const EdgeInsets.all(Dimens.spacingM),
                         child: Text(
                           appLocalizations.license,
                           style: GoogleFonts.sora(
-                            fontSize: 18,
+                            fontSize: Dimens.fontSizeXl,
                             fontWeight: FontWeight.w500,
                             color: Colors.grey,
                           ),
@@ -202,9 +209,9 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           fit: BoxFit.contain,
                         ),
                         title: Text(
-                          appLocalizations.license,
+                          appLocalizations.appLicense,
                           style: GoogleFonts.sora(
-                            fontSize: 16,
+                            fontSize: Dimens.fontSizeL,
                             fontWeight: FontWeight.w500,
                             color: Colors.black,
                           ),
@@ -212,33 +219,55 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         subtitle: Text(
                           appLocalizations.licenseSubtitle,
                           style: GoogleFonts.sora(
+                            fontSize: Dimens.fontSizeS,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey,
+                          ),
+                          softWrap: true,
+                        ),
+                        onTap: () => openUrl(
+                          context,
+                          'https://github.com/fossasia/magic-epaper-app/blob/main/LICENSE.md',
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Icon(
+                          Icons.article_outlined,
+                          size: 40,
+                          color: Colors.grey,
+                        ),
+                        title: Text(
+                          appLocalizations.openSourceLicenses,
+                          style: GoogleFonts.sora(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
+                        ),
+                        subtitle: Text(
+                          appLocalizations.openSourceLicensesSubtitle,
+                          style: GoogleFonts.sora(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                             color: Colors.grey,
                           ),
                           softWrap: true,
                         ),
-                        onTap: () => openUrl(context,
-                            'https://github.com/fossasia/magic-epaper-app/blob/main/LICENSE.md'),
+                        onTap: () => showLicensePage(
+                          context: context,
+                          applicationName: appLocalizations.appName,
+                          applicationIcon: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Image.asset(
+                              ImageAssets.appIcon,
+                              height: 64,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                          applicationLegalese:
+                              appLocalizations.openSourceLicensesLegalese,
+                        ),
                       ),
-                      // ListTile(
-                      //   leading: Image.asset('assets/icons/book.png', height: 40),
-                      //   title: Text(
-                      //     'Library Licenses',
-                      //     style: GoogleFonts.sora(
-                      //         fontSize: 16,
-                      //         fontWeight: FontWeight.w500,
-                      //         color: Colors.black),
-                      //   ),
-                      //   subtitle: Text(
-                      //     'Check third-party libs used on Badge Magic.',
-                      //     style: GoogleFonts.sora(
-                      //         fontSize: 12,
-                      //         fontWeight: FontWeight.w500,
-                      //         color: Colors.grey),
-                      //   ),
-                      //   onTap: () => showLicenseDialog(context),
-                      // ),
                     ],
                   ),
                 ),
@@ -247,7 +276,6 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
           ),
         ),
       ),
-      title: appLocalizations.appName,
     );
   }
 }

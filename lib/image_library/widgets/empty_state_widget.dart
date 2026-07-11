@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class EmptyStateWidget extends StatelessWidget {
   const EmptyStateWidget({super.key});
@@ -15,16 +16,16 @@ class EmptyStateWidget extends StatelessWidget {
         children: [
           const Icon(Icons.photo_library_outlined,
               size: 64, color: Colors.grey),
-          const SizedBox(height: 16),
+          const SizedBox(height: Dimens.spacingL),
           Text(
             appLocalizations.noSavedImagesYet,
             style: const TextStyle(
-              fontSize: 18,
+              fontSize: Dimens.fontSizeXl,
               fontWeight: FontWeight.w500,
               color: Colors.grey,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: Dimens.spacingS),
           Text(
             appLocalizations.saveImagesFromEditor,
             style: const TextStyle(color: Colors.grey),

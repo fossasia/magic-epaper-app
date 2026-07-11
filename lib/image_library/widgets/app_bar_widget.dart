@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isDeleteMode;
@@ -40,14 +41,14 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
         if (isDeleteMode) ...[
           if (selectedCount > 0)
             Padding(
-              padding: const EdgeInsets.only(right: 8.0),
+              padding: const EdgeInsets.only(right: Dimens.spacingS),
               child: TextButton(
                 onPressed: onDeletePressed,
                 style: TextButton.styleFrom(
                   backgroundColor: colorAccent,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(Dimens.radiusM),
                     side: const BorderSide(color: Colors.white, width: 1),
                   ),
                 ),
@@ -74,31 +75,32 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
               }
             },
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(Dimens.radiusXl),
             ),
             color: Colors.white,
             elevation: 8,
-            shadowColor: Colors.black.withOpacity(0.1),
+            shadowColor: Colors.black.withValues(alpha: 0.1),
             offset: const Offset(0, 10),
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 'clear_all',
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.spacingL, vertical: Dimens.spacingS),
                 child: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(Dimens.spacingS),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.red.withOpacity(0.05),
-                    border: Border.all(color: Colors.red.withOpacity(0.1)),
+                    borderRadius: BorderRadius.circular(Dimens.radiusM),
+                    color: Colors.red.withValues(alpha: 0.05),
+                    border:
+                        Border.all(color: Colors.red.withValues(alpha: 0.1)),
                   ),
                   child: Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(6),
+                        padding: const EdgeInsets.all(Dimens.spacingSm),
                         decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(6),
+                          color: Colors.red.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(Dimens.radiusS),
                         ),
                         child: const Icon(
                           Icons.delete_forever_outlined,
@@ -106,24 +108,24 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
                           size: 18,
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: Dimens.spacingM),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Clear All Data',
-                              style: TextStyle(
-                                fontSize: 14,
+                            Text(
+                              appLocalizations.clearAllData,
+                              style: const TextStyle(
+                                fontSize: Dimens.fontSizeM,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black87,
                               ),
                             ),
-                            const SizedBox(height: 2),
+                            const SizedBox(height: Dimens.spacingXxs),
                             Text(
-                              'Remove all images',
+                              appLocalizations.removeAllImages,
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: Dimens.fontSizeS,
                                 color: Colors.grey.shade600,
                                 fontWeight: FontWeight.w400,
                               ),

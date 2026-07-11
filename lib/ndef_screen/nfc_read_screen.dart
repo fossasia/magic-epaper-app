@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/ndef_screen/controller/nfc_controller.dart';
@@ -9,7 +10,7 @@ import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'dart:async';
 import '../util/app_logger.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class NFCReadScreen extends StatefulWidget {
   const NFCReadScreen({super.key});
@@ -164,13 +165,15 @@ class _NFCReadScreenState extends State<NFCReadScreen>
       index: 1,
       actions: [
         IconButton(
-          icon: const Icon(Icons.clear_all, color: Colors.white),
-          onPressed: _nfcController.result.isNotEmpty
-              ? () {
-                  _nfcController.clearResult();
-                  _showSnackBar(appLocalizations.resultsCleared);
-                }
-              : null,
+          icon: const Icon(Icons.delete_sweep, color: Colors.white),
+          onPressed: () {
+            if (_nfcController.result.isNotEmpty) {
+              _nfcController.clearResult();
+              _showSnackBar(appLocalizations.resultsCleared);
+            } else {
+              _showSnackBar(appLocalizations.nothingToClear, isError: true);
+            }
+          },
           tooltip: appLocalizations.clearResults,
         ),
       ],
@@ -184,7 +187,7 @@ class _NFCReadScreenState extends State<NFCReadScreen>
                 availability: _nfcController.availability,
                 onRefresh: _checkNFCAvailability,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
               if (_nfcController.availability == NFCAvailability.available) ...[
                 NFCReadCard(
                   isReading: _nfcController.isReading,
@@ -234,13 +237,14 @@ class _NFCReadScreenState extends State<NFCReadScreen>
                     }
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: Dimens.spacingL),
               ] else ...[
                 Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: Dimens.spacingS),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(Dimens.radiusXl),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.08),
@@ -251,11 +255,11 @@ class _NFCReadScreenState extends State<NFCReadScreen>
                     ],
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(24.0),
+                    padding: const EdgeInsets.all(Dimens.spacingXxl),
                     child: Column(
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(Dimens.spacingL),
                           decoration: BoxDecoration(
                             color: Colors.orange.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(50),
@@ -266,22 +270,22 @@ class _NFCReadScreenState extends State<NFCReadScreen>
                             color: Colors.orange,
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: Dimens.spacingXxl),
                         Text(
                           appLocalizations.nfcNotAvailable,
                           style: const TextStyle(
-                            fontSize: 20,
+                            fontSize: Dimens.fontSizeXxl,
                             fontWeight: FontWeight.bold,
                             color: Colors.black87,
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: Dimens.spacingM),
                         Text(
                           appLocalizations.enableNfcMessage,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: Dimens.fontSizeL,
                             color: Colors.grey[600],
                             height: 1.4,
                           ),
@@ -291,7 +295,7 @@ class _NFCReadScreenState extends State<NFCReadScreen>
                   ),
                 ),
               ],
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
             ],
           ),
         ),

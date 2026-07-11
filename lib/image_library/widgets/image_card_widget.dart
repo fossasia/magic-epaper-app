@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
 import 'package:magicepaperapp/image_library/utils/date_utils.dart' as dt;
 import 'package:magicepaperapp/image_library/widgets/image_overlay_widget.dart';
@@ -27,14 +28,14 @@ class ImageCardWidget extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(Dimens.radiusXl),
           border: Border.all(
             color: isDeleteMode && isSelected ? colorAccent : mdGrey400,
             width: isDeleteMode && isSelected ? 2.5 : 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: colorBlack.withOpacity(0.1),
+              color: colorBlack.withValues(alpha: 0.1),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
@@ -54,6 +55,18 @@ class ImageCardWidget extends StatelessWidget {
                       fit: BoxFit.cover,
                       width: double.infinity,
                       isAntiAlias: false,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey.shade200,
+                          child: const Center(
+                            child: Icon(
+                              Icons.broken_image_outlined,
+                              color: Colors.grey,
+                              size: 48,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   ImageOverlayWidget(
@@ -65,7 +78,7 @@ class ImageCardWidget extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(Dimens.spacingS),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -73,17 +86,17 @@ class ImageCardWidget extends StatelessWidget {
                     image.name,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                      fontSize: Dimens.fontSizeM,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: Dimens.spacingXs),
                   Text(
                     dt.DateUtils.formatRelativeDate(image.createdAt),
                     style: TextStyle(
                       color: Colors.grey.shade600,
-                      fontSize: 12,
+                      fontSize: Dimens.fontSizeS,
                     ),
                   ),
                 ],

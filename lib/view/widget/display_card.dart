@@ -1,22 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/color_util.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/util/epd/epd.dart';
 import 'package:magicepaperapp/util/epd/waveshare_nfc_display.dart';
 import 'package:magicepaperapp/view/widget/color_dot.dart';
 
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
+
 class DisplayCard extends StatelessWidget {
   final DisplayDevice display;
   final bool isSelected;
   final VoidCallback onTap;
 
-  const DisplayCard({
+  final double? width;
+  final bool fill;
+
+  static const double _referenceWidth = 300.0;
+
+  const DisplayCard.fill({
     super.key,
     required this.display,
     required this.isSelected,
     required this.onTap,
-  });
+  })  : width = null,
+        fill = true;
+
+  const DisplayCard.scaled({
+    super.key,
+    required this.display,
+    required this.isSelected,
+    required this.onTap,
+    required this.width,
+  }) : fill = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,100 +50,121 @@ class DisplayCard extends StatelessWidget {
 
     final chips = display.displayChips;
 
+    final double scale =
+        fill ? 1.0 : (width! / _referenceWidth).clamp(0.5, 1.0);
+
+    final Widget imageArea = ClipRRect(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(11 * scale),
+        topRight: Radius.circular(11 * scale),
+      ),
+      child: Container(
+        width: double.infinity,
+        color: Colors.white,
+        child: Padding(
+          padding: EdgeInsets.all(Dimens.spacingXs * scale),
+          child: Image.asset(
+            display.imgPath,
+            fit: BoxFit.contain,
+            height: fill ? 160 : null,
+            errorBuilder: (context, error, stackTrace) {
+              return Center(
+                child: Icon(
+                  Icons.display_settings,
+                  size: 60 * scale,
+                  color: Colors.grey.shade400,
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+
     return InkWell(
       onTap: onTap,
       highlightColor: Colors.redAccent,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(Dimens.radiusXl * scale),
       splashColor: Colors.redAccent.withAlpha(51),
       child: Card(
         color: Colors.white,
         elevation: isSelected ? 4 : 1,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(Dimens.radiusXl * scale),
           side: BorderSide(
             color: isSelected ? colorPrimary : Colors.grey.shade300,
-            width: isSelected ? 2.0 : 1.0,
+            width:
+                isSelected ? Dimens.borderWidthThick : Dimens.borderWidthThin,
           ),
         ),
         child: Column(
+          mainAxisSize: fill ? MainAxisSize.max : MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(11),
-                  topRight: Radius.circular(11),
-                ),
-                child: Container(
-                  width: double.infinity,
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Image.asset(
-                      display.imgPath,
-                      fit: BoxFit.contain,
-                      height: 160,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Center(
-                          child: Icon(
-                            Icons.display_settings,
-                            size: 60,
-                            color: Colors.grey.shade400,
-                          ),
-                        );
-                      },
-                    ),
+            fill
+                ? Expanded(child: imageArea)
+                : SizedBox(
+                    height: 120 * scale,
+                    width: double.infinity,
+                    child: imageArea,
                   ),
-                ),
-              ),
-            ),
             Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: EdgeInsets.all(Dimens.spacingM * scale),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     display.name,
-                    style: const TextStyle(
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: Dimens.fontSizeL * scale,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: Dimens.spacingS * scale),
                   if (chips != null && chips.isNotEmpty) ...[
                     Wrap(
-                      spacing: 4,
-                      runSpacing: 4,
-                      children: chips.map((chip) => _buildChip(chip)).toList(),
+                      spacing: Dimens.spacingXs * scale,
+                      runSpacing: Dimens.spacingXs * scale,
+                      children:
+                          chips.map((chip) => _buildChip(chip, scale)).toList(),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: Dimens.spacingS * scale),
                   ],
                   Row(
                     children: display.colors
-                        .map((color) => ColorDot(color: color))
+                        .map(
+                            (color) => ColorDot(color: color, size: 12 * scale))
                         .toList(),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: Dimens.spacingXs * scale),
                   Text(
                     display.colors
                         .map(ColorUtils.getColorDisplayName)
                         .join(', '),
-                    style: const TextStyle(
-                      fontSize: 10,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: Dimens.fontSizeXs * scale,
                       color: Colors.grey,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: Dimens.spacingS * scale),
                   if (display is WaveshareNfcDisplay) ...[
-                    _buildSpecRow('SKU:', display.modelId),
                     _buildSpecRow(
-                        'Resolution:', '${display.width} × ${display.height}'),
-                    _buildSpecRow('SDK:', driverText),
+                        appLocalizations.skuSpecLabel, display.modelId, scale),
+                    _buildSpecRow(appLocalizations.resolutionSpecLabel,
+                        '${display.width} × ${display.height}', scale),
+                    _buildSpecRow(
+                        appLocalizations.sdkSpecLabel, driverText, scale),
                   ] else ...[
-                    _buildSpecRow('Display:', display.modelId),
-                    _buildSpecRow(
-                        'Resolution:', '${display.width} × ${display.height}'),
-                    _buildSpecRow('Display Driver:', driverText),
+                    _buildSpecRow(appLocalizations.displaySpecLabel,
+                        display.modelId, scale),
+                    _buildSpecRow(appLocalizations.resolutionSpecLabel,
+                        '${display.width} × ${display.height}', scale),
+                    _buildSpecRow(appLocalizations.displayDriverSpecLabel,
+                        driverText, scale),
                   ],
                 ],
               ),
@@ -135,21 +175,22 @@ class DisplayCard extends StatelessWidget {
     );
   }
 
-  Widget _buildChip(String label) {
+  Widget _buildChip(String label, double scale) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: EdgeInsets.symmetric(
+          horizontal: Dimens.spacingS * scale, vertical: 3 * scale),
       decoration: BoxDecoration(
-        color: colorPrimary.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
+        color: colorPrimary.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(Dimens.radiusXl * scale),
         border: Border.all(
-          color: colorPrimary.withOpacity(0.3),
+          color: colorPrimary.withValues(alpha: 0.3),
           width: 0.8,
         ),
       ),
       child: Text(
         label,
-        style: const TextStyle(
-          fontSize: 7,
+        style: TextStyle(
+          fontSize: 7 * scale,
           fontWeight: FontWeight.w600,
           color: colorPrimary,
         ),
@@ -157,18 +198,28 @@ class DisplayCard extends StatelessWidget {
     );
   }
 
-  Widget _buildSpecRow(String label, String value) {
+  Widget _buildSpecRow(String label, String value, double scale) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
+      padding: EdgeInsets.only(bottom: Dimens.spacingXs * scale),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
-          const SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: Dimens.fontSizeXs * scale, color: Colors.grey),
+            ),
+          ),
+          SizedBox(width: Dimens.spacingS * scale),
           Flexible(
             child: Text(
               value,
-              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  fontSize: Dimens.fontSizeXs * scale,
+                  fontWeight: FontWeight.w500),
               softWrap: true,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

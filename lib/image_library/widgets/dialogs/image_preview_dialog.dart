@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
 import 'package:magicepaperapp/image_library/utils/date_utils.dart' as dt;
 import 'package:magicepaperapp/image_library/utils/filter_utils.dart';
@@ -11,7 +12,7 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class ImagePreviewDialog extends StatelessWidget {
   final SavedImage image;
@@ -34,7 +35,7 @@ class ImagePreviewDialog extends StatelessWidget {
     return Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(Dimens.radiusXxl),
       ),
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -55,7 +56,7 @@ class ImagePreviewDialog extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: const BoxDecoration(
         color: colorAccent,
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -67,7 +68,7 @@ class ImagePreviewDialog extends StatelessWidget {
               image.name,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: Dimens.fontSizeXl,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -88,14 +89,14 @@ class ImagePreviewDialog extends StatelessWidget {
 
   Widget _buildContent(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(Dimens.spacingM),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _buildImageContainer(),
-          const SizedBox(height: 16),
+          const SizedBox(height: Dimens.spacingL),
           _buildImageInfo(),
-          const SizedBox(height: 24),
+          const SizedBox(height: Dimens.spacingXxl),
           _buildActionButtons(context),
         ],
       ),
@@ -106,10 +107,10 @@ class ImagePreviewDialog extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: mdGrey400),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(Dimens.radiusM),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(Dimens.radiusM),
         child: Image.file(
           File(image.filePath),
           fit: BoxFit.contain,
@@ -126,17 +127,17 @@ class ImagePreviewDialog extends StatelessWidget {
           Icons.access_time,
           '${appLocalizations.created} ${dt.DateUtils.formatFullDate(image.createdAt)}',
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: Dimens.spacingS),
         _buildInfoRow(
           Icons.source,
           '${appLocalizations.source} ${SourceUtils.getSourceName(image.source)}',
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: Dimens.spacingS),
         _buildInfoRow(
           Icons.filter_alt,
           '${appLocalizations.filter} ${FilterUtils.getFilterName(image.metadata)}',
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: Dimens.spacingS),
         _buildInfoRow(
           Icons.display_settings,
           '${appLocalizations.epdModel} ${epd.modelId}',
@@ -148,11 +149,12 @@ class ImagePreviewDialog extends StatelessWidget {
   Widget _buildInfoRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: Colors.grey.shade600),
-        const SizedBox(width: 4),
+        Icon(icon, size: Dimens.iconSizeS, color: Colors.grey.shade600),
+        const SizedBox(width: Dimens.spacingXs),
         Text(
           text,
-          style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+          style: TextStyle(
+              color: Colors.grey.shade600, fontSize: Dimens.fontSizeS),
         ),
       ],
     );
@@ -172,28 +174,25 @@ class ImagePreviewDialog extends StatelessWidget {
                 icon: const Icon(Icons.delete_outline, color: Colors.red),
                 label: Text(
                   appLocalizations.delete,
-                  style: TextStyle(fontSize: 12),
-                ),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.red,
-                  side: const BorderSide(color: Colors.red),
+                  style:
+                      TextStyle(color: Colors.red, fontSize: Dimens.fontSizeS),
                 ),
               ),
             ),
-            const SizedBox(width: 4),
+            const SizedBox(width: Dimens.spacingXs),
             Expanded(
               child: OutlinedButton.icon(
                 onPressed: () => _showRenameDialog(context),
                 icon: const Icon(Icons.edit_outlined),
                 label: Text(
                   appLocalizations.rename,
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: Dimens.fontSizeS),
                 ),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: Dimens.spacingS),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
@@ -203,11 +202,6 @@ class ImagePreviewDialog extends StatelessWidget {
             },
             icon: const Icon(Icons.send),
             label: Text(appLocalizations.transferToEpaper),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: colorAccent,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 12),
-            ),
           ),
         ),
       ],

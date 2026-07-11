@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/image_library/widgets/filter_chip_widget.dart';
 import 'package:magicepaperapp/image_library/widgets/search_field_widget.dart';
@@ -6,7 +7,7 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class SearchAndFilterWidget extends StatelessWidget {
   final TextEditingController searchController;
@@ -21,12 +22,12 @@ class SearchAndFilterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: colorBlack.withOpacity(0.05),
+            color: colorBlack.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -42,11 +43,12 @@ class SearchAndFilterWidget extends StatelessWidget {
               provider.updateSearchQuery('');
             },
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: Dimens.spacingM),
           Row(
             children: [
               Text(appLocalizations.filter,
                   style: const TextStyle(fontWeight: FontWeight.w500)),
+              const SizedBox(width: Dimens.spacingS),
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,

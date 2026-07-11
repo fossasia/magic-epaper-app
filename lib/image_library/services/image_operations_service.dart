@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/services/image_filter_helper.dart';
 import 'package:magicepaperapp/image_library/model/image_properties.dart';
 import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
@@ -13,8 +14,9 @@ import 'dart:typed_data';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import '../../util/app_logger.dart';
+import '../../util/image_processing/image_processing.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class ImageOperationsService {
   final BuildContext context;
@@ -47,13 +49,14 @@ class ImageOperationsService {
       SavedImage image, ImageLibraryProvider provider) async {
     try {
       Navigator.pop(context);
-      _showLoadingSnackBar(appLocalizations.deletingImage);
+      _showLoadingSnackBar(appLocalizations.deletingImage(1));
       await provider.deleteImage(image.id);
       _showDeleteSuccessSnackBar(
           '${appLocalizations.imageDeleted}${image.name}${appLocalizations.deleted}');
     } catch (e) {
       _showErrorSnackBar(
-          '${appLocalizations.failedToDeleteImage}${e.toString()}');
+        appLocalizations.failedToDeleteImage(1, e.toString()),
+      );
     }
   }
 
@@ -64,33 +67,36 @@ class ImageOperationsService {
       await provider.clearAllData();
       _showClearAllSuccessSnackBar();
     } catch (e) {
-      _showErrorSnackBar('Failed to clear all data: ${e.toString()}');
+      _showErrorSnackBar(
+          '${appLocalizations.failedToClearAllData}: ${e.toString()}');
     }
   }
 
   void _showClearAllSuccessSnackBar() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Row(
+        content: Row(
           children: [
-            Icon(Icons.check_circle, color: Colors.white, size: 20),
-            SizedBox(width: 12),
-            Text('All data cleared successfully!'),
+            const Icon(Icons.check_circle,
+                color: Colors.white, size: Dimens.iconSizeM),
+            const SizedBox(width: Dimens.spacingM),
+            Text(appLocalizations.allDataCleared),
           ],
         ),
         backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusL)),
       ),
     );
   }
 
   void _showClearAllLoadingSnackBar() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+      SnackBar(
         content: Row(
           children: [
-            SizedBox(
+            const SizedBox(
               width: 20,
               height: 20,
               child: CircularProgressIndicator(
@@ -98,12 +104,12 @@ class ImageOperationsService {
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             ),
-            SizedBox(width: 12),
-            Text('Clearing all data...'),
+            const SizedBox(width: Dimens.spacingM),
+            Text(appLocalizations.clearingAllData),
           ],
         ),
         backgroundColor: Colors.orange,
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
@@ -125,7 +131,9 @@ class ImageOperationsService {
       _showBatchDeleteSuccessSnackBar(count);
     } catch (e) {
       _showErrorSnackBar(
-          '${appLocalizations.failedToDeleteImages}${e.toString()}');
+        appLocalizations.failedToDeleteImage(
+            selectedImages.length, e.toString()),
+      );
     }
   }
 
@@ -135,7 +143,7 @@ class ImageOperationsService {
     ImageLibraryProvider provider,
     String currentImageSource,
     int selectedFilterIndex,
-    List<Function> processingMethods,
+    List<ImageProcessingMethod> processingMethods,
     bool flipHorizontal,
     bool flipVertical,
     String epdModelId,
@@ -162,7 +170,8 @@ class ImageOperationsService {
     }
   }
 
-  String getFilterNameByIndex(int index, List<Function> processingMethods) {
+  String getFilterNameByIndex(
+      int index, List<ImageProcessingMethod> processingMethods) {
     return ImageFilterHelper.getFilterNameByIndex(index, processingMethods);
   }
 
@@ -177,6 +186,7 @@ class ImageOperationsService {
       }
       final decodedImage = img.decodeImage(imageData);
       if (decodedImage != null) {
+        if (!context.mounted) return;
         imageEpd.transfer(
           context,
           decodedImage,
@@ -252,7 +262,7 @@ class ImageOperationsService {
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: Dimens.spacingM),
             Text(message),
           ],
         ),
@@ -267,14 +277,16 @@ class ImageOperationsService {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
+            const Icon(Icons.check_circle,
+                color: Colors.white, size: Dimens.iconSizeM),
+            const SizedBox(width: Dimens.spacingM),
             Expanded(child: Text(message)),
           ],
         ),
         backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusL)),
       ),
     );
   }
@@ -284,14 +296,16 @@ class ImageOperationsService {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.delete_sweep, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
+            const Icon(Icons.delete_sweep,
+                color: Colors.white, size: Dimens.iconSizeM),
+            const SizedBox(width: Dimens.spacingM),
             Expanded(child: Text(message)),
           ],
         ),
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusL)),
       ),
     );
   }
@@ -309,9 +323,10 @@ class ImageOperationsService {
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: Dimens.spacingM),
             Text(
-                '${appLocalizations.deletingImages}$count${appLocalizations.images}'),
+              appLocalizations.deletingImage(count),
+            )
           ],
         ),
         backgroundColor: Colors.amber,
@@ -325,20 +340,20 @@ class ImageOperationsService {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.delete_sweep, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
+            const Icon(Icons.delete_sweep,
+                color: Colors.white, size: Dimens.iconSizeM),
+            const SizedBox(width: Dimens.spacingM),
             Expanded(
               child: Text(
-                count > 1
-                    ? '$count${appLocalizations.imagesDeletedSuccessfully}'
-                    : appLocalizations.imageDeletedSuccessfully,
+                appLocalizations.imageDeletedSuccessfully(count),
               ),
             ),
           ],
         ),
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusL)),
       ),
     );
   }
@@ -348,14 +363,16 @@ class ImageOperationsService {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.error, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
+            const Icon(Icons.error,
+                color: Colors.white, size: Dimens.iconSizeM),
+            const SizedBox(width: Dimens.spacingM),
             Expanded(child: Text(message)),
           ],
         ),
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusL)),
       ),
     );
   }
@@ -373,7 +390,7 @@ class ImageOperationsService {
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: Dimens.spacingM),
             Text(appLocalizations.savingImage),
           ],
         ),
@@ -391,16 +408,16 @@ class ImageOperationsService {
             const Icon(
               Icons.check_circle,
               color: Colors.white,
-              size: 20,
+              size: Dimens.iconSizeM,
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: Dimens.spacingM),
             Text(appLocalizations.imageSavedToLibrary),
           ],
         ),
         backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(Dimens.radiusL),
         ),
       ),
     );
@@ -414,9 +431,9 @@ class ImageOperationsService {
             const Icon(
               Icons.error,
               color: Colors.white,
-              size: 20,
+              size: Dimens.iconSizeM,
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: Dimens.spacingM),
             Expanded(
                 child: Text('${appLocalizations.failedToSaveImage}$error')),
           ],
@@ -424,7 +441,7 @@ class ImageOperationsService {
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(Dimens.radiusL),
         ),
       ),
     );

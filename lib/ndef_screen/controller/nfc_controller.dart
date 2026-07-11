@@ -8,7 +8,7 @@ import 'package:magicepaperapp/ndef_screen/services/nfc_availability_service.dar
 import 'package:magicepaperapp/ndef_screen/services/nfc_operations_service.dart';
 import 'package:ndef/ndef.dart' as ndef;
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class NFCController extends ChangeNotifier {
   NFCAvailability _availability = NFCAvailability.not_supported;
@@ -90,21 +90,6 @@ class NFCController extends ChangeNotifier {
       _setResult('${appLocalizations.errorCreatingAppRecord}$e');
     }
   }
-
-  // Future<void> writeAppLauncherRecord(String packageName,
-  //     {String? appUri}) async {
-  //   if (_availability != NFCAvailability.available ||
-  //       packageName.trim().isEmpty) {
-  //     return;
-  //   }
-  //   try {
-  //     final records = NDEFRecordFactory.createAppLauncherRecords(packageName,
-  //         appUri: appUri);
-  //     await _performWrite(records);
-  //   } catch (e) {
-  //     _setResult('${StringConstants.errorCreatingAppRecord}$e');
-  //   }
-  // }
 
   Future<void> writeMultipleRecords(String text, String url, String wifiSSID,
       String wifiPassword, VCardData? vCardData) async {

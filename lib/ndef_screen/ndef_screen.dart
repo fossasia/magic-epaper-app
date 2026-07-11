@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/ndef_screen/app_nfc/app_data_model.dart';
@@ -13,7 +14,7 @@ import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'dart:async';
 import '../util/app_logger.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class NDEFScreen extends StatefulWidget {
   const NDEFScreen({super.key});
@@ -165,6 +166,7 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
   Future<void> _writeAppLauncher() async {
     if (_selectedApp != null) {
       await _nfcController.writeAppLauncherRecord(_selectedApp!.packageName);
+      if (!mounted) return;
       _handleWriteResult();
       if (_nfcController.result.contains(appLocalizations.successfully)) {
         setState(() {
@@ -204,7 +206,7 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                 availability: _nfcController.availability,
                 onRefresh: _checkNFCAvailability,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
               if (_nfcController.availability == NFCAvailability.available) ...[
                 NFCReadCard(
                   isReading: _nfcController.isReading,
@@ -247,7 +249,7 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                     }
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: Dimens.spacingL),
                 NFCWriteCard(
                   isWriting: _nfcController.isWriting,
                   textValue: _textValue,
@@ -265,20 +267,24 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                       setState(() => _vCardData = vCardData),
                   onWriteText: () async {
                     await _nfcController.writeTextRecord(_textValue);
+                    if (!mounted) return;
                     _handleWriteResult();
                   },
                   onWriteUrl: () async {
                     await _nfcController.writeUrlRecord(_urlValue);
+                    if (!mounted) return;
                     _handleWriteResult();
                   },
                   onWriteWifi: () async {
                     await _nfcController.writeWifiRecord(
                         _wifiSSIDValue, _wifiPasswordValue);
+                    if (!mounted) return;
                     _handleWriteResult();
                   },
                   onWriteVCard: () async {
                     if (_vCardData != null) {
                       await _nfcController.writeVCardRecord(_vCardData!);
+                      if (!mounted) return;
                       _handleWriteResult();
                     }
                   },
@@ -290,6 +296,7 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                       _wifiPasswordValue,
                       _vCardData,
                     );
+                    if (!mounted) return;
                     _handleWriteResult();
                   },
                 ),
@@ -299,13 +306,14 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                   isWriting: _nfcController.isWriting,
                   onWriteAppLauncher: _writeAppLauncher,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: Dimens.spacingL),
               ] else ...[
                 Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: Dimens.spacingS),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(Dimens.radiusXl),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.08),
@@ -316,11 +324,11 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                     ],
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(24.0),
+                    padding: const EdgeInsets.all(Dimens.spacingXxl),
                     child: Column(
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(Dimens.spacingL),
                           decoration: BoxDecoration(
                             color: Colors.orange.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(50),
@@ -331,22 +339,22 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                             color: Colors.orange,
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: Dimens.spacingXxl),
                         Text(
                           appLocalizations.nfcNotAvailable,
                           style: const TextStyle(
-                            fontSize: 20,
+                            fontSize: Dimens.fontSizeXxl,
                             fontWeight: FontWeight.bold,
                             color: Colors.black87,
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: Dimens.spacingM),
                         Text(
                           appLocalizations.enableNfcMessage,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: Dimens.fontSizeL,
                             color: Colors.grey[600],
                             height: 1.4,
                           ),
@@ -356,7 +364,7 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                   ),
                 ),
               ],
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
             ],
           ),
         ),

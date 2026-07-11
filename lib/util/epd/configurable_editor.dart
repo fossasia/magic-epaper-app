@@ -5,17 +5,16 @@ import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/epd/driver/driver.dart';
 import 'package:magicepaperapp/util/epd/driver/uc8253.dart';
 import 'package:magicepaperapp/util/image_processing/image_processing.dart';
-import 'package:image/image.dart' as img;
 import 'epd.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 /// Represents a named image filter for use in e-paper image processing.
 ///
 /// Associates a filter function with a display name for UI and export purposes.
 class NamedImageFilter {
   /// The image filter function to apply.
-  final img.Image Function(img.Image) filter;
+  final ImageProcessingMethod filter;
 
   /// The display name of the filter.
   final String name;
@@ -66,7 +65,7 @@ class ConfigurableEpd extends Epd {
   final List<NamedImageFilter> namedProcessingMethods = [];
 
   @override
-  List<img.Image Function(img.Image)> get processingMethods =>
+  List<ImageProcessingMethod> get processingMethods =>
       namedProcessingMethods.map((f) => f.filter).toList();
 
   List<String> get processingMethodNames =>
@@ -88,97 +87,43 @@ class ConfigurableEpd extends Epd {
   /// Creates a palette for the 'image' library from a list of Flutter [Color]s.
   ///
   /// Used for custom dithering with custom color palettes.
-  img.PaletteUint8 _createDynamicPalette() {
-    final palette = img.PaletteUint8(colors.length, 3);
-    for (int i = 0; i < colors.length; i++) {
-      final color = colors[i];
-      palette.setRgb(i, (color.r * 255.0).round(), (color.g * 255.0).round(),
-          (color.b * 255.0).round());
-    }
-    return palette;
-  }
 
   /// Populates the list of processing methods based on the color palette.
   void _addProcessingMethods() {
     namedProcessingMethods.clear();
-    final isBlackAndWhite = colors.length == 2;
+    final isBlackAndWhite = colors.length <= 2;
+
     if (isBlackAndWhite) {
-      namedProcessingMethods.add(
-        NamedImageFilter(
+      namedProcessingMethods.add(NamedImageFilter(
           ImageProcessing.bwFloydSteinbergDither,
-          appLocalizations.floydSteinberg,
-        ),
-      );
-      namedProcessingMethods.add(
-        NamedImageFilter(
+          appLocalizations.floydSteinberg));
+      namedProcessingMethods.add(NamedImageFilter(
           ImageProcessing.bwFalseFloydSteinbergDither,
-          appLocalizations.falseFloydSteinberg,
-        ),
-      );
-      namedProcessingMethods.add(
-        NamedImageFilter(
-            ImageProcessing.bwStuckiDither, appLocalizations.stucki),
-      );
-      namedProcessingMethods.add(
-        NamedImageFilter(
-            ImageProcessing.bwAtkinsonDither, appLocalizations.atkinson),
-      );
-      namedProcessingMethods.add(
-        NamedImageFilter(
-            ImageProcessing.bwHalftoneDither, appLocalizations.halftone),
-      );
-      namedProcessingMethods.add(
-        NamedImageFilter(
-            ImageProcessing.bwThreshold, appLocalizations.threshold),
-      );
+          appLocalizations.falseFloydSteinberg));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwStuckiDither, appLocalizations.stucki));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwAtkinsonDither, appLocalizations.atkinson));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwHalftoneDither, appLocalizations.halftone));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwThreshold, appLocalizations.threshold));
     } else {
-      final dynamicPalette = _createDynamicPalette();
-      namedProcessingMethods.add(
-        NamedImageFilter(
-          (img.Image orgImg) => ImageProcessing.customFloydSteinbergDither(
-            orgImg,
-            dynamicPalette,
-          ),
-          appLocalizations.floydSteinberg,
-        ),
-      );
-      namedProcessingMethods.add(
-        NamedImageFilter(
-          (img.Image orgImg) => ImageProcessing.customFalseFloydSteinbergDither(
-            orgImg,
-            dynamicPalette,
-          ),
-          appLocalizations.falseFloydSteinberg,
-        ),
-      );
-      namedProcessingMethods.add(
-        NamedImageFilter(
-          (img.Image orgImg) =>
-              ImageProcessing.customStuckiDither(orgImg, dynamicPalette),
-          appLocalizations.stucki,
-        ),
-      );
-      namedProcessingMethods.add(
-        NamedImageFilter(
-          (img.Image orgImg) =>
-              ImageProcessing.customAtkinsonDither(orgImg, dynamicPalette),
-          appLocalizations.atkinson,
-        ),
-      );
-      namedProcessingMethods.add(
-        NamedImageFilter(
-          (img.Image orgImg) =>
-              ImageProcessing.customHalftoneDither(orgImg, dynamicPalette),
-          appLocalizations.halftone,
-        ),
-      );
-      namedProcessingMethods.add(
-        NamedImageFilter(
-          (img.Image orgImg) =>
-              ImageProcessing.customThreshold(orgImg, dynamicPalette),
-          appLocalizations.threshold,
-        ),
-      );
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwrFloydSteinbergDither,
+          appLocalizations.floydSteinberg));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwrFalseFloydSteinbergDither,
+          appLocalizations.falseFloydSteinberg));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwrStuckiDither, appLocalizations.stucki));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwrTriColorAtkinsonDither,
+          appLocalizations.atkinson));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwrHalftone, appLocalizations.colorHalftone));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwrThreshold, appLocalizations.threshold));
     }
   }
 }

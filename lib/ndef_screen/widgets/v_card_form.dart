@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class VCardFormWidget extends StatefulWidget {
   final VCardData? initialData;
@@ -109,23 +110,23 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Row(
+        Row(
           children: [
-            Icon(Icons.contact_page, color: colorAccent, size: 22),
-            SizedBox(width: 8),
+            const Icon(Icons.contact_page, color: colorAccent, size: 22),
+            const SizedBox(width: Dimens.spacingS),
             Text(
-              'vCard Contact Information',
-              style: TextStyle(
-                fontSize: 16,
+              appLocalizations.vCardContactInformation,
+              style: const TextStyle(
+                fontSize: Dimens.fontSizeL,
                 fontWeight: FontWeight.w600,
                 color: colorBlack,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: Dimens.spacingL),
         _buildSectionContainer(
-          title: 'Personal Information',
+          title: appLocalizations.personalInformation,
           icon: Icons.person,
           children: [
             Row(
@@ -133,24 +134,24 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
                 Expanded(
                   child: _buildTextField(
                     controller: _firstNameController,
-                    labelText: 'First Name',
+                    labelText: appLocalizations.firstName,
                     prefixIcon: Icons.person_outline,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: Dimens.spacingM),
                 Expanded(
                   child: _buildTextField(
                     controller: _lastNameController,
-                    labelText: 'Last Name',
+                    labelText: appLocalizations.lastName,
                   ),
                 ),
               ],
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: Dimens.spacingL),
         _buildSectionContainer(
-          title: 'Work Information',
+          title: appLocalizations.workInformation,
           icon: Icons.work,
           children: [
             Row(
@@ -158,82 +159,82 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
                 Expanded(
                   child: _buildTextField(
                     controller: _organizationController,
-                    labelText: 'Organization',
+                    labelText: appLocalizations.organization,
                     prefixIcon: Icons.business,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: Dimens.spacingM),
                 Expanded(
                   child: _buildTextField(
                     controller: _titleController,
-                    labelText: 'Job Title',
+                    labelText: appLocalizations.jobTitle,
                   ),
                 ),
               ],
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: Dimens.spacingL),
         _buildSectionContainer(
-          title: 'Contact Information',
+          title: appLocalizations.contactInformation,
           icon: Icons.contact_phone,
           children: [
             _buildTextField(
               controller: _mobileNumberController,
-              labelText: 'Mobile Number',
+              labelText: appLocalizations.mobileNumber,
               prefixIcon: Icons.phone,
               keyboardType: TextInputType.phone,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimens.spacingM),
             _buildTextField(
               controller: _emailController,
-              labelText: 'Email Address',
+              labelText: appLocalizations.emailAddress,
               prefixIcon: Icons.email,
               keyboardType: TextInputType.emailAddress,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimens.spacingM),
             _buildTextField(
               controller: _websiteController,
-              labelText: 'Website',
+              labelText: appLocalizations.website,
               prefixIcon: Icons.web,
               keyboardType: TextInputType.url,
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: Dimens.spacingL),
         _buildSectionContainer(
-          title: 'Address Information',
+          title: appLocalizations.addressInformation,
           icon: Icons.location_on,
           children: [
             _buildTextField(
               controller: _streetController,
-              labelText: 'Street Address',
+              labelText: appLocalizations.streetAddress,
               prefixIcon: Icons.home,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimens.spacingM),
             Row(
               children: [
                 Expanded(
                   flex: 2,
                   child: _buildTextField(
                     controller: _cityController,
-                    labelText: 'City',
+                    labelText: appLocalizations.city,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: Dimens.spacingM),
                 Expanded(
                   child: _buildTextField(
                     controller: _zipCodeController,
-                    labelText: 'Zip Code',
+                    labelText: appLocalizations.zipCode,
                     keyboardType: TextInputType.number,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimens.spacingM),
             _buildTextField(
               controller: _countryController,
-              labelText: 'Country',
+              labelText: appLocalizations.country,
             ),
           ],
         ),
@@ -247,10 +248,10 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
     required List<Widget> children,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
         color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(Dimens.radiusL),
         border: Border.all(color: mdGrey400.withValues(alpha: 0.2)),
       ),
       child: Column(
@@ -259,18 +260,18 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
           Row(
             children: [
               Icon(icon, size: 18, color: colorAccent),
-              const SizedBox(width: 8),
+              const SizedBox(width: Dimens.spacingS),
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: Dimens.fontSizeM,
                   fontWeight: FontWeight.w600,
                   color: colorBlack,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: Dimens.spacingM),
           ...children,
         ],
       ),
@@ -286,32 +287,32 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
-      style: const TextStyle(fontSize: 14),
+      style: const TextStyle(fontSize: Dimens.fontSizeM),
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: TextStyle(
           color: Colors.grey[600],
-          fontSize: 14,
+          fontSize: Dimens.fontSizeM,
         ),
         prefixIcon: prefixIcon != null
-            ? Icon(prefixIcon, color: colorAccent, size: 20)
+            ? Icon(prefixIcon, color: colorAccent, size: Dimens.iconSizeM)
             : null,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
           borderSide: const BorderSide(color: mdGrey400),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
           borderSide: BorderSide(color: mdGrey400.withValues(alpha: 0.4)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
           borderSide: const BorderSide(color: colorAccent, width: 2),
         ),
         filled: true,
         fillColor: colorWhite,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+            horizontal: Dimens.spacingL, vertical: Dimens.spacingM),
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
     );

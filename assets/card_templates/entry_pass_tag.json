@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "id": "entry_pass_tag",
+  "title": "Entry Pass Tag",
+  "description": "Venue entry pass with visitor details and QR code",
+  "icon": "card_membership_outlined",
+  "color": "orange",
+  "elements": [
+    {
+      "id": "profileImage",
+      "type": "image",
+      "label": "Profile Photo",
+      "props": {
+        "width": 200,
+        "height": 200,
+        "shape": "oval"
+      }
+    },
+    {
+      "id": "venueName",
+      "type": "text",
+      "label": "Venue Name",
+      "props": {
+        "bold": true,
+        "align": "center",
+        "color": "black"
+      }
+    },
+    {
+      "id": "visitorName",
+      "type": "text",
+      "label": "Visitor Name",
+      "props": {
+        "prefixKey": "visitorNamePrefix",
+        "align": "left",
+        "color": "black"
+      }
+    },
+    {
+      "id": "passType",
+      "type": "text",
+      "label": "Pass Type",
+      "props": {
+        "prefixKey": "passTypePrefix",
+        "align": "left",
+        "color": "black"
+      }
+    },
+    {
+      "id": "validDate",
+      "type": "text",
+      "label": "Valid Date",
+      "props": {
+        "prefixKey": "validDatePrefix",
+        "align": "left",
+        "color": "black"
+      }
+    },
+    {
+      "id": "passId",
+      "type": "text",
+      "label": "Pass ID",
+      "props": {
+        "prefixKey": "passIdPrefix",
+        "align": "left",
+        "color": "black"
+      }
+    },
+    {
+      "id": "qr",
+      "type": "barcode",
+      "label": "QR Code Data",
+      "props": {
+        "barcodeName": "QR-Code"
+      }
+    }
+  ]
+}

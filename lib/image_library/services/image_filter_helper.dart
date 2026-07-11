@@ -2,10 +2,10 @@ import 'package:magicepaperapp/util/image_processing/image_processing.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class ImageFilterHelper {
-  static Map<Function, String> get filterMap => {
+  static Map<ImageProcessingMethod, String> get filterMap => {
         ImageProcessing.bwFloydSteinbergDither: appLocalizations.floydSteinberg,
         ImageProcessing.bwFalseFloydSteinbergDither:
             appLocalizations.falseFloydSteinberg,
@@ -22,9 +22,8 @@ class ImageFilterHelper {
         ImageProcessing.bwrTriColorAtkinsonDither: appLocalizations.atkinson,
         ImageProcessing.bwrThreshold: appLocalizations.threshold,
       };
-
   static String getFilterNameByIndex(
-      int index, List<Function> processingMethods) {
+      int index, List<ImageProcessingMethod> processingMethods) {
     if (index < 0 || index >= processingMethods.length) return "Unknown";
     return filterMap[processingMethods[index]] ?? "Unknown";
   }

@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class ClearAllConfirmationDialog extends StatelessWidget {
   final VoidCallback onConfirm;
@@ -16,14 +21,14 @@ class ClearAllConfirmationDialog extends StatelessWidget {
       backgroundColor: Colors.transparent,
       child: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(Dimens.spacingXxl),
           margin: const EdgeInsets.symmetric(vertical: 48),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(Dimens.radiusRound),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -34,9 +39,9 @@ class ClearAllConfirmationDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHeader(),
-              const SizedBox(height: 24),
+              const SizedBox(height: Dimens.spacingXxl),
               _buildDataSummary(),
-              const SizedBox(height: 24),
+              const SizedBox(height: Dimens.spacingXxl),
               _buildActionButtons(context),
             ],
           ),
@@ -49,35 +54,35 @@ class ClearAllConfirmationDialog extends StatelessWidget {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(Dimens.spacingM),
           decoration: BoxDecoration(
-            color: Colors.red.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
+            color: Colors.red.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(Dimens.radiusXl),
           ),
           child: const Icon(
             Icons.delete_forever_outlined,
             color: Colors.red,
-            size: 24,
+            size: Dimens.iconSizeL,
           ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: Dimens.spacingL),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Clear All Data',
-                style: TextStyle(
-                  fontSize: 20,
+              Text(
+                appLocalizations.clearAllData,
+                style: const TextStyle(
+                  fontSize: Dimens.fontSizeXxl,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: Dimens.spacingXs),
               Text(
-                'Complete data removal',
+                appLocalizations.completeDataRemoval,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: Dimens.fontSizeM,
                   color: Colors.red.shade600,
                   fontWeight: FontWeight.w500,
                 ),
@@ -92,43 +97,43 @@ class ClearAllConfirmationDialog extends StatelessWidget {
   Widget _buildDataSummary() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
-        color: Colors.red.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.red.withOpacity(0.2)),
+        color: Colors.red.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(Dimens.radiusXxl),
+        border: Border.all(color: Colors.red.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(Dimens.spacingL),
             decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
+              color: Colors.red.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(Dimens.radiusXl),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   Icons.photo_library_outlined,
-                  size: 32,
+                  size: Dimens.iconSizeXl,
                   color: Colors.red.shade600,
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: Dimens.spacingM),
                 Column(
                   children: [
                     Text(
                       '$totalImages',
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: Dimens.fontSizeDisplay,
                         fontWeight: FontWeight.bold,
                         color: Colors.red.shade700,
                       ),
                     ),
                     Text(
-                      'Total Images',
+                      appLocalizations.totalImagesLabel,
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: Dimens.fontSizeS,
                         color: Colors.red.shade600,
                         fontWeight: FontWeight.w500,
                       ),
@@ -138,11 +143,11 @@ class ClearAllConfirmationDialog extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 12),
-          const Text(
-            'All images and associated data will be permanently removed',
-            style: TextStyle(
-              fontSize: 14,
+          const SizedBox(height: Dimens.spacingM),
+          Text(
+            appLocalizations.allImagesPermanentlyRemoved,
+            style: const TextStyle(
+              fontSize: Dimens.fontSizeM,
               fontWeight: FontWeight.w500,
               color: Colors.black87,
             ),
@@ -159,45 +164,28 @@ class ClearAllConfirmationDialog extends StatelessWidget {
         Expanded(
           child: OutlinedButton(
             onPressed: () => Navigator.pop(context),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              side: BorderSide(color: Colors.grey.shade300),
-              foregroundColor: Colors.grey.shade700,
-            ),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(
-                fontSize: 16,
+            child: Text(
+              appLocalizations.cancel,
+              style: const TextStyle(
+                fontSize: Dimens.fontSizeL,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: Dimens.spacingM),
         Expanded(
           child: ElevatedButton(
             onPressed: onConfirm,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 0,
-            ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.delete_forever, size: 20),
-                SizedBox(width: 8),
+                const Icon(Icons.delete_forever, size: Dimens.iconSizeM),
+                const SizedBox(width: Dimens.spacingS),
                 Text(
-                  'Clear All',
-                  style: TextStyle(
-                    fontSize: 16,
+                  appLocalizations.clearAll,
+                  style: const TextStyle(
+                    fontSize: Dimens.fontSizeL,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

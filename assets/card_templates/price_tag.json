@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "id": "price_tag",
+  "title": "Shop Price Tag",
+  "description": "Retail price tag with product details and barcode",
+  "icon": "local_offer_outlined",
+  "color": "green",
+  "elements": [
+    {
+      "id": "productImage",
+      "type": "image",
+      "label": "Product Photo",
+      "props": {
+        "width": 200,
+        "height": 160,
+        "shape": "rounded",
+        "radius": 8.0
+      }
+    },
+    {
+      "id": "productName",
+      "type": "text",
+      "label": "Product Name",
+      "props": {
+        "bold": true,
+        "align": "center",
+        "color": "black"
+      }
+    },
+    {
+      "id": "productDescription",
+      "type": "text",
+      "label": "Description",
+      "props": {
+        "bold": false,
+        "align": "center",
+        "color": "black"
+      }
+    },
+    {
+      "id": "price",
+      "type": "text",
+      "label": "Price",
+      "props": {
+        "bold": true,
+        "align": "center",
+        "color": "red"
+      }
+    },
+    {
+      "id": "quantity",
+      "type": "text",
+      "label": "Quantity",
+      "props": {
+        "align": "center",
+        "color": "black"
+      }
+    },
+    {
+      "id": "barcode",
+      "type": "barcode",
+      "label": "Barcode Data",
+      "props": {
+        "barcodeName": "CODE 128"
+      }
+    }
+  ]
+}

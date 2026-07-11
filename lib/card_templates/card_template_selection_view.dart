@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/card_templates/template_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/card_templates/employee_id_form.dart';
 import 'package:magicepaperapp/card_templates/price_tag_form.dart';
+import 'package:magicepaperapp/card_templates/entry_pass_tag_form.dart';
+import 'package:magicepaperapp/card_templates/event_badge_form.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
-AppLocalizations appLocalizations = getIt.get<AppLocalizations>();
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class CardTemplateSelectionView extends StatelessWidget {
   final int width;
@@ -23,24 +26,27 @@ class CardTemplateSelectionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return CommonScaffold(
       index: -1,
+      showBackButton: true,
       toolbarHeight: 85,
       titleWidget: Padding(
-        padding: const EdgeInsets.fromLTRB(5, 16, 16, 5),
+        padding:
+            const EdgeInsets.fromLTRB(5, Dimens.spacingL, Dimens.spacingL, 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               appLocalizations.cardTemplates,
               style: const TextStyle(
-                fontSize: 24,
+                fontSize: Dimens.fontSizeDisplay,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: Dimens.spacingS),
             Text(
               appLocalizations.chooseTemplateSubtitle,
-              style: const TextStyle(fontSize: 16, color: Colors.white),
+              style: const TextStyle(
+                  fontSize: Dimens.fontSizeL, color: Colors.white),
             ),
           ],
         ),
@@ -49,13 +55,14 @@ class CardTemplateSelectionView extends StatelessWidget {
         top: false,
         bottom: true,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 24, 16.0, 16.0),
+          padding: const EdgeInsets.fromLTRB(Dimens.spacingL, Dimens.spacingXxl,
+              Dimens.spacingL, Dimens.spacingL),
           child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.6,
-              mainAxisSpacing: 8,
-              crossAxisSpacing: 8,
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 240,
+              childAspectRatio: 0.7,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
             ),
             itemCount: _getTemplates().length,
             itemBuilder: (context, index) {
@@ -104,16 +111,30 @@ class CardTemplateSelectionView extends StatelessWidget {
         description: appLocalizations.entryPassTagDescription,
         icon: Icons.card_membership_outlined,
         color: Colors.orange,
-        isEnabled: false,
-        onTap: (context) => _showComingSoonDialog(context),
+        isEnabled: true,
+        onTap: (context) async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  EntryPassTagForm(width: width, height: height),
+            ),
+          );
+        },
       ),
       TemplateItem(
         title: appLocalizations.eventBadgeTitle,
         description: appLocalizations.eventBadgeDescription,
         icon: Icons.person_outline,
         color: Colors.purple,
-        isEnabled: false,
-        onTap: (context) => _showComingSoonDialog(context),
+        isEnabled: true,
+        onTap: (context) async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  EventBadgeForm(width: width, height: height),
+            ),
+          );
+        },
       ),
     ];
   }
@@ -128,14 +149,14 @@ class CardTemplateSelectionView extends StatelessWidget {
           onTap: template.isEnabled ? () => template.onTap(context) : null,
           highlightColor:
               template.isEnabled ? colorAccent.withValues(alpha: 0.1) : null,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(Dimens.radiusXl),
           splashColor:
               template.isEnabled ? colorAccent.withValues(alpha: 0.2) : null,
           child: Card(
             color: Colors.white,
             elevation: template.isEnabled ? 2 : 1,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(Dimens.radiusXl),
               side: BorderSide(
                 color: template.isEnabled
                     ? Colors.grey.shade300
@@ -145,7 +166,7 @@ class CardTemplateSelectionView extends StatelessWidget {
             ),
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(Dimens.radiusXl),
                 color: template.isEnabled ? Colors.white : Colors.grey.shade50,
               ),
               child: Column(
@@ -165,7 +186,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                         ),
                         child: Icon(
                           template.icon,
-                          size: 32,
+                          size: Dimens.iconSizeXl,
                           color:
                               template.isEnabled ? template.color : Colors.grey,
                         ),
@@ -173,7 +194,8 @@ class CardTemplateSelectionView extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    padding: EdgeInsets.fromLTRB(
+                        Dimens.spacingL, 0, Dimens.spacingL, Dimens.spacingL),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
@@ -188,7 +210,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                                 template.title,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                                  fontSize: Dimens.fontSizeM,
                                   color: template.isEnabled
                                       ? colorBlack
                                       : Colors.grey.shade600,
@@ -200,11 +222,11 @@ class CardTemplateSelectionView extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: Dimens.spacingS),
                         Text(
                           template.description,
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: Dimens.fontSizeXs,
                             color: template.isEnabled
                                 ? Colors.grey.shade600
                                 : Colors.grey.shade500,
@@ -215,13 +237,15 @@ class CardTemplateSelectionView extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         if (!template.isEnabled) ...[
-                          SizedBox(height: 8),
+                          SizedBox(height: Dimens.spacingS),
                           Container(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
+                                horizontal: Dimens.spacingS,
+                                vertical: Dimens.spacingXs),
                             decoration: BoxDecoration(
                               color: Colors.orange.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius:
+                                  BorderRadius.circular(Dimens.radiusXl),
                               border: Border.all(
                                 color: Colors.orange.withValues(alpha: 0.3),
                                 width: 1,
@@ -230,7 +254,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                             child: Text(
                               appLocalizations.comingSoon,
                               style: TextStyle(
-                                fontSize: 10,
+                                fontSize: Dimens.fontSizeXs,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.orange,
                               ),
@@ -244,49 +268,6 @@ class CardTemplateSelectionView extends StatelessWidget {
               ),
             ),
           ),
-        );
-      },
-    );
-  }
-
-  void _showComingSoonDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          title: Row(
-            children: [
-              const Icon(Icons.info_outline, color: colorAccent, size: 24),
-              const SizedBox(width: 12),
-              Text(
-                appLocalizations.comingSoon,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          content: Text(
-            appLocalizations.comingSoonMessage,
-            style: const TextStyle(fontSize: 14, height: 1.4),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: TextButton.styleFrom(
-                backgroundColor: colorAccent,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Text(appLocalizations.ok),
-            ),
-          ],
         );
       },
     );
