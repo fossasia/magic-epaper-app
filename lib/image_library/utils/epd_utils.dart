@@ -26,6 +26,8 @@ class EpdUtils {
       case '17745':
       case 'waveshare-2.13':
         return Waveshare2in13();
+      case 'waveshare-2.13g':
+        return Waveshare2in13g();
       case '18136':
       case 'waveshare-2.7':
         return Waveshare2in7();
