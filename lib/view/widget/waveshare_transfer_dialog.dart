@@ -5,20 +5,28 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/waveshare/services/waveshare_nfc_protocol.dart';
 import 'package:magicepaperapp/waveshare/services/waveshare_nfc_services.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
+
+typedef WaveshareFlasher = Future<void> Function(
+  img.Image image,
+  WaveshareProgressCallback onProgress,
+);
 
 enum _TransferState { processing, waitingForNfc, flashing, complete, error }
 
 class WaveshareTransferDialog extends StatefulWidget {
   final img.Image image;
   final int ePaperSizeEnum;
+  final WaveshareFlasher? flasher;
 
   const WaveshareTransferDialog({
     super.key,
     required this.image,
-    required this.ePaperSizeEnum,
+    this.ePaperSizeEnum = 0,
+    this.flasher,
   });
 
   static Future<void> show(
@@ -28,6 +36,16 @@ class WaveshareTransferDialog extends StatefulWidget {
       barrierDismissible: false,
       builder: (context) =>
           WaveshareTransferDialog(image: image, ePaperSizeEnum: ePaperSizeEnum),
+    );
+  }
+
+  static Future<void> showWithFlasher(
+      BuildContext context, img.Image image, WaveshareFlasher flasher) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) =>
+          WaveshareTransferDialog(image: image, flasher: flasher),
     );
   }
 
@@ -93,19 +111,25 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
 
     final services = WaveShareNfcServices();
     try {
-      await services.flashImage(
-        _processedImage!,
-        widget.ePaperSizeEnum,
-        onProgress: (progress) {
-          if (!mounted) return;
-          setState(() {
-            if (_currentState != _TransferState.flashing) {
-              _currentState = _TransferState.flashing;
-            }
-            _progress = progress.clamp(0, 100) / 100.0;
-          });
-        },
-      );
+      void onProgress(int progress) {
+        if (!mounted) return;
+        setState(() {
+          if (_currentState != _TransferState.flashing) {
+            _currentState = _TransferState.flashing;
+          }
+          _progress = progress.clamp(0, 100) / 100.0;
+        });
+      }
+
+      if (widget.flasher != null) {
+        await widget.flasher!(_processedImage!, onProgress);
+      } else {
+        await services.flashImage(
+          _processedImage!,
+          widget.ePaperSizeEnum,
+          onProgress: onProgress,
+        );
+      }
       if (!mounted) return;
       setState(() {
         _message = appLocalizations.transferCompleteMessage;

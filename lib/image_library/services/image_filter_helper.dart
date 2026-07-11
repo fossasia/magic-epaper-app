@@ -25,6 +25,13 @@ class ImageFilterHelper {
         ImageProcessing.bwrThreshold: appLocalizations.threshold,
         ImageProcessing.bwrBayerDither: appLocalizations.bayer,
         ImageProcessing.bwrSierra2Dither: appLocalizations.sierra2,
+        ImageProcessing.bwryFloydSteinbergDither:
+            appLocalizations.floydSteinberg,
+        ImageProcessing.bwryFalseFloydSteinbergDither:
+            appLocalizations.falseFloydSteinberg,
+        ImageProcessing.bwryStuckiDither: appLocalizations.stucki,
+        ImageProcessing.bwryAtkinsonDither: appLocalizations.atkinson,
+        ImageProcessing.bwryThreshold: appLocalizations.threshold,
       };
   static String getFilterNameByIndex(
       int index, List<ImageProcessingMethod> processingMethods) {
