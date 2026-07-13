@@ -97,22 +97,6 @@ class ImagePreviewDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(Dimens.spacingM),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildImageContainer(),
-          const SizedBox(height: Dimens.spacingL),
-          _buildImageInfo(),
-          const SizedBox(height: Dimens.spacingXxl),
-          _buildActionButtons(context),
-        ],
-      ),
-    );
-  }
-
   Widget _buildImageContainer() {
     return AspectRatio(
       aspectRatio: 16 / 9,
