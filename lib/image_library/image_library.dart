@@ -153,35 +153,39 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
       body: SafeArea(
         top: false,
         bottom: true,
-        child: Consumer<ImageLibraryProvider>(
-          builder: (context, provider, child) {
-            if (provider.isLoading) {
-              return const Center(
-                child: CircularProgressIndicator(color: colorAccent),
-              );
-            }
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 900),
+            child: Consumer<ImageLibraryProvider>(
+              builder: (context, provider, child) {
+                if (provider.isLoading) {
+                  return const Center(
+                      child: CircularProgressIndicator(color: colorAccent));
+                }
 
-            if (provider.savedImages.isEmpty) {
-              return const EmptyStateWidget();
-            }
+                if (provider.savedImages.isEmpty) {
+                  return const EmptyStateWidget();
+                }
 
-            return Column(
-              children: [
-                SearchAndFilterWidget(
-                  searchController: _searchController,
-                  provider: provider,
-                ),
-                Expanded(
-                  child: ImageGridWidget(
-                    images: provider.filteredImages,
-                    isDeleteMode: _isDeleteMode,
-                    selectedImages: _selectedImages,
-                    onImageTap: _handleImageTap,
-                  ),
-                ),
-              ],
-            );
-          },
+                return Column(
+                  children: [
+                    SearchAndFilterWidget(
+                      searchController: _searchController,
+                      provider: provider,
+                    ),
+                    Expanded(
+                      child: ImageGridWidget(
+                        images: provider.filteredImages,
+                        isDeleteMode: _isDeleteMode,
+                        selectedImages: _selectedImages,
+                        onImageTap: _handleImageTap,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
         ),
       ),
     );

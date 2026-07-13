@@ -38,17 +38,27 @@ class ImagePreviewDialog extends StatelessWidget {
         borderRadius: BorderRadius.circular(Dimens.radiusXxl),
       ),
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.8,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildHeader(context),
-              _buildContent(context),
-            ],
-          ),
+        constraints: const BoxConstraints(maxWidth: 500),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildHeader(context),
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(Dimens.spacingM),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildImageContainer(),
+                    const SizedBox(height: Dimens.spacingL),
+                    _buildImageInfo(),
+                    const SizedBox(height: Dimens.spacingXxl),
+                    _buildActionButtons(context),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -104,17 +114,20 @@ class ImagePreviewDialog extends StatelessWidget {
   }
 
   Widget _buildImageContainer() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: mdGrey400),
-        borderRadius: BorderRadius.circular(Dimens.radiusM),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(Dimens.radiusM),
-        child: Image.file(
-          File(image.filePath),
-          fit: BoxFit.contain,
-          isAntiAlias: false,
+    return AspectRatio(
+      aspectRatio: 16 / 9,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
+          color: Colors.grey.shade50,
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
+          child: Image.file(
+            File(image.filePath),
+            fit: BoxFit.contain, // Mantiene l'intero disegno visibile
+          ),
         ),
       ),
     );
