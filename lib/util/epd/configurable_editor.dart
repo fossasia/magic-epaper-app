@@ -108,6 +108,8 @@ class ConfigurableEpd extends Epd {
           ImageProcessing.bwHalftoneDither, appLocalizations.halftone));
       namedProcessingMethods.add(NamedImageFilter(
           ImageProcessing.bwThreshold, appLocalizations.threshold));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwBayerDither, appLocalizations.bayer));
     } else {
       namedProcessingMethods.add(NamedImageFilter(
           ImageProcessing.bwrFloydSteinbergDither,
@@ -124,6 +126,8 @@ class ConfigurableEpd extends Epd {
           ImageProcessing.bwrHalftone, appLocalizations.colorHalftone));
       namedProcessingMethods.add(NamedImageFilter(
           ImageProcessing.bwrThreshold, appLocalizations.threshold));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwrBayerDither, appLocalizations.bayer));
     }
   }
 }
