@@ -110,7 +110,7 @@ class ImagePreviewDialog extends StatelessWidget {
           borderRadius: BorderRadius.circular(Dimens.radiusM),
           child: Image.file(
             File(image.filePath),
-            fit: BoxFit.contain, // Mantiene l'intero disegno visibile
+            fit: BoxFit.contain,
           ),
         ),
       ),
