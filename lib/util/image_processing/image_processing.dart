@@ -21,6 +21,7 @@ class ImageProcessing {
       ImageProcessingMethod(DitherMethod.atkinson, false);
   static const bwThreshold =
       ImageProcessingMethod(DitherMethod.threshold, false);
+  static const bwBayerDither = ImageProcessingMethod(DitherMethod.bayer, false);
 
   static const bwHalftoneDither = ImageProcessingMethod(
       DitherMethod.halftone, false,
@@ -36,6 +37,7 @@ class ImageProcessing {
       ImageProcessingMethod(DitherMethod.atkinson, true);
   static const bwrThreshold =
       ImageProcessingMethod(DitherMethod.threshold, true);
+  static const bwrBayerDither = ImageProcessingMethod(DitherMethod.bayer, true);
 
   static const bwrHalftone =
       ImageProcessingMethod(DitherMethod.halftone, true, useDartHalftone: true);
