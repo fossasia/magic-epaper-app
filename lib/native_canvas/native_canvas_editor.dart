@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -7,9 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image/image.dart' as img;
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:magicepaperapp/util/image_crop_screen.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_controller.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_element.dart';
 import 'package:magicepaperapp/native_canvas/model/stroke.dart';
@@ -444,43 +442,16 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   Future<void> _cropImage(CanvasElement element) async {
     final bytes = element.imageBytes;
     if (bytes == null) return;
-    final dir = await getTemporaryDirectory();
-    final file = File(
-      '${dir.path}/mep_crop_${DateTime.now().microsecondsSinceEpoch}.png',
-    );
-    await file.writeAsBytes(bytes);
-    final cropped = await ImageCropper().cropImage(
-      sourcePath: file.path,
-      compressFormat: ImageCompressFormat.png,
-      compressQuality: 100,
-      uiSettings: [
-        AndroidUiSettings(
-          toolbarTitle: 'Crop',
-          toolbarColor: colorAccent,
-          toolbarWidgetColor: Colors.white,
-          activeControlsWidgetColor: colorAccent,
-          backgroundColor: Colors.black,
-          initAspectRatio: CropAspectRatioPreset.original,
-          lockAspectRatio: false,
-          hideBottomControls: false,
-        ),
-        IOSUiSettings(
-          title: 'Crop',
-          aspectRatioLockEnabled: false,
-          resetAspectRatioEnabled: true,
-        ),
-      ],
-    );
-    if (cropped == null) return;
-    final newBytes = await File(cropped.path).readAsBytes();
-    final decoded = img.decodeImage(newBytes);
+    final cropped = await showImageCropScreen(context, bytes);
+    if (cropped == null || !mounted) return;
+    final decoded = img.decodeImage(cropped);
     final aspect = (decoded == null || decoded.height == 0)
         ? 1.0
         : decoded.width / decoded.height;
     final w = element.baseSize.width;
     _controller.beginChange();
     _controller.updateElement(
-      element.copyWith(imageBytes: newBytes, baseSize: Size(w, w / aspect)),
+      element.copyWith(imageBytes: cropped, baseSize: Size(w, w / aspect)),
     );
   }
 

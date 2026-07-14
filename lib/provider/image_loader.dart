@@ -3,8 +3,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:magicepaperapp/util/image_crop_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
@@ -13,22 +13,27 @@ class ImageLoader extends ChangeNotifier {
   final List<img.Image> processedImgs = List.empty(growable: true);
   bool isLoading = false;
 
-  Future<bool> pickImage({required int width, required int height}) async {
+  Future<bool> pickImage({
+    required BuildContext context,
+    required int width,
+    required int height,
+  }) async {
     final ImagePicker picker = ImagePicker();
     final XFile? file = await picker.pickImage(source: ImageSource.gallery);
     if (file == null) return false;
 
-    final croppedFile = await ImageCropper().cropImage(
-      sourcePath: file.path,
-      aspectRatio: CropAspectRatio(
-        ratioX: width.toDouble(),
-        ratioY: height.toDouble(),
-      ),
+    final bytes = await file.readAsBytes();
+    if (!context.mounted) return false;
+
+    final cropped = await showImageCropScreen(
+      context,
+      bytes,
+      aspectRatio: width / height,
     );
-    if (croppedFile == null) return false;
+    if (cropped == null) return false;
 
     processedImgs.clear();
-    image = await img.decodeImageFile(croppedFile.path);
+    image = img.decodeImage(cropped);
 
     notifyListeners();
     return true;
