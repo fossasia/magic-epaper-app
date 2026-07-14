@@ -77,8 +77,7 @@ class _ImageCropScreenState extends State<ImageCropScreen> {
               }
             },
           ),
-          if (_isCropping)
-            const Center(child: CircularProgressIndicator()),
+          if (_isCropping) const Center(child: CircularProgressIndicator()),
         ],
       ),
     );
