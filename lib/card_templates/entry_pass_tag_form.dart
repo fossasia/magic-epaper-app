@@ -204,11 +204,11 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
           textStyle: TextStyle(
             fontSize: layoutParams.venueNameFontSize,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: colorBlack,
           ),
           text: _passData.venueName,
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
+          textColor: colorBlack,
+          backgroundColor: colorWhite,
           textAlign: TextAlign.center,
           offset: layoutParams.venueNameOffset,
           scale: layoutParams.venueNameScale,
@@ -220,8 +220,8 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.visitorNamePrefix}${_passData.visitorName}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
+          textColor: colorBlack,
+          backgroundColor: colorWhite,
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['visitorName']!,
           scale: layoutParams.textFieldScale,
@@ -233,8 +233,8 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.passTypePrefix}${_passData.passType}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
+          textColor: colorBlack,
+          backgroundColor: colorWhite,
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['passType']!,
           scale: layoutParams.textFieldScale,
@@ -246,8 +246,8 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.validDatePrefix}${_passData.validDate}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
+          textColor: colorBlack,
+          backgroundColor: colorWhite,
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['validDate']!,
           scale: layoutParams.textFieldScale,
@@ -259,8 +259,8 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
         layers.add(LayerSpec.text(
           text: '${appLocalizations.passIdPrefix}${_passData.passId}',
           textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
+          textColor: colorBlack,
+          backgroundColor: colorWhite,
           textAlign: TextAlign.left,
           offset: layoutParams.textOffsets['passId']!,
           scale: layoutParams.textFieldScale,
@@ -322,7 +322,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
         style: const TextStyle(
           fontSize: Dimens.fontSizeXxl,
           fontWeight: FontWeight.bold,
-          color: Colors.white,
+          color: colorWhite,
         ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
@@ -349,14 +349,14 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
               const SizedBox(height: Dimens.spacingM),
               EntryPassTagCardWidget(data: _passData),
               const SizedBox(height: Dimens.spacingXl),
-              const Divider(height: 1, color: Colors.grey),
+              const Divider(height: 1, color: grey500),
               const SizedBox(height: Dimens.spacingXl),
               Card(
-                color: Colors.white,
+                color: colorWhite,
                 elevation: 2,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(Dimens.radiusXl),
-                  side: BorderSide(color: Colors.grey.shade300, width: 1),
+                  side: BorderSide(color: grey300, width: 1),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(Dimens.spacingXl),
@@ -383,8 +383,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
                         const SizedBox(height: Dimens.spacingSm),
                         Text(
                           appLocalizations.fillDetailsToCreatePass,
-                          style: TextStyle(
-                              fontSize: 13, color: Colors.grey.shade600),
+                          style: TextStyle(fontSize: 13, color: grey600),
                         ),
                         const SizedBox(height: Dimens.spacingXl),
                         _buildPhotoSection(),
@@ -463,7 +462,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
                     backgroundColor:
                         colorPrimary.withAlpha(_isGenerating ? 125 : 255),
                     foregroundColor:
-                        Colors.white.withAlpha(_isGenerating ? 178 : 255),
+                        colorWhite.withAlpha(_isGenerating ? 178 : 255),
                     elevation: _isGenerating ? 0 : 2,
                     shadowColor: colorPrimary.withValues(alpha: 0.3),
                     shape: RoundedRectangleBorder(
@@ -480,7 +479,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
                                 valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                                    AlwaysStoppedAnimation<Color>(colorWhite),
                               ),
                             ),
                             const SizedBox(width: Dimens.spacingM),
@@ -572,7 +571,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
             fontWeight: FontWeight.w500,
           ),
           hintStyle: TextStyle(
-            color: Colors.grey.shade500,
+            color: grey500,
             fontSize: Dimens.fontSizeM,
             fontWeight: FontWeight.w400,
           ),
@@ -583,11 +582,11 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(Dimens.radiusM),
-            borderSide: BorderSide(color: Colors.grey.shade300),
+            borderSide: BorderSide(color: grey300),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(Dimens.radiusM),
-            borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
+            borderSide: BorderSide(color: grey300, width: 1.5),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(Dimens.radiusM),
@@ -604,7 +603,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
           contentPadding: const EdgeInsets.symmetric(
               horizontal: Dimens.spacingL, vertical: 14),
           filled: true,
-          fillColor: Colors.grey.shade50,
+          fillColor: grey50,
         ),
       ),
     );
@@ -612,11 +611,11 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
 
   Widget _buildPhotoSection() {
     return Card(
-      color: Colors.grey.shade50,
+      color: grey50,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Dimens.radiusM),
-        side: BorderSide(color: Colors.grey.shade300, width: 1),
+        side: BorderSide(color: grey300, width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.all(Dimens.spacingL),
@@ -667,12 +666,10 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(Dimens.spacingL),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: colorWhite,
                   borderRadius: BorderRadius.circular(Dimens.radiusM),
                   border: Border.all(
-                    color: _profileImage != null
-                        ? colorPrimary
-                        : Colors.grey.shade300,
+                    color: _profileImage != null ? colorPrimary : grey300,
                     width: _profileImage != null ? 2 : 1,
                   ),
                 ),
@@ -682,12 +679,12 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
                       width: 60,
                       height: 60,
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
+                        color: grey100,
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: _profileImage != null
                               ? colorPrimary.withValues(alpha: 0.3)
-                              : Colors.grey.shade300,
+                              : grey300,
                         ),
                       ),
                       child: _profileImage != null
@@ -715,7 +712,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
                                     child: const Icon(
                                       Icons.check,
                                       size: 12,
-                                      color: Colors.white,
+                                      color: colorWhite,
                                     ),
                                   ),
                                 ),
@@ -724,7 +721,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
                           : Icon(
                               Icons.add_photo_alternate,
                               size: 28,
-                              color: Colors.grey.shade400,
+                              color: grey400,
                             ),
                     ),
                     const SizedBox(width: Dimens.spacingL),
@@ -751,7 +748,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
                                 : appLocalizations.tapToSelectFromGallery,
                             style: TextStyle(
                               fontSize: Dimens.fontSizeS,
-                              color: Colors.grey.shade600,
+                              color: grey600,
                             ),
                           ),
                         ],
@@ -762,16 +759,14 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
                       decoration: BoxDecoration(
                         color: _profileImage != null
                             ? colorPrimary.withValues(alpha: 0.3)
-                            : Colors.grey.shade100,
+                            : grey100,
                         borderRadius: BorderRadius.circular(Dimens.radiusRound),
                       ),
                       child: Icon(
                         _profileImage != null
                             ? Icons.edit
                             : Icons.arrow_forward_ios,
-                        color: _profileImage != null
-                            ? colorPrimary
-                            : Colors.grey.shade400,
+                        color: _profileImage != null ? colorPrimary : grey400,
                         size: _profileImage != null ? 16 : 14,
                       ),
                     ),

@@ -188,6 +188,7 @@
   "halftone": "अख़बार",
   "threshold": "पोस्टराइज़",
   "colorHalftone": "रंगीन अख़बार",
+  "bayer": "ग्रिड",
 
   "searchingForDevice": "डिवाइस खोजा जा रहा है",
   "displayRefreshing": "डिस्प्ले रीफ़्रेश हो रहा है",

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../model/canvas_controller.dart';
 import '../model/canvas_element.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 
 class EditableElement extends StatefulWidget {
   const EditableElement({
@@ -233,14 +234,14 @@ class _ElementContent extends StatelessWidget {
             : Image.memory(element.imageBytes!, fit: BoxFit.contain);
       case CanvasElementKind.barcode:
         return ColoredBox(
-          color: Colors.white,
+          color: colorWhite,
           child: Padding(
             padding: const EdgeInsets.all(4),
             child: BarcodeWidget(
               barcode: element.barcode ?? Barcode.qrCode(),
               data: element.barcodeData ?? '',
-              color: Colors.black,
-              backgroundColor: Colors.white,
+              color: colorBlack,
+              backgroundColor: colorWhite,
               drawText: false,
               errorBuilder: (context, error) => const SizedBox.shrink(),
             ),
@@ -268,10 +269,10 @@ class _Handle extends StatelessWidget {
       decoration: BoxDecoration(
         color: background,
         shape: BoxShape.circle,
-        border: Border.all(color: Colors.white, width: 2),
-        boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 2)],
+        border: Border.all(color: colorWhite, width: 2),
+        boxShadow: const [BoxShadow(color: colorBlack26, blurRadius: 2)],
       ),
-      child: Icon(icon, size: 14, color: Colors.white),
+      child: Icon(icon, size: 14, color: colorWhite),
     );
   }
 }
