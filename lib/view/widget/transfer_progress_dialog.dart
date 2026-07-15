@@ -14,7 +14,8 @@ class TransferProgressDialog extends StatefulWidget {
     img.Image image,
     Function(double, String) onProgress,
     Function() onTagDetected,
-  ) transferFunction;
+  )
+  transferFunction;
   final Color colorAccent;
 
   const TransferProgressDialog({
@@ -34,7 +35,8 @@ class TransferProgressDialog extends StatefulWidget {
       img.Image image,
       Function(double, String) onProgress,
       Function() onTagDetected,
-    ) transferFunction,
+    )
+    transferFunction,
     required Color colorAccent,
   }) {
     return showDialog<void>(
@@ -93,34 +95,19 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     )..repeat(reverse: true);
-    _pulseAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _pulseController,
-      curve: Curves.easeInOut,
-    ));
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _slideController,
-      curve: Curves.elasticOut,
-    ));
-    _scaleAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _scaleController,
-      curve: Curves.elasticOut,
-    ));
-    _holdStillPulseAnimation = Tween<double>(
-      begin: 0.9,
-      end: 1.1,
-    ).animate(CurvedAnimation(
-      parent: _holdStillController,
-      curve: Curves.easeInOut,
-    ));
+    _pulseAnimation = Tween<double>(begin: 0.8, end: 1.2).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(parent: _slideController, curve: Curves.elasticOut),
+        );
+    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
+    );
+    _holdStillPulseAnimation = Tween<double>(begin: 0.9, end: 1.1).animate(
+      CurvedAnimation(parent: _holdStillController, curve: Curves.easeInOut),
+    );
     _slideController.forward();
     _scaleController.forward();
   }
@@ -240,8 +227,9 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                 final delay = index * 0.3;
                 final animationValue = (_pulseController.value + delay) % 1.0;
                 return Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: Dimens.spacingXs),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: Dimens.spacingXs,
+                  ),
                   child: Opacity(
                     opacity: animationValue > 0.5 ? 1.0 : 0.3,
                     child: Container(
@@ -334,7 +322,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
         ),
         const SizedBox(height: Dimens.spacingS),
         Text(
-appLocalizations.dataTransferSuccessfulMessage,
+          appLocalizations.dataTransferSuccessfulMessage,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: Dimens.fontSizeM,
@@ -409,11 +397,7 @@ appLocalizations.dataTransferSuccessfulMessage,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.error_outline,
-            color: Colors.red.shade600,
-            size: 48,
-          ),
+          Icon(Icons.error_outline, color: Colors.red.shade600, size: 48),
           const SizedBox(height: Dimens.spacingM),
           Text(
             appLocalizations.transferFailed,
@@ -462,24 +446,26 @@ appLocalizations.dataTransferSuccessfulMessage,
                       !tagDetected
                           ? Icons.nfc
                           : showRefreshingMessage
-                              ? Icons.pan_tool_outlined
-                              : transferComplete
-                                  ? Icons.check_circle
-                                  : Icons.upload,
-                      key: ValueKey(!tagDetected
-                          ? 'nfc'
-                          : showRefreshingMessage
-                              ? 'refresh'
-                              : transferComplete
-                                  ? 'complete'
-                                  : 'upload'),
+                          ? Icons.pan_tool_outlined
+                          : transferComplete
+                          ? Icons.check_circle
+                          : Icons.upload,
+                      key: ValueKey(
+                        !tagDetected
+                            ? 'nfc'
+                            : showRefreshingMessage
+                            ? 'refresh'
+                            : transferComplete
+                            ? 'complete'
+                            : 'upload',
+                      ),
                       color: !tagDetected
                           ? widget.colorAccent
                           : showRefreshingMessage
-                              ? Colors.orange.shade600
-                              : transferComplete
-                                  ? Colors.green.shade600
-                                  : widget.colorAccent,
+                          ? Colors.orange.shade600
+                          : transferComplete
+                          ? Colors.green.shade600
+                          : widget.colorAccent,
                       size: 28,
                     ),
                   ),
@@ -491,17 +477,19 @@ appLocalizations.dataTransferSuccessfulMessage,
                         !tagDetected
                             ? appLocalizations.searchingForDevice
                             : showRefreshingMessage
-                                ? appLocalizations.displayRefreshing
-                                : transferComplete
-                                    ? appLocalizations.transferComplete
-                                    : appLocalizations.writingToEpaper,
-                        key: ValueKey(!tagDetected
-                            ? 'search'
-                            : showRefreshingMessage
-                                ? 'refreshing'
-                                : transferComplete
-                                    ? 'complete'
-                                    : 'write'),
+                            ? appLocalizations.displayRefreshing
+                            : transferComplete
+                            ? appLocalizations.transferComplete
+                            : appLocalizations.writingToEpaper,
+                        key: ValueKey(
+                          !tagDetected
+                              ? 'search'
+                              : showRefreshingMessage
+                              ? 'refreshing'
+                              : transferComplete
+                              ? 'complete'
+                              : 'write',
+                        ),
                         style: const TextStyle(
                           fontSize: Dimens.fontSizeXxl,
                           fontWeight: FontWeight.bold,
@@ -517,12 +505,12 @@ appLocalizations.dataTransferSuccessfulMessage,
                 child: errorMessage != null
                     ? _buildErrorState()
                     : showRefreshingMessage
-                        ? _buildRefreshingState()
-                        : transferComplete
-                            ? _buildTransferCompleteState()
-                            : !tagDetected
-                                ? _buildNFCSearchingState()
-                                : _buildTransferProgressState(),
+                    ? _buildRefreshingState()
+                    : transferComplete
+                    ? _buildTransferCompleteState()
+                    : !tagDetected
+                    ? _buildNFCSearchingState()
+                    : _buildTransferProgressState(),
               ),
               if (showRefreshingMessage || errorMessage != null) ...[
                 const SizedBox(height: Dimens.spacingXxl),
@@ -535,8 +523,9 @@ appLocalizations.dataTransferSuccessfulMessage,
                           ? Colors.orange.shade600
                           : Colors.red.shade600,
                       foregroundColor: colorWhite,
-                      padding:
-                          const EdgeInsets.symmetric(vertical: Dimens.spacingL),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: Dimens.spacingL,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(Dimens.radiusXl),
                       ),
