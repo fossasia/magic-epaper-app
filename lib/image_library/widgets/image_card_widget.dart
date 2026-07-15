@@ -27,7 +27,7 @@ class ImageCardWidget extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorWhite,
           borderRadius: BorderRadius.circular(Dimens.radiusXl),
           border: Border.all(
             color: isDeleteMode && isSelected ? colorAccent : mdGrey400,
@@ -58,11 +58,11 @@ class ImageCardWidget extends StatelessWidget {
                       isAntiAlias: false,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
-                          color: Colors.grey.shade200,
+                          color: grey200,
                           child: const Center(
                             child: Icon(
                               Icons.broken_image_outlined,
-                              color: Colors.grey,
+                              color: grey500,
                               size: 48,
                             ),
                           ),
@@ -96,7 +96,7 @@ class ImageCardWidget extends StatelessWidget {
                   Text(
                     dt.DateUtils.formatRelativeDate(image.createdAt),
                     style: TextStyle(
-                      color: Colors.grey.shade600,
+                      color: grey600,
                       fontSize: Dimens.fontSizeS,
                     ),
                   ),

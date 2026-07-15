@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
@@ -13,7 +12,7 @@ import 'package:magicepaperapp/ndef_screen/nfc_read_screen.dart';
 import 'package:magicepaperapp/ndef_screen/nfc_write_screen.dart';
 import 'package:magicepaperapp/view/display_selection_screen.dart';
 import 'package:magicepaperapp/src/rust/frb_generated.dart';
-import 'constants/color_constants.dart';
+import 'package:magicepaperapp/theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,84 +62,7 @@ class MyApp extends StatelessWidget {
             '/nfcReadScreen': (context) => const NFCReadScreen(),
             '/nfcWriteScreen': (context) => const NFCWriteScreen(),
           },
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            dialogTheme: DialogThemeData(
-              backgroundColor: colorWhite,
-              surfaceTintColor: Colors.transparent,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(28.0),
-              ),
-              actionsPadding: const EdgeInsets.symmetric(
-                  horizontal: Dimens.spacingL, vertical: Dimens.spacingS),
-              titleTextStyle: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: Dimens.fontSizeXl,
-                color: colorBlack,
-              ),
-            ),
-            inputDecorationTheme: InputDecorationTheme(
-              filled: true,
-              fillColor: Colors.grey.shade50,
-              contentPadding: const EdgeInsets.symmetric(
-                  horizontal: Dimens.spacingL, vertical: Dimens.spacingM),
-              floatingLabelStyle: const TextStyle(color: colorAccent),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(Dimens.radiusXl),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(Dimens.radiusXl),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(Dimens.radiusXl),
-                borderSide: const BorderSide(color: colorAccent, width: 2),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(Dimens.radiusXl),
-                borderSide: const BorderSide(color: Colors.red, width: 2),
-              ),
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.grey[700],
-                textStyle: const TextStyle(fontWeight: FontWeight.bold),
-                padding: const EdgeInsets.symmetric(vertical: Dimens.spacingM),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(Dimens.radiusM),
-                  side: BorderSide(color: Colors.grey.shade300),
-                ),
-              ),
-            ),
-            elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colorAccent,
-                foregroundColor: colorWhite,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(Dimens.radiusXl)),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: Dimens.spacingM, vertical: Dimens.spacingM),
-                textStyle: const TextStyle(
-                    fontSize: Dimens.fontSizeL, fontWeight: FontWeight.w600),
-              ),
-            ),
-            outlinedButtonTheme: OutlinedButtonThemeData(
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.grey.shade700,
-                side: BorderSide(color: Colors.grey.shade300),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(Dimens.radiusXl)),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: Dimens.spacingM, vertical: Dimens.spacingM),
-                textStyle: const TextStyle(
-                    fontSize: Dimens.fontSizeL, fontWeight: FontWeight.w600),
-              ),
-            ),
-          ),
+          theme: AppTheme.lightTheme,
         );
       },
     );

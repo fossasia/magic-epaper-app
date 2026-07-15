@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/constants/string_constants.dart';
@@ -225,7 +226,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
           style: TextStyle(
             fontSize: Dimens.fontSizeL,
             fontWeight: FontWeight.w500,
-            color: Colors.grey[800],
+            color: grey800,
             height: 1.4,
           ),
         ),
@@ -274,7 +275,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
               child: CircularProgressIndicator(
                 value: progress,
                 strokeWidth: 6,
-                backgroundColor: Colors.grey[200],
+                backgroundColor: grey200,
                 valueColor: AlwaysStoppedAnimation<Color>(widget.colorAccent),
               ),
             ),
@@ -294,7 +295,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: Dimens.fontSizeM,
-            color: Colors.grey[700],
+            color: grey700,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -337,7 +338,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: Dimens.fontSizeM,
-            color: Colors.grey[700],
+            color: grey700,
             height: 1.3,
           ),
         ),
@@ -389,7 +390,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: Dimens.fontSizeM,
-            color: Colors.grey[700],
+            color: grey700,
             height: 1.4,
           ),
         ),
@@ -442,7 +443,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
     return SlideTransition(
       position: _slideAnimation,
       child: Dialog(
-        backgroundColor: Colors.white,
+        backgroundColor: colorWhite,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Dimens.radiusRound),
         ),
@@ -533,7 +534,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                       backgroundColor: showRefreshingMessage
                           ? Colors.orange.shade600
                           : Colors.red.shade600,
-                      foregroundColor: Colors.white,
+                      foregroundColor: colorWhite,
                       padding:
                           const EdgeInsets.symmetric(vertical: Dimens.spacingL),
                       shape: RoundedRectangleBorder(

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:magicepaperapp/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
@@ -26,11 +27,11 @@ class DeleteConfirmationDialog extends StatelessWidget {
           padding: const EdgeInsets.all(Dimens.spacingXxl),
           margin: const EdgeInsets.symmetric(vertical: 48),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colorWhite,
             borderRadius: BorderRadius.circular(Dimens.radiusRound),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: colorBlack.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -76,7 +77,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: Dimens.fontSizeXxl,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: colorBlack87,
                 ),
               ),
               const SizedBox(height: Dimens.spacingXs),
@@ -124,7 +125,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
             style: const TextStyle(
               fontSize: Dimens.fontSizeL,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: colorBlack87,
             ),
             textAlign: TextAlign.center,
             maxLines: 2,
@@ -136,14 +137,14 @@ class DeleteConfirmationDialog extends StatelessWidget {
               padding: const EdgeInsets.symmetric(
                   horizontal: Dimens.spacingS, vertical: Dimens.spacingXs),
               decoration: BoxDecoration(
-                color: Colors.grey.withValues(alpha: 0.2),
+                color: grey500.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(Dimens.radiusXl),
               ),
               child: Text(
                 '${appLocalizations.filterLabel} ${image.metadata!['filter']}',
                 style: const TextStyle(
                   fontSize: Dimens.fontSizeS,
-                  color: Colors.grey,
+                  color: grey500,
                   fontWeight: FontWeight.w500,
                 ),
               ),

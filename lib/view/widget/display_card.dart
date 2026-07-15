@@ -60,7 +60,7 @@ class DisplayCard extends StatelessWidget {
       ),
       child: Container(
         width: double.infinity,
-        color: Colors.white,
+        color: colorWhite,
         child: Padding(
           padding: EdgeInsets.all(Dimens.spacingXs * scale),
           child: Image.asset(
@@ -72,7 +72,7 @@ class DisplayCard extends StatelessWidget {
                 child: Icon(
                   Icons.display_settings,
                   size: 60 * scale,
-                  color: Colors.grey.shade400,
+                  color: grey400,
                 ),
               );
             },
@@ -87,12 +87,12 @@ class DisplayCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(Dimens.radiusXl * scale),
       splashColor: Colors.redAccent.withAlpha(51),
       child: Card(
-        color: Colors.white,
+        color: colorWhite,
         elevation: isSelected ? 4 : 1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Dimens.radiusXl * scale),
           side: BorderSide(
-            color: isSelected ? colorPrimary : Colors.grey.shade300,
+            color: isSelected ? colorPrimary : grey300,
             width:
                 isSelected ? Dimens.borderWidthThick : Dimens.borderWidthThin,
           ),
@@ -147,7 +147,7 @@ class DisplayCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: Dimens.fontSizeXs * scale,
-                      color: Colors.grey,
+                      color: grey500,
                     ),
                   ),
                   SizedBox(height: Dimens.spacingS * scale),
@@ -210,7 +210,7 @@ class DisplayCard extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                  fontSize: Dimens.fontSizeXs * scale, color: Colors.grey),
+                  fontSize: Dimens.fontSizeXs * scale, color: grey500),
             ),
           ),
           SizedBox(width: Dimens.spacingS * scale),

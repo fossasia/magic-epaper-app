@@ -52,11 +52,11 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
           padding: const EdgeInsets.all(Dimens.spacingXxl),
           margin: const EdgeInsets.symmetric(vertical: 48),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colorWhite,
             borderRadius: BorderRadius.circular(Dimens.radiusRound),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: colorBlack.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -109,7 +109,7 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
                 style: const TextStyle(
                   fontSize: Dimens.fontSizeXxl,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: colorBlack87,
                 ),
               ),
               const SizedBox(height: Dimens.spacingXs),
@@ -117,7 +117,7 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
                 appLocalizations.saveFilteredImageToLibrary,
                 style: const TextStyle(
                   fontSize: Dimens.fontSizeM,
-                  color: Colors.grey,
+                  color: grey500,
                 ),
               ),
             ],
@@ -133,9 +133,9 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
       height: 120,
       padding: const EdgeInsets.symmetric(horizontal: Dimens.spacingM),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: grey50,
         borderRadius: BorderRadius.circular(Dimens.radiusXxl),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: grey200),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(Dimens.radiusXl),
@@ -156,7 +156,7 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
           style: const TextStyle(
             fontSize: Dimens.fontSizeM,
             fontWeight: FontWeight.w600,
-            color: Colors.black87,
+            color: colorBlack87,
           ),
         ),
         const SizedBox(height: Dimens.spacingS),
@@ -167,14 +167,14 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
           decoration: InputDecoration(
             hintText: appLocalizations.enterImageName,
             filled: true,
-            fillColor: Colors.grey.shade50,
+            fillColor: grey50,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(Dimens.radiusXl),
-              borderSide: BorderSide(color: Colors.grey.shade300),
+              borderSide: BorderSide(color: grey300),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(Dimens.radiusXl),
-              borderSide: BorderSide(color: Colors.grey.shade300),
+              borderSide: BorderSide(color: grey300),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(Dimens.radiusXl),
@@ -186,7 +186,7 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
             ),
             prefixIcon: const Icon(
               Icons.photo_library_outlined,
-              color: Colors.grey,
+              color: grey500,
             ),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: Dimens.spacingL,
@@ -289,7 +289,7 @@ class SnackBarUtils {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(colorWhite),
               ),
             ),
             const SizedBox(width: Dimens.spacingM),
@@ -308,7 +308,7 @@ class SnackBarUtils {
         content: Row(
           children: [
             const Icon(Icons.check_circle,
-                color: Colors.white, size: Dimens.iconSizeM),
+                color: colorWhite, size: Dimens.iconSizeM),
             const SizedBox(width: Dimens.spacingM),
             Text(message),
           ],
@@ -326,8 +326,7 @@ class SnackBarUtils {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.error,
-                color: Colors.white, size: Dimens.iconSizeM),
+            const Icon(Icons.error, color: colorWhite, size: Dimens.iconSizeM),
             const SizedBox(width: Dimens.spacingM),
             Text(message),
           ],

@@ -27,7 +27,7 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      iconTheme: const IconThemeData(color: Colors.white),
+      iconTheme: const IconThemeData(color: colorWhite),
       backgroundColor: colorAccent,
       elevation: 0,
       titleSpacing: 0,
@@ -77,7 +77,7 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
             tooltip: appLocalizations.deleteMode,
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
+            icon: const Icon(Icons.more_vert, color: colorWhite),
             onSelected: (value) {
               switch (value) {
                 case 'clear_all':
@@ -88,9 +88,9 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(Dimens.radiusXl),
             ),
-            color: Colors.white,
+            color: colorWhite,
             elevation: 8,
-            shadowColor: Colors.black.withValues(alpha: 0.1),
+            shadowColor: colorBlack.withValues(alpha: 0.1),
             offset: const Offset(0, 10),
             itemBuilder: (context) => [
               PopupMenuItem(
@@ -129,7 +129,7 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
                               style: const TextStyle(
                                 fontSize: Dimens.fontSizeM,
                                 fontWeight: FontWeight.w600,
-                                color: Colors.black87,
+                                color: colorBlack87,
                               ),
                             ),
                             const SizedBox(height: Dimens.spacingXxs),
@@ -137,7 +137,7 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
                               appLocalizations.removeAllImages,
                               style: TextStyle(
                                 fontSize: Dimens.fontSizeS,
-                                color: Colors.grey.shade600,
+                                color: grey600,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),

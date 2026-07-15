@@ -194,7 +194,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                             widget.selectedApp!.packageName,
                             style: TextStyle(
                               fontSize: Dimens.fontSizeS,
-                              color: Colors.grey[600],
+                              color: grey600,
                               height: 1.3,
                             ),
                           ),
@@ -207,8 +207,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                         color: colorWhite,
                       ),
                       child: IconButton(
-                        icon: const Icon(Icons.clear,
-                            color: Colors.grey, size: 18),
+                        icon: const Icon(Icons.clear, color: grey500, size: 18),
                         onPressed: () => widget.onAppSelected(null),
                         padding: const EdgeInsets.all(Dimens.spacingXs),
                         constraints: const BoxConstraints(
@@ -258,7 +257,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
     return Container(
       padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: grey50,
         borderRadius: BorderRadius.circular(Dimens.radiusL),
         border: Border.all(color: mdGrey400.withValues(alpha: 0.2)),
       ),
@@ -312,7 +311,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
       return Container(
         height: 400,
         decoration: BoxDecoration(
-          color: Colors.grey[50],
+          color: grey50,
           borderRadius: BorderRadius.circular(Dimens.radiusL),
           border: Border.all(color: mdGrey400.withValues(alpha: 0.2)),
         ),
@@ -342,7 +341,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
       return Container(
         height: 400,
         decoration: BoxDecoration(
-          color: Colors.grey[50],
+          color: grey50,
           borderRadius: BorderRadius.circular(Dimens.radiusL),
           border: Border.all(color: mdGrey400.withValues(alpha: 0.2)),
         ),
@@ -350,7 +349,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.search_off, color: Colors.grey, size: 48),
+              const Icon(Icons.search_off, color: grey500, size: 48),
               const SizedBox(height: Dimens.spacingS),
               Text(
                 appLocalizations.noAppsFound,
@@ -368,7 +367,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
     return Container(
       height: 400,
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: grey50,
         borderRadius: BorderRadius.circular(Dimens.radiusL),
         border: Border.all(color: mdGrey400.withValues(alpha: 0.2)),
       ),
@@ -408,7 +407,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                 app.packageName,
                 style: TextStyle(
                   fontSize: Dimens.fontSizeS,
-                  color: Colors.grey[600],
+                  color: grey600,
                 ),
               ),
               trailing: isSelected
@@ -482,8 +481,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
       style: const TextStyle(fontSize: Dimens.fontSizeM),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle:
-            TextStyle(color: Colors.grey[500], fontSize: Dimens.fontSizeM),
+        hintStyle: TextStyle(color: grey500, fontSize: Dimens.fontSizeM),
         prefixIcon:
             Icon(prefixIcon, color: colorAccent, size: Dimens.iconSizeM),
         suffixIcon: suffixIcon,
@@ -526,8 +524,8 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
           ),
         ),
         style: ElevatedButton.styleFrom(
-          disabledBackgroundColor: Colors.grey[300],
-          disabledForegroundColor: Colors.grey[600],
+          disabledBackgroundColor: grey300,
+          disabledForegroundColor: grey600,
         ),
       ),
     );
