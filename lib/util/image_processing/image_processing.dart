@@ -174,6 +174,7 @@ class ImageProcessing {
         ]);
       case DitherMethod.threshold:
       case DitherMethod.halftone:
+      case DitherMethod.bayer:
         return null;
     }
   }
