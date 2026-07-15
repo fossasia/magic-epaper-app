@@ -60,6 +60,13 @@ fn dither_gamma_lut() -> &'static [f32; 256] {
     })
 }
 
+const PALETTE_BWRY: [Colorf32; 4] = [
+    Colorf32 { r: 0.0, g: 0.0, b: 0.0 },
+    Colorf32 { r: 255.0, g: 255.0, b: 255.0 },
+    Colorf32 { r: 255.0, g: 0.0, b: 0.0 },
+    Colorf32 { r: 255.0, g: 255.0, b: 0.0 },
+];
+
 fn closest_color(pixel: Colorf32, palette: &[Colorf32]) -> Colorf32 {
     let mut min_dist = f32::MAX;
     let mut best_color = palette[0];
@@ -89,6 +96,7 @@ pub fn process_image_rust(
     target_height: u32,
     method: DitherMethod,
     is_bwr: bool,
+    is_four_color: bool,
 ) -> Vec<u8> {
     let dynamic_img = load_from_memory_with_format(&image_bytes, ImageFormat::Png)
         .expect("Failed to decode image")
@@ -109,7 +117,13 @@ pub fn process_image_rust(
         }
     }
 
-    let palette = if is_bwr { &PALETTE_BWR[..] } else { &PALETTE_BW[..] };
+    let palette = if is_four_color {
+        &PALETTE_BWRY[..]
+    } else if is_bwr {
+        &PALETTE_BWR[..]
+    } else {
+        &PALETTE_BW[..]
+    };
 
     let w = width as i32;
     let h = height as i32;
