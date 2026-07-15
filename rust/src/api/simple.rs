@@ -8,7 +8,19 @@ pub enum DitherMethod {
     Atkinson,
     Threshold,
     Halftone,
+    Bayer,
 }
+
+const BAYER_8X8: [[f32; 8]; 8] = [
+    [ 0.0, 32.0,  8.0, 40.0,  2.0, 34.0, 10.0, 42.0],
+    [48.0, 16.0, 56.0, 24.0, 50.0, 18.0, 58.0, 26.0],
+    [12.0, 44.0,  4.0, 36.0, 14.0, 46.0,  6.0, 38.0],
+    [60.0, 28.0, 52.0, 20.0, 62.0, 30.0, 54.0, 22.0],
+    [ 3.0, 35.0, 11.0, 43.0,  1.0, 33.0,  9.0, 41.0],
+    [51.0, 19.0, 59.0, 27.0, 49.0, 17.0, 57.0, 25.0],
+    [15.0, 47.0,  7.0, 39.0, 13.0, 45.0,  5.0, 37.0],
+    [63.0, 31.0, 55.0, 23.0, 61.0, 29.0, 53.0, 21.0],
+];
 
 #[derive(Clone, Copy)]
 struct Colorf32 {
@@ -77,7 +89,17 @@ pub fn process_image_rust(
         for x in 0..w {
             let idx = (y * w + x) as usize;
             let old_pixel = buffer[idx];
-            let new_pixel = closest_color(old_pixel, palette);
+
+            let quant_input = match method {
+                DitherMethod::Bayer => {
+                    let t = (BAYER_8X8[(y & 7) as usize][(x & 7) as usize] + 0.5) / 64.0 - 0.5;
+                    let off = t * 255.0;
+                    Colorf32 { r: old_pixel.r + off, g: old_pixel.g + off, b: old_pixel.b + off }
+                }
+                _ => old_pixel,
+            };
+
+            let new_pixel = closest_color(quant_input, palette);
 
             buffer[idx] = new_pixel;
 
@@ -86,7 +108,7 @@ pub fn process_image_rust(
             let err_b = old_pixel.b - new_pixel.b;
 
             match method {
-                DitherMethod::Threshold => {}
+                DitherMethod::Threshold | DitherMethod::Bayer => {}
                
                 DitherMethod::FloydSteinberg | DitherMethod::Halftone => {
                     distribute_error(&mut buffer, x, y, w, h, 1, 0, err_r, err_g, err_b, 7.0 / 16.0);
