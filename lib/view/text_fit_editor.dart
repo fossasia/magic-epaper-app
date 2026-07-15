@@ -145,7 +145,8 @@ class TextFitEditorState extends State<TextFitEditor> {
             onPressed: () => _handleConfirm(canvasSize, appLocalizations),
             icon: Icon(
               Icons.check,
-              color: _isTextEmpty ? colorWhite.withValues(alpha: .4) : colorWhite,
+              color:
+                  _isTextEmpty ? colorWhite.withValues(alpha: .4) : colorWhite,
             ),
           ),
         ],
