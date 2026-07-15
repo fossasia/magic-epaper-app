@@ -8,7 +8,6 @@ import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:magicepaperapp/card_templates/card_template_selection_view.dart';
 import 'package:magicepaperapp/util/color_util.dart';
 import 'package:magicepaperapp/util/epd/driver/waveform.dart';
-import 'package:magicepaperapp/util/image_processing/image_processing.dart';
 import 'package:magicepaperapp/util/xbm_encoder.dart';
 import 'package:magicepaperapp/view/text_fit_editor.dart';
 import 'package:magicepaperapp/view/widget/image_list.dart';
@@ -185,37 +184,27 @@ class _ImageEditorState extends State<ImageEditor> {
         Uint8List processedPngBytes;
         img.Image? decodedImage;
 
-        if (filtersToRun[i].is4Color) {
-          final ditheredImage = ImageProcessing.fourColorDither(
-            sourceImage,
-            filtersToRun[i].method,
-            widget.device.width.toInt(),
-            widget.device.height.toInt(),
-          );
-          processedPngBytes = Uint8List.fromList(img.encodePng(ditheredImage));
-          decodedImage = ditheredImage;
-        } else {
-          Uint8List bytesForRust = sourcePngBytes;
+        Uint8List bytesForRust = sourcePngBytes;
 
-          if (filtersToRun[i].useDartHalftone) {
-            final tempImg = img.Image.from(sourceImage);
-            if (!filtersToRun[i].isBwr) {
-              img.grayscale(tempImg);
-            }
-            img.colorHalftone(tempImg, size: 3);
-            bytesForRust = Uint8List.fromList(img.encodePng(tempImg));
+        if (filtersToRun[i].useDartHalftone) {
+          final tempImg = img.Image.from(sourceImage);
+          if (!filtersToRun[i].isBwr) {
+            img.grayscale(tempImg);
           }
-
-          processedPngBytes = await rust_api.processImageRust(
-            imageBytes: bytesForRust,
-            targetWidth: widget.device.width.toInt(),
-            targetHeight: widget.device.height.toInt(),
-            method: filtersToRun[i].method,
-            isBwr: filtersToRun[i].isBwr,
-          );
-
-          decodedImage = await compute(img.decodePng, processedPngBytes);
+          img.colorHalftone(tempImg, size: 3);
+          bytesForRust = Uint8List.fromList(img.encodePng(tempImg));
         }
+
+        processedPngBytes = await rust_api.processImageRust(
+          imageBytes: bytesForRust,
+          targetWidth: widget.device.width.toInt(),
+          targetHeight: widget.device.height.toInt(),
+          method: filtersToRun[i].method,
+          isBwr: filtersToRun[i].isBwr,
+          isFourColor: filtersToRun[i].is4Color,
+        );
+
+        decodedImage = await compute(img.decodePng, processedPngBytes);
 
         if (mounted && _processedSourceImage == sourceImage) {
           setState(() {
