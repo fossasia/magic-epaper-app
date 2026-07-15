@@ -14,8 +14,7 @@ class TransferProgressDialog extends StatefulWidget {
     img.Image image,
     Function(double, String) onProgress,
     Function() onTagDetected,
-  )
-  transferFunction;
+  ) transferFunction;
   final Color colorAccent;
 
   const TransferProgressDialog({
@@ -35,8 +34,7 @@ class TransferProgressDialog extends StatefulWidget {
       img.Image image,
       Function(double, String) onProgress,
       Function() onTagDetected,
-    )
-    transferFunction,
+    ) transferFunction,
     required Color colorAccent,
   }) {
     return showDialog<void>(
@@ -100,8 +98,8 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
     );
     _slideAnimation =
         Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
-          CurvedAnimation(parent: _slideController, curve: Curves.elasticOut),
-        );
+      CurvedAnimation(parent: _slideController, curve: Curves.elasticOut),
+    );
     _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
     );
@@ -446,26 +444,26 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                       !tagDetected
                           ? Icons.nfc
                           : showRefreshingMessage
-                          ? Icons.pan_tool_outlined
-                          : transferComplete
-                          ? Icons.check_circle
-                          : Icons.upload,
+                              ? Icons.pan_tool_outlined
+                              : transferComplete
+                                  ? Icons.check_circle
+                                  : Icons.upload,
                       key: ValueKey(
                         !tagDetected
                             ? 'nfc'
                             : showRefreshingMessage
-                            ? 'refresh'
-                            : transferComplete
-                            ? 'complete'
-                            : 'upload',
+                                ? 'refresh'
+                                : transferComplete
+                                    ? 'complete'
+                                    : 'upload',
                       ),
                       color: !tagDetected
                           ? widget.colorAccent
                           : showRefreshingMessage
-                          ? Colors.orange.shade600
-                          : transferComplete
-                          ? Colors.green.shade600
-                          : widget.colorAccent,
+                              ? Colors.orange.shade600
+                              : transferComplete
+                                  ? Colors.green.shade600
+                                  : widget.colorAccent,
                       size: 28,
                     ),
                   ),
@@ -477,18 +475,18 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                         !tagDetected
                             ? appLocalizations.searchingForDevice
                             : showRefreshingMessage
-                            ? appLocalizations.displayRefreshing
-                            : transferComplete
-                            ? appLocalizations.transferComplete
-                            : appLocalizations.writingToEpaper,
+                                ? appLocalizations.displayRefreshing
+                                : transferComplete
+                                    ? appLocalizations.transferComplete
+                                    : appLocalizations.writingToEpaper,
                         key: ValueKey(
                           !tagDetected
                               ? 'search'
                               : showRefreshingMessage
-                              ? 'refreshing'
-                              : transferComplete
-                              ? 'complete'
-                              : 'write',
+                                  ? 'refreshing'
+                                  : transferComplete
+                                      ? 'complete'
+                                      : 'write',
                         ),
                         style: const TextStyle(
                           fontSize: Dimens.fontSizeXxl,
@@ -505,12 +503,12 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                 child: errorMessage != null
                     ? _buildErrorState()
                     : showRefreshingMessage
-                    ? _buildRefreshingState()
-                    : transferComplete
-                    ? _buildTransferCompleteState()
-                    : !tagDetected
-                    ? _buildNFCSearchingState()
-                    : _buildTransferProgressState(),
+                        ? _buildRefreshingState()
+                        : transferComplete
+                            ? _buildTransferCompleteState()
+                            : !tagDetected
+                                ? _buildNFCSearchingState()
+                                : _buildTransferProgressState(),
               ),
               if (showRefreshingMessage || errorMessage != null) ...[
                 const SizedBox(height: Dimens.spacingXxl),
