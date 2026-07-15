@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/services/image_filter_helper.dart';
 import 'package:magicepaperapp/image_library/model/image_properties.dart';
 import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
@@ -76,14 +77,16 @@ class ImageOperationsService {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
+            const Icon(Icons.check_circle,
+                color: colorWhite, size: Dimens.iconSizeM),
+            const SizedBox(width: Dimens.spacingM),
             Text(appLocalizations.allDataCleared),
           ],
         ),
         backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusL)),
       ),
     );
   }
@@ -98,10 +101,10 @@ class ImageOperationsService {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(colorWhite),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: Dimens.spacingM),
             Text(appLocalizations.clearingAllData),
           ],
         ),
@@ -256,10 +259,10 @@ class ImageOperationsService {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(colorWhite),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: Dimens.spacingM),
             Text(message),
           ],
         ),
@@ -274,14 +277,16 @@ class ImageOperationsService {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
+            const Icon(Icons.check_circle,
+                color: colorWhite, size: Dimens.iconSizeM),
+            const SizedBox(width: Dimens.spacingM),
             Expanded(child: Text(message)),
           ],
         ),
         backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusL)),
       ),
     );
   }
@@ -291,14 +296,16 @@ class ImageOperationsService {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.delete_sweep, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
+            const Icon(Icons.delete_sweep,
+                color: colorWhite, size: Dimens.iconSizeM),
+            const SizedBox(width: Dimens.spacingM),
             Expanded(child: Text(message)),
           ],
         ),
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusL)),
       ),
     );
   }
@@ -313,10 +320,10 @@ class ImageOperationsService {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(colorWhite),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: Dimens.spacingM),
             Text(
               appLocalizations.deletingImage(count),
             )
@@ -333,8 +340,9 @@ class ImageOperationsService {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.delete_sweep, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
+            const Icon(Icons.delete_sweep,
+                color: colorWhite, size: Dimens.iconSizeM),
+            const SizedBox(width: Dimens.spacingM),
             Expanded(
               child: Text(
                 appLocalizations.imageDeletedSuccessfully(count),
@@ -344,7 +352,8 @@ class ImageOperationsService {
         ),
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusL)),
       ),
     );
   }
@@ -354,14 +363,15 @@ class ImageOperationsService {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.error, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
+            const Icon(Icons.error, color: colorWhite, size: Dimens.iconSizeM),
+            const SizedBox(width: Dimens.spacingM),
             Expanded(child: Text(message)),
           ],
         ),
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusL)),
       ),
     );
   }
@@ -376,10 +386,10 @@ class ImageOperationsService {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(colorWhite),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: Dimens.spacingM),
             Text(appLocalizations.savingImage),
           ],
         ),
@@ -396,17 +406,17 @@ class ImageOperationsService {
           children: [
             const Icon(
               Icons.check_circle,
-              color: Colors.white,
-              size: 20,
+              color: colorWhite,
+              size: Dimens.iconSizeM,
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: Dimens.spacingM),
             Text(appLocalizations.imageSavedToLibrary),
           ],
         ),
         backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(Dimens.radiusL),
         ),
       ),
     );
@@ -419,10 +429,10 @@ class ImageOperationsService {
           children: [
             const Icon(
               Icons.error,
-              color: Colors.white,
-              size: 20,
+              color: colorWhite,
+              size: Dimens.iconSizeM,
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: Dimens.spacingM),
             Expanded(
                 child: Text('${appLocalizations.failedToSaveImage}$error')),
           ],
@@ -430,7 +440,7 @@ class ImageOperationsService {
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(Dimens.radiusL),
         ),
       ),
     );

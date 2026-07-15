@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
@@ -19,8 +20,8 @@ class TextFitEditor extends StatefulWidget {
 class TextFitEditorState extends State<TextFitEditor> {
   final TextEditingController _controller = TextEditingController();
   final GlobalKey _repaintKey = GlobalKey();
-  Color _textColor = Colors.black;
-  Color _backgroundColor = Colors.white;
+  Color _textColor = colorBlack;
+  Color _backgroundColor = colorWhite;
   TextAlign _align = TextAlign.center;
   late final List<Color> _availableColors;
 
@@ -28,12 +29,12 @@ class TextFitEditorState extends State<TextFitEditor> {
   void initState() {
     super.initState();
     _availableColors = getIt<ColorPaletteProvider>().colors;
-    _backgroundColor = _availableColors.contains(Colors.white)
-        ? Colors.white
+    _backgroundColor = _availableColors.contains(colorWhite)
+        ? colorWhite
         : _availableColors.first;
     _textColor = _availableColors.firstWhere(
       (c) => c != _backgroundColor,
-      orElse: () => Colors.black,
+      orElse: () => colorBlack,
     );
   }
 
@@ -97,7 +98,7 @@ class TextFitEditorState extends State<TextFitEditor> {
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context)!;
     final Size canvasSize = _calculateCanvas(MediaQuery.sizeOf(context));
-    final double padding = 16;
+    final double padding = Dimens.spacingL;
     final double fontSize = _fitFontSize(
       _controller.text,
       canvasSize.width - padding * 2,
@@ -105,15 +106,15 @@ class TextFitEditorState extends State<TextFitEditor> {
       _align,
     );
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colorWhite,
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: colorWhite),
         titleSpacing: 0.0,
         backgroundColor: colorAccent,
         elevation: 0,
         title: Text(appLocalizations.textEditorTitle,
             style: const TextStyle(
-                color: Colors.white,
+                color: colorWhite,
                 fontSize: 13.8,
                 fontWeight: FontWeight.bold)),
         actions: [
@@ -123,21 +124,22 @@ class TextFitEditorState extends State<TextFitEditor> {
               if (!context.mounted) return;
               Navigator.pop(context, bytes);
             },
-            icon: const Icon(Icons.check, color: Colors.white),
+            icon: const Icon(Icons.check, color: colorWhite),
           ),
         ],
       ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+            padding: const EdgeInsets.fromLTRB(Dimens.spacingM, Dimens.spacingM,
+                Dimens.spacingM, Dimens.spacingS),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                    color: colorWhite,
+                    borderRadius: BorderRadius.circular(Dimens.radiusXl),
                     boxShadow: [
                       BoxShadow(
                         color: colorBlack.withValues(alpha: .06),
@@ -150,25 +152,27 @@ class TextFitEditorState extends State<TextFitEditor> {
                     controller: _controller,
                     maxLines: null,
                     onChanged: (_) => setState(() {}),
-                    style: const TextStyle(fontSize: 14),
+                    style: const TextStyle(fontSize: Dimens.fontSizeM),
                     decoration: InputDecoration(
                       hintText: appLocalizations.enterTextHint,
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 10),
+                          horizontal: Dimens.spacingM,
+                          vertical: Dimens.spacingMd),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(Dimens.radiusXl),
                         borderSide: BorderSide.none,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: Dimens.spacingMd),
                 Row(
                   children: [
                     Text(appLocalizations.text,
                         style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w600)),
-                    const SizedBox(width: 8),
+                            fontSize: Dimens.fontSizeS,
+                            fontWeight: FontWeight.w600)),
+                    const SizedBox(width: Dimens.spacingS),
                     Expanded(
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
@@ -176,11 +180,12 @@ class TextFitEditorState extends State<TextFitEditor> {
                           children: _availableColors.map((c) {
                             final bool selected = c == _textColor;
                             return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: Dimens.spacingXs),
                               child: InkWell(
                                 onTap: () => setState(() => _textColor = c),
-                                borderRadius: BorderRadius.circular(16),
+                                borderRadius:
+                                    BorderRadius.circular(Dimens.radiusXxl),
                                 child: Container(
                                   width: 26,
                                   height: 26,
@@ -188,10 +193,10 @@ class TextFitEditorState extends State<TextFitEditor> {
                                     color: c,
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: selected
-                                          ? colorAccent
-                                          : Colors.grey.shade300,
-                                      width: selected ? 2 : 1,
+                                      color: selected ? colorAccent : grey300,
+                                      width: selected
+                                          ? Dimens.borderWidthThick
+                                          : Dimens.borderWidthThin,
                                     ),
                                   ),
                                 ),
@@ -201,16 +206,16 @@ class TextFitEditorState extends State<TextFitEditor> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: Dimens.spacingS),
                     ToggleButtons(
                       isSelected: [
                         _align == TextAlign.left,
                         _align == TextAlign.center,
                         _align == TextAlign.right,
                       ],
-                      borderRadius: BorderRadius.circular(8),
-                      selectedColor: Colors.white,
-                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(Dimens.radiusM),
+                      selectedColor: colorWhite,
+                      color: colorBlack54,
                       fillColor: colorAccent,
                       constraints:
                           const BoxConstraints(minWidth: 36, minHeight: 32),
@@ -231,13 +236,14 @@ class TextFitEditorState extends State<TextFitEditor> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: Dimens.spacingMd),
                 Row(
                   children: [
                     Text(appLocalizations.backgroundLabel,
                         style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w600)),
-                    const SizedBox(width: 8),
+                            fontSize: Dimens.fontSizeS,
+                            fontWeight: FontWeight.w600)),
+                    const SizedBox(width: Dimens.spacingS),
                     Expanded(
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
@@ -245,8 +251,8 @@ class TextFitEditorState extends State<TextFitEditor> {
                           children: _availableColors.map((c) {
                             final bool selected = c == _backgroundColor;
                             return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: Dimens.spacingXs),
                               child: InkWell(
                                 onTap: () {
                                   setState(() {
@@ -259,7 +265,8 @@ class TextFitEditorState extends State<TextFitEditor> {
                                     }
                                   });
                                 },
-                                borderRadius: BorderRadius.circular(16),
+                                borderRadius:
+                                    BorderRadius.circular(Dimens.radiusXxl),
                                 child: Container(
                                   width: 26,
                                   height: 26,
@@ -267,10 +274,10 @@ class TextFitEditorState extends State<TextFitEditor> {
                                     color: c,
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: selected
-                                          ? colorAccent
-                                          : Colors.grey.shade300,
-                                      width: selected ? 2 : 1,
+                                      color: selected ? colorAccent : grey300,
+                                      width: selected
+                                          ? Dimens.borderWidthThick
+                                          : Dimens.borderWidthThin,
                                     ),
                                   ),
                                 ),
@@ -280,18 +287,19 @@ class TextFitEditorState extends State<TextFitEditor> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: Dimens.spacingS),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 6),
+                          horizontal: Dimens.spacingS,
+                          vertical: Dimens.spacingSm),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(8),
+                        color: grey100,
+                        borderRadius: BorderRadius.circular(Dimens.radiusM),
                       ),
                       child: Text(
                         '${_controller.text.length}',
                         style: const TextStyle(
-                            fontSize: 12, color: Colors.black54),
+                            fontSize: Dimens.fontSizeS, color: colorBlack54),
                       ),
                     ),
                   ],
@@ -302,10 +310,11 @@ class TextFitEditorState extends State<TextFitEditor> {
           Expanded(
             child: Center(
               child: Container(
-                padding: const EdgeInsets.all(0),
+                padding: EdgeInsets.zero,
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.grey.shade600, width: 1),
+                  color: colorWhite,
+                  border:
+                      Border.all(color: grey600, width: Dimens.borderWidthThin),
                   boxShadow: [
                     BoxShadow(
                       color: colorBlack.withValues(alpha: .08),

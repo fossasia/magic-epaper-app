@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
@@ -95,10 +96,10 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+      margin: const EdgeInsets.symmetric(horizontal: Dimens.spacingS),
       decoration: BoxDecoration(
         color: colorWhite,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(Dimens.radiusXl),
         boxShadow: [
           BoxShadow(
             color: colorBlack.withValues(alpha: 0.08),
@@ -109,7 +110,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(Dimens.spacingL),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -119,11 +120,11 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                 Row(
                   children: [
                     const Icon(Icons.apps, color: colorAccent, size: 22),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: Dimens.spacingS),
                     Text(
                       appLocalizations.writeAppLauncherData,
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: Dimens.fontSizeXl,
                         fontWeight: FontWeight.bold,
                         color: colorBlack,
                       ),
@@ -147,10 +148,10 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                     icon: Icon(
                       _isExpanded ? Icons.expand_less : Icons.expand_more,
                       color: colorAccent,
-                      size: 20,
+                      size: Dimens.iconSizeM,
                     ),
                     onPressed: () => setState(() => _isExpanded = !_isExpanded),
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(Dimens.spacingS),
                     constraints: const BoxConstraints(
                       minWidth: 36,
                       minHeight: 36,
@@ -160,13 +161,13 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
               ],
             ),
             if (widget.selectedApp != null) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(Dimens.spacingL),
                 decoration: BoxDecoration(
                   color: Colors.green[50],
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(Dimens.radiusL),
                   border: Border.all(
                     color: Colors.green.shade300.withValues(alpha: 0.5),
                     width: 1.5,
@@ -175,7 +176,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                 child: Row(
                   children: [
                     _buildAppIcon(widget.selectedApp!),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: Dimens.spacingM),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,16 +185,16 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                             widget.selectedApp!.appName,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              fontSize: 16,
+                              fontSize: Dimens.fontSizeL,
                               color: Colors.green.shade700,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: Dimens.spacingXs),
                           Text(
                             widget.selectedApp!.packageName,
                             style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
+                              fontSize: Dimens.fontSizeS,
+                              color: grey600,
                               height: 1.3,
                             ),
                           ),
@@ -206,10 +207,9 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                         color: colorWhite,
                       ),
                       child: IconButton(
-                        icon: const Icon(Icons.clear,
-                            color: Colors.grey, size: 18),
+                        icon: const Icon(Icons.clear, color: grey500, size: 18),
                         onPressed: () => widget.onAppSelected(null),
-                        padding: const EdgeInsets.all(4),
+                        padding: const EdgeInsets.all(Dimens.spacingXs),
                         constraints: const BoxConstraints(
                           minWidth: 28,
                           minHeight: 28,
@@ -219,7 +219,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
               _buildActionButton(
                 onPressed: !widget.isWriting ? widget.onWriteAppLauncher : null,
                 icon: widget.isWriting
@@ -238,13 +238,13 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
               ),
             ],
             if (_isExpanded) ...[
-              const SizedBox(height: 20),
+              const SizedBox(height: Dimens.spacingXl),
               _buildSearchSection(),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
               _buildAppsList(),
             ],
             if (widget.selectedApp == null && !_isExpanded) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
               _buildSelectButton(),
             ],
           ],
@@ -255,10 +255,10 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
 
   Widget _buildSearchSection() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(10),
+        color: grey50,
+        borderRadius: BorderRadius.circular(Dimens.radiusL),
         border: Border.all(color: mdGrey400.withValues(alpha: 0.2)),
       ),
       child: Column(
@@ -268,7 +268,8 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
             hintText: appLocalizations.searchApps,
             prefixIcon: Icons.search,
             suffixIcon: IconButton(
-              icon: const Icon(Icons.add, color: colorAccent, size: 20),
+              icon: const Icon(Icons.add,
+                  color: colorAccent, size: Dimens.iconSizeM),
               onPressed: () =>
                   setState(() => _showCustomInput = !_showCustomInput),
               tooltip: appLocalizations.customPackageName,
@@ -276,7 +277,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
             onChanged: _filterApps,
           ),
           if (_showCustomInput) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimens.spacingM),
             Row(
               children: [
                 Expanded(
@@ -286,13 +287,13 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                     prefixIcon: Icons.code,
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: Dimens.spacingS),
                 ElevatedButton(
                   onPressed: _addCustomApp,
                   child: Text(
                     appLocalizations.add,
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: Dimens.fontSizeM,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -310,8 +311,8 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
       return Container(
         height: 400,
         decoration: BoxDecoration(
-          color: Colors.grey[50],
-          borderRadius: BorderRadius.circular(10),
+          color: grey50,
+          borderRadius: BorderRadius.circular(Dimens.radiusL),
           border: Border.all(color: mdGrey400.withValues(alpha: 0.2)),
         ),
         child: const Center(
@@ -322,12 +323,12 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
                 valueColor: AlwaysStoppedAnimation<Color>(colorAccent),
                 strokeWidth: 2,
               ),
-              SizedBox(height: 12),
+              SizedBox(height: Dimens.spacingM),
               Text(
                 'Loading apps...',
                 style: TextStyle(
                   color: colorBlack,
-                  fontSize: 14,
+                  fontSize: Dimens.fontSizeM,
                 ),
               ),
             ],
@@ -340,21 +341,21 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
       return Container(
         height: 400,
         decoration: BoxDecoration(
-          color: Colors.grey[50],
-          borderRadius: BorderRadius.circular(10),
+          color: grey50,
+          borderRadius: BorderRadius.circular(Dimens.radiusL),
           border: Border.all(color: mdGrey400.withValues(alpha: 0.2)),
         ),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.search_off, color: Colors.grey, size: 48),
-              const SizedBox(height: 8),
+              const Icon(Icons.search_off, color: grey500, size: 48),
+              const SizedBox(height: Dimens.spacingS),
               Text(
                 appLocalizations.noAppsFound,
                 style: const TextStyle(
                   color: colorBlack,
-                  fontSize: 14,
+                  fontSize: Dimens.fontSizeM,
                 ),
               ),
             ],
@@ -366,14 +367,15 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
     return Container(
       height: 400,
       decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(10),
+        color: grey50,
+        borderRadius: BorderRadius.circular(Dimens.radiusL),
         border: Border.all(color: mdGrey400.withValues(alpha: 0.2)),
       ),
       child: ListView.separated(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(Dimens.spacingS),
         itemCount: _filteredApps.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 4),
+        separatorBuilder: (context, index) =>
+            const SizedBox(height: Dimens.spacingXs),
         itemBuilder: (context, index) {
           final app = _filteredApps[index];
           final isSelected = widget.selectedApp?.packageName == app.packageName;
@@ -382,7 +384,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
             decoration: BoxDecoration(
               color:
                   isSelected ? colorAccent.withValues(alpha: 0.1) : colorWhite,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(Dimens.radiusM),
               border: Border.all(
                 color: isSelected
                     ? colorAccent.withValues(alpha: 0.3)
@@ -390,29 +392,29 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
               ),
             ),
             child: ListTile(
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              contentPadding: const EdgeInsets.symmetric(
+                  horizontal: Dimens.spacingM, vertical: Dimens.spacingXs),
               leading: _buildAppIcon(app),
               title: Text(
                 app.appName,
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
-                  fontSize: 14,
+                  fontSize: Dimens.fontSizeM,
                   color: isSelected ? colorAccent : colorBlack,
                 ),
               ),
               subtitle: Text(
                 app.packageName,
                 style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
+                  fontSize: Dimens.fontSizeS,
+                  color: grey600,
                 ),
               ),
               trailing: isSelected
                   ? const Icon(
                       Icons.check_circle,
                       color: colorAccent,
-                      size: 20,
+                      size: Dimens.iconSizeM,
                     )
                   : null,
               onTap: () {
@@ -431,11 +433,11 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(Dimens.radiusM),
         color: Colors.transparent,
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(Dimens.radiusM),
         child: app.icon != null
             ? Image.memory(
                 app.icon!,
@@ -457,12 +459,12 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
       height: 40,
       decoration: BoxDecoration(
         color: colorAccent.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(Dimens.radiusM),
       ),
       child: const Icon(
         Icons.android,
         color: colorAccent,
-        size: 24,
+        size: Dimens.iconSizeL,
       ),
     );
   }
@@ -476,28 +478,29 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
   }) {
     return TextField(
       controller: controller,
-      style: const TextStyle(fontSize: 14),
+      style: const TextStyle(fontSize: Dimens.fontSizeM),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
-        prefixIcon: Icon(prefixIcon, color: colorAccent, size: 20),
+        hintStyle: TextStyle(color: grey500, fontSize: Dimens.fontSizeM),
+        prefixIcon:
+            Icon(prefixIcon, color: colorAccent, size: Dimens.iconSizeM),
         suffixIcon: suffixIcon,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
           borderSide: const BorderSide(color: mdGrey400),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
           borderSide: BorderSide(color: mdGrey400.withValues(alpha: 0.6)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
           borderSide: const BorderSide(color: colorAccent, width: 2),
         ),
         filled: true,
         fillColor: colorWhite,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+            horizontal: Dimens.spacingL, vertical: Dimens.spacingM),
       ),
       onChanged: onChanged,
     );
@@ -516,13 +519,13 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
         label: Text(
           label,
           style: const TextStyle(
-            fontSize: 14,
+            fontSize: Dimens.fontSizeM,
             fontWeight: FontWeight.w600,
           ),
         ),
         style: ElevatedButton.styleFrom(
-          disabledBackgroundColor: Colors.grey[300],
-          disabledForegroundColor: Colors.grey[600],
+          disabledBackgroundColor: grey300,
+          disabledForegroundColor: grey600,
         ),
       ),
     );
@@ -537,7 +540,7 @@ class _AppLauncherCardState extends State<AppLauncherCard> {
         label: Text(
           appLocalizations.selectApplication,
           style: const TextStyle(
-            fontSize: 14,
+            fontSize: Dimens.fontSizeM,
             fontWeight: FontWeight.w600,
             color: colorAccent,
           ),

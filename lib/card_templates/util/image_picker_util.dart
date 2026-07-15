@@ -1,41 +1,42 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:pro_image_editor/pro_image_editor.dart';
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/util/image_source_picker.dart';
 
 final ImagePicker _picker = ImagePicker();
 
-Future<File?> pickAndEditImage(
-  BuildContext context, {
-  ImageSource source = ImageSource.gallery,
-}) async {
+Future<File?> pickAndEditImage(BuildContext context) async {
+  final source = await chooseImageSource(context);
+  if (source == null) return null;
+
   final picked = await _picker.pickImage(source: source);
   if (picked == null) return null;
 
-  final Uint8List original = await picked.readAsBytes();
-  if (!context.mounted) return null;
-
-  final Uint8List? edited = await Navigator.of(context).push<Uint8List>(
-    MaterialPageRoute(
-      builder: (editorContext) => ProImageEditor.memory(
-        original,
-        callbacks: ProImageEditorCallbacks(
-          onImageEditingComplete: (Uint8List bytes) async {
-            Navigator.of(editorContext).pop(bytes);
-          },
-        ),
+  final cropped = await ImageCropper().cropImage(
+    sourcePath: picked.path,
+    compressFormat: ImageCompressFormat.png,
+    compressQuality: 100,
+    uiSettings: [
+      AndroidUiSettings(
+        toolbarTitle: 'Crop',
+        toolbarColor: colorAccent,
+        toolbarWidgetColor: colorWhite,
+        activeControlsWidgetColor: colorAccent,
+        backgroundColor: colorBlack,
+        initAspectRatio: CropAspectRatioPreset.original,
+        lockAspectRatio: false,
+        hideBottomControls: false,
       ),
-    ),
+      IOSUiSettings(
+        title: 'Crop',
+        aspectRatioLockEnabled: false,
+        resetAspectRatioEnabled: true,
+      ),
+    ],
   );
 
-  if (edited == null) return null;
-
-  final dir = await getTemporaryDirectory();
-  final file = File(
-    '${dir.path}/template_photo_${DateTime.now().millisecondsSinceEpoch}.png',
-  );
-  await file.writeAsBytes(edited);
-  return file;
+  if (cropped == null) return null;
+  return File(cropped.path);
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
@@ -26,29 +27,28 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      iconTheme: const IconThemeData(color: Colors.white),
+      iconTheme: const IconThemeData(color: colorWhite),
       backgroundColor: colorAccent,
       elevation: 0,
       title: Text(
         isDeleteMode
             ? appLocalizations.selectImagesToDelete
             : appLocalizations.imageLibrary,
-        style:
-            const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        style: const TextStyle(color: colorWhite, fontWeight: FontWeight.bold),
       ),
       actions: [
         if (isDeleteMode) ...[
           if (selectedCount > 0)
             Padding(
-              padding: const EdgeInsets.only(right: 8.0),
+              padding: const EdgeInsets.only(right: Dimens.spacingS),
               child: TextButton(
                 onPressed: onDeletePressed,
                 style: TextButton.styleFrom(
                   backgroundColor: colorAccent,
-                  foregroundColor: Colors.white,
+                  foregroundColor: colorWhite,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    side: const BorderSide(color: Colors.white, width: 1),
+                    borderRadius: BorderRadius.circular(Dimens.radiusM),
+                    side: const BorderSide(color: colorWhite, width: 1),
                   ),
                 ),
                 child: Text('${appLocalizations.delete} ($selectedCount)'),
@@ -65,7 +65,7 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
             tooltip: appLocalizations.deleteMode,
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
+            icon: const Icon(Icons.more_vert, color: colorWhite),
             onSelected: (value) {
               switch (value) {
                 case 'clear_all':
@@ -74,21 +74,21 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
               }
             },
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(Dimens.radiusXl),
             ),
-            color: Colors.white,
+            color: colorWhite,
             elevation: 8,
-            shadowColor: Colors.black.withValues(alpha: 0.1),
+            shadowColor: colorBlack.withValues(alpha: 0.1),
             offset: const Offset(0, 10),
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 'clear_all',
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.spacingL, vertical: Dimens.spacingS),
                 child: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(Dimens.spacingS),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(Dimens.radiusM),
                     color: Colors.red.withValues(alpha: 0.05),
                     border:
                         Border.all(color: Colors.red.withValues(alpha: 0.1)),
@@ -96,10 +96,10 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
                   child: Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(6),
+                        padding: const EdgeInsets.all(Dimens.spacingSm),
                         decoration: BoxDecoration(
                           color: Colors.red.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(Dimens.radiusS),
                         ),
                         child: const Icon(
                           Icons.delete_forever_outlined,
@@ -107,7 +107,7 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
                           size: 18,
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: Dimens.spacingM),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,17 +115,17 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
                             Text(
                               appLocalizations.clearAllData,
                               style: const TextStyle(
-                                fontSize: 14,
+                                fontSize: Dimens.fontSizeM,
                                 fontWeight: FontWeight.w600,
-                                color: Colors.black87,
+                                color: colorBlack87,
                               ),
                             ),
-                            const SizedBox(height: 2),
+                            const SizedBox(height: Dimens.spacingXxs),
                             Text(
                               appLocalizations.removeAllImages,
                               style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.shade600,
+                                fontSize: Dimens.fontSizeS,
+                                color: grey600,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/model/image_properties.dart';
 import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
 import 'package:magicepaperapp/image_library/services/image_operations_service.dart';
@@ -54,9 +55,9 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: colorWhite,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(Dimens.radiusXxl),
       ),
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -80,28 +81,29 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
 
   Widget _buildHeader(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: const BoxDecoration(
         color: colorAccent,
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       child: Row(
         children: [
-          const Icon(Icons.info_outline, color: Colors.white, size: 24),
-          const SizedBox(width: 8),
+          const Icon(Icons.info_outline,
+              color: colorWhite, size: Dimens.iconSizeL),
+          const SizedBox(width: Dimens.spacingS),
           const Expanded(
             child: Text(
               'Image Properties',
               style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
+                color: colorWhite,
+                fontSize: Dimens.fontSizeXl,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
           IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.close, color: Colors.white),
+            icon: const Icon(Icons.close, color: colorWhite),
           ),
         ],
       ),
@@ -110,25 +112,28 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
 
   Widget _buildContent(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+      padding: const EdgeInsets.only(
+          top: Dimens.spacingXl,
+          left: Dimens.spacingXl,
+          right: Dimens.spacingXl),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildImageThumbnail(),
-          const SizedBox(height: 10),
+          const SizedBox(height: Dimens.spacingMd),
           _buildSectionHeader('File Information'),
-          const SizedBox(height: 12),
+          const SizedBox(height: Dimens.spacingM),
           _buildFileInfoSection(),
-          const SizedBox(height: 10),
+          const SizedBox(height: Dimens.spacingMd),
           _buildSectionHeader('Image Properties'),
-          const SizedBox(height: 12),
+          const SizedBox(height: Dimens.spacingM),
           if (_isLoadingProperties)
             _buildLoadingSection()
           else if (_imageProperties != null)
             _buildImagePropertiesSection()
           else
             _buildErrorSection(),
-          const SizedBox(height: 20),
+          const SizedBox(height: Dimens.spacingXl),
         ],
       ),
     );
@@ -140,21 +145,21 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
         width: 120,
         height: 120,
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: grey300),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
           child: Image.file(
             File(widget.image.filePath),
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
               return Container(
-                color: Colors.grey.shade100,
+                color: grey100,
                 child: const Icon(
                   Icons.broken_image,
                   size: 40,
-                  color: Colors.grey,
+                  color: grey500,
                 ),
               );
             },
@@ -168,20 +173,20 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
     return Text(
       title,
       style: const TextStyle(
-        fontSize: 16,
+        fontSize: Dimens.fontSizeL,
         fontWeight: FontWeight.bold,
-        color: Colors.black87,
+        color: colorBlack87,
       ),
     );
   }
 
   Widget _buildFileInfoSection() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade200),
+        color: grey50,
+        borderRadius: BorderRadius.circular(Dimens.radiusM),
+        border: Border.all(color: grey200),
       ),
       child: Column(
         children: [
@@ -204,10 +209,10 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
     final properties = _imageProperties!;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
         color: Colors.blue.shade50,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(Dimens.radiusM),
         border: Border.all(color: Colors.blue.shade200),
       ),
       child: Column(
@@ -217,31 +222,31 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
               Expanded(
                   child: _buildPropertyCard(Icons.photo_size_select_actual,
                       'Resolution', properties.resolution)),
-              const SizedBox(width: 12),
+              const SizedBox(width: Dimens.spacingM),
               Expanded(
                   child: _buildPropertyCard(Icons.storage, 'File Size',
                       properties.fileSizeFormatted)),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: Dimens.spacingM),
           Row(
             children: [
               Expanded(
                   child: _buildPropertyCard(
                       Icons.image, 'Format', properties.format)),
-              const SizedBox(width: 12),
+              const SizedBox(width: Dimens.spacingM),
               Expanded(
                   child: _buildPropertyCard(
                       Icons.camera, 'Megapixels', properties.megapixels)),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: Dimens.spacingM),
           Row(
             children: [
               Expanded(
                   child: _buildPropertyCard(Icons.aspect_ratio, 'Aspect Ratio',
                       '${properties.aspectRatio.toStringAsFixed(2)}:1')),
-              const SizedBox(width: 12),
+              const SizedBox(width: Dimens.spacingM),
               Expanded(
                   child: _buildPropertyCard(Icons.straighten, 'Dimensions',
                       '${properties.width} × ${properties.height}')),
@@ -254,38 +259,38 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
 
   Widget _buildPropertyCard(IconData icon, String label, String value) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(Dimens.spacingM),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: Colors.grey.shade200),
+        color: colorWhite,
+        borderRadius: BorderRadius.circular(Dimens.radiusS),
+        border: Border.all(color: grey200),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(icon, size: 16, color: colorAccent),
-              const SizedBox(width: 6),
+              Icon(icon, size: Dimens.iconSizeS, color: colorAccent),
+              const SizedBox(width: Dimens.spacingSm),
               Expanded(
                 child: Text(
                   label,
                   style: TextStyle(
                     fontSize: 11,
-                    color: Colors.grey.shade600,
+                    color: grey600,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: Dimens.spacingXs),
           Text(
             value,
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: colorBlack87,
             ),
           ),
         ],
@@ -303,17 +308,17 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
             label,
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              color: Colors.grey.shade700,
+              color: grey700,
               fontSize: 13,
             ),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: Dimens.spacingM),
         Expanded(
           child: Text(
             value,
             style: const TextStyle(
-              color: Colors.black87,
+              color: colorBlack87,
               fontSize: 13,
             ),
           ),
@@ -325,11 +330,11 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
   Widget _buildLoadingSection() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(Dimens.spacingXxl),
         child: Column(
           children: [
             const CircularProgressIndicator(),
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimens.spacingM),
             Text(appLocalizations.loadingImageProperties),
           ],
         ),
@@ -339,16 +344,16 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
 
   Widget _buildErrorSection() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
         color: Colors.red.shade50,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(Dimens.radiusM),
         border: Border.all(color: Colors.red.shade200),
       ),
       child: Row(
         children: [
           Icon(Icons.error_outline, color: Colors.red.shade600),
-          const SizedBox(width: 8),
+          const SizedBox(width: Dimens.spacingS),
           const Expanded(
             child: Text(
               'Unable to load image properties',

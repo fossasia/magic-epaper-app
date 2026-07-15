@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:magicepaperapp/theme/colors.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
@@ -38,18 +40,18 @@ class TemplateCardPreview extends StatelessWidget {
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade300),
+            color: colorWhite,
+            borderRadius: BorderRadius.circular(Dimens.radiusXl),
+            border: Border.all(color: grey300),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.06),
+                color: colorBlack.withValues(alpha: 0.06),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
             ],
           ),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(Dimens.spacingL),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -57,7 +59,7 @@ class TemplateCardPreview extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _buildAvatar(),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: Dimens.spacingMd),
                   _buildQr(),
                 ],
               ),
@@ -73,12 +75,12 @@ class TemplateCardPreview extends StatelessWidget {
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 0.3,
-                        color: hasTitle ? Colors.black : Colors.grey.shade400,
+                        color: hasTitle ? colorBlack : grey400,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: Dimens.spacingS),
                     ...fields.map(_buildInfoRow),
                   ],
                 ),
@@ -96,13 +98,13 @@ class TemplateCardPreview extends StatelessWidget {
       height: 70,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.grey.shade100,
-        border: Border.all(color: Colors.grey.shade300),
+        color: grey100,
+        border: Border.all(color: grey300),
       ),
       clipBehavior: Clip.antiAlias,
       child: photo != null
           ? Image.file(photo!, fit: BoxFit.cover)
-          : Icon(Icons.person_outline, size: 34, color: Colors.grey.shade400),
+          : Icon(Icons.person_outline, size: 34, color: grey400),
     );
   }
 
@@ -111,9 +113,9 @@ class TemplateCardPreview extends StatelessWidget {
       width: 64,
       height: 64,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: Colors.grey.shade300),
+        color: colorWhite,
+        borderRadius: BorderRadius.circular(Dimens.radiusS),
+        border: Border.all(color: grey300),
       ),
       clipBehavior: Clip.antiAlias,
       child: qrData.isNotEmpty
@@ -125,14 +127,14 @@ class TemplateCardPreview extends StatelessWidget {
                 drawText: false,
               ),
             )
-          : Icon(Icons.qr_code_2, size: 32, color: Colors.grey.shade400),
+          : Icon(Icons.qr_code_2, size: Dimens.iconSizeXl, color: grey400),
     );
   }
 
   Widget _buildInfoRow(TemplateInfoField field) {
     final bool hasValue = field.value.trim().isNotEmpty;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.only(bottom: Dimens.spacingXs),
       child: Text.rich(
         TextSpan(
           children: [
@@ -140,7 +142,7 @@ class TemplateCardPreview extends StatelessWidget {
               text: field.prefix,
               style: TextStyle(
                 fontSize: 12.5,
-                color: Colors.grey.shade600,
+                color: grey600,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -150,7 +152,7 @@ class TemplateCardPreview extends StatelessWidget {
                   : appLocalizations.emptyFieldPlaceholder,
               style: TextStyle(
                 fontSize: 12.5,
-                color: hasValue ? Colors.black : Colors.grey.shade400,
+                color: hasValue ? colorBlack : grey400,
                 fontWeight: FontWeight.w600,
               ),
             ),

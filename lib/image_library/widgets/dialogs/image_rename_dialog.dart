@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
@@ -39,13 +40,13 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Container(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(Dimens.spacingXxl),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          color: colorWhite,
+          borderRadius: BorderRadius.circular(Dimens.radiusRound),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
+              color: colorBlack.withValues(alpha: 0.1),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -56,9 +57,9 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
-            const SizedBox(height: 24),
+            const SizedBox(height: Dimens.spacingXxl),
             _buildTextFieldSection(context),
-            const SizedBox(height: 32),
+            const SizedBox(height: Dimens.spacingXxxl),
             _buildActionButtons(context),
           ],
         ),
@@ -70,18 +71,18 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(Dimens.spacingM),
           decoration: BoxDecoration(
             color: colorAccent.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(Dimens.radiusXl),
           ),
           child: const Icon(
             Icons.edit_outlined,
             color: colorAccent,
-            size: 24,
+            size: Dimens.iconSizeL,
           ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: Dimens.spacingL),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,17 +90,17 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
               Text(
                 appLocalizations.renameImage,
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: Dimens.fontSizeXxl,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: colorBlack87,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: Dimens.spacingXs),
               Text(
                 appLocalizations.enterNewNameForImage,
                 style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
+                  fontSize: Dimens.fontSizeM,
+                  color: grey500,
                 ),
               ),
             ],
@@ -117,12 +118,12 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
           Text(
             appLocalizations.imageName,
             style: const TextStyle(
-              fontSize: 14,
+              fontSize: Dimens.fontSizeM,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: colorBlack87,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: Dimens.spacingS),
           TextField(
             controller: _controller,
             autofocus: true,
@@ -131,7 +132,7 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
               hintText: appLocalizations.enterImageName,
               prefixIcon: const Icon(
                 Icons.image_outlined,
-                color: Colors.grey,
+                color: grey500,
               ),
             ),
             textCapitalization: TextCapitalization.words,
@@ -151,34 +152,34 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
             child: Text(
               appLocalizations.cancel,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: Dimens.fontSizeL,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: Dimens.spacingM),
         Expanded(
           child: ElevatedButton(
             onPressed: () => _handleRename(context),
             style: ElevatedButton.styleFrom(
               backgroundColor: colorAccent,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              foregroundColor: colorWhite,
+              padding: const EdgeInsets.symmetric(vertical: Dimens.spacingL),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(Dimens.radiusXl),
               ),
               elevation: 0,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.check, size: 20),
-                const SizedBox(width: 8),
+                const Icon(Icons.check, size: Dimens.iconSizeM),
+                const SizedBox(width: Dimens.spacingS),
                 Text(
                   appLocalizations.rename,
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: Dimens.fontSizeL,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

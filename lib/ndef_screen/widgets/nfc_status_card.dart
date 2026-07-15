@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
@@ -23,10 +24,10 @@ class NFCStatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+      margin: const EdgeInsets.symmetric(horizontal: Dimens.spacingS),
       decoration: BoxDecoration(
         color: colorWhite,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(Dimens.radiusXl),
         boxShadow: [
           BoxShadow(
             color: colorBlack.withValues(alpha: 0.08),
@@ -37,7 +38,7 @@ class NFCStatusCard extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(Dimens.spacingL),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -51,11 +52,11 @@ class NFCStatusCard extends StatelessWidget {
                       color: colorAccent,
                       size: 22,
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: Dimens.spacingS),
                     Text(
                       appLocalizations.nfcStatus,
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: Dimens.fontSizeXl,
                         fontWeight: FontWeight.bold,
                         color: colorBlack,
                       ),
@@ -79,11 +80,11 @@ class NFCStatusCard extends StatelessWidget {
                     icon: const Icon(
                       Icons.refresh,
                       color: colorAccent,
-                      size: 20,
+                      size: Dimens.iconSizeM,
                     ),
                     onPressed: onRefresh,
                     tooltip: appLocalizations.refreshNfcStatus,
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(Dimens.spacingS),
                     constraints: const BoxConstraints(
                       minWidth: 36,
                       minHeight: 36,
@@ -92,13 +93,13 @@ class NFCStatusCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: Dimens.spacingL),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(Dimens.spacingL),
               decoration: BoxDecoration(
                 color: _getStatusBackgroundColor(),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(Dimens.radiusL),
                 border: Border.all(
                   color: NFCAvailabilityService.getAvailabilityColor(
                     availability,
@@ -109,22 +110,22 @@ class NFCStatusCard extends StatelessWidget {
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(Dimens.spacingS),
                     decoration: BoxDecoration(
                       color: NFCAvailabilityService.getAvailabilityColor(
                         availability,
                       ).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(Dimens.radiusM),
                     ),
                     child: Icon(
                       NFCAvailabilityService.getAvailabilityIcon(availability),
                       color: NFCAvailabilityService.getAvailabilityColor(
                         availability,
                       ),
-                      size: 24,
+                      size: Dimens.iconSizeL,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: Dimens.spacingM),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,18 +136,18 @@ class NFCStatusCard extends StatelessWidget {
                           ),
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            fontSize: 16,
+                            fontSize: Dimens.fontSizeL,
                             color: NFCAvailabilityService.getAvailabilityColor(
                               availability,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: Dimens.spacingXs),
                         Text(
                           _getStatusDescription(),
                           style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
+                            fontSize: Dimens.fontSizeS,
+                            color: grey600,
                             height: 1.3,
                           ),
                         ),

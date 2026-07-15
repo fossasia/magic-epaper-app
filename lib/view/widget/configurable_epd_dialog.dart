@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/color_util.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
@@ -78,109 +80,109 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
         name: 'Waveshare 1.54" B/W/R',
         width: 200,
         height: 200,
-        colors: [Colors.white, Colors.black, Colors.red]),
+        colors: [colorWhite, colorBlack, Colors.red]),
     DisplayPreset(
         name: 'Waveshare 2.13" B/W',
         width: 122,
         height: 250,
-        colors: [Colors.white, Colors.black]),
+        colors: [colorWhite, colorBlack]),
     DisplayPreset(
         name: 'Waveshare 2.13" B/W/R',
         width: 104,
         height: 212,
-        colors: [Colors.white, Colors.black, Colors.red]),
+        colors: [colorWhite, colorBlack, Colors.red]),
     DisplayPreset(
         name: 'Waveshare 2.7" B/W/R',
         width: 176,
         height: 264,
-        colors: [Colors.white, Colors.black, Colors.red]),
+        colors: [colorWhite, colorBlack, Colors.red]),
     DisplayPreset(
         name: 'Waveshare 2.9" B/W/Y',
         width: 128,
         height: 296,
-        colors: [Colors.white, Colors.black, Colors.yellow]),
+        colors: [colorWhite, colorBlack, Colors.yellow]),
     DisplayPreset(
         name: 'Waveshare 4.2" B/W/R',
         width: 300,
         height: 400,
-        colors: [Colors.white, Colors.black, Colors.red]),
+        colors: [colorWhite, colorBlack, Colors.red]),
     DisplayPreset(
         name: 'Waveshare 5.83" B/W/R',
         width: 480,
         height: 648,
-        colors: [Colors.white, Colors.black, Colors.red]),
+        colors: [colorWhite, colorBlack, Colors.red]),
     DisplayPreset(
         name: 'Waveshare 7.5" B/W/R',
         width: 480,
         height: 800,
-        colors: [Colors.white, Colors.black, Colors.red]),
+        colors: [colorWhite, colorBlack, Colors.red]),
     DisplayPreset(
         name: 'Good Display 0.97" B/W/R',
         width: 88,
         height: 184,
-        colors: [Colors.white, Colors.black, Colors.red]),
+        colors: [colorWhite, colorBlack, Colors.red]),
     DisplayPreset(
         name: 'Good Display 1.54" B/W/R/Y',
         width: 152,
         height: 152,
-        colors: [Colors.white, Colors.black, Colors.red, Colors.yellow]),
+        colors: [colorWhite, colorBlack, Colors.red, Colors.yellow]),
     DisplayPreset(
         name: 'Good Display 2.13" B/W/R',
         width: 122,
         height: 250,
-        colors: [Colors.white, Colors.black, Colors.red]),
+        colors: [colorWhite, colorBlack, Colors.red]),
     DisplayPreset(
         name: 'Good Display 2.66" B/W/R',
         width: 152,
         height: 296,
-        colors: [Colors.white, Colors.black, Colors.red]),
+        colors: [colorWhite, colorBlack, Colors.red]),
     DisplayPreset(
         name: 'Good Display 2.7" B/W/R',
         width: 176,
         height: 264,
-        colors: [Colors.white, Colors.black, Colors.red]),
+        colors: [colorWhite, colorBlack, Colors.red]),
     DisplayPreset(
         name: 'Good Display 2.9" B/W/R',
         width: 128,
         height: 296,
-        colors: [Colors.white, Colors.black, Colors.red]),
+        colors: [colorWhite, colorBlack, Colors.red]),
     DisplayPreset(
         name: 'Good Display 4.2" B/W/R',
         width: 300,
         height: 400,
-        colors: [Colors.white, Colors.black, Colors.red]),
+        colors: [colorWhite, colorBlack, Colors.red]),
     DisplayPreset(
         name: 'Good Display 5.83" B/W/Y',
         width: 448,
         height: 600,
-        colors: [Colors.white, Colors.black, Colors.yellow]),
+        colors: [colorWhite, colorBlack, Colors.yellow]),
     DisplayPreset(
         name: 'Good Display 7.5" B/W/R',
         width: 480,
         height: 800,
-        colors: [Colors.white, Colors.black, Colors.red]),
+        colors: [colorWhite, colorBlack, Colors.red]),
     DisplayPreset(
         name: 'Good Display 10.2" B/W/R',
         width: 640,
         height: 960,
-        colors: [Colors.white, Colors.black, Colors.red]),
+        colors: [colorWhite, colorBlack, Colors.red]),
     DisplayPreset(
         name: 'Good Display 12.48" B/W/R',
         width: 984,
         height: 1304,
-        colors: [Colors.white, Colors.black, Colors.red]),
+        colors: [colorWhite, colorBlack, Colors.red]),
     DisplayPreset(
         name: 'Good Display 13.3" B/W/R',
         width: 680,
         height: 960,
-        colors: [Colors.white, Colors.black, Colors.red]),
+        colors: [colorWhite, colorBlack, Colors.red]),
     DisplayPreset(
         name: 'Good Display 4" Multicolor',
         width: 400,
         height: 600,
         colors: [
-          Colors.white,
-          Colors.black,
+          colorWhite,
+          colorBlack,
           Colors.red,
           Colors.green,
           Colors.blue,
@@ -191,8 +193,8 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
         width: 480,
         height: 800,
         colors: [
-          Colors.white,
-          Colors.black,
+          colorWhite,
+          colorBlack,
           Colors.red,
           Colors.green,
           Colors.blue,
@@ -203,8 +205,8 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
         width: 1200,
         height: 1600,
         colors: [
-          Colors.white,
-          Colors.black,
+          colorWhite,
+          colorBlack,
           Colors.red,
           Colors.green,
           Colors.blue,
@@ -215,8 +217,8 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
         width: 1440,
         height: 2560,
         colors: [
-          Colors.white,
-          Colors.black,
+          colorWhite,
+          colorBlack,
           Colors.red,
           Colors.green,
           Colors.blue,
@@ -316,7 +318,7 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
   }
 
   void _removeColor(Color color) {
-    if (color == Colors.black || color == Colors.white) return;
+    if (color == colorBlack || color == colorWhite) return;
     setState(() {
       _currentColors.removeWhere((c) => c.toARGB32() == color.toARGB32());
     });
@@ -351,7 +353,7 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                     InputDecoration(labelText: appLocalizations.displayPreset),
                 isExpanded: true,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
               Row(
                 children: [
                   Expanded(
@@ -368,7 +370,7 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                           : null,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: Dimens.spacingM),
                   Expanded(
                     child: TextFormField(
                       controller: _heightController,
@@ -385,13 +387,13 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacingL),
               Text(appLocalizations.colorsLabel,
                   style: Theme.of(context).textTheme.titleSmall),
-              const SizedBox(height: 8),
+              const SizedBox(height: Dimens.spacingS),
               Wrap(
-                spacing: 8,
-                runSpacing: 4,
+                spacing: Dimens.spacingS,
+                runSpacing: Dimens.spacingXs,
                 children: _currentColors.map((color) {
                   return Chip(
                     avatar: CircleAvatar(backgroundColor: color, radius: 12),
@@ -401,11 +403,11 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
                     ),
                     backgroundColor: color.withAlpha(30),
                     onDeleted: (_isCustom &&
-                            color != Colors.white &&
-                            color != Colors.black)
+                            color != colorWhite &&
+                            color != colorBlack)
                         ? () => _removeColor(color)
                         : null,
-                    deleteIcon: const Icon(Icons.close, size: 16),
+                    deleteIcon: const Icon(Icons.close, size: Dimens.iconSizeS),
                   );
                 }).toList(),
               ),
@@ -415,16 +417,16 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2.0),
+          padding: const EdgeInsets.symmetric(vertical: Dimens.spacingXxs),
           child: Wrap(
-            spacing: 8,
-            runSpacing: 4,
+            spacing: Dimens.spacingS,
+            runSpacing: Dimens.spacingXs,
             alignment: WrapAlignment.spaceBetween,
             children: [
               if (_isCustom)
                 ElevatedButton.icon(
                   onPressed: _addColor,
-                  icon: const Icon(Icons.add, size: 16),
+                  icon: const Icon(Icons.add, size: Dimens.iconSizeS),
                   label: Text(appLocalizations.addColor),
                 ),
               OutlinedButton(

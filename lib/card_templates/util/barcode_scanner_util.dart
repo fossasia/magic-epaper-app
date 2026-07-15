@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
@@ -68,11 +69,11 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: colorBlack,
       appBar: AppBar(
         title: Text(appLocalizations.scanCode),
         backgroundColor: colorAccent,
-        foregroundColor: Colors.white,
+        foregroundColor: colorWhite,
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () => Navigator.of(context).pop(),
@@ -89,8 +90,8 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
             width: 240,
             height: 240,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.white, width: 3),
-              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: colorWhite, width: 3),
+              borderRadius: BorderRadius.circular(Dimens.radiusXxl),
             ),
           ),
           Positioned(
@@ -103,22 +104,24 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                 Text(
                   appLocalizations.pointCameraAtCode,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                  style: const TextStyle(
+                      color: colorWhite, fontSize: Dimens.fontSizeL),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: Dimens.spacingL),
                 OutlinedButton.icon(
                   onPressed: _scanFromGallery,
                   icon: const Icon(Icons.photo_library_outlined,
-                      color: Colors.white),
+                      color: colorWhite),
                   label: Text(
                     appLocalizations.scanFromGallery,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(color: colorWhite),
                   ),
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.white),
+                    side: const BorderSide(color: colorWhite),
                     backgroundColor: const Color.fromRGBO(0, 0, 0, 0.4),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
+                        horizontal: Dimens.spacingXl,
+                        vertical: Dimens.spacingM),
                   ),
                 ),
               ],

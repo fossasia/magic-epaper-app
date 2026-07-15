@@ -17,18 +17,25 @@ class EpdUtils {
         return Gdey037z03();
       case 'GDEY037T03':
         return Gdey037z03BW();
+      case '17746':
       case 'waveshare-2.9':
         return Waveshare2in9();
+      case '13339':
       case 'waveshare-2.9b':
         return Waveshare2in9b();
+      case '17745':
       case 'waveshare-2.13':
         return Waveshare2in13();
+      case '18136':
       case 'waveshare-2.7':
         return Waveshare2in7();
+      case '17341':
       case 'waveshare-4.2':
         return Waveshare4in2();
+      case '17675':
       case 'waveshare-7.5':
         return Waveshare7in5();
+      case '18082':
       case 'waveshare-7.5-hd':
         return Waveshare7in5HD();
       case 'GDEQ031T10':

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
@@ -57,7 +58,7 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
     return Container(
       color: colorWhite,
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(Dimens.spacingS),
         child: Column(
           children: [
             _buildCard(
@@ -67,7 +68,7 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                     initialData: widget.vCardData,
                     onVCardChanged: widget.onVCardChanged,
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: Dimens.spacingL),
                   _buildActionButton(
                     onPressed: widget.isWriting ? null : widget.onWriteVCard,
                     icon: widget.isWriting
@@ -87,13 +88,13 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: Dimens.spacingL),
             _buildCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildSectionTitle(appLocalizations.writeNdefRecords),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: Dimens.spacingXl),
                   _buildRecordSection(
                     title: appLocalizations.textRecord,
                     icon: Icons.text_fields,
@@ -105,7 +106,7 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                           prefixIcon: Icons.text_format,
                           maxLines: 2,
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: Dimens.spacingM),
                         _buildActionButton(
                           onPressed: (widget.isWriting ||
                                   widget.textValue.trim().isEmpty)
@@ -129,7 +130,7 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: Dimens.spacingXl),
                   _buildRecordSection(
                     title: appLocalizations.urlRecord,
                     icon: Icons.link,
@@ -140,7 +141,7 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                           hintText: appLocalizations.enterUrl,
                           prefixIcon: Icons.link,
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: Dimens.spacingM),
                         _buildActionButton(
                           onPressed: (widget.isWriting ||
                                   widget.urlValue.trim().isEmpty)
@@ -164,7 +165,7 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: Dimens.spacingXl),
                   _buildRecordSection(
                     title: appLocalizations.wifiRecord,
                     icon: Icons.wifi,
@@ -175,14 +176,14 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                           hintText: appLocalizations.wifiNetworkNameSsid,
                           prefixIcon: Icons.wifi,
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: Dimens.spacingM),
                         _buildTextField(
                           onChanged: widget.onWifiPasswordChanged,
                           hintText: appLocalizations.wifiPassword,
                           prefixIcon: Icons.lock,
                           obscureText: true,
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: Dimens.spacingM),
                         _buildActionButton(
                           onPressed: (widget.isWriting ||
                                   widget.wifiSSIDValue.trim().isEmpty)
@@ -206,7 +207,7 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: Dimens.spacingXl),
                   _buildRecordSection(
                     title: appLocalizations.writeAllRecords,
                     icon: Icons.layers,
@@ -217,11 +218,11 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                           appLocalizations.writeAllNonEmptyFieldsDescription,
                           style: TextStyle(
                             fontSize: 13,
-                            color: Colors.grey[600],
+                            color: grey600,
                             height: 1.4,
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: Dimens.spacingM),
                         _buildActionButton(
                           onPressed:
                               widget.isWriting ? null : widget.onWriteMultiple,
@@ -246,7 +247,7 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: Dimens.spacingXl),
           ],
         ),
       ),
@@ -258,7 +259,7 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
       width: double.infinity,
       decoration: BoxDecoration(
         color: colorWhite,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(Dimens.radiusXl),
         boxShadow: [
           BoxShadow(
             color: colorBlack.withValues(alpha: 0.08),
@@ -269,7 +270,7 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(Dimens.spacingL),
         child: child,
       ),
     );
@@ -279,7 +280,7 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
     return Text(
       title,
       style: const TextStyle(
-        fontSize: 18,
+        fontSize: Dimens.fontSizeXl,
         fontWeight: FontWeight.bold,
         color: colorBlack,
       ),
@@ -292,10 +293,10 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
     required Widget child,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(8),
+        color: grey50,
+        borderRadius: BorderRadius.circular(Dimens.radiusM),
         border: Border.all(color: mdGrey400.withValues(alpha: 0.3)),
       ),
       child: Column(
@@ -303,19 +304,19 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
         children: [
           Row(
             children: [
-              Icon(icon, size: 20, color: colorAccent),
-              const SizedBox(width: 8),
+              Icon(icon, size: Dimens.iconSizeM, color: colorAccent),
+              const SizedBox(width: Dimens.spacingS),
               Text(
                 title,
                 style: const TextStyle(
                   fontWeight: FontWeight.w600,
-                  fontSize: 16,
+                  fontSize: Dimens.fontSizeL,
                   color: colorBlack,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: Dimens.spacingM),
           child,
         ],
       ),
@@ -334,27 +335,28 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
       maxLines: maxLines,
       minLines: 1,
       obscureText: obscureText,
-      style: const TextStyle(fontSize: 14),
+      style: const TextStyle(fontSize: Dimens.fontSizeM),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
-        prefixIcon: Icon(prefixIcon, color: colorAccent, size: 20),
+        hintStyle: TextStyle(color: grey500, fontSize: Dimens.fontSizeM),
+        prefixIcon:
+            Icon(prefixIcon, color: colorAccent, size: Dimens.iconSizeM),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
           borderSide: const BorderSide(color: mdGrey400),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
           borderSide: BorderSide(color: mdGrey400.withValues(alpha: 0.6)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
           borderSide: const BorderSide(color: colorAccent, width: 2),
         ),
         filled: true,
         fillColor: colorWhite,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+            horizontal: Dimens.spacingL, vertical: Dimens.spacingM),
       ),
     );
   }
@@ -372,13 +374,13 @@ class _NFCWriteCardState extends State<NFCWriteCard> {
         label: Text(
           label,
           style: const TextStyle(
-            fontSize: 14,
+            fontSize: Dimens.fontSizeM,
             fontWeight: FontWeight.w600,
           ),
         ),
         style: ElevatedButton.styleFrom(
-          disabledBackgroundColor: Colors.grey[300],
-          disabledForegroundColor: Colors.grey[600],
+          disabledBackgroundColor: grey300,
+          disabledForegroundColor: grey600,
         ),
       ),
     );

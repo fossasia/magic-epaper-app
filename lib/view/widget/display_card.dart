@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/color_util.dart';
@@ -59,9 +60,9 @@ class DisplayCard extends StatelessWidget {
       ),
       child: Container(
         width: double.infinity,
-        color: Colors.white,
+        color: colorWhite,
         child: Padding(
-          padding: EdgeInsets.all(4.0 * scale),
+          padding: EdgeInsets.all(Dimens.spacingXs * scale),
           child: Image.asset(
             display.imgPath,
             fit: BoxFit.contain,
@@ -71,7 +72,7 @@ class DisplayCard extends StatelessWidget {
                 child: Icon(
                   Icons.display_settings,
                   size: 60 * scale,
-                  color: Colors.grey.shade400,
+                  color: grey400,
                 ),
               );
             },
@@ -83,16 +84,17 @@ class DisplayCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       highlightColor: Colors.redAccent,
-      borderRadius: BorderRadius.circular(12 * scale),
+      borderRadius: BorderRadius.circular(Dimens.radiusXl * scale),
       splashColor: Colors.redAccent.withAlpha(51),
       child: Card(
-        color: Colors.white,
+        color: colorWhite,
         elevation: isSelected ? 4 : 1,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12 * scale),
+          borderRadius: BorderRadius.circular(Dimens.radiusXl * scale),
           side: BorderSide(
-            color: isSelected ? colorPrimary : Colors.grey.shade300,
-            width: isSelected ? 2.0 : 1.0,
+            color: isSelected ? colorPrimary : grey300,
+            width:
+                isSelected ? Dimens.borderWidthThick : Dimens.borderWidthThin,
           ),
         ),
         child: Column(
@@ -107,7 +109,7 @@ class DisplayCard extends StatelessWidget {
                     child: imageArea,
                   ),
             Padding(
-              padding: EdgeInsets.all(12.0 * scale),
+              padding: EdgeInsets.all(Dimens.spacingM * scale),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -117,18 +119,18 @@ class DisplayCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16 * scale,
+                      fontSize: Dimens.fontSizeL * scale,
                     ),
                   ),
-                  SizedBox(height: 8 * scale),
+                  SizedBox(height: Dimens.spacingS * scale),
                   if (chips != null && chips.isNotEmpty) ...[
                     Wrap(
-                      spacing: 4 * scale,
-                      runSpacing: 4 * scale,
+                      spacing: Dimens.spacingXs * scale,
+                      runSpacing: Dimens.spacingXs * scale,
                       children:
                           chips.map((chip) => _buildChip(chip, scale)).toList(),
                     ),
-                    SizedBox(height: 8 * scale),
+                    SizedBox(height: Dimens.spacingS * scale),
                   ],
                   Row(
                     children: display.colors
@@ -136,7 +138,7 @@ class DisplayCard extends StatelessWidget {
                             (color) => ColorDot(color: color, size: 12 * scale))
                         .toList(),
                   ),
-                  SizedBox(height: 4 * scale),
+                  SizedBox(height: Dimens.spacingXs * scale),
                   Text(
                     display.colors
                         .map(ColorUtils.getColorDisplayName)
@@ -144,11 +146,11 @@ class DisplayCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontSize: 10 * scale,
-                      color: Colors.grey,
+                      fontSize: Dimens.fontSizeXs * scale,
+                      color: grey500,
                     ),
                   ),
-                  SizedBox(height: 8 * scale),
+                  SizedBox(height: Dimens.spacingS * scale),
                   if (display is WaveshareNfcDisplay) ...[
                     _buildSpecRow(
                         appLocalizations.skuSpecLabel, display.modelId, scale),
@@ -175,10 +177,11 @@ class DisplayCard extends StatelessWidget {
 
   Widget _buildChip(String label, double scale) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8 * scale, vertical: 3 * scale),
+      padding: EdgeInsets.symmetric(
+          horizontal: Dimens.spacingS * scale, vertical: 3 * scale),
       decoration: BoxDecoration(
         color: colorPrimary.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12 * scale),
+        borderRadius: BorderRadius.circular(Dimens.radiusXl * scale),
         border: Border.all(
           color: colorPrimary.withValues(alpha: 0.3),
           width: 0.8,
@@ -197,7 +200,7 @@ class DisplayCard extends StatelessWidget {
 
   Widget _buildSpecRow(String label, String value, double scale) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 4 * scale),
+      padding: EdgeInsets.only(bottom: Dimens.spacingXs * scale),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -206,15 +209,17 @@ class DisplayCard extends StatelessWidget {
               label,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 10 * scale, color: Colors.grey),
+              style: TextStyle(
+                  fontSize: Dimens.fontSizeXs * scale, color: grey500),
             ),
           ),
-          SizedBox(width: 8 * scale),
+          SizedBox(width: Dimens.spacingS * scale),
           Flexible(
             child: Text(
               value,
-              style:
-                  TextStyle(fontSize: 10 * scale, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  fontSize: Dimens.fontSizeXs * scale,
+                  fontWeight: FontWeight.w500),
               softWrap: true,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

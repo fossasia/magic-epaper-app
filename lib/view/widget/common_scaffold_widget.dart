@@ -27,7 +27,7 @@ class CommonScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colorWhite,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         leading: Padding(
@@ -37,7 +37,7 @@ class CommonScaffold extends StatelessWidget {
                   onPressed: () => Navigator.of(context).maybePop(),
                   icon: const Icon(
                     Icons.arrow_back,
-                    color: Colors.white,
+                    color: colorWhite,
                   ),
                 )
               : Builder(builder: (context) {
@@ -47,7 +47,7 @@ class CommonScaffold extends StatelessWidget {
                     },
                     icon: const Icon(
                       Icons.menu,
-                      color: Colors.white,
+                      color: colorWhite,
                     ),
                   );
                 }),
@@ -57,7 +57,7 @@ class CommonScaffold extends StatelessWidget {
         title: titleWidget ??
             Text(
               title,
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: colorWhite),
             ),
         toolbarHeight: toolbarHeight,
         actions: actions,
