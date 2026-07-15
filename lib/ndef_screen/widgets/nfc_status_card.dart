@@ -147,7 +147,7 @@ class NFCStatusCard extends StatelessWidget {
                           _getStatusDescription(),
                           style: TextStyle(
                             fontSize: Dimens.fontSizeS,
-                            color: Colors.grey[600],
+                            color: grey600,
                             height: 1.3,
                           ),
                         ),

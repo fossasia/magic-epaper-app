@@ -69,11 +69,11 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: colorBlack,
       appBar: AppBar(
         title: Text(appLocalizations.scanCode),
         backgroundColor: colorAccent,
-        foregroundColor: Colors.white,
+        foregroundColor: colorWhite,
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () => Navigator.of(context).pop(),
@@ -90,7 +90,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
             width: 240,
             height: 240,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.white, width: 3),
+              border: Border.all(color: colorWhite, width: 3),
               borderRadius: BorderRadius.circular(Dimens.radiusXxl),
             ),
           ),
@@ -105,19 +105,19 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                   appLocalizations.pointCameraAtCode,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
-                      color: Colors.white, fontSize: Dimens.fontSizeL),
+                      color: colorWhite, fontSize: Dimens.fontSizeL),
                 ),
                 const SizedBox(height: Dimens.spacingL),
                 OutlinedButton.icon(
                   onPressed: _scanFromGallery,
                   icon: const Icon(Icons.photo_library_outlined,
-                      color: Colors.white),
+                      color: colorWhite),
                   label: Text(
                     appLocalizations.scanFromGallery,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(color: colorWhite),
                   ),
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.white),
+                    side: const BorderSide(color: colorWhite),
                     backgroundColor: const Color.fromRGBO(0, 0, 0, 0.4),
                     padding: const EdgeInsets.symmetric(
                         horizontal: Dimens.spacingXl,
