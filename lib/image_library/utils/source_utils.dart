@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 
 class SourceUtils {
   static Color getSourceColor(String source) {
@@ -8,7 +9,7 @@ class SourceUtils {
       case 'editor':
         return Colors.orange;
       default:
-        return Colors.grey;
+        return grey500;
     }
   }
 

@@ -21,6 +21,7 @@ abstract class WaveshareNfcDisplay extends DisplayDevice {
         ImageProcessing.bwAtkinsonDither,
         ImageProcessing.bwHalftoneDither,
         ImageProcessing.bwThreshold,
+        ImageProcessing.bwBayerDither,
       ];
 
   @override

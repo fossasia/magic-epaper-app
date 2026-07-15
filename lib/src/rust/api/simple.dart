@@ -30,5 +30,6 @@ enum DitherMethod {
   atkinson,
   threshold,
   halftone,
+  bayer,
   ;
 }

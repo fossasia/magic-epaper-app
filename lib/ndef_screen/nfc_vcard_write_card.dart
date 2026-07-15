@@ -4,6 +4,7 @@ import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/v_card_form.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
@@ -63,7 +64,7 @@ class _NFCVCardWriteCardState extends State<NFCVCardWriteCard> {
                   padding:
                       const EdgeInsets.symmetric(vertical: Dimens.spacingM),
                   backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
+                  foregroundColor: colorWhite,
                 ),
               ),
             ),

@@ -117,5 +117,6 @@ class Waveshare2in9b extends WaveshareNfcDisplay {
         ImageProcessing.bwrTriColorAtkinsonDither,
         ImageProcessing.bwrHalftone,
         ImageProcessing.bwrThreshold,
+        ImageProcessing.bwrBayerDither,
       ];
 }
