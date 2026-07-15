@@ -1,5 +1,6 @@
 use image::{load_from_memory_with_format, ImageFormat, RgbaImage, Rgba};
 use std::io::Cursor;
+use std::sync::OnceLock;
 
 pub enum DitherMethod {
     FloydSteinberg,
@@ -40,6 +41,24 @@ const PALETTE_BWR: [Colorf32; 3] = [
     Colorf32 { r: 255.0, g: 0.0, b: 0.0 },
 ];
 
+const DITHER_GAMMA: f32 = 1.5;
+
+#[inline(always)]
+fn apply_dither_gamma(c: f32) -> f32 {
+    (c / 255.0).powf(DITHER_GAMMA) * 255.0
+}
+
+fn dither_gamma_lut() -> &'static [f32; 256] {
+    static LUT: OnceLock<[f32; 256]> = OnceLock::new();
+    LUT.get_or_init(|| {
+        let mut lut = [0.0f32; 256];
+        for (i, v) in lut.iter_mut().enumerate() {
+            *v = apply_dither_gamma(i as f32);
+        }
+        lut
+    })
+}
+
 fn closest_color(pixel: Colorf32, palette: &[Colorf32]) -> Colorf32 {
     let mut min_dist = f32::MAX;
     let mut best_color = palette[0];
@@ -79,6 +98,15 @@ pub fn process_image_rust(
 
     let mut buffer: Vec<Colorf32> = img.pixels()
         .map(|p| Colorf32 { r: p[0] as f32, g: p[1] as f32, b: p[2] as f32 }).collect();
+
+    if !matches!(method, DitherMethod::Threshold) {
+        let gamma_lut = dither_gamma_lut();
+        for px in buffer.iter_mut() {
+            px.r = gamma_lut[px.r.clamp(0.0, 255.0) as usize];
+            px.g = gamma_lut[px.g.clamp(0.0, 255.0) as usize];
+            px.b = gamma_lut[px.b.clamp(0.0, 255.0) as usize];
+        }
+    }
 
     let palette = if is_bwr { &PALETTE_BWR[..] } else { &PALETTE_BW[..] };
 
