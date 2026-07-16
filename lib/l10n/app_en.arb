@@ -691,6 +691,8 @@
   "quickRefresh": "Quick Refresh",
   "textEditorTitle": "Text Editor",
   "enterTextHint": "Enter text",
+  "emptyTextError": "Text cannot be empty",
+  "emptyTextWarning": "Please enter some text before saving",
   "backgroundLabel": "Background",
   "canvasColor": "Canvas Color",
   "addImage": "Add Image",
