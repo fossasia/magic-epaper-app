@@ -882,8 +882,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
                       const SizedBox(height: 16),
                       Text(
                         _l10n.analyzingImage,
-                        style:
-                            const TextStyle(color: colorWhite, fontSize: 14),
+                        style: const TextStyle(color: colorWhite, fontSize: 14),
                       ),
                     ],
                   ),

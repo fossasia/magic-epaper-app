@@ -782,8 +782,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                 children: [
                   _modeButton(
                     icon: Icon(Icons.brush,
-                        size: 18,
-                        color: !_eraser ? colorWhite : colorBlack54),
+                        size: 18, color: !_eraser ? colorWhite : colorBlack54),
                     label: appLocalizations.brush,
                     active: !_eraser,
                     onTap: () => setState(() => _eraser = false),
@@ -818,8 +817,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     width: 56,
                     child: Text(
                       appLocalizations.size,
-                      style:
-                          TextStyle(color: grey600, fontSize: 13),
+                      style: TextStyle(color: grey600, fontSize: 13),
                     ),
                   ),
                   for (final w in _brushWidths)
@@ -859,8 +857,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                       width: 56,
                       child: Text(
                         appLocalizations.colour,
-                        style: TextStyle(
-                            color: grey600, fontSize: 13),
+                        style: TextStyle(color: grey600, fontSize: 13),
                       ),
                     ),
                     for (final c in _controller.palette)
