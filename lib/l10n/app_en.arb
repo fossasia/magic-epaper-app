@@ -266,6 +266,7 @@
   "threshold": "Posterize",
   "colorHalftone": "Color Newspaper",
   "bayer": "Grid",
+  "sierra2": "Smooth",
 
   "searchingForDevice": "Searching for Device",
   "displayRefreshing": "Display Refreshing",

@@ -36,5 +36,6 @@ class Gdey037z03 extends Epd {
         ImageProcessing.bwrHalftone,
         ImageProcessing.bwrThreshold,
         ImageProcessing.bwrBayerDither,
+        ImageProcessing.bwrSierra2Dither,
       ];
 }
