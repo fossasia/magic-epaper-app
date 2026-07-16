@@ -250,7 +250,7 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
     return Container(
       padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: grey50,
         borderRadius: BorderRadius.circular(Dimens.radiusL),
         border: Border.all(color: mdGrey400.withValues(alpha: 0.2)),
       ),
@@ -291,7 +291,7 @@ class _VCardFormWidgetState extends State<VCardFormWidget> {
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: TextStyle(
-          color: Colors.grey[600],
+          color: grey600,
           fontSize: Dimens.fontSizeM,
         ),
         prefixIcon: prefixIcon != null

@@ -12,6 +12,7 @@ import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'package:magicepaperapp/view/widget/display_card.dart';
 import 'package:provider/provider.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 
 class DisplaySelectionScreen extends StatefulWidget {
   const DisplaySelectionScreen({super.key});
@@ -192,7 +193,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                         style: const TextStyle(
                           fontSize: Dimens.fontSizeDisplay,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: colorWhite,
                         ),
                       ),
                       if (showSubtitle) ...[
@@ -201,7 +202,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                           appLocalizations.selectDisplayType,
                           style: const TextStyle(
                             fontSize: Dimens.fontSizeL,
-                            color: Colors.white,
+                            color: colorWhite,
                           ),
                         ),
                       ],
@@ -259,7 +260,7 @@ class _LoadingWrapperState extends State<_LoadingWrapper> {
   Widget build(BuildContext context) {
     if (_showLoading) {
       return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: colorWhite,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -271,7 +272,7 @@ class _LoadingWrapperState extends State<_LoadingWrapper> {
               Text(
                 AppLocalizations.of(context)?.loading ?? 'Loading...',
                 style: const TextStyle(
-                    color: Colors.black, fontSize: Dimens.fontSizeM),
+                    color: colorBlack, fontSize: Dimens.fontSizeM),
               ),
             ],
           ),

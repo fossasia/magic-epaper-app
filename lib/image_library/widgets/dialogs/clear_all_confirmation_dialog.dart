@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
@@ -24,11 +25,11 @@ class ClearAllConfirmationDialog extends StatelessWidget {
           padding: const EdgeInsets.all(Dimens.spacingXxl),
           margin: const EdgeInsets.symmetric(vertical: 48),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colorWhite,
             borderRadius: BorderRadius.circular(Dimens.radiusRound),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: colorBlack.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -75,7 +76,7 @@ class ClearAllConfirmationDialog extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: Dimens.fontSizeXxl,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: colorBlack87,
                 ),
               ),
               const SizedBox(height: Dimens.spacingXs),
@@ -149,7 +150,7 @@ class ClearAllConfirmationDialog extends StatelessWidget {
             style: const TextStyle(
               fontSize: Dimens.fontSizeM,
               fontWeight: FontWeight.w500,
-              color: Colors.black87,
+              color: colorBlack87,
             ),
             textAlign: TextAlign.center,
           ),

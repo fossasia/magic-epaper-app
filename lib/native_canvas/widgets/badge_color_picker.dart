@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 
 class BadgeColorPicker extends StatelessWidget {
   const BadgeColorPicker({
@@ -42,8 +43,7 @@ class _Swatch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final checkColor =
-        color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+    final checkColor = color.computeLuminance() > 0.5 ? colorBlack : colorWhite;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -53,9 +53,7 @@ class _Swatch extends StatelessWidget {
           color: color,
           shape: BoxShape.circle,
           border: Border.all(
-            color: isSelected
-                ? Theme.of(context).colorScheme.primary
-                : Colors.grey.shade400,
+            color: isSelected ? Theme.of(context).colorScheme.primary : grey400,
             width: isSelected ? 3 : 1,
           ),
         ),
