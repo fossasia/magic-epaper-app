@@ -8,6 +8,7 @@ import 'package:barcode_widget/barcode_widget.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart' as scanner;
+import 'package:magicepaperapp/theme/colors.dart';
 
 class BarcodeEditor extends StatefulWidget {
   /// Library-agnostic callback: hands back the chosen [Barcode] and its data
@@ -646,25 +647,25 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       width: double.infinity,
       height: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorWhite,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: colorBlack.withValues(alpha: 0.05),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
         ],
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: grey200),
       ),
       padding: const EdgeInsets.all(14),
       child: Center(
         child: AspectRatio(
           aspectRatio: aspectRatio,
           child: BarcodeWidget(
-            style: const TextStyle(color: Colors.black),
+            style: const TextStyle(color: colorBlack),
             padding: const EdgeInsets.all(8),
-            backgroundColor: Colors.white,
+            backgroundColor: colorWhite,
             barcode: _selectedBarcode,
             data: _debouncedBarcodeData,
             drawText: !is2D,
@@ -740,7 +741,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 8),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.6),
+                        color: colorWhite.withValues(alpha: 0.6),
                         borderRadius: BorderRadius.circular(10),
                         border:
                             Border.all(color: Colors.amber.shade200, width: 1),
@@ -790,9 +791,9 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
       width: double.infinity,
       height: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color: grey100,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: grey300),
       ),
       child: Center(
         child: Column(
@@ -801,13 +802,13 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
             Icon(
               Icons.qr_code_2_rounded,
               size: 36,
-              color: Colors.grey.shade400,
+              color: grey400,
             ),
             const SizedBox(height: 8),
             Text(
               _l10n.livePreview,
               style: TextStyle(
-                color: Colors.grey.shade600,
+                color: grey600,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -815,7 +816,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
             Text(
               _l10n.startTypingToSeeBarcode,
               style: TextStyle(
-                color: Colors.grey.shade500,
+                color: grey500,
                 fontSize: 12,
               ),
             ),
@@ -834,7 +835,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
 
   Widget _buildScannerScaffold() {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: colorBlack,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text(
@@ -842,7 +843,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
+        foregroundColor: colorWhite,
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle.light,
         leading: IconButton(
@@ -868,11 +869,11 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      CircularProgressIndicator(color: Colors.white),
+                      CircularProgressIndicator(color: colorWhite),
                       SizedBox(height: 16),
                       Text(
                         'Analyzing image…',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
+                        style: TextStyle(color: colorWhite, fontSize: 14),
                       ),
                     ],
                   ),
@@ -893,15 +894,15 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
           decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.55),
+            color: colorBlack.withValues(alpha: 0.55),
             borderRadius: BorderRadius.circular(30),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.15),
+              color: colorWhite.withValues(alpha: 0.15),
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.25),
+                color: colorBlack.withValues(alpha: 0.25),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
@@ -911,12 +912,12 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(Icons.center_focus_strong_rounded,
-                  color: Colors.white, size: 18),
+                  color: colorWhite, size: 18),
               const SizedBox(width: 8),
               Text(
                 _l10n.alignBarcodeInFrame,
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: colorWhite,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -940,14 +941,14 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.55),
+              color: colorBlack.withValues(alpha: 0.55),
               borderRadius: BorderRadius.circular(28),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.12),
+                color: colorWhite.withValues(alpha: 0.12),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.35),
+                  color: colorBlack.withValues(alpha: 0.35),
                   blurRadius: 18,
                   offset: const Offset(0, 6),
                 ),
@@ -983,10 +984,10 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     required VoidCallback? onTap,
     bool active = false,
   }) {
-    final color = active ? const Color(0xFF4ADE80) : Colors.white;
+    final color = active ? const Color(0xFF4ADE80) : colorWhite;
     final bg = active
         ? const Color(0xFF4ADE80).withValues(alpha: 0.18)
-        : Colors.white.withValues(alpha: 0.08);
+        : colorWhite.withValues(alpha: 0.08);
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
@@ -1003,7 +1004,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
                 color: bg,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.1),
+                  color: colorWhite.withValues(alpha: 0.1),
                 ),
               ),
               child: Icon(icon, color: color, size: 24),
@@ -1027,7 +1028,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     final isPermission =
         error.errorCode == scanner.MobileScannerErrorCode.permissionDenied;
     return Container(
-      color: Colors.black,
+      color: colorBlack,
       padding: const EdgeInsets.all(32),
       child: Center(
         child: Column(
@@ -1035,14 +1036,14 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
           children: [
             Icon(
               isPermission ? Icons.no_photography_rounded : Icons.error_outline,
-              color: Colors.white70,
+              color: colorWhite70,
               size: 56,
             ),
             const SizedBox(height: 16),
             Text(
               isPermission ? _l10n.cameraAccessNeeded : _l10n.cameraUnavailable,
               style: const TextStyle(
-                color: Colors.white,
+                color: colorWhite,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -1053,7 +1054,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
                   ? _l10n.cameraPermissionMessage
                   : _l10n.cameraStartFailedMessage,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white70, fontSize: 14),
+              style: const TextStyle(color: colorWhite70, fontSize: 14),
             ),
             const SizedBox(height: 20),
             FilledButton.tonalIcon(
@@ -1114,7 +1115,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 12),
                 decoration: BoxDecoration(
-                  color: Colors.grey[400],
+                  color: grey400,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -1126,7 +1127,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
                 fontSize: 22,
                 fontWeight: FontWeight.w600,
                 letterSpacing: -0.3,
-                color: Colors.grey.shade900,
+                color: grey900,
               ),
             ),
             const SizedBox(height: 16),
@@ -1160,7 +1161,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
                         _formatHint(_selectedBarcode),
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.grey[600],
+                          color: grey600,
                         ),
                       ),
                       Text(
@@ -1168,8 +1169,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color:
-                              overMin ? Colors.grey[600] : Colors.orange[700],
+                          color: overMin ? grey600 : Colors.orange[700],
                         ),
                       ),
                     ],
@@ -1221,7 +1221,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
                       label: Text(_l10n.addToCanvas),
                       style: FilledButton.styleFrom(
                         backgroundColor: Colors.green.shade600,
-                        foregroundColor: Colors.white,
+                        foregroundColor: colorWhite,
                         minimumSize: const Size.fromHeight(48),
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(14)),

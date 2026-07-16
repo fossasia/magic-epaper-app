@@ -78,7 +78,7 @@ class ImageOperationsService {
         content: Row(
           children: [
             const Icon(Icons.check_circle,
-                color: Colors.white, size: Dimens.iconSizeM),
+                color: colorWhite, size: Dimens.iconSizeM),
             const SizedBox(width: Dimens.spacingM),
             Text(appLocalizations.allDataCleared),
           ],
@@ -101,7 +101,7 @@ class ImageOperationsService {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(colorWhite),
               ),
             ),
             const SizedBox(width: Dimens.spacingM),
@@ -259,7 +259,7 @@ class ImageOperationsService {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(colorWhite),
               ),
             ),
             const SizedBox(width: Dimens.spacingM),
@@ -278,7 +278,7 @@ class ImageOperationsService {
         content: Row(
           children: [
             const Icon(Icons.check_circle,
-                color: Colors.white, size: Dimens.iconSizeM),
+                color: colorWhite, size: Dimens.iconSizeM),
             const SizedBox(width: Dimens.spacingM),
             Expanded(child: Text(message)),
           ],
@@ -297,7 +297,7 @@ class ImageOperationsService {
         content: Row(
           children: [
             const Icon(Icons.delete_sweep,
-                color: Colors.white, size: Dimens.iconSizeM),
+                color: colorWhite, size: Dimens.iconSizeM),
             const SizedBox(width: Dimens.spacingM),
             Expanded(child: Text(message)),
           ],
@@ -320,7 +320,7 @@ class ImageOperationsService {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(colorWhite),
               ),
             ),
             const SizedBox(width: Dimens.spacingM),
@@ -341,7 +341,7 @@ class ImageOperationsService {
         content: Row(
           children: [
             const Icon(Icons.delete_sweep,
-                color: Colors.white, size: Dimens.iconSizeM),
+                color: colorWhite, size: Dimens.iconSizeM),
             const SizedBox(width: Dimens.spacingM),
             Expanded(
               child: Text(
@@ -363,8 +363,7 @@ class ImageOperationsService {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.error,
-                color: Colors.white, size: Dimens.iconSizeM),
+            const Icon(Icons.error, color: colorWhite, size: Dimens.iconSizeM),
             const SizedBox(width: Dimens.spacingM),
             Expanded(child: Text(message)),
           ],
@@ -387,7 +386,7 @@ class ImageOperationsService {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(colorWhite),
               ),
             ),
             const SizedBox(width: Dimens.spacingM),
@@ -407,7 +406,7 @@ class ImageOperationsService {
           children: [
             const Icon(
               Icons.check_circle,
-              color: Colors.white,
+              color: colorWhite,
               size: Dimens.iconSizeM,
             ),
             const SizedBox(width: Dimens.spacingM),
@@ -430,7 +429,7 @@ class ImageOperationsService {
           children: [
             const Icon(
               Icons.error,
-              color: Colors.white,
+              color: colorWhite,
               size: Dimens.iconSizeM,
             ),
             const SizedBox(width: Dimens.spacingM),
