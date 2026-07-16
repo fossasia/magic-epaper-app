@@ -65,9 +65,10 @@ class _ImageCropScreenState extends State<ImageCropScreen> {
             controller: _controller,
             image: widget.imageBytes,
             aspectRatio: widget.aspectRatio,
-            interactive: true,
             baseColor: Colors.black,
             maskColor: Colors.black.withValues(alpha: 0.6),
+            cornerDotBuilder: (size, edgeAlignment) =>
+                const DotControl(color: colorAccent, padding: 2),
             onCropped: (result) {
               switch (result) {
                 case CropSuccess(:final croppedImage):
