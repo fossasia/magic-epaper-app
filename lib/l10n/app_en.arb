@@ -266,6 +266,7 @@
   "threshold": "Posterize",
   "colorHalftone": "Color Newspaper",
   "bayer": "Grid",
+  "burkes": "Soft",
 
   "searchingForDevice": "Searching for Device",
   "displayRefreshing": "Display Refreshing",

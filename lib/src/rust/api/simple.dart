@@ -31,5 +31,6 @@ enum DitherMethod {
   threshold,
   halftone,
   bayer,
+  burkes,
   ;
 }
