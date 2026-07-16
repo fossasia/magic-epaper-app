@@ -730,6 +730,7 @@
   "couldntReadImage": "Couldn't read the image. Try a different file.",
   "notABarcode": "This doesn't look like a barcode. Please upload a clear barcode image.",
   "addBarcode": "Add Barcode",
+  "dataTransferSuccessfulMessage": "Data transfer successful. The display will now refresh.",
   "readyToTransfer": "Ready to Transfer",
   "holdPhoneNearDisplay": "Hold your phone near the display to begin."
 }
