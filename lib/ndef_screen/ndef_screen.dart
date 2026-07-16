@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
@@ -184,7 +185,7 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
         IconButton(
           icon: const Icon(
             Icons.clear_all,
-            color: Colors.white,
+            color: colorWhite,
           ),
           onPressed: _nfcController.result.isNotEmpty
               ? () {
@@ -311,11 +312,11 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                   margin:
                       const EdgeInsets.symmetric(horizontal: Dimens.spacingS),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: colorWhite,
                     borderRadius: BorderRadius.circular(Dimens.radiusXl),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
+                        color: colorBlack.withValues(alpha: 0.08),
                         spreadRadius: 0,
                         blurRadius: 10,
                         offset: const Offset(0, 2),
@@ -344,7 +345,7 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                           style: const TextStyle(
                             fontSize: Dimens.fontSizeXxl,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                            color: colorBlack87,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -354,7 +355,7 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: Dimens.fontSizeL,
-                            color: Colors.grey[600],
+                            color: grey600,
                             height: 1.4,
                           ),
                         ),

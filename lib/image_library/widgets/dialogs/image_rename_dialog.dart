@@ -42,11 +42,11 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
       child: Container(
         padding: const EdgeInsets.all(Dimens.spacingXxl),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorWhite,
           borderRadius: BorderRadius.circular(Dimens.radiusRound),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
+              color: colorBlack.withValues(alpha: 0.1),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -92,7 +92,7 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
                 style: const TextStyle(
                   fontSize: Dimens.fontSizeXxl,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: colorBlack87,
                 ),
               ),
               const SizedBox(height: Dimens.spacingXs),
@@ -100,7 +100,7 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
                 appLocalizations.enterNewNameForImage,
                 style: const TextStyle(
                   fontSize: Dimens.fontSizeM,
-                  color: Colors.grey,
+                  color: grey500,
                 ),
               ),
             ],
@@ -120,7 +120,7 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
             style: const TextStyle(
               fontSize: Dimens.fontSizeM,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: colorBlack87,
             ),
           ),
           const SizedBox(height: Dimens.spacingS),
@@ -132,7 +132,7 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
               hintText: appLocalizations.enterImageName,
               prefixIcon: const Icon(
                 Icons.image_outlined,
-                color: Colors.grey,
+                color: grey500,
               ),
             ),
             textCapitalization: TextCapitalization.words,
@@ -164,7 +164,7 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
             onPressed: () => _handleRename(context),
             style: ElevatedButton.styleFrom(
               backgroundColor: colorAccent,
-              foregroundColor: Colors.white,
+              foregroundColor: colorWhite,
               padding: const EdgeInsets.symmetric(vertical: Dimens.spacingL),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(Dimens.radiusXl),

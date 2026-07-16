@@ -188,6 +188,7 @@
   "halftone": "अख़बार",
   "threshold": "पोस्टराइज़",
   "colorHalftone": "रंगीन अख़बार",
+  "bayer": "ग्रिड",
 
   "searchingForDevice": "डिवाइस खोजा जा रहा है",
   "displayRefreshing": "डिस्प्ले रीफ़्रेश हो रहा है",
@@ -565,5 +566,9 @@
   "noOtherCamera": "कोई दूसरा कैमरा उपलब्ध नहीं है।",
   "couldntReadImage": "इमेज नहीं पढ़ी जा सकी। कोई दूसरी फ़ाइल आज़माएँ।",
   "notABarcode": "यह बारकोड नहीं लगता। कृपया साफ़ बारकोड इमेज अपलोड करें।",
-  "addBarcode": "बारकोड जोड़ें"
+  "addBarcode": "बारकोड जोड़ें",
+  "couldntLoadLibrary": "आपकी इमेज लाइब्रेरी लोड नहीं हो सकी",
+  "couldntLoadLibrarySubtitle": "आपकी सहेजी गई इमेज लोड करते समय कुछ गड़बड़ हो गई। कृपया पुनः प्रयास करें।",
+  "retry": "पुनः प्रयास करें",
+  "imageUnavailable": "इमेज उपलब्ध नहीं है"
 }

@@ -75,7 +75,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     final paletteColors = getIt<ColorPaletteProvider>().colors;
     final palette = paletteColors.isNotEmpty
         ? paletteColors
-        : const [Colors.white, Colors.black];
+        : const [colorWhite, colorBlack];
     _controller = CanvasController(
       canvasSize: Size(widget.width.toDouble(), widget.height.toDouble()),
       palette: palette,
@@ -101,7 +101,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     for (final c in _controller.palette) {
       if (c.computeLuminance() <= 0.85) return c;
     }
-    return Colors.black;
+    return colorBlack;
   }
 
   Offset get _canvasCenter => Offset(widget.width / 2, widget.height / 2);
@@ -321,7 +321,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   Color _sanitizeColor(Color? color) {
     if (color == null) return _inkColor;
     final palette = _controller.palette;
-    Color best = palette.isNotEmpty ? palette.first : Colors.black;
+    Color best = palette.isNotEmpty ? palette.first : colorBlack;
     double bestDist = double.infinity;
     for (final c in palette) {
       final dr = c.r - color.r;
@@ -459,9 +459,9 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
         AndroidUiSettings(
           toolbarTitle: appLocalizations.crop,
           toolbarColor: colorAccent,
-          toolbarWidgetColor: Colors.white,
+          toolbarWidgetColor: colorWhite,
           activeControlsWidgetColor: colorAccent,
-          backgroundColor: Colors.black,
+          backgroundColor: colorBlack,
           initAspectRatio: CropAspectRatioPreset.original,
           lockAspectRatio: false,
           hideBottomControls: false,
@@ -497,7 +497,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: colorWhite,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
@@ -514,7 +514,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: colorWhite,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
@@ -588,7 +588,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
           backgroundColor: const Color(0xFFEDEDED),
           appBar: AppBar(
             backgroundColor: colorAccent,
-            foregroundColor: Colors.white,
+            foregroundColor: colorWhite,
             title: Text(appLocalizations.editor),
             actions: [
               IconButton(
@@ -625,9 +625,9 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
         return Center(
           child: Container(
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade400, width: 1),
+              border: Border.all(color: grey400, width: 1),
               boxShadow: const [
-                BoxShadow(color: Colors.black26, blurRadius: 10),
+                BoxShadow(color: colorBlack26, blurRadius: 10),
               ],
             ),
             child: RepaintBoundary(
@@ -721,7 +721,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     final appLocalizations = AppLocalizations.of(context)!;
     if (_drawMode) return _buildDrawBar();
     return BottomAppBar(
-      color: Colors.white,
+      color: colorWhite,
       elevation: 8,
       padding: EdgeInsets.zero,
       height: 72,
@@ -736,7 +736,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
               height: 22,
               decoration: BoxDecoration(
                 color: _controller.canvasColor,
-                border: Border.all(color: Colors.black38, width: 2),
+                border: Border.all(color: colorBlack38, width: 2),
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
@@ -769,7 +769,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   Widget _buildDrawBar() {
     final appLocalizations = AppLocalizations.of(context)!;
     return Material(
-      color: Colors.white,
+      color: colorWhite,
       elevation: 8,
       child: SafeArea(
         top: false,
@@ -783,7 +783,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                   _modeButton(
                     icon: Icon(Icons.brush,
                         size: 18,
-                        color: !_eraser ? Colors.white : Colors.black54),
+                        color: !_eraser ? colorWhite : colorBlack54),
                     label: appLocalizations.brush,
                     active: !_eraser,
                     onTap: () => setState(() => _eraser = false),
@@ -794,8 +794,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                       width: 18,
                       height: 18,
                       child: CustomPaint(
-                        painter: _EraserPainter(
-                            _eraser ? Colors.white : Colors.black54),
+                        painter:
+                            _EraserPainter(_eraser ? colorWhite : colorBlack54),
                       ),
                     ),
                     label: appLocalizations.eraser,
@@ -819,7 +819,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     child: Text(
                       appLocalizations.size,
                       style:
-                          TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                          TextStyle(color: grey600, fontSize: 13),
                     ),
                   ),
                   for (final w in _brushWidths)
@@ -836,16 +836,14 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                               ? colorAccent.withValues(alpha: 0.15)
                               : Colors.transparent,
                           border: Border.all(
-                            color: w == _brushWidth
-                                ? colorAccent
-                                : Colors.grey.shade300,
+                            color: w == _brushWidth ? colorAccent : grey300,
                           ),
                         ),
                         child: Container(
                           width: w + 8,
                           height: w + 8,
                           decoration: const BoxDecoration(
-                            color: Colors.black87,
+                            color: colorBlack87,
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -862,7 +860,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                       child: Text(
                         appLocalizations.colour,
                         style: TextStyle(
-                            color: Colors.grey.shade600, fontSize: 13),
+                            color: grey600, fontSize: 13),
                       ),
                     ),
                     for (final c in _controller.palette)
@@ -878,7 +876,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                             border: Border.all(
                               color: c.toARGB32() == _brushColor.toARGB32()
                                   ? colorAccent
-                                  : Colors.black38,
+                                  : colorBlack38,
                               width: c.toARGB32() == _brushColor.toARGB32()
                                   ? 3
                                   : 1,
@@ -907,7 +905,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: active ? colorAccent : Colors.grey.shade200,
+          color: active ? colorAccent : grey200,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
@@ -918,7 +916,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
             Text(
               label,
               style: TextStyle(
-                color: active ? Colors.white : Colors.black54,
+                color: active ? colorWhite : colorBlack54,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -974,7 +972,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     decoration: BoxDecoration(
                       color: _controller.canvasColor,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey.shade300),
+                      border: Border.all(color: grey300),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -1107,7 +1105,7 @@ class _BarButton extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               label,
-              style: const TextStyle(fontSize: 11, color: Colors.black87),
+              style: const TextStyle(fontSize: 11, color: colorBlack87),
             ),
           ],
         ),

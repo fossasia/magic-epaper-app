@@ -265,6 +265,7 @@
   "halftone": "Newspaper",
   "threshold": "Posterize",
   "colorHalftone": "Color Newspaper",
+  "bayer": "Grid",
 
   "searchingForDevice": "Searching for Device",
   "displayRefreshing": "Display Refreshing",
@@ -708,6 +709,8 @@
   "quickRefresh": "Quick Refresh",
   "textEditorTitle": "Text Editor",
   "enterTextHint": "Enter text",
+  "emptyTextError": "Text cannot be empty",
+  "emptyTextWarning": "Please enter some text before saving",
   "backgroundLabel": "Background",
   "canvasColor": "Canvas Color",
   "addImage": "Add Image",
@@ -747,6 +750,7 @@
   "couldntReadImage": "Couldn't read the image. Try a different file.",
   "notABarcode": "This doesn't look like a barcode. Please upload a clear barcode image.",
   "addBarcode": "Add Barcode",
+  "dataTransferSuccessfulMessage": "Data transfer successful. The display will now refresh.",
   "readyToTransfer": "Ready to Transfer",
   "holdPhoneNearDisplay": "Hold your phone near the display to begin.",
   "privacyPolicy": "Privacy Policy",
@@ -845,4 +849,8 @@
   "xbmFilesExportedSuccessfully": "{count, plural, =1 {1 XBM file exported to MagicEpaper} other {{count} XBM files exported to MagicEpaper}}",
   "exportFailedMessage": "Export failed: {message}",
   "percentage": "{value}%"
+  "couldntLoadLibrary": "Couldn't load your image library",
+  "couldntLoadLibrarySubtitle": "Something went wrong while loading your saved images. Please try again.",
+  "retry": "Retry",
+  "imageUnavailable": "Image unavailable"
 }

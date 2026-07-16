@@ -23,9 +23,9 @@ Future<File?> pickAndEditImage(BuildContext context) async {
       AndroidUiSettings(
         toolbarTitle: AppLocalizations.of(context)!.crop,
         toolbarColor: colorAccent,
-        toolbarWidgetColor: Colors.white,
+        toolbarWidgetColor: colorWhite,
         activeControlsWidgetColor: colorAccent,
-        backgroundColor: Colors.black,
+        backgroundColor: colorBlack,
         initAspectRatio: CropAspectRatioPreset.original,
         lockAspectRatio: false,
         hideBottomControls: false,

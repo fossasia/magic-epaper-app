@@ -179,7 +179,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
                 LinearProgressIndicator(
                   value: _progress,
                   minHeight: 10,
-                  backgroundColor: Colors.grey.shade300,
+                  backgroundColor: grey300,
                   color: colorPrimary,
                 ),
                 const SizedBox(height: Dimens.spacingM),
