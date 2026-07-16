@@ -848,7 +848,7 @@
   "deleteCount": "{count, plural, =1 {Delete 1 image} other {Delete {count} images}}",
   "xbmFilesExportedSuccessfully": "{count, plural, =1 {1 XBM file exported to MagicEpaper} other {{count} XBM files exported to MagicEpaper}}",
   "exportFailedMessage": "Export failed: {message}",
-  "percentage": "{value}%"
+  "percentage": "{value}%",
   "couldntLoadLibrary": "Couldn't load your image library",
   "couldntLoadLibrarySubtitle": "Something went wrong while loading your saved images. Please try again.",
   "retry": "Retry",
