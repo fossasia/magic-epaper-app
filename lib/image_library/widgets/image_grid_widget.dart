@@ -4,6 +4,7 @@ import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
 import 'package:magicepaperapp/image_library/widgets/image_card_widget.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
@@ -27,8 +28,7 @@ class ImageGridWidget extends StatelessWidget {
       return Center(
         child: Text(
           appLocalizations.noImagesMatchSearch,
-          style:
-              const TextStyle(color: Colors.grey, fontSize: Dimens.fontSizeL),
+          style: const TextStyle(color: grey500, fontSize: Dimens.fontSizeL),
         ),
       );
     }

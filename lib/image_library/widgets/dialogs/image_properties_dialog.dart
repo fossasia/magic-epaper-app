@@ -7,6 +7,7 @@ import 'package:magicepaperapp/image_library/services/image_operations_service.d
 import 'package:magicepaperapp/image_library/utils/date_utils.dart' as dt;
 import 'package:magicepaperapp/image_library/utils/filter_utils.dart';
 import 'package:magicepaperapp/image_library/utils/source_utils.dart';
+import 'package:magicepaperapp/image_library/widgets/image_error_placeholder.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import '../../../util/app_logger.dart';
 
@@ -55,7 +56,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: colorWhite,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Dimens.radiusXxl),
       ),
@@ -89,13 +90,13 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
       child: Row(
         children: [
           const Icon(Icons.info_outline,
-              color: Colors.white, size: Dimens.iconSizeL),
+              color: colorWhite, size: Dimens.iconSizeL),
           const SizedBox(width: Dimens.spacingS),
           const Expanded(
             child: Text(
               'Image Properties',
               style: TextStyle(
-                color: Colors.white,
+                color: colorWhite,
                 fontSize: Dimens.fontSizeXl,
                 fontWeight: FontWeight.bold,
               ),
@@ -103,7 +104,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
           ),
           IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.close, color: Colors.white),
+            icon: const Icon(Icons.close, color: colorWhite),
           ),
         ],
       ),
@@ -145,7 +146,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
         width: 120,
         height: 120,
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
+          border: Border.all(color: grey300),
           borderRadius: BorderRadius.circular(Dimens.radiusM),
         ),
         child: ClipRRect(
@@ -154,14 +155,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
             File(widget.image.filePath),
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
-              return Container(
-                color: Colors.grey.shade100,
-                child: const Icon(
-                  Icons.broken_image,
-                  size: 40,
-                  color: Colors.grey,
-                ),
-              );
+              return const ImageErrorPlaceholder(iconSize: 40);
             },
           ),
         ),
@@ -175,7 +169,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
       style: const TextStyle(
         fontSize: Dimens.fontSizeL,
         fontWeight: FontWeight.bold,
-        color: Colors.black87,
+        color: colorBlack87,
       ),
     );
   }
@@ -184,9 +178,9 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
     return Container(
       padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: grey50,
         borderRadius: BorderRadius.circular(Dimens.radiusM),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: grey200),
       ),
       child: Column(
         children: [
@@ -261,9 +255,9 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
     return Container(
       padding: const EdgeInsets.all(Dimens.spacingM),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorWhite,
         borderRadius: BorderRadius.circular(Dimens.radiusS),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: grey200),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -277,7 +271,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
                   label,
                   style: TextStyle(
                     fontSize: 11,
-                    color: Colors.grey.shade600,
+                    color: grey600,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -290,7 +284,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: colorBlack87,
             ),
           ),
         ],
@@ -308,7 +302,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
             label,
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              color: Colors.grey.shade700,
+              color: grey700,
               fontSize: 13,
             ),
           ),
@@ -318,7 +312,7 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
           child: Text(
             value,
             style: const TextStyle(
-              color: Colors.black87,
+              color: colorBlack87,
               fontSize: 13,
             ),
           ),

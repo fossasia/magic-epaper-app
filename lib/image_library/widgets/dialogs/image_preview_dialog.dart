@@ -7,6 +7,7 @@ import 'package:magicepaperapp/image_library/utils/filter_utils.dart';
 import 'package:magicepaperapp/image_library/utils/source_utils.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_properties_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_rename_dialog.dart';
+import 'package:magicepaperapp/image_library/widgets/image_error_placeholder.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
@@ -33,7 +34,7 @@ class ImagePreviewDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: colorWhite,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Dimens.radiusXxl),
       ),
@@ -77,7 +78,7 @@ class ImagePreviewDialog extends StatelessWidget {
             child: Text(
               image.name,
               style: const TextStyle(
-                color: Colors.white,
+                color: colorWhite,
                 fontSize: Dimens.fontSizeXl,
                 fontWeight: FontWeight.bold,
               ),
@@ -85,12 +86,12 @@ class ImagePreviewDialog extends StatelessWidget {
           ),
           IconButton(
             onPressed: () => _showPropertiesDialog(context),
-            icon: const Icon(Icons.info_outline, color: Colors.white),
+            icon: const Icon(Icons.info_outline, color: colorWhite),
             tooltip: appLocalizations.imageProperties,
           ),
           IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.close, color: Colors.white),
+            icon: const Icon(Icons.close, color: colorWhite),
           ),
         ],
       ),
@@ -111,6 +112,13 @@ class ImagePreviewDialog extends StatelessWidget {
           child: Image.file(
             File(image.filePath),
             fit: BoxFit.contain,
+            isAntiAlias: false,
+            errorBuilder: (context, error, stackTrace) {
+              return const AspectRatio(
+                aspectRatio: 1,
+                child: ImageErrorPlaceholder(showLabel: true),
+              );
+            },
           ),
         ),
       ),
@@ -146,12 +154,11 @@ class ImagePreviewDialog extends StatelessWidget {
   Widget _buildInfoRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: Dimens.iconSizeS, color: Colors.grey.shade600),
+        Icon(icon, size: Dimens.iconSizeS, color: grey600),
         const SizedBox(width: Dimens.spacingXs),
         Text(
           text,
-          style: TextStyle(
-              color: Colors.grey.shade600, fontSize: Dimens.fontSizeS),
+          style: TextStyle(color: grey600, fontSize: Dimens.fontSizeS),
         ),
       ],
     );

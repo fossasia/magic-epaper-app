@@ -39,7 +39,7 @@ class _AppDrawerState extends State<AppDrawer> {
       modelId: 'NA',
       width: 400,
       height: 300,
-      colors: [Colors.white, Colors.black, Colors.red],
+      colors: [colorWhite, colorBlack, Colors.red],
     );
 
     final result = await showDialog<CustomEpdConfig>(
@@ -178,7 +178,7 @@ class _AppDrawerState extends State<AppDrawer> {
             child: Text(
               appLocalizations.other,
               style: const TextStyle(
-                color: Colors.black54,
+                color: colorBlack54,
                 fontWeight: FontWeight.bold,
                 fontSize: Dimens.fontSizeM,
               ),
@@ -295,14 +295,14 @@ class _AppDrawerState extends State<AppDrawer> {
               style: TextStyle(
                 color: currentIndex == index
                     ? colorAccent.withValues(alpha: 0.7)
-                    : Colors.grey[600],
+                    : grey600,
                 fontSize: Dimens.fontSizeS,
               ),
             )
           : null,
       trailing: showHelp
           ? IconButton(
-              icon: Icon(Icons.help_outline, size: 18, color: Colors.grey[600]),
+              icon: Icon(Icons.help_outline, size: 18, color: grey600),
               onPressed: _showArduinoHelpDialog,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
