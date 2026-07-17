@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/constants/string_constants.dart';
@@ -92,34 +93,19 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     )..repeat(reverse: true);
-    _pulseAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _pulseController,
-      curve: Curves.easeInOut,
-    ));
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _slideController,
-      curve: Curves.elasticOut,
-    ));
-    _scaleAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _scaleController,
-      curve: Curves.elasticOut,
-    ));
-    _holdStillPulseAnimation = Tween<double>(
-      begin: 0.9,
-      end: 1.1,
-    ).animate(CurvedAnimation(
-      parent: _holdStillController,
-      curve: Curves.easeInOut,
-    ));
+    _pulseAnimation = Tween<double>(begin: 0.8, end: 1.2).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+      CurvedAnimation(parent: _slideController, curve: Curves.elasticOut),
+    );
+    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
+    );
+    _holdStillPulseAnimation = Tween<double>(begin: 0.9, end: 1.1).animate(
+      CurvedAnimation(parent: _holdStillController, curve: Curves.easeInOut),
+    );
     _slideController.forward();
     _scaleController.forward();
   }
@@ -225,7 +211,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
           style: TextStyle(
             fontSize: Dimens.fontSizeL,
             fontWeight: FontWeight.w500,
-            color: Colors.grey[800],
+            color: grey800,
             height: 1.4,
           ),
         ),
@@ -239,8 +225,9 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                 final delay = index * 0.3;
                 final animationValue = (_pulseController.value + delay) % 1.0;
                 return Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: Dimens.spacingXs),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: Dimens.spacingXs,
+                  ),
                   child: Opacity(
                     opacity: animationValue > 0.5 ? 1.0 : 0.3,
                     child: Container(
@@ -274,7 +261,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
               child: CircularProgressIndicator(
                 value: progress,
                 strokeWidth: 6,
-                backgroundColor: Colors.grey[200],
+                backgroundColor: grey200,
                 valueColor: AlwaysStoppedAnimation<Color>(widget.colorAccent),
               ),
             ),
@@ -294,7 +281,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: Dimens.fontSizeM,
-            color: Colors.grey[700],
+            color: grey700,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -333,11 +320,11 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
         ),
         const SizedBox(height: Dimens.spacingS),
         Text(
-          StringConstants.dataTransferSuccessful,
+          appLocalizations.dataTransferSuccessfulMessage,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: Dimens.fontSizeM,
-            color: Colors.grey[700],
+            color: grey700,
             height: 1.3,
           ),
         ),
@@ -389,7 +376,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: Dimens.fontSizeM,
-            color: Colors.grey[700],
+            color: grey700,
             height: 1.4,
           ),
         ),
@@ -408,11 +395,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.error_outline,
-            color: Colors.red.shade600,
-            size: 48,
-          ),
+          Icon(Icons.error_outline, color: Colors.red.shade600, size: 48),
           const SizedBox(height: Dimens.spacingM),
           Text(
             appLocalizations.transferFailed,
@@ -442,7 +425,7 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
     return SlideTransition(
       position: _slideAnimation,
       child: Dialog(
-        backgroundColor: Colors.white,
+        backgroundColor: colorWhite,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Dimens.radiusRound),
         ),
@@ -465,13 +448,15 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                               : transferComplete
                                   ? Icons.check_circle
                                   : Icons.upload,
-                      key: ValueKey(!tagDetected
-                          ? 'nfc'
-                          : showRefreshingMessage
-                              ? 'refresh'
-                              : transferComplete
-                                  ? 'complete'
-                                  : 'upload'),
+                      key: ValueKey(
+                        !tagDetected
+                            ? 'nfc'
+                            : showRefreshingMessage
+                                ? 'refresh'
+                                : transferComplete
+                                    ? 'complete'
+                                    : 'upload',
+                      ),
                       color: !tagDetected
                           ? widget.colorAccent
                           : showRefreshingMessage
@@ -494,13 +479,15 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                                 : transferComplete
                                     ? appLocalizations.transferComplete
                                     : appLocalizations.writingToEpaper,
-                        key: ValueKey(!tagDetected
-                            ? 'search'
-                            : showRefreshingMessage
-                                ? 'refreshing'
-                                : transferComplete
-                                    ? 'complete'
-                                    : 'write'),
+                        key: ValueKey(
+                          !tagDetected
+                              ? 'search'
+                              : showRefreshingMessage
+                                  ? 'refreshing'
+                                  : transferComplete
+                                      ? 'complete'
+                                      : 'write',
+                        ),
                         style: const TextStyle(
                           fontSize: Dimens.fontSizeXxl,
                           fontWeight: FontWeight.bold,
@@ -533,9 +520,10 @@ class _TransferProgressDialogState extends State<TransferProgressDialog>
                       backgroundColor: showRefreshingMessage
                           ? Colors.orange.shade600
                           : Colors.red.shade600,
-                      foregroundColor: Colors.white,
-                      padding:
-                          const EdgeInsets.symmetric(vertical: Dimens.spacingL),
+                      foregroundColor: colorWhite,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: Dimens.spacingL,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(Dimens.radiusXl),
                       ),

@@ -65,7 +65,7 @@ class NFCReadCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(Dimens.spacingL),
               decoration: BoxDecoration(
-                color: Colors.grey[50],
+                color: grey50,
                 borderRadius: BorderRadius.circular(Dimens.radiusL),
                 border: Border.all(color: mdGrey400.withValues(alpha: 0.2)),
               ),
@@ -151,7 +151,7 @@ class NFCReadCard extends StatelessWidget {
                 constraints: const BoxConstraints(maxHeight: 300),
                 padding: const EdgeInsets.all(Dimens.spacingL),
                 decoration: BoxDecoration(
-                  color: Colors.grey[50],
+                  color: grey50,
                   borderRadius: BorderRadius.circular(Dimens.radiusM),
                   border: Border.all(color: mdGrey400.withValues(alpha: 0.3)),
                 ),
@@ -198,8 +198,8 @@ class NFCReadCard extends StatelessWidget {
         ),
         backgroundColor: backgroundColor,
         foregroundColor: colorWhite,
-        disabledBackgroundColor: Colors.grey[300],
-        disabledForegroundColor: Colors.grey[600],
+        disabledBackgroundColor: grey300,
+        disabledForegroundColor: grey600,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Dimens.radiusM),

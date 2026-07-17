@@ -27,8 +27,8 @@ class ImageOverlayWidget extends StatelessWidget {
             child: CircleAvatar(
               backgroundColor: colorAccent,
               radius: 12,
-              child: Icon(Icons.check,
-                  color: Colors.white, size: Dimens.iconSizeS),
+              child:
+                  Icon(Icons.check, color: colorWhite, size: Dimens.iconSizeS),
             ),
           ),
         if (!isDeleteMode) ...[
@@ -45,7 +45,7 @@ class ImageOverlayWidget extends StatelessWidget {
               child: Text(
                 SourceUtils.getSourceLabel(image.source),
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: colorWhite,
                   fontSize: Dimens.fontSizeXs,
                   fontWeight: FontWeight.w500,
                 ),
@@ -60,13 +60,13 @@ class ImageOverlayWidget extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                     horizontal: Dimens.spacingSm, vertical: Dimens.spacingXxs),
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.7),
+                  color: colorBlack.withValues(alpha: 0.7),
                   borderRadius: BorderRadius.circular(Dimens.radiusM),
                 ),
                 child: Text(
                   image.metadata!['epdModel'].toString(),
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: colorWhite,
                     fontSize: 9,
                     fontWeight: FontWeight.w500,
                   ),

@@ -183,8 +183,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
           textStyle: TextStyle(
               fontSize: layoutParams.productNameFontSize,
               fontWeight: FontWeight.bold),
-          backgroundColor: Colors.white,
-          textColor: Colors.black,
+          backgroundColor: colorWhite,
+          textColor: colorBlack,
           textAlign: TextAlign.center,
           offset: layoutParams.productNameOffset,
           scale: layoutParams.productNameScale,
@@ -197,8 +197,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
               fontSize: layoutParams.productDescriptionFontSize,
               fontWeight: FontWeight.normal,
             ),
-            backgroundColor: Colors.white,
-            textColor: Colors.black,
+            backgroundColor: colorWhite,
+            textColor: colorBlack,
             textAlign: TextAlign.center,
             offset: layoutParams.productDescriptionOffset,
             scale: layoutParams.productDescriptionScale,
@@ -213,7 +213,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
           textStyle: TextStyle(
               fontSize: layoutParams.priceFontSize,
               fontWeight: FontWeight.bold),
-          backgroundColor: Colors.white,
+          backgroundColor: colorWhite,
           textColor: Colors.red,
           textAlign: TextAlign.center,
           offset: layoutParams.priceOffset,
@@ -227,8 +227,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
         layers.add(LayerSpec.text(
           text: _data.quantity,
           textStyle: TextStyle(fontSize: layoutParams.quantityFontSize),
-          backgroundColor: Colors.white,
-          textColor: Colors.black,
+          backgroundColor: colorWhite,
+          textColor: colorBlack,
           textAlign: TextAlign.center,
           offset: layoutParams.quantityOffset,
           scale: layoutParams.quantityScale,
@@ -239,7 +239,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
       if (_data.barcodeData.isNotEmpty) {
         layers.add(LayerSpec.widget(
           widget: BarcodeWidget(
-            style: const TextStyle(color: Colors.black),
+            style: const TextStyle(color: colorBlack),
             padding: const EdgeInsets.all(Dimens.spacingXxs),
             backgroundColor: colorWhite,
             barcode: Barcode.code128(),
@@ -289,7 +289,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
         style: const TextStyle(
           fontSize: Dimens.fontSizeXxl,
           fontWeight: FontWeight.bold,
-          color: Colors.white,
+          color: colorWhite,
         ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
@@ -316,14 +316,14 @@ class _PriceTagFormState extends State<PriceTagForm> {
               const SizedBox(height: Dimens.spacingM),
               PriceTagCardWidget(data: _data),
               const SizedBox(height: Dimens.spacingXl),
-              const Divider(height: 1, color: Colors.grey),
+              const Divider(height: 1, color: grey500),
               const SizedBox(height: Dimens.spacingXl),
               Card(
-                color: Colors.white,
+                color: colorWhite,
                 elevation: 2,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(Dimens.radiusXl),
-                  side: BorderSide(color: Colors.grey.shade300, width: 1),
+                  side: BorderSide(color: grey300, width: 1),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(Dimens.spacingXl),
@@ -350,8 +350,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                         const SizedBox(height: Dimens.spacingSm),
                         Text(
                           appLocalizations.priceTagDescription,
-                          style: TextStyle(
-                              fontSize: 13, color: Colors.grey.shade600),
+                          style: TextStyle(fontSize: 13, color: grey600),
                         ),
                         const SizedBox(height: Dimens.spacingXl),
                         _buildProductImageSection(),
@@ -433,8 +432,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colorPrimary.withValues(
                         alpha: _isGenerating ? 0.49 : 1.0),
-                    foregroundColor: Colors.white
-                        .withValues(alpha: _isGenerating ? 0.7 : 1.0),
+                    foregroundColor:
+                        colorWhite.withValues(alpha: _isGenerating ? 0.7 : 1.0),
                     elevation: _isGenerating ? 0 : 2,
                     shadowColor: colorPrimary.withValues(alpha: 0.3),
                     shape: RoundedRectangleBorder(
@@ -451,7 +450,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
                                 valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                                    AlwaysStoppedAnimation<Color>(colorWhite),
                               ),
                             ),
                             const SizedBox(width: Dimens.spacingM),
@@ -547,7 +546,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
             fontWeight: FontWeight.w500,
           ),
           hintStyle: TextStyle(
-            color: Colors.grey.shade500,
+            color: grey500,
             fontSize: Dimens.fontSizeM,
             fontWeight: FontWeight.w400,
           ),
@@ -558,11 +557,11 @@ class _PriceTagFormState extends State<PriceTagForm> {
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(Dimens.radiusM),
-            borderSide: BorderSide(color: Colors.grey.shade300),
+            borderSide: BorderSide(color: grey300),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(Dimens.radiusM),
-            borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
+            borderSide: BorderSide(color: grey300, width: 1.5),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(Dimens.radiusM),
@@ -579,7 +578,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
           contentPadding: const EdgeInsets.symmetric(
               horizontal: Dimens.spacingL, vertical: 14),
           filled: true,
-          fillColor: Colors.grey.shade50,
+          fillColor: grey50,
         ),
       ),
     );
@@ -587,11 +586,11 @@ class _PriceTagFormState extends State<PriceTagForm> {
 
   Widget _buildProductImageSection() {
     return Card(
-      color: Colors.grey.shade50,
+      color: grey50,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Dimens.radiusM),
-        side: BorderSide(color: Colors.grey.shade300, width: 1),
+        side: BorderSide(color: grey300, width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.all(Dimens.spacingL),
@@ -641,12 +640,10 @@ class _PriceTagFormState extends State<PriceTagForm> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(Dimens.spacingL),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: colorWhite,
                   borderRadius: BorderRadius.circular(Dimens.radiusM),
                   border: Border.all(
-                    color: _productImage != null
-                        ? colorPrimary
-                        : Colors.grey.shade300,
+                    color: _productImage != null ? colorPrimary : grey300,
                     width: _productImage != null ? 2 : 1,
                   ),
                 ),
@@ -656,12 +653,12 @@ class _PriceTagFormState extends State<PriceTagForm> {
                       width: 60,
                       height: 60,
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
+                        color: grey100,
                         borderRadius: BorderRadius.circular(Dimens.radiusM),
                         border: Border.all(
                           color: _productImage != null
                               ? colorPrimary.withValues(alpha: 0.3)
-                              : Colors.grey.shade300,
+                              : grey300,
                         ),
                       ),
                       child: _productImage != null
@@ -690,7 +687,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                                     child: const Icon(
                                       Icons.check,
                                       size: 12,
-                                      color: Colors.white,
+                                      color: colorWhite,
                                     ),
                                   ),
                                 ),
@@ -699,7 +696,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                           : Icon(
                               Icons.add_photo_alternate,
                               size: 28,
-                              color: Colors.grey.shade400,
+                              color: grey400,
                             ),
                     ),
                     const SizedBox(width: Dimens.spacingL),
@@ -726,7 +723,7 @@ class _PriceTagFormState extends State<PriceTagForm> {
                                 : appLocalizations.chooseImageFromGallery,
                             style: TextStyle(
                               fontSize: Dimens.fontSizeS,
-                              color: Colors.grey.shade600,
+                              color: grey600,
                             ),
                           ),
                         ],
@@ -737,16 +734,14 @@ class _PriceTagFormState extends State<PriceTagForm> {
                       decoration: BoxDecoration(
                         color: _productImage != null
                             ? colorPrimary.withValues(alpha: 0.1)
-                            : Colors.grey.shade100,
+                            : grey100,
                         borderRadius: BorderRadius.circular(Dimens.radiusRound),
                       ),
                       child: Icon(
                         _productImage != null
                             ? Icons.edit
                             : Icons.photo_library,
-                        color: _productImage != null
-                            ? colorPrimary
-                            : Colors.grey.shade400,
+                        color: _productImage != null ? colorPrimary : grey400,
                         size: Dimens.iconSizeS,
                       ),
                     ),

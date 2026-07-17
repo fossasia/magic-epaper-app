@@ -4,6 +4,7 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
 import 'package:magicepaperapp/image_library/utils/date_utils.dart' as dt;
+import 'package:magicepaperapp/image_library/widgets/image_error_placeholder.dart';
 import 'package:magicepaperapp/image_library/widgets/image_overlay_widget.dart';
 
 class ImageCardWidget extends StatelessWidget {
@@ -27,7 +28,7 @@ class ImageCardWidget extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorWhite,
           borderRadius: BorderRadius.circular(Dimens.radiusXl),
           border: Border.all(
             color: isDeleteMode && isSelected ? colorAccent : mdGrey400,
@@ -56,16 +57,7 @@ class ImageCardWidget extends StatelessWidget {
                       width: double.infinity,
                       isAntiAlias: false,
                       errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey.shade200,
-                          child: const Center(
-                            child: Icon(
-                              Icons.broken_image_outlined,
-                              color: Colors.grey,
-                              size: 48,
-                            ),
-                          ),
-                        );
+                        return const ImageErrorPlaceholder();
                       },
                     ),
                   ),
@@ -95,7 +87,7 @@ class ImageCardWidget extends StatelessWidget {
                   Text(
                     dt.DateUtils.formatRelativeDate(image.createdAt),
                     style: TextStyle(
-                      color: Colors.grey.shade600,
+                      color: grey600,
                       fontSize: Dimens.fontSizeS,
                     ),
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
@@ -29,7 +30,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
       index: 5,
       titleWidget: Text(
         AppLocalizations.of(context)!.appName,
-        style: const TextStyle(color: Colors.white),
+        style: const TextStyle(color: colorWhite),
       ),
       body: SafeArea(
         top: false,
@@ -42,11 +43,11 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: colorWhite,
                     borderRadius: BorderRadius.circular(Dimens.radiusL),
                     boxShadow: const [
                       BoxShadow(
-                        color: Colors.grey,
+                        color: grey500,
                         offset: Offset(0, 1),
                         blurRadius: 2.0,
                       ),
@@ -71,7 +72,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           style: GoogleFonts.sora(
                             wordSpacing: 3,
                             fontWeight: FontWeight.w400,
-                            color: Colors.black,
+                            color: colorBlack,
                             fontSize: Dimens.fontSizeS,
                           ),
                           softWrap: true,
@@ -85,7 +86,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                                 appLocalizations.developedBy,
                                 style: GoogleFonts.sora(
                                   fontWeight: FontWeight.w500,
-                                  color: Colors.grey,
+                                  color: grey500,
                                   fontSize: Dimens.fontSizeS,
                                 ),
                                 overflow: TextOverflow.ellipsis,
@@ -119,11 +120,11 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                 const SizedBox(height: Dimens.spacingMd),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: colorWhite,
                     boxShadow: const [
                       BoxShadow(
                         blurRadius: 1,
-                        color: Colors.grey,
+                        color: grey500,
                         offset: Offset(0, 1),
                       ),
                     ],
@@ -140,7 +141,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           style: GoogleFonts.sora(
                             fontSize: Dimens.fontSizeL,
                             fontWeight: FontWeight.w500,
-                            color: Colors.grey,
+                            color: grey500,
                           ),
                         ),
                       ),
@@ -155,7 +156,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           style: GoogleFonts.sora(
                             fontSize: Dimens.fontSizeL,
                             fontWeight: FontWeight.w500,
-                            color: Colors.black,
+                            color: colorBlack,
                           ),
                         ),
                         subtitle: Text(
@@ -163,7 +164,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           style: GoogleFonts.sora(
                             fontSize: Dimens.fontSizeS,
                             fontWeight: FontWeight.w500,
-                            color: Colors.grey,
+                            color: grey500,
                           ),
                           softWrap: true,
                         ),
@@ -178,11 +179,11 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                 const SizedBox(height: Dimens.spacingMd),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: colorWhite,
                     boxShadow: const [
                       BoxShadow(
                         blurRadius: 1,
-                        color: Colors.grey,
+                        color: grey500,
                         offset: Offset(0, 1),
                       ),
                     ],
@@ -198,7 +199,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           style: GoogleFonts.sora(
                             fontSize: Dimens.fontSizeXl,
                             fontWeight: FontWeight.w500,
-                            color: Colors.grey,
+                            color: grey500,
                           ),
                         ),
                       ),
@@ -213,7 +214,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           style: GoogleFonts.sora(
                             fontSize: Dimens.fontSizeL,
                             fontWeight: FontWeight.w500,
-                            color: Colors.black,
+                            color: colorBlack,
                           ),
                         ),
                         subtitle: Text(
@@ -221,7 +222,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           style: GoogleFonts.sora(
                             fontSize: Dimens.fontSizeS,
                             fontWeight: FontWeight.w500,
-                            color: Colors.grey,
+                            color: grey500,
                           ),
                           softWrap: true,
                         ),
@@ -234,14 +235,14 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         leading: const Icon(
                           Icons.article_outlined,
                           size: 40,
-                          color: Colors.grey,
+                          color: grey500,
                         ),
                         title: Text(
                           appLocalizations.openSourceLicenses,
                           style: GoogleFonts.sora(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
-                            color: Colors.black,
+                            color: colorBlack,
                           ),
                         ),
                         subtitle: Text(
@@ -249,7 +250,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           style: GoogleFonts.sora(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: Colors.grey,
+                            color: grey500,
                           ),
                           softWrap: true,
                         ),
