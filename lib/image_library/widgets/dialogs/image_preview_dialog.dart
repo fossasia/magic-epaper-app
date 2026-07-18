@@ -7,6 +7,7 @@ import 'package:magicepaperapp/image_library/utils/filter_utils.dart';
 import 'package:magicepaperapp/image_library/utils/source_utils.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_properties_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_rename_dialog.dart';
+import 'package:magicepaperapp/image_library/widgets/image_error_placeholder.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
@@ -115,6 +116,12 @@ class ImagePreviewDialog extends StatelessWidget {
           File(image.filePath),
           fit: BoxFit.contain,
           isAntiAlias: false,
+          errorBuilder: (context, error, stackTrace) {
+            return const AspectRatio(
+              aspectRatio: 1,
+              child: ImageErrorPlaceholder(showLabel: true),
+            );
+          },
         ),
       ),
     );

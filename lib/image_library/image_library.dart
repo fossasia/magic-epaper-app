@@ -7,6 +7,7 @@ import 'package:magicepaperapp/image_library/widgets/dialogs/batch_delete_confir
 import 'package:magicepaperapp/image_library/widgets/dialogs/clear_all_confirmation_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/delete_confirmation_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/empty_state_widget.dart';
+import 'package:magicepaperapp/image_library/widgets/error_state_widget.dart';
 import 'package:magicepaperapp/image_library/widgets/image_grid_widget.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_preview_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/search_and_filter_widget.dart';
@@ -158,6 +159,13 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
             if (provider.isLoading) {
               return const Center(
                 child: CircularProgressIndicator(color: colorAccent),
+              );
+            }
+
+            if (provider.hasError) {
+              return ErrorStateWidget(
+                onRetry: () =>
+                    context.read<ImageLibraryProvider>().loadSavedImages(),
               );
             }
 
