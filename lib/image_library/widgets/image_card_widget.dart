@@ -4,6 +4,7 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
 import 'package:magicepaperapp/image_library/utils/date_utils.dart' as dt;
+import 'package:magicepaperapp/image_library/widgets/image_error_placeholder.dart';
 import 'package:magicepaperapp/image_library/widgets/image_overlay_widget.dart';
 
 class ImageCardWidget extends StatelessWidget {
@@ -56,16 +57,7 @@ class ImageCardWidget extends StatelessWidget {
                       width: double.infinity,
                       isAntiAlias: false,
                       errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: grey200,
-                          child: const Center(
-                            child: Icon(
-                              Icons.broken_image_outlined,
-                              color: grey500,
-                              size: 48,
-                            ),
-                          ),
-                        );
+                        return const ImageErrorPlaceholder();
                       },
                     ),
                   ),

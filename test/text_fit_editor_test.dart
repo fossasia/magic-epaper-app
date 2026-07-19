@@ -41,4 +41,42 @@ void main() {
     expect(find.text('टेक्स्ट एडिटर'), findsOneWidget);
     expect(find.text('Text Editor'), findsNothing);
   });
+
+  testWidgets('confirming with empty text shows validation errors',
+      (tester) async {
+    await tester.pumpWidget(wrap(const Locale('en')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.check));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Text cannot be empty'), findsOneWidget);
+    expect(find.text('Please enter some text before saving'), findsOneWidget);
+    expect(find.byType(TextFitEditor), findsOneWidget);
+  });
+
+  testWidgets('confirming with whitespace-only text is rejected',
+      (tester) async {
+    await tester.pumpWidget(wrap(const Locale('en')));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), '   ');
+    await tester.tap(find.byIcon(Icons.check));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Text cannot be empty'), findsOneWidget);
+  });
+
+  testWidgets('typing valid text clears the validation error', (tester) async {
+    await tester.pumpWidget(wrap(const Locale('en')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.check));
+    await tester.pumpAndSettle();
+    expect(find.text('Text cannot be empty'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField), 'Hello');
+    await tester.pumpAndSettle();
+    expect(find.text('Text cannot be empty'), findsNothing);
+  });
 }
