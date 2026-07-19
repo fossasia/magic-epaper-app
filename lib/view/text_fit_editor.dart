@@ -24,6 +24,9 @@ class TextFitEditorState extends State<TextFitEditor> {
   Color _backgroundColor = colorWhite;
   TextAlign _align = TextAlign.center;
   late final List<Color> _availableColors;
+  String? _errorText;
+
+  bool get _isTextEmpty => _controller.text.trim().isEmpty;
 
   @override
   void initState() {
@@ -83,6 +86,25 @@ class TextFitEditorState extends State<TextFitEditor> {
     return best;
   }
 
+  Future<void> _handleConfirm(
+      Size canvasSize, AppLocalizations appLocalizations) async {
+    if (_isTextEmpty) {
+      setState(() => _errorText = appLocalizations.emptyTextError);
+      final messenger = ScaffoldMessenger.of(context);
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(appLocalizations.emptyTextWarning),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+    final bytes = await _export(canvasSize);
+    if (!mounted) return;
+    Navigator.pop(context, bytes);
+  }
+
   Future<Uint8List?> _export(Size canvasSize) async {
     final boundary = _repaintKey.currentContext?.findRenderObject()
         as RenderRepaintBoundary?;
@@ -119,12 +141,13 @@ class TextFitEditorState extends State<TextFitEditor> {
                 fontWeight: FontWeight.bold)),
         actions: [
           IconButton(
-            onPressed: () async {
-              final bytes = await _export(canvasSize);
-              if (!context.mounted) return;
-              Navigator.pop(context, bytes);
-            },
-            icon: const Icon(Icons.check, color: colorWhite),
+            tooltip: appLocalizations.done,
+            onPressed: () => _handleConfirm(canvasSize, appLocalizations),
+            icon: Icon(
+              Icons.check,
+              color:
+                  _isTextEmpty ? colorWhite.withValues(alpha: .4) : colorWhite,
+            ),
           ),
         ],
       ),
@@ -151,16 +174,39 @@ class TextFitEditorState extends State<TextFitEditor> {
                   child: TextField(
                     controller: _controller,
                     maxLines: null,
-                    onChanged: (_) => setState(() {}),
+                    autofocus: true,
+                    textCapitalization: TextCapitalization.sentences,
+                    onChanged: (value) => setState(() {
+                      if (value.trim().isNotEmpty) {
+                        _errorText = null;
+                      }
+                    }),
                     style: const TextStyle(fontSize: Dimens.fontSizeM),
                     decoration: InputDecoration(
                       hintText: appLocalizations.enterTextHint,
+                      errorText: _errorText,
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: Dimens.spacingM,
                           vertical: Dimens.spacingMd),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(Dimens.radiusXl),
                         borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(Dimens.radiusXl),
+                        borderSide: BorderSide.none,
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(Dimens.radiusXl),
+                        borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.error,
+                            width: Dimens.borderWidthThin),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(Dimens.radiusXl),
+                        borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.error,
+                            width: Dimens.borderWidthThin),
                       ),
                     ),
                   ),
