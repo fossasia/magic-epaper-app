@@ -604,6 +604,7 @@
   "scanFromGallery": "Scan from gallery",
   "noCodeFound": "No QR code or barcode found in the image",
   "cropImage": "Crop",
+  "cropFree": "Free",
   "previewIdCard": "Preview of your ID card",
   "previewPriceTag": "Preview of your price tag",
   "previewBadge": "Preview of your badge",
