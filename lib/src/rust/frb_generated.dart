@@ -89,7 +89,8 @@ abstract class RustLibApi extends BaseApi {
       required int targetWidth,
       required int targetHeight,
       required DitherMethod method,
-      required bool isBwr});
+      required bool isBwr,
+      required bool isFourColor});
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -129,7 +130,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       required int targetWidth,
       required int targetHeight,
       required DitherMethod method,
-      required bool isBwr}) {
+      required bool isBwr,
+      required bool isFourColor}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
@@ -138,6 +140,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_u_32(targetHeight, serializer);
         sse_encode_dither_method(method, serializer);
         sse_encode_bool(isBwr, serializer);
+        sse_encode_bool(isFourColor, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 2, port: port_);
       },
@@ -146,7 +149,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeErrorData: null,
       ),
       constMeta: kCrateApiSimpleProcessImageRustConstMeta,
-      argValues: [imageBytes, targetWidth, targetHeight, method, isBwr],
+      argValues: [
+        imageBytes,
+        targetWidth,
+        targetHeight,
+        method,
+        isBwr,
+        isFourColor
+      ],
       apiImpl: this,
     ));
   }
@@ -159,7 +169,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           "targetWidth",
           "targetHeight",
           "method",
-          "isBwr"
+          "isBwr",
+          "isFourColor"
         ],
       );
 

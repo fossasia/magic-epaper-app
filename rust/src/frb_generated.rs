@@ -107,6 +107,7 @@ fn wire__crate__api__simple__process_image_rust_impl(
             let api_target_height = <u32>::sse_decode(&mut deserializer);
             let api_method = <crate::api::simple::DitherMethod>::sse_decode(&mut deserializer);
             let api_is_bwr = <bool>::sse_decode(&mut deserializer);
+            let api_is_four_color = <bool>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
                 transform_result_sse::<_, ()>((move || {
@@ -116,6 +117,7 @@ fn wire__crate__api__simple__process_image_rust_impl(
                         api_target_height,
                         api_method,
                         api_is_bwr,
+                        api_is_four_color,
                     ))?;
                     Ok(output_ok)
                 })())

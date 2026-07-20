@@ -6,8 +6,9 @@ class ImageProcessingMethod {
   final DitherMethod method;
   final bool isBwr;
   final bool useDartHalftone;
+  final bool is4Color;
   const ImageProcessingMethod(this.method, this.isBwr,
-      {this.useDartHalftone = false});
+      {this.useDartHalftone = false, this.is4Color = false});
 }
 
 class ImageProcessing {
@@ -41,6 +42,18 @@ class ImageProcessing {
 
   static const bwrHalftone =
       ImageProcessingMethod(DitherMethod.halftone, true, useDartHalftone: true);
+
+  static const bwryFloydSteinbergDither =
+      ImageProcessingMethod(DitherMethod.floydSteinberg, true, is4Color: true);
+  static const bwryFalseFloydSteinbergDither = ImageProcessingMethod(
+      DitherMethod.falseFloydSteinberg, true,
+      is4Color: true);
+  static const bwryStuckiDither =
+      ImageProcessingMethod(DitherMethod.stucki, true, is4Color: true);
+  static const bwryAtkinsonDither =
+      ImageProcessingMethod(DitherMethod.atkinson, true, is4Color: true);
+  static const bwryThreshold =
+      ImageProcessingMethod(DitherMethod.threshold, true, is4Color: true);
 
   static img.Image extract(Color toBeExtract, img.Image orgImg) {
     var image = img.Image.from(orgImg);

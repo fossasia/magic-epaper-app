@@ -181,6 +181,9 @@ class _ImageEditorState extends State<ImageEditor> {
       for (int i = 0; i < filtersToRun.length; i++) {
         if (!mounted || _processedSourceImage != sourceImage) break;
 
+        Uint8List processedPngBytes;
+        img.Image? decodedImage;
+
         Uint8List bytesForRust = sourcePngBytes;
 
         if (filtersToRun[i].useDartHalftone) {
@@ -192,16 +195,16 @@ class _ImageEditorState extends State<ImageEditor> {
           bytesForRust = Uint8List.fromList(img.encodePng(tempImg));
         }
 
-        final Uint8List processedPngBytes = await rust_api.processImageRust(
+        processedPngBytes = await rust_api.processImageRust(
           imageBytes: bytesForRust,
           targetWidth: widget.device.width.toInt(),
           targetHeight: widget.device.height.toInt(),
           method: filtersToRun[i].method,
           isBwr: filtersToRun[i].isBwr,
+          isFourColor: filtersToRun[i].is4Color,
         );
 
-        final img.Image? decodedImage =
-            await compute(img.decodePng, processedPngBytes);
+        decodedImage = await compute(img.decodePng, processedPngBytes);
 
         if (mounted && _processedSourceImage == sourceImage) {
           setState(() {
