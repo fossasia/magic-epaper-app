@@ -119,15 +119,14 @@ class _NDEFScreenState extends State<NDEFScreen> with WidgetsBindingObserver {
 
     switch (to) {
       case NFCAvailability.available:
-        message = 'NFC is now enabled and ready to use!';
+        message = appLocalizations.nfcIsNowEnabledAndReady;
         break;
       case NFCAvailability.disabled:
-        message =
-            'NFC has been disabled. Please enable it to continue using NFC features.';
+        message = appLocalizations.nfcHasBeenDisabled;
         isError = true;
         break;
       case NFCAvailability.not_supported:
-        message = 'NFC is not supported on this device.';
+        message = appLocalizations.nfcIsNotSupportedOnDevice;
         isError = true;
         break;
     }

@@ -63,7 +63,7 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
                     side: BorderSide(color: Colors.white, width: 1),
                   ),
                 ),
-                child: Text('${appLocalizations.delete} ($selectedCount)'),
+                child: Text(appLocalizations.deleteCount(selectedCount)),
               ),
             ),
           IconButton(

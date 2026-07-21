@@ -457,8 +457,7 @@ class ImageOperationsService {
               size: Dimens.iconSizeM,
             ),
             const SizedBox(width: Dimens.spacingM),
-            Expanded(
-                child: Text('${appLocalizations.failedToSaveImage}$error')),
+            Expanded(child: Text(appLocalizations.failedToSaveImage(error))),
           ],
         ),
         backgroundColor: Colors.red,
