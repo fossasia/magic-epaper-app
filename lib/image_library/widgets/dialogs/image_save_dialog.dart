@@ -9,13 +9,15 @@ AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class ImageSaveDialog extends StatefulWidget {
   final Uint8List imageData;
-  final String filterName;
+  final String? filterName;
+  final String? initialName;
   final Function(String) onSave;
 
   const ImageSaveDialog({
     super.key,
     required this.imageData,
-    required this.filterName,
+    this.filterName,
+    this.initialName,
     required this.onSave,
   });
 
@@ -30,7 +32,8 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(
-      text: 'Filtered_${DateTime.now().millisecondsSinceEpoch}',
+      text: widget.initialName ??
+          'Filtered_${DateTime.now().millisecondsSinceEpoch}',
     );
   }
 
@@ -69,8 +72,10 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
               const SizedBox(height: Dimens.spacingL),
               _buildTextFieldSection(),
               const SizedBox(height: Dimens.spacingXxl),
-              _buildFilterInfoChip(),
-              const SizedBox(height: Dimens.spacingXl),
+              if (widget.filterName != null) ...[
+                _buildFilterInfoChip(),
+                const SizedBox(height: Dimens.spacingXl),
+              ],
               _buildActionButtons(context),
             ],
           ),

@@ -266,6 +266,7 @@
   "threshold": "Posterize",
   "colorHalftone": "Color Newspaper",
   "bayer": "Grid",
+  "sierra2": "Smooth",
 
   "searchingForDevice": "Searching for Device",
   "displayRefreshing": "Display Refreshing",
@@ -279,6 +280,24 @@
   "connectionLostDuringTransfer": "Connection was lost during transfer. Please keep your phone close to the device and try again.",
   "done": "Done",
   "close": "Close",
+  "crop": "Crop",
+  "canvas": "Canvas",
+  "image": "Image",
+  "barcode": "Barcode",
+  "draw": "Draw",
+  "brush": "Brush",
+  "eraser": "Eraser",
+  "preview": "Preview",
+  "size": "Size",
+  "font": "Font",
+  "colour": "Colour",
+  "defaultFont": "Default",
+  "buyBadgeDescription": "Thank you for your interest in the FOSSASIA Badges. Currently the Magic ePaper Badge is still in prototype stage. You can order in future on FOSSASIA.com. In the meantime please check out our prototypes on the Git repository.",
+  "links": "Links",
+  "fossasiaWebsite": "FOSSASIA Website",
+  "visitFossasiaForFutureBadgeOrders": "Visit fossasia.com for future badge orders",
+  "hardwareRepository": "Hardware Repository",
+  "checkOutBadgePrototypesAndHardwareDesigns": "Check out our badge prototypes and hardware designs",
   "processingImage": "Processing Image...",
   "readyToFlash": "Ready to Flash",
   "imageProcessedSuccessfully": "Image processed successfully.",
@@ -362,6 +381,10 @@
   "epdModel": "EPD Model:",
   "transferToEpaper": "Transfer to ePaper",
   "saveImage": "Save Image",
+  "edit": "Edit",
+  "savedToLibrary": "Saved to Library",
+  "couldNotSaveToLibrary": "Could not save to Library",
+  "couldNotUpdateDesign": "Could not update the saved design",
   "saveFilteredImageToLibrary": "Save your filtered image to the library",
   "filterApplied": "Filter Applied:",
   "save": "Save",
@@ -739,6 +762,102 @@
   "brightness": "Brightness",
   "contrast": "Contrast",
   "resetToDefault": "Reset to default",
+  "privacyPolicy": "Privacy Policy",
+  "flipHorizontally": "Flip Horizontally",
+  "flipVertically": "Flip Vertically",
+  "saveToLibrary": "Save to Library",
+  "sizeWithValue": "Size: {value}",
+  "@sizeWithValue": {
+    "description": "Label for size with value",
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "analyzingImage": "Analyzing image…",
+  "barcodeDetectionFailed": "Data filled in. Format could not be auto-detected — please pick the correct format from the dropdown.",
+  "characterNotAllowed": "Character not allowed",
+  "barcodeCharNotAllowed": "{friendly} doesn't allow '{char}'.\nAllowed: {allowed}",
+  "@barcodeCharNotAllowed": {
+    "placeholders": {
+      "friendly": { "type": "String" },
+      "char": { "type": "String" },
+      "allowed": { "type": "String" }
+    }
+  },
+  "dataTooShortTitle": "Data too short",
+  "barcodeDataTooShortDetail": "{friendly} needs {requirement}.\nYou entered {entered} — add {needed} more.",
+  "@barcodeDataTooShortDetail": {
+    "placeholders": {
+      "friendly": { "type": "String" },
+      "requirement": { "type": "String" },
+      "entered": { "type": "int" },
+      "needed": { "type": "int" }
+    }
+  },
+  "dataTooLongTitle": "Data too long",
+  "barcodeDataTooLongDetail": "{friendly} fits {requirement}.\nYou entered {entered} — that's {extra} too many.",
+  "@barcodeDataTooLongDetail": {
+    "placeholders": {
+      "friendly": { "type": "String" },
+      "requirement": { "type": "String" },
+      "entered": { "type": "int" },
+      "extra": { "type": "int" }
+    }
+  },
+  "invalidBarcodeData": "Invalid {friendly} data",
+  "@invalidBarcodeData": {
+    "placeholders": {
+      "friendly": { "type": "String" }
+    }
+  },
+  "barcodeEncodeError": "This value can't be encoded as {friendly}. Please check it.",
+  "@barcodeEncodeError": {
+    "placeholders": {
+      "friendly": { "type": "String" }
+    }
+  },
+  "barcodeChecksumError": "The last digit is a check digit. You entered \"{entered}\" but it should be \"{expected}\".\nTip: enter one fewer digit and we'll calculate it for you.",
+  "@barcodeChecksumError": {
+    "placeholders": {
+      "entered": { "type": "String" },
+      "expected": { "type": "String" }
+    }
+  },
+  "itfLengthSuggestion": "ITF needs an even number of digits. Add or remove one digit.",
+  "codabarSuggestion": "Start and stop letters are added automatically. Use only digits and ($ . / : +).",
+  "upcAFromUpceSuggestion": "This looks like a compressed UPC-E code. Enter the full 11-digit UPC-A version to edit it here.",
+  "anyLength": "any length",
+  "atLeastCharacters": "at least {count} characters",
+  "@atLeastCharacters": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "exactlyCharacters": "{count} characters",
+  "@exactlyCharacters": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "rangeCharacters": "{min}–{max} characters",
+  "@rangeCharacters": {
+    "placeholders": {
+      "min": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "anyText": "Any text",
+  "anyPrintableAscii": "Any printable ASCII",
+  "barcodeCharsAtoZ": "A to Z, 0 to 9, and (space . $ / + %)",
+  "barcodeCharsDigits": "Digits and ($ . / : +)",
+  "ean13Hint": "12 digits (check digit added automatically)",
+  "ean8Hint": "7 digits (check digit added automatically)",
+  "upcAHint": "11 digits (check digit added automatically)",
+  "itfHint": "Even number of digits",
+  "english": "English",
+  "hindi": "हिंदी",
+  "deleteCount": "{count, plural, =1 {Delete 1 image} other {Delete {count} images}}",
+  "xbmFilesExportedSuccessfully": "{count, plural, =1 {1 XBM file exported to MagicEpaper} other {{count} XBM files exported to MagicEpaper}}",
+  "exportFailedMessage": "Export failed: {message}",
+  "percentage": "{value}%",
   "couldntLoadLibrary": "Couldn't load your image library",
   "couldntLoadLibrarySubtitle": "Something went wrong while loading your saved images. Please try again.",
   "retry": "Retry",
