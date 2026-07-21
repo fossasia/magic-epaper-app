@@ -145,6 +145,7 @@ impl SseDecode for crate::api::simple::DitherMethod {
             4 => crate::api::simple::DitherMethod::Threshold,
             5 => crate::api::simple::DitherMethod::Halftone,
             6 => crate::api::simple::DitherMethod::Bayer,
+            7 => crate::api::simple::DitherMethod::Sierra2,
             _ => unreachable!("Invalid variant for DitherMethod: {}", inner),
         };
     }
@@ -228,6 +229,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::simple::DitherMethod {
             Self::Threshold => 4.into_dart(),
             Self::Halftone => 5.into_dart(),
             Self::Bayer => 6.into_dart(),
+            Self::Sierra2 => 7.into_dart(),
             _ => unreachable!(),
         }
     }
@@ -263,6 +265,7 @@ impl SseEncode for crate::api::simple::DitherMethod {
                 crate::api::simple::DitherMethod::Threshold => 4,
                 crate::api::simple::DitherMethod::Halftone => 5,
                 crate::api::simple::DitherMethod::Bayer => 6,
+                crate::api::simple::DitherMethod::Sierra2 => 7,
                 _ => {
                     unimplemented!("");
                 }

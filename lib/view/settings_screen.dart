@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:magicepaperapp/util/orientation_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
+import '../card_templates/card_template_selection_view.dart';
+
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -24,10 +26,10 @@ class SettingsScreenState extends State<SettingsScreen> {
   String _getLanguageName(Locale locale) {
     switch (locale.languageCode) {
       case 'hi':
-        return 'हिंदी';
+        return appLocalizations.hindi;
       case 'en':
       default:
-        return 'English';
+        return appLocalizations.english;
     }
   }
 

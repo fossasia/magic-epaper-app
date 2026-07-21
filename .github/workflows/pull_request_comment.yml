@@ -101,7 +101,22 @@ jobs:
           for file in ../screenshots/*; do
             if [[ -f "$file" ]]; then
               filename=$(basename "$file")
-              cp -f "$file" "./${{ steps.fetch-pr-number.outputs.pr_number }}_${filename}"
+
+              if [[ "$filename" =~ -([0-9]+_.*\.png)$ ]]; then
+                screenshot_part="${BASH_REMATCH[1]}"
+
+                if [[ "$filename" == *"iPhone"* ]]; then
+                  generic_name="iPhone-${screenshot_part}"
+                elif [[ "$filename" == *"iPad"* ]]; then
+                  generic_name="iPad-${screenshot_part}"
+                else
+                  generic_name="Android-${screenshot_part}"
+                fi
+              else
+                generic_name="$filename"
+              fi
+
+              cp -f "$file" "./${{ steps.fetch-pr-number.outputs.pr_number }}_${generic_name}"
             fi
           done
           
@@ -152,16 +167,16 @@ jobs:
             <summary>Android Screenshots</summary>
             <table>
               <tr>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-1_display_selection.png?raw=true" width="1080"/></td>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-2_sidebar.png?raw=true" width="1080"/></td>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-3_ndef_screen.png?raw=true" width="1080"/></td>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-4_filter_selection.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Android-1_display_selection.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Android-2_sidebar.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Android-3_ndef_screen.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Android-4_filter_selection.png?raw=true" width="1080"/></td>
               </tr>
               <tr>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-5_barcode_screen.png?raw=true" width="1080"/></td>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-6_Barcode_added.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Android-5_barcode_screen.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Android-6_Barcode_added.png?raw=true" width="1080"/></td>
                 <td>
-                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Pixel_6-7_Templates_screen.png?raw=true" width="1080"/>
+                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_Android-7_Templates_screen.png?raw=true" width="1080"/>
                 </td>
               </tr>
             </table>
@@ -173,16 +188,16 @@ jobs:
             <summary>iPhone Screenshots</summary>
             <table>
               <tr>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-1_display_selection.png?raw=true" width="1080"/></td>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-2_sidebar.png?raw=true" width="1080"/></td>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-3_ndef_screen.png?raw=true" width="1080"/></td>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-4_filter_selection.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone-1_display_selection.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone-2_sidebar.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone-3_ndef_screen.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone-4_filter_selection.png?raw=true" width="1080"/></td>
               </tr>
               <tr>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-5_barcode_screen.png?raw=true" width="1080"/></td>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-6_Barcode_added.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone-5_barcode_screen.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone-6_Barcode_added.png?raw=true" width="1080"/></td>
                 <td>
-                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone_16_Pro_Max-7_Templates_screen.png?raw=true" width="1080"/></td>
+                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPhone-7_Templates_screen.png?raw=true" width="1080"/></td>
               </tr>
             </table>
             </details>
@@ -193,16 +208,16 @@ jobs:
             <summary>iPad Screenshots</summary>
             <table>
               <tr>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-1_display_selection.png?raw=true" width="1080"/></td>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-2_sidebar.png?raw=true" width="1080"/></td>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-3_ndef_screen.png?raw=true" width="1080"/></td>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-4_filter_selection.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad-1_display_selection.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad-2_sidebar.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad-3_ndef_screen.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad-4_filter_selection.png?raw=true" width="1080"/></td>
               </tr>
               <tr>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-5_barcode_screen.png?raw=true" width="1080"/></td>
-                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-6_Barcode_added.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad-5_barcode_screen.png?raw=true" width="1080"/></td>
+                <td><img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad-6_Barcode_added.png?raw=true" width="1080"/></td>
                 <td>
-                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad_Pro_13-inch_(M4)-7_Templates_screen.png?raw=true" width="1080"/></td>
+                  <img src="https://github.com/${owner}/${repo}/blob/pr-screenshots/${issue_number}_iPad-7_Templates_screen.png?raw=true" width="1080"/></td>
               </tr>
             </table>
             </details>

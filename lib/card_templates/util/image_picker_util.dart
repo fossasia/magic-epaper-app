@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/util/image_source_picker.dart';
 
 final ImagePicker _picker = ImagePicker();
@@ -20,7 +21,7 @@ Future<File?> pickAndEditImage(BuildContext context) async {
     compressQuality: 100,
     uiSettings: [
       AndroidUiSettings(
-        toolbarTitle: 'Crop',
+        toolbarTitle: AppLocalizations.of(context)!.crop,
         toolbarColor: colorAccent,
         toolbarWidgetColor: colorWhite,
         activeControlsWidgetColor: colorAccent,
@@ -30,7 +31,7 @@ Future<File?> pickAndEditImage(BuildContext context) async {
         hideBottomControls: false,
       ),
       IOSUiSettings(
-        title: 'Crop',
+        title: AppLocalizations.of(context)!.crop,
         aspectRatioLockEnabled: false,
         resetAspectRatioEnabled: true,
       ),

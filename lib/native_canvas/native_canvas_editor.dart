@@ -11,6 +11,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_controller.dart';
+import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_element.dart';
 import 'package:magicepaperapp/native_canvas/model/stroke.dart';
 import 'package:magicepaperapp/native_canvas/widgets/badge_color_picker.dart';
@@ -20,6 +21,7 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/native_canvas/widgets/barcode_editor.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/util/template_util.dart';
 import 'package:magicepaperapp/util/image_source_picker.dart';
 
@@ -29,11 +31,17 @@ class NativeCanvasEditor extends StatefulWidget {
     required this.width,
     required this.height,
     this.initialLayers,
+    this.initialDocument,
+    this.returnDocument = false,
   });
 
   final int width;
   final int height;
   final List<LayerSpec>? initialLayers;
+
+  final CanvasDocument? initialDocument;
+
+  final bool returnDocument;
 
   @override
   State<NativeCanvasEditor> createState() => _NativeCanvasEditorState();
@@ -121,6 +129,12 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   static const double _templateStickerUnit = 20;
 
   void _seedInitialLayers() {
+    final document = widget.initialDocument;
+    if (document != null) {
+      _controller.loadDocument(document);
+      _resumeIdCounter();
+      return;
+    }
     final layers = widget.initialLayers;
     if (layers == null) return;
     if (layers.any((s) => s.elementId == 'qr')) {
@@ -129,6 +143,18 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
       _seedOffsetLayers(layers);
     }
     _controller.select(null);
+  }
+
+  void _resumeIdCounter() {
+    var maxId = -1;
+    for (final e in _controller.elements) {
+      final match = RegExp(r'^el_(\d+)$').firstMatch(e.id);
+      if (match != null) {
+        final n = int.parse(match.group(1)!);
+        if (n > maxId) maxId = n;
+      }
+    }
+    _idCounter = maxId + 1;
   }
 
   void _seedCardLayout(List<LayerSpec> layers) {
@@ -384,17 +410,26 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     );
   }
 
+  static const double _maxImportDimension = 2048;
+
   Future<void> _addImage() async {
     final source = await chooseImageSource(context);
     if (source == null) return;
     if (source == ImageSource.gallery) {
-      final picked = await _picker.pickMultiImage();
+      final picked = await _picker.pickMultiImage(
+        maxWidth: _maxImportDimension,
+        maxHeight: _maxImportDimension,
+      );
       if (picked.isEmpty) return;
       for (final file in picked) {
         _placeImage(await file.readAsBytes());
       }
     } else {
-      final picked = await _picker.pickImage(source: source);
+      final picked = await _picker.pickImage(
+        source: source,
+        maxWidth: _maxImportDimension,
+        maxHeight: _maxImportDimension,
+      );
       if (picked == null) return;
       _placeImage(await picked.readAsBytes());
     }
@@ -427,7 +462,11 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   Future<void> _replaceImage(CanvasElement element) async {
     final source = await chooseImageSource(context);
     if (source == null) return;
-    final picked = await _picker.pickImage(source: source);
+    final picked = await _picker.pickImage(
+      source: source,
+      maxWidth: _maxImportDimension,
+      maxHeight: _maxImportDimension,
+    );
     if (picked == null) return;
     final bytes = await picked.readAsBytes();
     final decoded = img.decodeImage(bytes);
@@ -442,6 +481,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   }
 
   Future<void> _cropImage(CanvasElement element) async {
+    final appLocalizations = AppLocalizations.of(context)!;
     final bytes = element.imageBytes;
     if (bytes == null) return;
     final dir = await getTemporaryDirectory();
@@ -455,7 +495,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
       compressQuality: 100,
       uiSettings: [
         AndroidUiSettings(
-          toolbarTitle: 'Crop',
+          toolbarTitle: appLocalizations.crop,
           toolbarColor: colorAccent,
           toolbarWidgetColor: colorWhite,
           activeControlsWidgetColor: colorAccent,
@@ -465,7 +505,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
           hideBottomControls: false,
         ),
         IOSUiSettings(
-          title: 'Crop',
+          title: appLocalizations.crop,
           aspectRatioLockEnabled: false,
           resetAspectRatioEnabled: true,
         ),
@@ -565,10 +605,25 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       image.dispose();
       if (!mounted || byteData == null) return;
-      Navigator.pop(context, byteData.buffer.asUint8List());
+      final png = byteData.buffer.asUint8List();
+      if (widget.returnDocument) {
+        Navigator.pop(context, CanvasEditorResult(png, _buildDocument()));
+      } else {
+        Navigator.pop(context, png);
+      }
     } catch (e) {
       if (mounted) _snack('Could not export the canvas: $e');
     }
+  }
+
+  CanvasDocument _buildDocument() {
+    return CanvasDocument(
+      width: widget.width,
+      height: widget.height,
+      canvasColor: _controller.canvasColor,
+      elements: _controller.elements,
+      strokes: _controller.strokes,
+    );
   }
 
   void _snack(String message) {
@@ -578,6 +633,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, _) {
@@ -586,7 +642,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
           appBar: AppBar(
             backgroundColor: colorAccent,
             foregroundColor: colorWhite,
-            title: const Text('Editor'),
+            title: Text(appLocalizations.editor),
             actions: [
               IconButton(
                 icon: const Icon(Icons.undo),
@@ -715,6 +771,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   }
 
   Widget _buildBottomBar() {
+    final appLocalizations = AppLocalizations.of(context)!;
     if (_drawMode) return _buildDrawBar();
     return BottomAppBar(
       color: colorWhite,
@@ -725,7 +782,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           _BarButton(
-            label: 'Canvas',
+            label: appLocalizations.canvas,
             onTap: _controller.cycleCanvasColor,
             iconWidget: Container(
               width: 22,
@@ -738,12 +795,20 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
             ),
           ),
           _BarButton(
-              icon: Icons.image_outlined, label: 'Image', onTap: _addImage),
-          _BarButton(icon: Icons.text_fields, label: 'Text', onTap: _addText),
-          _BarButton(icon: Icons.qr_code, label: 'Barcode', onTap: _addBarcode),
+              icon: Icons.image_outlined,
+              label: appLocalizations.image,
+              onTap: _addImage),
+          _BarButton(
+              icon: Icons.text_fields,
+              label: AppLocalizations.of(context)!.text,
+              onTap: _addText),
+          _BarButton(
+              icon: Icons.qr_code,
+              label: appLocalizations.barcode,
+              onTap: _addBarcode),
           _BarButton(
             icon: Icons.brush_outlined,
-            label: 'Draw',
+            label: appLocalizations.draw,
             onTap: () => setState(() {
               _controller.select(null);
               _drawMode = true;
@@ -755,6 +820,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   }
 
   Widget _buildDrawBar() {
+    final appLocalizations = AppLocalizations.of(context)!;
     return Material(
       color: colorWhite,
       elevation: 8,
@@ -770,7 +836,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                   _modeButton(
                     icon: Icon(Icons.brush,
                         size: 18, color: !_eraser ? colorWhite : colorBlack54),
-                    label: 'Brush',
+                    label: appLocalizations.brush,
                     active: !_eraser,
                     onTap: () => setState(() => _eraser = false),
                   ),
@@ -784,7 +850,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                             _EraserPainter(_eraser ? colorWhite : colorBlack54),
                       ),
                     ),
-                    label: 'Eraser',
+                    label: appLocalizations.eraser,
                     active: _eraser,
                     onTap: () => setState(() => _eraser = true),
                   ),
@@ -792,7 +858,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                   TextButton.icon(
                     onPressed: () => setState(() => _drawMode = false),
                     icon: const Icon(Icons.check),
-                    label: const Text('Done'),
+                    label: Text(appLocalizations.done),
                     style: TextButton.styleFrom(foregroundColor: colorAccent),
                   ),
                 ],
@@ -803,7 +869,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                   SizedBox(
                     width: 56,
                     child: Text(
-                      'Size',
+                      appLocalizations.size,
                       style: TextStyle(color: grey600, fontSize: 13),
                     ),
                   ),
@@ -843,7 +909,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     SizedBox(
                       width: 56,
                       child: Text(
-                        'Colour',
+                        appLocalizations.colour,
                         style: TextStyle(color: grey600, fontSize: 13),
                       ),
                     ),
@@ -911,6 +977,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   }
 
   Future<_TextResult?> _showTextSheet({CanvasElement? existing}) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final textCtrl = TextEditingController(text: existing?.text ?? '');
     double fontSize = existing?.fontSize ?? 24;
     Color color =
@@ -942,9 +1009,9 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     style: fontFamily == null
                         ? null
                         : GoogleFonts.getFont(fontFamily!),
-                    decoration: const InputDecoration(
-                      labelText: 'Text',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: appLocalizations.text,
+                      border: const OutlineInputBorder(),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -963,7 +1030,9 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          textCtrl.text.isEmpty ? 'Preview' : textCtrl.text,
+                          textCtrl.text.isEmpty
+                              ? appLocalizations.preview
+                              : textCtrl.text,
                           style: fontFamily == null
                               ? TextStyle(fontSize: fontSize, color: color)
                               : GoogleFonts.getFont(
@@ -976,7 +1045,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Text('Size: ${fontSize.round()}'),
+                  Text(appLocalizations.sizeWithValue(fontSize.round())),
                   Slider(
                     min: 8,
                     max: 120,
@@ -984,7 +1053,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     onChanged: (v) => setSheet(() => fontSize = v),
                   ),
                   const SizedBox(height: 4),
-                  const Text('Font'),
+                  Text(appLocalizations.font),
                   const SizedBox(height: 8),
                   SizedBox(
                     height: 44,
@@ -997,7 +1066,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                             child: ChoiceChip(
                               selected: f == fontFamily,
                               label: Text(
-                                f ?? 'Default',
+                                f ?? appLocalizations.defaultFont,
                                 style:
                                     f == null ? null : GoogleFonts.getFont(f),
                               ),
@@ -1008,7 +1077,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  const Text('Colour'),
+                  Text(appLocalizations.colour),
                   const SizedBox(height: 8),
                   BadgeColorPicker(
                     colors: _controller.palette,
@@ -1034,7 +1103,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                               text, fontSize, color, manualColor, fontFamily),
                         );
                       },
-                      child: const Text('Done'),
+                      child: Text(appLocalizations.done),
                     ),
                   ),
                 ],
