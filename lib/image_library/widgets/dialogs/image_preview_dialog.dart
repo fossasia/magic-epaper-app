@@ -21,6 +21,7 @@ class ImagePreviewDialog extends StatelessWidget {
   final VoidCallback onDelete;
   final Function(String) onRename;
   final VoidCallback onTransfer;
+  final VoidCallback? onEdit;
 
   const ImagePreviewDialog({
     super.key,
@@ -29,6 +30,7 @@ class ImagePreviewDialog extends StatelessWidget {
     required this.onDelete,
     required this.onRename,
     required this.onTransfer,
+    this.onEdit,
   });
 
   @override
@@ -114,6 +116,7 @@ class ImagePreviewDialog extends StatelessWidget {
         borderRadius: BorderRadius.circular(Dimens.radiusM),
         child: Image.file(
           File(image.filePath),
+          key: ValueKey(image.imageCacheKey),
           fit: BoxFit.contain,
           isAntiAlias: false,
           errorBuilder: (context, error, stackTrace) {
@@ -198,6 +201,20 @@ class ImagePreviewDialog extends StatelessWidget {
             ),
           ],
         ),
+        if (onEdit != null) ...[
+          const SizedBox(height: Dimens.spacingS),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                onEdit!();
+              },
+              icon: const Icon(Icons.brush_outlined),
+              label: Text(appLocalizations.edit),
+            ),
+          ),
+        ],
         const SizedBox(height: Dimens.spacingS),
         SizedBox(
           width: double.infinity,

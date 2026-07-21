@@ -11,6 +11,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_controller.dart';
+import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_element.dart';
 import 'package:magicepaperapp/native_canvas/model/stroke.dart';
 import 'package:magicepaperapp/native_canvas/widgets/badge_color_picker.dart';
@@ -29,11 +30,17 @@ class NativeCanvasEditor extends StatefulWidget {
     required this.width,
     required this.height,
     this.initialLayers,
+    this.initialDocument,
+    this.returnDocument = false,
   });
 
   final int width;
   final int height;
   final List<LayerSpec>? initialLayers;
+
+  final CanvasDocument? initialDocument;
+
+  final bool returnDocument;
 
   @override
   State<NativeCanvasEditor> createState() => _NativeCanvasEditorState();
@@ -121,6 +128,12 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   static const double _templateStickerUnit = 20;
 
   void _seedInitialLayers() {
+    final document = widget.initialDocument;
+    if (document != null) {
+      _controller.loadDocument(document);
+      _resumeIdCounter();
+      return;
+    }
     final layers = widget.initialLayers;
     if (layers == null) return;
     if (layers.any((s) => s.elementId == 'qr')) {
@@ -129,6 +142,18 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
       _seedOffsetLayers(layers);
     }
     _controller.select(null);
+  }
+
+  void _resumeIdCounter() {
+    var maxId = -1;
+    for (final e in _controller.elements) {
+      final match = RegExp(r'^el_(\d+)$').firstMatch(e.id);
+      if (match != null) {
+        final n = int.parse(match.group(1)!);
+        if (n > maxId) maxId = n;
+      }
+    }
+    _idCounter = maxId + 1;
   }
 
   void _seedCardLayout(List<LayerSpec> layers) {
@@ -384,17 +409,26 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     );
   }
 
+  static const double _maxImportDimension = 2048;
+
   Future<void> _addImage() async {
     final source = await chooseImageSource(context);
     if (source == null) return;
     if (source == ImageSource.gallery) {
-      final picked = await _picker.pickMultiImage();
+      final picked = await _picker.pickMultiImage(
+        maxWidth: _maxImportDimension,
+        maxHeight: _maxImportDimension,
+      );
       if (picked.isEmpty) return;
       for (final file in picked) {
         _placeImage(await file.readAsBytes());
       }
     } else {
-      final picked = await _picker.pickImage(source: source);
+      final picked = await _picker.pickImage(
+        source: source,
+        maxWidth: _maxImportDimension,
+        maxHeight: _maxImportDimension,
+      );
       if (picked == null) return;
       _placeImage(await picked.readAsBytes());
     }
@@ -427,7 +461,11 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   Future<void> _replaceImage(CanvasElement element) async {
     final source = await chooseImageSource(context);
     if (source == null) return;
-    final picked = await _picker.pickImage(source: source);
+    final picked = await _picker.pickImage(
+      source: source,
+      maxWidth: _maxImportDimension,
+      maxHeight: _maxImportDimension,
+    );
     if (picked == null) return;
     final bytes = await picked.readAsBytes();
     final decoded = img.decodeImage(bytes);
@@ -565,10 +603,25 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       image.dispose();
       if (!mounted || byteData == null) return;
-      Navigator.pop(context, byteData.buffer.asUint8List());
+      final png = byteData.buffer.asUint8List();
+      if (widget.returnDocument) {
+        Navigator.pop(context, CanvasEditorResult(png, _buildDocument()));
+      } else {
+        Navigator.pop(context, png);
+      }
     } catch (e) {
       if (mounted) _snack('Could not export the canvas: $e');
     }
+  }
+
+  CanvasDocument _buildDocument() {
+    return CanvasDocument(
+      width: widget.width,
+      height: widget.height,
+      canvasColor: _controller.canvasColor,
+      elements: _controller.elements,
+      strokes: _controller.strokes,
+    );
   }
 
   void _snack(String message) {

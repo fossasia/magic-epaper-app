@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'canvas_document.dart';
 import 'canvas_element.dart';
 import 'stroke.dart';
 
@@ -139,6 +140,20 @@ class CanvasController extends ChangeNotifier {
   void select(String? id) {
     if (_selectedId == id) return;
     _selectedId = id;
+    notifyListeners();
+  }
+
+  void loadDocument(CanvasDocument doc) {
+    _undoStack.clear();
+    _redoStack.clear();
+    _selectedId = null;
+    _canvasColor = doc.canvasColor;
+    _elements
+      ..clear()
+      ..addAll(doc.elements);
+    _strokes
+      ..clear()
+      ..addAll(doc.strokes);
     notifyListeners();
   }
 
