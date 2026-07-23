@@ -143,7 +143,7 @@ class _EditableElementState extends State<EditableElement> {
                       ? BoxDecoration(
                           border: Border.all(color: primary, width: 1.5))
                       : null,
-                  child: _ElementContent(element: el),
+                  child: CanvasElementContent(element: el),
                 ),
               ),
             ),
@@ -203,8 +203,8 @@ class _EditableElementState extends State<EditableElement> {
   }
 }
 
-class _ElementContent extends StatelessWidget {
-  const _ElementContent({required this.element});
+class CanvasElementContent extends StatelessWidget {
+  const CanvasElementContent({super.key, required this.element});
 
   final CanvasElement element;
 

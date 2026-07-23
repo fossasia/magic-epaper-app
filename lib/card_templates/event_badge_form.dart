@@ -9,9 +9,10 @@ import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
-import 'package:barcode_widget/barcode_widget.dart';
-import 'package:magicepaperapp/util/template_util.dart';
-import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
+import 'package:magicepaperapp/card_templates/template_layer_builders.dart';
+import 'package:magicepaperapp/card_templates/bulk/bulk_csv_import_screen.dart';
+import 'package:magicepaperapp/card_templates/bulk/bulk_template.dart';
+import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/card_templates/util/barcode_scanner_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
@@ -20,8 +21,10 @@ AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 class EventBadgeForm extends StatefulWidget {
   final int width;
   final int height;
+  final DisplayDevice? device;
 
-  const EventBadgeForm({super.key, required this.width, required this.height});
+  const EventBadgeForm(
+      {super.key, required this.width, required this.height, this.device});
 
   @override
   State<EventBadgeForm> createState() => _EventBadgeFormState();
@@ -146,111 +149,12 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
     });
 
     try {
-      final List<LayerSpec> layers = [];
-
-      final layoutParams =
-          ResponsiveLayoutUtil.getEventBadgeLayout(widget.width, widget.height);
-
-      if (_profileImage != null) {
-        layers.add(LayerSpec.widget(
-          widget: ClipOval(
-            child: Image.file(_profileImage!,
-                width: 200, height: 200, fit: BoxFit.cover),
-          ),
-          offset: layoutParams.profileImageOffset,
-          scale: layoutParams.profileImageScale,
-          kind: LayerKind.image,
-          elementId: 'profileImage',
-        ));
-      }
-
-      if (_badgeData.eventName.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          textStyle: TextStyle(
-            fontSize: layoutParams.eventNameFontSize,
-            fontWeight: FontWeight.bold,
-            color: colorBlack,
-          ),
-          text: _badgeData.eventName,
-          textColor: colorBlack,
-          backgroundColor: colorWhite,
-          textAlign: TextAlign.center,
-          offset: layoutParams.eventNameOffset,
-          scale: layoutParams.eventNameScale,
-          elementId: 'eventName',
-        ));
-      }
-
-      if (_badgeData.attendeeName.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          text:
-              '${appLocalizations.attendeeNamePrefix}${_badgeData.attendeeName}',
-          textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: colorBlack,
-          backgroundColor: colorWhite,
-          textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['attendeeName']!,
-          scale: layoutParams.textFieldScale,
-          elementId: 'attendeeName',
-        ));
-      }
-
-      if (_badgeData.role.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          text: '${appLocalizations.rolePrefix}${_badgeData.role}',
-          textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: colorBlack,
-          backgroundColor: colorWhite,
-          textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['role']!,
-          scale: layoutParams.textFieldScale,
-          elementId: 'role',
-        ));
-      }
-
-      if (_badgeData.organization.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          text:
-              '${appLocalizations.organizationPrefix}${_badgeData.organization}',
-          textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: colorBlack,
-          backgroundColor: colorWhite,
-          textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['organization']!,
-          scale: layoutParams.textFieldScale,
-          elementId: 'organization',
-        ));
-      }
-
-      if (_badgeData.ticketId.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          text: '${appLocalizations.ticketIdPrefix}${_badgeData.ticketId}',
-          textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: colorBlack,
-          backgroundColor: colorWhite,
-          textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['ticketId']!,
-          scale: layoutParams.textFieldScale,
-          elementId: 'ticketId',
-        ));
-      }
-
-      if (_badgeData.qrData.isNotEmpty) {
-        layers.add(LayerSpec.widget(
-          widget: BarcodeWidget(
-            padding: const EdgeInsets.all(Dimens.spacingXxs),
-            backgroundColor: colorWhite,
-            barcode: Barcode.qrCode(),
-            data: _badgeData.qrData,
-            width: layoutParams.qrCodeSize.width,
-            height: layoutParams.qrCodeSize.height,
-          ),
-          offset: layoutParams.qrCodeOffset,
-          scale: layoutParams.qrCodeScale,
-          kind: LayerKind.barcode,
-          elementId: 'qr',
-        ));
-      }
+      final layers = buildEventBadgeLayers(
+        data: _badgeData,
+        width: widget.width,
+        height: widget.height,
+        photo: _profileImage,
+      );
 
       final result = await Navigator.of(context).push<Object>(
         MaterialPageRoute(
@@ -472,8 +376,43 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
                         ),
                 ),
               ),
+              const SizedBox(height: Dimens.spacingM),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: OutlinedButton.icon(
+                  onPressed: _openBulkImport,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: colorPrimary,
+                    side: const BorderSide(color: colorPrimary),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(Dimens.radiusM),
+                    ),
+                  ),
+                  icon: const Icon(Icons.table_view, size: 18),
+                  label: Text(
+                    appLocalizations.bulkImportCsv,
+                    style: const TextStyle(
+                        fontSize: Dimens.fontSizeL,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  void _openBulkImport() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => BulkCsvImportScreen(
+          template: eventBadgeBulkTemplate(),
+          width: widget.width,
+          height: widget.height,
+          device: widget.device,
         ),
       ),
     );
