@@ -53,6 +53,7 @@ class ImageCardWidget extends StatelessWidget {
                         const BorderRadius.vertical(top: Radius.circular(12)),
                     child: Image.file(
                       File(image.filePath),
+                      key: ValueKey(image.imageCacheKey),
                       fit: BoxFit.cover,
                       width: double.infinity,
                       isAntiAlias: false,

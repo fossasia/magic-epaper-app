@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:barcode_widget/barcode_widget.dart';
@@ -107,4 +108,81 @@ class CanvasElement {
       elementId: elementId,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'kind': kind.name,
+      'position': {'dx': position.dx, 'dy': position.dy},
+      'scale': scale,
+      'rotation': rotation,
+      'baseSize': {'w': baseSize.width, 'h': baseSize.height},
+      'color': color.toARGB32(),
+      if (text != null) 'text': text,
+      'fontSize': fontSize,
+      'fontWeight': fontWeight.value,
+      'textAlign': textAlign.index,
+      if (fontFamily != null) 'fontFamily': fontFamily,
+      if (imageBytes != null) 'imageBytes': base64Encode(imageBytes!),
+      if (barcode != null) 'barcodeName': barcode!.name,
+      if (barcodeData != null) 'barcodeData': barcodeData,
+      'followCanvasTheme': followCanvasTheme,
+      if (elementId != null) 'elementId': elementId,
+    };
+  }
+
+  factory CanvasElement.fromJson(Map<String, dynamic> json) {
+    final position = json['position'] as Map<String, dynamic>;
+    final baseSize = json['baseSize'] as Map<String, dynamic>;
+    final imageB64 = json['imageBytes'] as String?;
+    final barcodeName = json['barcodeName'] as String?;
+    return CanvasElement(
+      id: json['id'] as String,
+      kind: CanvasElementKind.values.byName(json['kind'] as String),
+      position: Offset(
+        (position['dx'] as num).toDouble(),
+        (position['dy'] as num).toDouble(),
+      ),
+      scale: (json['scale'] as num).toDouble(),
+      rotation: (json['rotation'] as num).toDouble(),
+      baseSize: Size(
+        (baseSize['w'] as num).toDouble(),
+        (baseSize['h'] as num).toDouble(),
+      ),
+      color: Color(json['color'] as int),
+      text: json['text'] as String?,
+      fontSize: (json['fontSize'] as num).toDouble(),
+      fontWeight: FontWeight.values.firstWhere(
+        (w) => w.value == json['fontWeight'] as int,
+        orElse: () => FontWeight.normal,
+      ),
+      textAlign: TextAlign.values[json['textAlign'] as int],
+      fontFamily: json['fontFamily'] as String?,
+      imageBytes: imageB64 == null ? null : base64Decode(imageB64),
+      barcode: barcodeName == null ? null : barcodeByName(barcodeName),
+      barcodeData: json['barcodeData'] as String?,
+      followCanvasTheme: json['followCanvasTheme'] as bool? ?? true,
+      elementId: json['elementId'] as String?,
+    );
+  }
 }
+
+Barcode barcodeByName(String name) => _barcodesByName[name] ?? Barcode.qrCode();
+
+final Map<String, Barcode> _barcodesByName = {
+  for (final b in <Barcode>[
+    Barcode.qrCode(),
+    Barcode.dataMatrix(),
+    Barcode.aztec(),
+    Barcode.pdf417(),
+    Barcode.code128(),
+    Barcode.code93(),
+    Barcode.code39(),
+    Barcode.codabar(),
+    Barcode.ean13(),
+    Barcode.ean8(),
+    Barcode.itf(),
+    Barcode.upcA(),
+  ])
+    b.name: b,
+};
