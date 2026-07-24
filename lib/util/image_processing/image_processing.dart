@@ -24,6 +24,8 @@ class ImageProcessing {
   static const bwBayerDither = ImageProcessingMethod(DitherMethod.bayer, false);
   static const bwSierra2Dither =
       ImageProcessingMethod(DitherMethod.sierra2, false);
+  static const bwBurkesDither =
+      ImageProcessingMethod(DitherMethod.burkes, false);
 
   static const bwHalftoneDither = ImageProcessingMethod(
       DitherMethod.halftone, false,
@@ -42,6 +44,8 @@ class ImageProcessing {
   static const bwrBayerDither = ImageProcessingMethod(DitherMethod.bayer, true);
   static const bwrSierra2Dither =
       ImageProcessingMethod(DitherMethod.sierra2, true);
+  static const bwrBurkesDither =
+      ImageProcessingMethod(DitherMethod.burkes, true);
 
   static const bwrHalftone =
       ImageProcessingMethod(DitherMethod.halftone, true, useDartHalftone: true);
