@@ -9,9 +9,10 @@ import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
-import 'package:barcode_widget/barcode_widget.dart';
-import 'package:magicepaperapp/util/template_util.dart';
-import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
+import 'package:magicepaperapp/card_templates/template_layer_builders.dart';
+import 'package:magicepaperapp/card_templates/bulk/bulk_csv_import_screen.dart';
+import 'package:magicepaperapp/card_templates/bulk/bulk_template.dart';
+import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/card_templates/util/barcode_scanner_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
@@ -20,9 +21,10 @@ AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 class EntryPassTagForm extends StatefulWidget {
   final int width;
   final int height;
+  final DisplayDevice? device;
 
   const EntryPassTagForm(
-      {super.key, required this.width, required this.height});
+      {super.key, required this.width, required this.height, this.device});
 
   @override
   State<EntryPassTagForm> createState() => _EntryPassTagFormState();
@@ -181,109 +183,12 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
     });
 
     try {
-      final List<LayerSpec> layers = [];
-
-      final layoutParams = ResponsiveLayoutUtil.getEntryPassTagLayout(
-          widget.width, widget.height);
-
-      if (_profileImage != null) {
-        layers.add(LayerSpec.widget(
-          widget: ClipOval(
-            child: Image.file(_profileImage!,
-                width: 200, height: 200, fit: BoxFit.cover),
-          ),
-          offset: layoutParams.profileImageOffset,
-          scale: layoutParams.profileImageScale,
-          kind: LayerKind.image,
-          elementId: 'profileImage',
-        ));
-      }
-
-      if (_passData.venueName.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          textStyle: TextStyle(
-            fontSize: layoutParams.venueNameFontSize,
-            fontWeight: FontWeight.bold,
-            color: colorBlack,
-          ),
-          text: _passData.venueName,
-          textColor: colorBlack,
-          backgroundColor: colorWhite,
-          textAlign: TextAlign.center,
-          offset: layoutParams.venueNameOffset,
-          scale: layoutParams.venueNameScale,
-          elementId: 'venueName',
-        ));
-      }
-
-      if (_passData.visitorName.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          text: '${appLocalizations.visitorNamePrefix}${_passData.visitorName}',
-          textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: colorBlack,
-          backgroundColor: colorWhite,
-          textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['visitorName']!,
-          scale: layoutParams.textFieldScale,
-          elementId: 'visitorName',
-        ));
-      }
-
-      if (_passData.passType.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          text: '${appLocalizations.passTypePrefix}${_passData.passType}',
-          textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: colorBlack,
-          backgroundColor: colorWhite,
-          textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['passType']!,
-          scale: layoutParams.textFieldScale,
-          elementId: 'passType',
-        ));
-      }
-
-      if (_passData.validDate.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          text: '${appLocalizations.validDatePrefix}${_passData.validDate}',
-          textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: colorBlack,
-          backgroundColor: colorWhite,
-          textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['validDate']!,
-          scale: layoutParams.textFieldScale,
-          elementId: 'validDate',
-        ));
-      }
-
-      if (_passData.passId.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          text: '${appLocalizations.passIdPrefix}${_passData.passId}',
-          textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textColor: colorBlack,
-          backgroundColor: colorWhite,
-          textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['passId']!,
-          scale: layoutParams.textFieldScale,
-          elementId: 'passId',
-        ));
-      }
-
-      if (_passData.qrData.isNotEmpty) {
-        layers.add(LayerSpec.widget(
-          widget: BarcodeWidget(
-            padding: const EdgeInsets.all(Dimens.spacingXxs),
-            backgroundColor: colorWhite,
-            barcode: Barcode.qrCode(),
-            data: _passData.qrData,
-            width: layoutParams.qrCodeSize.width,
-            height: layoutParams.qrCodeSize.height,
-          ),
-          offset: layoutParams.qrCodeOffset,
-          scale: layoutParams.qrCodeScale,
-          kind: LayerKind.barcode,
-          elementId: 'qr',
-        ));
-      }
+      final layers = buildEntryPassTagLayers(
+        data: _passData,
+        width: widget.width,
+        height: widget.height,
+        photo: _profileImage,
+      );
 
       final result = await Navigator.of(context).push<Object>(
         MaterialPageRoute(
@@ -507,8 +412,43 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
                         ),
                 ),
               ),
+              const SizedBox(height: Dimens.spacingM),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: OutlinedButton.icon(
+                  onPressed: _openBulkImport,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: colorPrimary,
+                    side: const BorderSide(color: colorPrimary),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(Dimens.radiusM),
+                    ),
+                  ),
+                  icon: const Icon(Icons.table_view, size: 18),
+                  label: Text(
+                    appLocalizations.bulkImportCsv,
+                    style: const TextStyle(
+                        fontSize: Dimens.fontSizeL,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  void _openBulkImport() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => BulkCsvImportScreen(
+          template: entryPassTagBulkTemplate(),
+          width: widget.width,
+          height: widget.height,
+          device: widget.device,
         ),
       ),
     );

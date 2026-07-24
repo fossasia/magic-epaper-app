@@ -758,6 +758,17 @@
   "dataTransferSuccessfulMessage": "Data transfer successful. The display will now refresh.",
   "readyToTransfer": "Ready to Transfer",
   "holdPhoneNearDisplay": "Hold your phone near the display to begin.",
+  "bulkImportCsv": "Bulk import (CSV)",
+  "bulkImportTitle": "Bulk Import",
+  "bulkSelectCsv": "Select a CSV file",
+  "bulkRowsDetected": "{count} rows detected",
+  "@bulkRowsDetected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "privacyPolicy": "Privacy Policy",
   "flipHorizontally": "Flip Horizontally",
   "flipVertically": "Flip Vertically",
@@ -768,6 +779,166 @@
     "placeholders": {
       "value": {
         "type": "int"
+      }
+    }
+  },
+  "bulkMapColumns": "Map columns",
+  "bulkMapColumnsSubtitle": "Match each field to a column from your file.",
+  "bulkColumnNone": "— None —",
+  "bulkAddPhotos": "Add photos",
+  "bulkPhotosSelected": "{count} photos added",
+  "@bulkPhotosSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkPhotosHint": "Photos are matched to rows by file name using the photo column.",
+  "bulkGenerate": "Generate {count} cards",
+  "@bulkGenerate": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkGenerating": "Generating {current} of {total}…",
+  "@bulkGenerating": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkResultsTitle": "Generated Cards",
+  "bulkSaveAll": "Save all to Library",
+  "bulkTransfer": "Transfer",
+  "bulkSavedCount": "Saved {count} cards to Library",
+  "@bulkSavedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkSaveFailed": "Could not save card",
+  "bulkNoRows": "No data rows found in the CSV.",
+  "bulkMapRequired": "Map all required fields first.",
+  "bulkNothingGenerated": "No cards were generated.",
+  "bulkCardNumber": "Card {number}",
+  "@bulkCardNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkPhotoFileName": "Photo (file name)",
+  "productDescription": "Product Description",
+  "bulkStepUpload": "Upload",
+  "bulkStepMap": "Map",
+  "bulkStepPhotos": "Photos",
+  "bulkStepReview": "Review",
+  "bulkUploadHint": "Row 1 should be the column names; each row after it becomes one card.",
+  "bulkChangeFile": "Change file",
+  "bulkExpectedColumns": "Columns this template uses (* = required)",
+  "bulkLivePreview": "Live preview",
+  "bulkFirstRowNote": "Showing the first row from your file.",
+  "bulkRequired": "Required",
+  "bulkAutoMatched": "Auto",
+  "bulkColumnLabel": "Spreadsheet column",
+  "bulkColumnDontUse": "Don't use",
+  "bulkPhotoColumnUnmapped": "Tip: map the photo column on the previous step so photos attach to the right rows by file name.",
+  "bulkReviewReady": "{count} cards ready to generate",
+  "@bulkReviewReady": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkBack": "Back",
+  "bulkNext": "Next",
+  "bulkAdjustMapping": "Adjust column mapping",
+  "bulkAllRequiredMatched": "All required fields are matched.",
+  "bulkRequiredMissing": "Still needs a column: {fields}",
+  "@bulkRequiredMissing": {
+    "placeholders": {
+      "fields": {
+        "type": "String"
+      }
+    }
+  },
+  "bulkColumnsMatched": "{matched} of {total} fields matched to a column",
+  "@bulkColumnsMatched": {
+    "placeholders": {
+      "matched": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkPhotosMatched": "Matched {matched} of {total} rows by file name",
+  "@bulkPhotosMatched": {
+    "placeholders": {
+      "matched": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkPhotosOptional": "Photos (optional)",
+  "bulkPhotoColumnLabel": "Photo (link or file)",
+  "bulkRecordsTitle": "Records",
+  "bulkRecordsHint": "Tap any record to edit its details",
+  "bulkEditRecordTitle": "Edit details",
+  "bulkSaveChanges": "Save",
+  "bulkCancel": "Cancel",
+  "bulkResultsCount": "{count} cards generated",
+  "@bulkResultsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkEdit": "Edit",
+  "bulkDone": "Done",
+  "bulkSaveAllDone": "Save all & Done",
+  "bulkPhotoLinkHint": "Paste an image link (https://…) or use \"Pick file\" for a photo on your device.",
+  "bulkPickFile": "Pick file",
+  "bulkPhotosOrderHint": "Add a photo to each row below. No file names needed.",
+  "bulkAddPhotosInOrder": "Add photos in order",
+  "bulkRowAddPhoto": "Add photo",
+  "bulkRowChangePhoto": "Change",
+  "bulkPhotosAddedInOrder": "{count} photos added to the first rows. Tap any row to change.",
+  "@bulkPhotosAddedInOrder": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkDownloadSample": "Download sample CSV",
+  "bulkSampleSaved": "Sample CSV saved to your device. Fill it in and upload it.",
+  "bulkNameColumnsHint": "Name your spreadsheet columns like these and they line up automatically — no matching needed.",
+  "bulkColumnsAutoMatched": "All columns matched automatically",
+  "bulkEditColumns": "Edit",
+  "bulkFixColumns": "One column needs matching",
+  "bulkPhotoInstructions": "1. In your CSV, add a column with each row's image file name (e.g. john.jpg).\n2. Tap \"Add photos\" and choose those same image files.",
+  "bulkPhotosUnmatched": "Couldn't find files for: {names}",
+  "@bulkPhotosUnmatched": {
+    "placeholders": {
+      "names": {
+        "type": "String"
       }
     }
   },
