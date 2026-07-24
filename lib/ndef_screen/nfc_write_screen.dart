@@ -2,19 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:magicepaperapp/theme/colors.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/ndef_screen/app_launcher_card.dart';
 import 'package:magicepaperapp/ndef_screen/app_nfc/app_data_model.dart';
-import 'package:magicepaperapp/ndef_screen/controller/nfc_controller.dart';
+import 'package:magicepaperapp/ndef_screen/nfc_base_screen_state.dart';
 import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
+import 'package:magicepaperapp/ndef_screen/widgets/nfc_disabled_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_status_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_write_card.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
-import 'dart:async';
-import '../util/app_logger.dart';
-
-AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class NFCWriteScreen extends StatefulWidget {
   const NFCWriteScreen({super.key});
@@ -23,28 +18,17 @@ class NFCWriteScreen extends StatefulWidget {
   State<NFCWriteScreen> createState() => _NFCWriteScreenState();
 }
 
-class _NFCWriteScreenState extends State<NFCWriteScreen>
-    with WidgetsBindingObserver {
-  late NFCController _nfcController;
+class _NFCWriteScreenState extends NFCBaseScreenState<NFCWriteScreen> {
   String _textValue = '';
   String _urlValue = '';
   String _wifiSSIDValue = '';
   String _wifiPasswordValue = '';
   VCardData? _vCardData;
   AppData? _selectedApp;
-  Timer? _nfcAvailabilityTimer;
 
   @override
   void initState() {
     super.initState();
-    _nfcController = NFCController();
-    _nfcController.addListener(_onNFCStateChanged);
-
-    WidgetsBinding.instance.addObserver(this);
-
-    _checkNFCAvailability();
-    _startNFCAvailabilityListener();
-
     _vCardData = VCardData(
       firstName: '',
       lastName: '',
@@ -60,104 +44,6 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
     );
   }
 
-  @override
-  void dispose() {
-    _nfcController.removeListener(_onNFCStateChanged);
-    _nfcController.dispose();
-    _stopNFCAvailabilityListener();
-
-    WidgetsBinding.instance.removeObserver(this);
-
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.resumed) {
-      _checkNFCAvailability();
-      _startNFCAvailabilityListener();
-    } else if (state == AppLifecycleState.paused) {
-      _stopNFCAvailabilityListener();
-    }
-  }
-
-  void _startNFCAvailabilityListener() {
-    _stopNFCAvailabilityListener();
-
-    _nfcAvailabilityTimer = Timer.periodic(const Duration(seconds: 2), (
-      timer,
-    ) async {
-      await _checkNFCAvailabilityWithChangeDetection();
-    });
-  }
-
-  void _stopNFCAvailabilityListener() {
-    _nfcAvailabilityTimer?.cancel();
-    _nfcAvailabilityTimer = null;
-  }
-
-  Future<void> _checkNFCAvailabilityWithChangeDetection() async {
-    try {
-      NFCAvailability previousAvailability = _nfcController.availability;
-      await _nfcController.checkNFCAvailability();
-
-      if (previousAvailability != _nfcController.availability) {
-        _showNFCStatusChangeMessage(
-          previousAvailability,
-          _nfcController.availability,
-        );
-      }
-    } catch (e) {
-      AppLogger.error('Error checking NFC availability: $e');
-    }
-  }
-
-  void _showNFCStatusChangeMessage(NFCAvailability from, NFCAvailability to) {
-    String message;
-    bool isError = false;
-
-    switch (to) {
-      case NFCAvailability.available:
-        message = appLocalizations.nfcIsNowEnabledAndReady;
-        break;
-      case NFCAvailability.disabled:
-        message = appLocalizations.nfcHasBeenDisabled;
-        isError = true;
-        break;
-      case NFCAvailability.not_supported:
-        message = appLocalizations.nfcIsNotSupportedOnDevice;
-        isError = true;
-        break;
-    }
-
-    _showSnackBar(message, isError: isError);
-  }
-
-  void _onNFCStateChanged() {
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  Future<void> _checkNFCAvailability() async {
-    await _nfcController.checkNFCAvailability();
-  }
-
-  void _showSnackBar(String message, {bool isError = false}) {
-    if (!mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? Colors.red : Colors.green,
-        duration: const Duration(seconds: 3),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
-
   void _onAppSelected(AppData? app) {
     setState(() {
       _selectedApp = app;
@@ -166,10 +52,10 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
 
   Future<void> _writeAppLauncher() async {
     if (_selectedApp != null) {
-      await _nfcController.writeAppLauncherRecord(_selectedApp!.packageName);
+      await nfcController.writeAppLauncherRecord(_selectedApp!.packageName);
       if (!mounted) return;
       _handleWriteResult();
-      if (_nfcController.result.contains(appLocalizations.successfully)) {
+      if (nfcController.result.contains(this.appLocalizations.successfully)) {
         setState(() {
           _selectedApp = null;
         });
@@ -178,10 +64,11 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
   }
 
   void _handleWriteResult() {
-    if (_nfcController.result.contains(appLocalizations.error)) {
-      _showSnackBar(appLocalizations.writeOperationFailed, isError: true);
-    } else if (_nfcController.result.contains(appLocalizations.successfully)) {
-      _showSnackBar(appLocalizations.dataWrittenSuccessfully);
+    if (nfcController.result.contains(this.appLocalizations.error)) {
+      showSnackBar(this.appLocalizations.writeOperationFailed, isError: true);
+    } else if (nfcController.result
+        .contains(this.appLocalizations.successfully)) {
+      showSnackBar(this.appLocalizations.dataWrittenSuccessfully);
       setState(() {
         _textValue = '';
         _urlValue = '';
@@ -207,20 +94,20 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      title: appLocalizations.writeNfcTags,
+      title: this.appLocalizations.writeNfcTags,
       index: 2,
       actions: [
         IconButton(
           icon: const Icon(Icons.delete_sweep, color: colorWhite),
           onPressed: () {
-            if (_nfcController.result.isNotEmpty) {
-              _nfcController.clearResult();
-              _showSnackBar(appLocalizations.resultsCleared);
+            if (nfcController.result.isNotEmpty) {
+              nfcController.clearResult();
+              showSnackBar(this.appLocalizations.resultsCleared);
             } else {
-              _showSnackBar(appLocalizations.nothingToClear, isError: true);
+              showSnackBar(this.appLocalizations.nothingToClear, isError: true);
             }
           },
-          tooltip: appLocalizations.clearResults,
+          tooltip: this.appLocalizations.clearResults,
         ),
       ],
       body: SafeArea(
@@ -230,13 +117,13 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
           child: Column(
             children: [
               NFCStatusCard(
-                availability: _nfcController.availability,
-                onRefresh: _checkNFCAvailability,
+                availability: nfcController.availability,
+                onRefresh: checkNFCAvailability,
               ),
               const SizedBox(height: Dimens.spacingL),
-              if (_nfcController.availability == NFCAvailability.available) ...[
+              if (nfcController.availability == NFCAvailability.available) ...[
                 NFCWriteCard(
-                  isWriting: _nfcController.isWriting,
+                  isWriting: nfcController.isWriting,
                   textValue: _textValue,
                   urlValue: _urlValue,
                   wifiSSIDValue: _wifiSSIDValue,
@@ -251,17 +138,17 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
                   onVCardChanged: (vCardData) =>
                       setState(() => _vCardData = vCardData),
                   onWriteText: () async {
-                    await _nfcController.writeTextRecord(_textValue);
+                    await nfcController.writeTextRecord(_textValue);
                     if (!mounted) return;
                     _handleWriteResult();
                   },
                   onWriteUrl: () async {
-                    await _nfcController.writeUrlRecord(_urlValue);
+                    await nfcController.writeUrlRecord(_urlValue);
                     if (!mounted) return;
                     _handleWriteResult();
                   },
                   onWriteWifi: () async {
-                    await _nfcController.writeWifiRecord(
+                    await nfcController.writeWifiRecord(
                       _wifiSSIDValue,
                       _wifiPasswordValue,
                     );
@@ -270,13 +157,13 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
                   },
                   onWriteVCard: () async {
                     if (_vCardData != null) {
-                      await _nfcController.writeVCardRecord(_vCardData!);
+                      await nfcController.writeVCardRecord(_vCardData!);
                       if (!mounted) return;
                       _handleWriteResult();
                     }
                   },
                   onWriteMultiple: () async {
-                    await _nfcController.writeMultipleRecords(
+                    await nfcController.writeMultipleRecords(
                       _textValue,
                       _urlValue,
                       _wifiSSIDValue,
@@ -290,66 +177,13 @@ class _NFCWriteScreenState extends State<NFCWriteScreen>
                 AppLauncherCard(
                   selectedApp: _selectedApp,
                   onAppSelected: _onAppSelected,
-                  isWriting: _nfcController.isWriting,
+                  isWriting: nfcController.isWriting,
                   onWriteAppLauncher: _writeAppLauncher,
                 ),
                 const SizedBox(height: Dimens.spacingL),
-              ] else ...[
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: Dimens.spacingS),
-                  decoration: BoxDecoration(
-                    color: colorWhite,
-                    borderRadius: BorderRadius.circular(Dimens.radiusXl),
-                    boxShadow: [
-                      BoxShadow(
-                        color: colorBlack.withValues(alpha: 0.08),
-                        spreadRadius: 0,
-                        blurRadius: 10,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(Dimens.spacingXxl),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(Dimens.spacingL),
-                          decoration: BoxDecoration(
-                            color: Colors.orange.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: const Icon(
-                            Icons.warning_outlined,
-                            size: 48,
-                            color: Colors.orange,
-                          ),
-                        ),
-                        const SizedBox(height: Dimens.spacingXxl),
-                        Text(
-                          appLocalizations.nfcNotAvailable,
-                          style: const TextStyle(
-                            fontSize: Dimens.fontSizeXxl,
-                            fontWeight: FontWeight.bold,
-                            color: colorBlack87,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: Dimens.spacingM),
-                        Text(
-                          appLocalizations.enableNfcMessage,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: Dimens.fontSizeL,
-                            color: grey600,
-                            height: 1.4,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              ] else if (nfcController.availability ==
+                  NFCAvailability.disabled) ...[
+                const NFCDisabledCard(),
               ],
               const SizedBox(height: Dimens.spacingL),
             ],
