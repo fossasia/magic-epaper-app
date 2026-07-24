@@ -111,6 +111,8 @@ class ConfigurableEpd extends Epd {
       namedProcessingMethods.add(NamedImageFilter(
           ImageProcessing.bwBayerDither, appLocalizations.bayer));
       namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwSierra2Dither, appLocalizations.sierra2));
+      namedProcessingMethods.add(NamedImageFilter(
           ImageProcessing.bwBurkesDither, appLocalizations.burkes));
     } else {
       namedProcessingMethods.add(NamedImageFilter(
@@ -130,6 +132,8 @@ class ConfigurableEpd extends Epd {
           ImageProcessing.bwrThreshold, appLocalizations.threshold));
       namedProcessingMethods.add(NamedImageFilter(
           ImageProcessing.bwrBayerDither, appLocalizations.bayer));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwrSierra2Dither, appLocalizations.sierra2));
       namedProcessingMethods.add(NamedImageFilter(
           ImageProcessing.bwrBurkesDither, appLocalizations.burkes));
     }

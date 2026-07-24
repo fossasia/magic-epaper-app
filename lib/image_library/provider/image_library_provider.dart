@@ -187,6 +187,37 @@ class ImageLibraryProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> updateSavedImage(
+    String id, {
+    Uint8List? imageData,
+    Map<String, dynamic>? metadata,
+  }) async {
+    try {
+      await _ensureInitialized();
+      await _initializeDirectories();
+      final index = _savedImages.indexWhere((image) => image.id == id);
+      if (index == -1) return;
+      final old = _savedImages[index];
+      if (imageData != null) {
+        await File(old.filePath).writeAsBytes(imageData);
+        await FileImage(File(old.filePath)).evict();
+      }
+      _savedImages[index] = SavedImage(
+        id: old.id,
+        name: old.name,
+        filePath: old.filePath,
+        createdAt: old.createdAt,
+        source: old.source,
+        metadata: metadata ?? old.metadata,
+      );
+      await _persistMetadata();
+      notifyListeners();
+    } catch (e) {
+      AppLogger.error('Error updating saved image: $e');
+      rethrow;
+    }
+  }
+
   Future<void> deleteImage(String id) async {
     try {
       await _ensureInitialized();

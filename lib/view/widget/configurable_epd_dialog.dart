@@ -289,25 +289,26 @@ class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
       return;
     }
     final pickedColor = await showDialog<Color>(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: Text(appLocalizations.selectAColor),
-              content: SizedBox(
-                width: double.maxFinite,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: available.length,
-                  itemBuilder: (context, index) {
-                    final color = available[index];
-                    return ListTile(
-                      leading: CircleAvatar(backgroundColor: color),
-                      title: Text(ColorUtils.getColorDisplayName(color)),
-                      onTap: () => Navigator.of(context).pop(color),
-                    );
-                  },
-                ),
-              ),
-            ));
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(appLocalizations.selectAColor),
+        content: SizedBox(
+          width: 350,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: available.length,
+            itemBuilder: (context, index) {
+              final color = available[index];
+              return ListTile(
+                leading: CircleAvatar(backgroundColor: color),
+                title: Text(ColorUtils.getColorDisplayName(color)),
+                onTap: () => Navigator.of(context).pop(color),
+              );
+            },
+          ),
+        ),
+      ),
+    );
 
     if (pickedColor != null) {
       if (!mounted) return;
