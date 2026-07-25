@@ -257,7 +257,7 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
                   return const Center(
                       child: CircularProgressIndicator(color: colorAccent));
                 }
-                
+
                 if (provider.hasError) {
                   return ErrorStateWidget(
                     onRetry: () =>
