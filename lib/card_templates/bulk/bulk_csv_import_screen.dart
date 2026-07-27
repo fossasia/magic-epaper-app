@@ -198,7 +198,6 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
     }
   }
 
-
   Future<void> _downloadSample() async {
     final headers = widget.template.fields.map((f) => f.label).toList();
     final buffer = StringBuffer();
@@ -233,36 +232,176 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
     switch (widget.template.id) {
       case 'price_tag':
         return const [
-          {'productName': 'Basmati Rice 5kg', 'productDescription': 'India Gate Classic', 'price': '649', 'currency': '₹', 'quantity': '25 in stock', 'barcode': '8901234500017'},
-          {'productName': 'Masala Chai 250g', 'productDescription': 'Tata Tea Premium', 'price': '145', 'currency': '₹', 'quantity': '60 in stock', 'barcode': '8901234500024'},
-          {'productName': 'Pure Ghee 1L', 'productDescription': 'Amul', 'price': '615', 'currency': '₹', 'quantity': '18 in stock', 'barcode': '8901234500031'},
-          {'productName': 'Turmeric Powder 200g', 'productDescription': 'MDH Haldi', 'price': '82', 'currency': '₹', 'quantity': '45 in stock', 'barcode': '8901234500048'},
-          {'productName': 'Coconut Oil 500ml', 'productDescription': 'Parachute', 'price': '199', 'currency': '₹', 'quantity': '32 in stock', 'barcode': '8901234500055'},
+          {
+            'productName': 'Basmati Rice 5kg',
+            'productDescription': 'India Gate Classic',
+            'price': '649',
+            'currency': '₹',
+            'quantity': '25 in stock',
+            'barcode': '8901234500017'
+          },
+          {
+            'productName': 'Masala Chai 250g',
+            'productDescription': 'Tata Tea Premium',
+            'price': '145',
+            'currency': '₹',
+            'quantity': '60 in stock',
+            'barcode': '8901234500024'
+          },
+          {
+            'productName': 'Pure Ghee 1L',
+            'productDescription': 'Amul',
+            'price': '615',
+            'currency': '₹',
+            'quantity': '18 in stock',
+            'barcode': '8901234500031'
+          },
+          {
+            'productName': 'Turmeric Powder 200g',
+            'productDescription': 'MDH Haldi',
+            'price': '82',
+            'currency': '₹',
+            'quantity': '45 in stock',
+            'barcode': '8901234500048'
+          },
+          {
+            'productName': 'Coconut Oil 500ml',
+            'productDescription': 'Parachute',
+            'price': '199',
+            'currency': '₹',
+            'quantity': '32 in stock',
+            'barcode': '8901234500055'
+          },
         ];
       case 'event_badge':
         return const [
-          {'eventName': 'DevFest Bengaluru 2026', 'attendeeName': 'Ananya Desai', 'role': 'Speaker', 'organization': 'Google Developer Group', 'ticketId': 'DF-1001', 'qr': 'https://devfest.in/1001'},
-          {'eventName': 'DevFest Bengaluru 2026', 'attendeeName': 'Karthik Menon', 'role': 'Attendee', 'organization': 'Zoho', 'ticketId': 'DF-1002', 'qr': 'https://devfest.in/1002'},
-          {'eventName': 'DevFest Bengaluru 2026', 'attendeeName': 'Meera Joshi', 'role': 'Volunteer', 'organization': 'GDG Bengaluru', 'ticketId': 'DF-1003', 'qr': 'https://devfest.in/1003'},
-          {'eventName': 'DevFest Bengaluru 2026', 'attendeeName': 'Rohan Gupta', 'role': 'Sponsor', 'organization': 'Freshworks', 'ticketId': 'DF-1004', 'qr': 'https://devfest.in/1004'},
-          {'eventName': 'DevFest Bengaluru 2026', 'attendeeName': 'Divya Pillai', 'role': 'Organizer', 'organization': 'GDG Bengaluru', 'ticketId': 'DF-1005', 'qr': 'https://devfest.in/1005'},
+          {
+            'eventName': 'DevFest Bengaluru 2026',
+            'attendeeName': 'Ananya Desai',
+            'role': 'Speaker',
+            'organization': 'Google Developer Group',
+            'ticketId': 'DF-1001',
+            'qr': 'https://devfest.in/1001'
+          },
+          {
+            'eventName': 'DevFest Bengaluru 2026',
+            'attendeeName': 'Karthik Menon',
+            'role': 'Attendee',
+            'organization': 'Zoho',
+            'ticketId': 'DF-1002',
+            'qr': 'https://devfest.in/1002'
+          },
+          {
+            'eventName': 'DevFest Bengaluru 2026',
+            'attendeeName': 'Meera Joshi',
+            'role': 'Volunteer',
+            'organization': 'GDG Bengaluru',
+            'ticketId': 'DF-1003',
+            'qr': 'https://devfest.in/1003'
+          },
+          {
+            'eventName': 'DevFest Bengaluru 2026',
+            'attendeeName': 'Rohan Gupta',
+            'role': 'Sponsor',
+            'organization': 'Freshworks',
+            'ticketId': 'DF-1004',
+            'qr': 'https://devfest.in/1004'
+          },
+          {
+            'eventName': 'DevFest Bengaluru 2026',
+            'attendeeName': 'Divya Pillai',
+            'role': 'Organizer',
+            'organization': 'GDG Bengaluru',
+            'ticketId': 'DF-1005',
+            'qr': 'https://devfest.in/1005'
+          },
         ];
       case 'entry_pass_tag':
         return const [
-          {'venueName': 'Taj Mahal', 'visitorName': 'Amit Kulkarni', 'passType': 'VIP', 'validDate': '2026-08-15', 'passId': 'TAJ9001', 'qr': 'https://asi.gov.in/9001'},
-          {'venueName': 'Taj Mahal', 'visitorName': 'Fatima Khan', 'passType': 'General', 'validDate': '2026-08-15', 'passId': 'TAJ9002', 'qr': 'https://asi.gov.in/9002'},
-          {'venueName': 'Red Fort', 'visitorName': 'Suresh Rao', 'passType': 'Student', 'validDate': '2026-08-16', 'passId': 'RF9003', 'qr': 'https://asi.gov.in/9003'},
-          {'venueName': 'Gateway of India', 'visitorName': 'Neha Verma', 'passType': 'General', 'validDate': '2026-08-17', 'passId': 'GOI9004', 'qr': 'https://asi.gov.in/9004'},
-          {'venueName': 'Mysore Palace', 'visitorName': 'Rajesh Pillai', 'passType': 'VIP', 'validDate': '2026-08-18', 'passId': 'MP9005', 'qr': 'https://asi.gov.in/9005'},
+          {
+            'venueName': 'Taj Mahal',
+            'visitorName': 'Amit Kulkarni',
+            'passType': 'VIP',
+            'validDate': '2026-08-15',
+            'passId': 'TAJ9001',
+            'qr': 'https://asi.gov.in/9001'
+          },
+          {
+            'venueName': 'Taj Mahal',
+            'visitorName': 'Fatima Khan',
+            'passType': 'General',
+            'validDate': '2026-08-15',
+            'passId': 'TAJ9002',
+            'qr': 'https://asi.gov.in/9002'
+          },
+          {
+            'venueName': 'Red Fort',
+            'visitorName': 'Suresh Rao',
+            'passType': 'Student',
+            'validDate': '2026-08-16',
+            'passId': 'RF9003',
+            'qr': 'https://asi.gov.in/9003'
+          },
+          {
+            'venueName': 'Gateway of India',
+            'visitorName': 'Neha Verma',
+            'passType': 'General',
+            'validDate': '2026-08-17',
+            'passId': 'GOI9004',
+            'qr': 'https://asi.gov.in/9004'
+          },
+          {
+            'venueName': 'Mysore Palace',
+            'visitorName': 'Rajesh Pillai',
+            'passType': 'VIP',
+            'validDate': '2026-08-18',
+            'passId': 'MP9005',
+            'qr': 'https://asi.gov.in/9005'
+          },
         ];
       case 'employee_id':
       default:
         return const [
-          {'companyName': 'Infosys', 'name': 'Rahul Sharma', 'position': 'Software Engineer', 'division': 'Engineering', 'idNumber': 'INF1024', 'qr': 'https://infy.com/1024'},
-          {'companyName': 'Tata Consultancy Services', 'name': 'Priya Nair', 'position': 'Project Manager', 'division': 'Delivery', 'idNumber': 'TCS2048', 'qr': 'https://tcs.com/2048'},
-          {'companyName': 'Wipro', 'name': 'Arjun Reddy', 'position': 'QA Analyst', 'division': 'Quality Assurance', 'idNumber': 'WIP3072', 'qr': 'https://wipro.com/3072'},
-          {'companyName': 'HCLTech', 'name': 'Sneha Iyer', 'position': 'UX Designer', 'division': 'Design', 'idNumber': 'HCL4096', 'qr': 'https://hcltech.com/4096'},
-          {'companyName': 'Tech Mahindra', 'name': 'Vikram Singh', 'position': 'DevOps Engineer', 'division': 'Infrastructure', 'idNumber': 'TM5120', 'qr': 'https://techmahindra.com/5120'},
+          {
+            'companyName': 'Infosys',
+            'name': 'Rahul Sharma',
+            'position': 'Software Engineer',
+            'division': 'Engineering',
+            'idNumber': 'INF1024',
+            'qr': 'https://infy.com/1024'
+          },
+          {
+            'companyName': 'Tata Consultancy Services',
+            'name': 'Priya Nair',
+            'position': 'Project Manager',
+            'division': 'Delivery',
+            'idNumber': 'TCS2048',
+            'qr': 'https://tcs.com/2048'
+          },
+          {
+            'companyName': 'Wipro',
+            'name': 'Arjun Reddy',
+            'position': 'QA Analyst',
+            'division': 'Quality Assurance',
+            'idNumber': 'WIP3072',
+            'qr': 'https://wipro.com/3072'
+          },
+          {
+            'companyName': 'HCLTech',
+            'name': 'Sneha Iyer',
+            'position': 'UX Designer',
+            'division': 'Design',
+            'idNumber': 'HCL4096',
+            'qr': 'https://hcltech.com/4096'
+          },
+          {
+            'companyName': 'Tech Mahindra',
+            'name': 'Vikram Singh',
+            'position': 'DevOps Engineer',
+            'division': 'Infrastructure',
+            'idNumber': 'TM5120',
+            'qr': 'https://techmahindra.com/5120'
+          },
         ];
     }
   }
@@ -1200,21 +1339,21 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
                     ],
                     for (final f in widget.template.fields)
                       if (!f.isPhoto) ...[
-                      TextField(
-                        controller: controllers[f.key],
-                        decoration: InputDecoration(
-                          labelText: f.label,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: Dimens.spacingM,
-                              vertical: Dimens.spacingM),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(Dimens.radiusL),
+                        TextField(
+                          controller: controllers[f.key],
+                          decoration: InputDecoration(
+                            labelText: f.label,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: Dimens.spacingM,
+                                vertical: Dimens.spacingM),
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.circular(Dimens.radiusL),
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: Dimens.spacingM),
-                    ],
+                        const SizedBox(height: Dimens.spacingM),
+                      ],
                     const SizedBox(height: Dimens.spacingS),
                     Row(
                       children: [

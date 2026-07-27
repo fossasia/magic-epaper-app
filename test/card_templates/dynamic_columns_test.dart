@@ -53,7 +53,10 @@ void main() {
     });
 
     test('column keys are slugified and unique-ish', () {
-      final cols = detectColumnRoles(['Full Name', 'Ticket #'], [
+      final cols = detectColumnRoles([
+        'Full Name',
+        'Ticket #'
+      ], [
         ['A', 'T-1'],
       ]);
       expect(cols[0].key, 'full_name');
@@ -72,8 +75,8 @@ void main() {
       expect(t.fields.length, 3);
       expect(t.hasPhoto, isTrue);
       expect(t.nameField.label, 'Name');
-      final layers = t.buildLayers({'name': 'Rahul', 'role': 'Speaker'}, null,
-          296, 128);
+      final layers =
+          t.buildLayers({'name': 'Rahul', 'role': 'Speaker'}, null, 296, 128);
       expect(layers, isNotEmpty);
     });
   });

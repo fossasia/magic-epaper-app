@@ -158,53 +158,54 @@ class _BulkResultsScreenState extends State<BulkResultsScreen> {
           child: widget.badges.isEmpty
               ? Center(child: Text(appLocalizations.bulkNothingGenerated))
               : Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(Dimens.spacingL,
-                        Dimens.spacingL, Dimens.spacingL, 0),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 38,
-                          height: 38,
-                          decoration: BoxDecoration(
-                            color: colorPrimary.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(Dimens.radiusL),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                          Dimens.spacingL, Dimens.spacingL, Dimens.spacingL, 0),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 38,
+                            height: 38,
+                            decoration: BoxDecoration(
+                              color: colorPrimary.withValues(alpha: 0.1),
+                              borderRadius:
+                                  BorderRadius.circular(Dimens.radiusL),
+                            ),
+                            child: const Icon(Icons.style_outlined,
+                                size: 20, color: colorPrimary),
                           ),
-                          child: const Icon(Icons.style_outlined,
-                              size: 20, color: colorPrimary),
-                        ),
-                        const SizedBox(width: Dimens.spacingM),
-                        Text(
-                          appLocalizations
-                              .bulkResultsCount(widget.badges.length),
-                          style: const TextStyle(
-                            fontSize: Dimens.fontSizeL,
-                            fontWeight: FontWeight.bold,
-                            color: colorBlack,
+                          const SizedBox(width: Dimens.spacingM),
+                          Text(
+                            appLocalizations
+                                .bulkResultsCount(widget.badges.length),
+                            style: const TextStyle(
+                              fontSize: Dimens.fontSizeL,
+                              fontWeight: FontWeight.bold,
+                              color: colorBlack,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: GridView.builder(
-                      padding: const EdgeInsets.all(Dimens.spacingL),
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 220,
-                        childAspectRatio: 0.82,
-                        mainAxisSpacing: 16,
-                        crossAxisSpacing: 16,
+                        ],
                       ),
-                      itemCount: widget.badges.length,
-                      itemBuilder: (context, index) =>
-                          _buildCard(widget.badges[index]),
                     ),
-                  ),
-                  _buildBottomBar(),
-                ],
-              ),
+                    Expanded(
+                      child: GridView.builder(
+                        padding: const EdgeInsets.all(Dimens.spacingL),
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 220,
+                          childAspectRatio: 0.82,
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 16,
+                        ),
+                        itemCount: widget.badges.length,
+                        itemBuilder: (context, index) =>
+                            _buildCard(widget.badges[index]),
+                      ),
+                    ),
+                    _buildBottomBar(),
+                  ],
+                ),
         ),
       ),
     );

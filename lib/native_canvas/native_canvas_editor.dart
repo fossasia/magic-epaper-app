@@ -398,7 +398,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     if (result == null) return;
     final measured = _measureText(
         result.text, result.fontSize, FontWeight.normal, result.fontFamily);
-    final aspect = measured.height == 0 ? 6.0 : measured.width / measured.height;
+    final aspect =
+        measured.height == 0 ? 6.0 : measured.width / measured.height;
     final oldFont = element.fontSize;
     final targetH = oldFont > 0
         ? element.baseSize.height * (result.fontSize / oldFont)

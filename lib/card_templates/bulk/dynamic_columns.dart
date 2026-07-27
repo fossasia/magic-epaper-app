@@ -118,8 +118,7 @@ List<LayerSpec> buildDynamicLayers(
       case ColumnRole.title:
         layers.add(LayerSpec.text(
           text: value,
-          textStyle:
-              const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+          textStyle: const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
           offset: Offset.zero,
           scale: 1.0,
