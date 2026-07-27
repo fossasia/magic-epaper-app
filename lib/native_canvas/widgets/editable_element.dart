@@ -229,9 +229,23 @@ class CanvasElementContent extends StatelessWidget {
           ),
         );
       case CanvasElementKind.image:
-        return element.imageBytes == null
-            ? const SizedBox.shrink()
-            : Image.memory(element.imageBytes!, fit: BoxFit.contain);
+        if (element.imageBytes == null) return const SizedBox.shrink();
+        if (element.clipOval) {
+          return ClipOval(
+            child: SizedBox.expand(
+              child: Image.memory(element.imageBytes!, fit: BoxFit.cover),
+            ),
+          );
+        }
+        if (element.cornerRadius > 0) {
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(element.cornerRadius),
+            child: SizedBox.expand(
+              child: Image.memory(element.imageBytes!, fit: BoxFit.cover),
+            ),
+          );
+        }
+        return Image.memory(element.imageBytes!, fit: BoxFit.contain);
       case CanvasElementKind.barcode:
         return ColoredBox(
           color: colorWhite,

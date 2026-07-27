@@ -396,6 +396,22 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   Future<void> _editText(CanvasElement element) async {
     final result = await _showTextSheet(existing: element);
     if (result == null) return;
+    final measured = _measureText(
+        result.text, result.fontSize, FontWeight.normal, result.fontFamily);
+    final aspect = measured.height == 0 ? 6.0 : measured.width / measured.height;
+    final oldFont = element.fontSize;
+    final targetH = oldFont > 0
+        ? element.baseSize.height * (result.fontSize / oldFont)
+        : measured.height;
+    final newWidth = targetH * aspect;
+    final dw = newWidth - element.baseSize.width;
+    final align = element.textAlign;
+    double dx = 0;
+    if (align == TextAlign.left || align == TextAlign.start) {
+      dx = dw * element.scale / 2;
+    } else if (align == TextAlign.right || align == TextAlign.end) {
+      dx = -dw * element.scale / 2;
+    }
     _controller.beginChange();
     _controller.updateElement(
       element.copyWith(
@@ -404,8 +420,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
         color: result.color,
         fontFamily: result.fontFamily,
         followCanvasTheme: !result.manualColor,
-        baseSize: _measureText(
-            result.text, result.fontSize, FontWeight.normal, result.fontFamily),
+        baseSize: Size(newWidth, targetH),
+        position: Offset(element.position.dx + dx, element.position.dy),
       ),
     );
   }
@@ -469,6 +485,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     );
     if (picked == null) return;
     final bytes = await picked.readAsBytes();
+    final keepFrame = element.clipOval || element.cornerRadius > 0;
     final decoded = img.decodeImage(bytes);
     final aspect = (decoded == null || decoded.height == 0)
         ? 1.0
@@ -476,7 +493,10 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     final w = element.baseSize.width;
     _controller.beginChange();
     _controller.updateElement(
-      element.copyWith(imageBytes: bytes, baseSize: Size(w, w / aspect)),
+      element.copyWith(
+        imageBytes: bytes,
+        baseSize: keepFrame ? element.baseSize : Size(w, w / aspect),
+      ),
     );
   }
 
@@ -513,6 +533,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     );
     if (cropped == null) return;
     final newBytes = await File(cropped.path).readAsBytes();
+    final keepFrame = element.clipOval || element.cornerRadius > 0;
     final decoded = img.decodeImage(newBytes);
     final aspect = (decoded == null || decoded.height == 0)
         ? 1.0
@@ -520,7 +541,10 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     final w = element.baseSize.width;
     _controller.beginChange();
     _controller.updateElement(
-      element.copyWith(imageBytes: newBytes, baseSize: Size(w, w / aspect)),
+      element.copyWith(
+        imageBytes: newBytes,
+        baseSize: keepFrame ? element.baseSize : Size(w, w / aspect),
+      ),
     );
   }
 
@@ -601,7 +625,12 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     try {
       final boundary = _boundaryKey.currentContext!.findRenderObject()
           as RenderRepaintBoundary;
-      final image = await boundary.toImage(pixelRatio: 1 / _displayScale);
+      final longSide =
+          (widget.width > widget.height ? widget.width : widget.height)
+              .toDouble();
+      final supersample = (2048 / longSide).clamp(2.0, 4.0);
+      final image =
+          await boundary.toImage(pixelRatio: supersample / _displayScale);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       image.dispose();
       if (!mounted || byteData == null) return;
@@ -716,7 +745,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                         selected: _controller.selectedId == element.id,
                         controller: _controller,
                         canvasKey: _canvasKey,
-                        onRequestEdit: element.elementId != null
+                        onRequestEdit: element.elementId != null &&
+                                !widget.returnDocument
                             ? () => Navigator.pop(context, element.elementId)
                             : switch (element.kind) {
                                 CanvasElementKind.text => () =>

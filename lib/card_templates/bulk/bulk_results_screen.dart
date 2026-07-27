@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
@@ -154,9 +153,11 @@ class _BulkResultsScreenState extends State<BulkResultsScreen> {
       ),
       body: SafeArea(
         top: false,
-        child: widget.badges.isEmpty
-            ? Center(child: Text(appLocalizations.bulkNothingGenerated))
-            : Column(
+        child: ColoredBox(
+          color: grey50,
+          child: widget.badges.isEmpty
+              ? Center(child: Text(appLocalizations.bulkNothingGenerated))
+              : Column(
                 children: [
                   Padding(
                     padding: const EdgeInsets.fromLTRB(Dimens.spacingL,
@@ -164,14 +165,14 @@ class _BulkResultsScreenState extends State<BulkResultsScreen> {
                     child: Row(
                       children: [
                         Container(
-                          width: 34,
-                          height: 34,
+                          width: 38,
+                          height: 38,
                           decoration: BoxDecoration(
                             color: colorPrimary.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(Dimens.radiusM),
+                            borderRadius: BorderRadius.circular(Dimens.radiusL),
                           ),
                           child: const Icon(Icons.style_outlined,
-                              size: 18, color: colorPrimary),
+                              size: 20, color: colorPrimary),
                         ),
                         const SizedBox(width: Dimens.spacingM),
                         Text(
@@ -204,17 +205,25 @@ class _BulkResultsScreenState extends State<BulkResultsScreen> {
                   _buildBottomBar(),
                 ],
               ),
+        ),
       ),
     );
   }
 
   Widget _buildCard(GeneratedBadge badge) {
-    return Card(
-      color: colorWhite,
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Dimens.radiusL),
-        side: BorderSide(color: grey200),
+    return Container(
+      decoration: BoxDecoration(
+        color: colorWhite,
+        borderRadius: BorderRadius.circular(Dimens.radiusXxl),
+        border: Border.all(color: grey200),
+        boxShadow: [
+          BoxShadow(
+            color: colorBlack.withValues(alpha: 0.05),
+            blurRadius: 20,
+            spreadRadius: -6,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -225,7 +234,7 @@ class _BulkResultsScreenState extends State<BulkResultsScreen> {
               child: AspectRatio(
                 aspectRatio: widget.width / widget.height,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(Dimens.radiusS),
+                  borderRadius: BorderRadius.circular(Dimens.radiusM),
                   child: Container(
                     decoration:
                         BoxDecoration(border: Border.all(color: grey200)),
@@ -246,6 +255,8 @@ class _BulkResultsScreenState extends State<BulkResultsScreen> {
                   fontWeight: FontWeight.w600, color: colorBlack),
             ),
           ),
+          const SizedBox(height: Dimens.spacingXs),
+          Divider(height: 1, color: grey100),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -288,34 +299,48 @@ class _BulkResultsScreenState extends State<BulkResultsScreen> {
         top: false,
         child: Padding(
           padding: const EdgeInsets.all(Dimens.spacingL),
-          child: SizedBox(
-            width: double.infinity,
-            height: 54,
-            child: ElevatedButton.icon(
-              onPressed: _savingAll ? null : _saveAllAndDone,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colorPrimary,
-                foregroundColor: colorWhite,
-                disabledBackgroundColor: grey300,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(Dimens.radiusL),
-                ),
-              ),
-              icon: _savingAll
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(colorWhite),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(Dimens.radiusXxl),
+              boxShadow: _savingAll
+                  ? const []
+                  : [
+                      BoxShadow(
+                        color: colorPrimary.withValues(alpha: 0.3),
+                        blurRadius: 16,
+                        offset: const Offset(0, 6),
                       ),
-                    )
-                  : const Icon(Icons.library_add),
-              label: Text(
-                appLocalizations.bulkSaveAllDone,
-                style: const TextStyle(
-                    fontSize: Dimens.fontSizeL, fontWeight: FontWeight.bold),
+                    ],
+            ),
+            child: SizedBox(
+              width: double.infinity,
+              height: 54,
+              child: ElevatedButton.icon(
+                onPressed: _savingAll ? null : _saveAllAndDone,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorPrimary,
+                  foregroundColor: colorWhite,
+                  disabledBackgroundColor: grey300,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(Dimens.radiusXxl),
+                  ),
+                ),
+                icon: _savingAll
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(colorWhite),
+                        ),
+                      )
+                    : const Icon(Icons.library_add),
+                label: Text(
+                  appLocalizations.bulkSaveAllDone,
+                  style: const TextStyle(
+                      fontSize: Dimens.fontSizeL, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),

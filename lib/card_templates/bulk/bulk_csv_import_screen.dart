@@ -58,6 +58,17 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
     return null;
   }
 
+  bool get _circularPhoto =>
+      widget.template.hasPhoto && widget.template.id != 'price_tag';
+
+  Widget _clipPhoto({required double size, required Widget child}) {
+    final box = SizedBox(width: size, height: size, child: child);
+    return _circularPhoto
+        ? ClipOval(child: box)
+        : ClipRRect(
+            borderRadius: BorderRadius.circular(Dimens.radiusM), child: box);
+  }
+
   late final List<Color> _palette;
   late final Color _canvasColor;
 
@@ -199,15 +210,15 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
       buffer.writeln(cells.join(','));
     }
     try {
-      await FileSaver.instance.saveFile(
+      final path = await FileSaver.instance.saveAs(
         name: 'sample_${widget.template.id}',
         bytes: Uint8List.fromList(utf8.encode(buffer.toString())),
         fileExtension: 'csv',
         mimeType: MimeType.csv,
       );
-      _snack(appLocalizations.bulkSampleSaved);
+      if (path != null && mounted) _snack(appLocalizations.bulkSampleSaved);
     } catch (_) {
-      _snack(appLocalizations.bulkSaveFailed);
+      if (mounted) _snack(appLocalizations.bulkSaveFailed);
     }
   }
 
@@ -355,16 +366,19 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
       ),
       body: SafeArea(
         top: false,
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(Dimens.spacingL),
-                child: _hasFile ? _buildLoaded() : _buildEmpty(),
+        child: ColoredBox(
+          color: grey50,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(Dimens.spacingL),
+                  child: _hasFile ? _buildLoaded() : _buildEmpty(),
+                ),
               ),
-            ),
-            if (_hasFile) _buildBottomBar(),
-          ],
+              if (_hasFile) _buildBottomBar(),
+            ],
+          ),
         ),
       ),
     );
@@ -376,11 +390,6 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _sectionTitle(widget.template.title),
-        const SizedBox(height: Dimens.spacingS),
-        Text(
-          appLocalizations.bulkUploadHint,
-          style: TextStyle(fontSize: Dimens.fontSizeS, color: grey600),
-        ),
         const SizedBox(height: Dimens.spacingL),
         _uploadCard(),
         const SizedBox(height: Dimens.spacingM),
@@ -389,7 +398,11 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
             onPressed: _downloadSample,
             icon: const Icon(Icons.download_outlined, size: 18),
             label: Text(appLocalizations.bulkDownloadSample),
-            style: TextButton.styleFrom(foregroundColor: colorPrimary),
+            style: TextButton.styleFrom(
+              foregroundColor: colorPrimary,
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimens.spacingL, vertical: Dimens.spacingS),
+            ),
           ),
         ),
         const SizedBox(height: Dimens.spacingM),
@@ -401,29 +414,30 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
   Widget _uploadCard() {
     return InkWell(
       onTap: _pickCsv,
-      borderRadius: BorderRadius.circular(Dimens.radiusL),
+      borderRadius: BorderRadius.circular(Dimens.radiusXxl),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(
-            vertical: Dimens.spacingXxl, horizontal: Dimens.spacingL),
+            vertical: Dimens.spacingXxxl, horizontal: Dimens.spacingL),
         decoration: BoxDecoration(
           color: colorPrimary.withValues(alpha: 0.04),
-          borderRadius: BorderRadius.circular(Dimens.radiusL),
+          borderRadius: BorderRadius.circular(Dimens.radiusXxl),
           border: Border.all(
               color: colorPrimary.withValues(alpha: 0.35), width: 1.5),
         ),
         child: Column(
           children: [
             Container(
-              width: 64,
-              height: 64,
+              width: 72,
+              height: 72,
               decoration: BoxDecoration(
                 color: colorPrimary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.upload_file, color: colorPrimary, size: 30),
+              child:
+                  const Icon(Icons.upload_file, color: colorPrimary, size: 34),
             ),
-            const SizedBox(height: Dimens.spacingM),
+            const SizedBox(height: Dimens.spacingL),
             Text(
               appLocalizations.bulkSelectCsv,
               textAlign: TextAlign.center,
@@ -431,6 +445,12 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
                   fontWeight: FontWeight.bold,
                   fontSize: Dimens.fontSizeL,
                   color: colorBlack),
+            ),
+            const SizedBox(height: Dimens.spacingXs),
+            Text(
+              appLocalizations.bulkUploadHint,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: Dimens.fontSizeS, color: grey600),
             ),
           ],
         ),
@@ -468,7 +488,7 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
               for (final f in widget.template.fields)
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: Dimens.spacingM, vertical: Dimens.spacingXs),
+                      horizontal: Dimens.spacingM, vertical: Dimens.spacingSm),
                   decoration: BoxDecoration(
                     color: colorWhite,
                     borderRadius: BorderRadius.circular(Dimens.radiusXl),
@@ -528,13 +548,14 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
       padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
         color: colorWhite,
-        borderRadius: BorderRadius.circular(Dimens.radiusL),
+        borderRadius: BorderRadius.circular(Dimens.radiusXxl),
         border: Border.all(color: grey200),
         boxShadow: [
           BoxShadow(
-            color: colorBlack.withValues(alpha: 0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            color: colorBlack.withValues(alpha: 0.05),
+            blurRadius: 24,
+            spreadRadius: -6,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -548,13 +569,13 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: 34,
-          height: 34,
+          width: 38,
+          height: 38,
           decoration: BoxDecoration(
             color: colorPrimary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(Dimens.radiusM),
+            borderRadius: BorderRadius.circular(Dimens.radiusL),
           ),
-          child: Icon(icon, size: 18, color: colorPrimary),
+          child: Icon(icon, size: 20, color: colorPrimary),
         ),
         const SizedBox(width: Dimens.spacingM),
         Expanded(
@@ -603,7 +624,7 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
   Widget _infoChip(IconData icon, String label) {
     return Container(
       padding: const EdgeInsets.symmetric(
-          horizontal: Dimens.spacingM, vertical: Dimens.spacingXs),
+          horizontal: Dimens.spacingM, vertical: Dimens.spacingSm),
       decoration: BoxDecoration(
         color: grey50,
         borderRadius: BorderRadius.circular(Dimens.radiusXl),
@@ -655,6 +676,11 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
           ),
           TextButton(
             onPressed: _pickCsv,
+            style: TextButton.styleFrom(
+              foregroundColor: colorPrimary,
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimens.spacingM, vertical: Dimens.spacingS),
+            ),
             child: Text(appLocalizations.bulkChangeFile,
                 style: const TextStyle(color: colorPrimary)),
           ),
@@ -760,7 +786,7 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
     final color = ok ? Colors.green : Colors.orange;
     return Container(
       padding: const EdgeInsets.symmetric(
-          horizontal: Dimens.spacingM, vertical: Dimens.spacingXs),
+          horizontal: Dimens.spacingM, vertical: Dimens.spacingSm),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(Dimens.radiusXl),
@@ -847,11 +873,10 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
             isExpanded: true,
             decoration: InputDecoration(
               labelText: appLocalizations.bulkColumnLabel,
-              isDense: true,
               contentPadding: const EdgeInsets.symmetric(
-                  horizontal: Dimens.spacingM, vertical: Dimens.spacingS),
+                  horizontal: Dimens.spacingM, vertical: Dimens.spacingM),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(Dimens.radiusM),
+                borderRadius: BorderRadius.circular(Dimens.radiusL),
               ),
             ),
             items: [
@@ -967,7 +992,10 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
           ],
           const SizedBox(height: Dimens.spacingS),
           const Divider(height: 1),
-          for (final i in rows) _recordTile(i),
+          for (var r = 0; r < rows.length; r++) ...[
+            if (r > 0) Divider(height: 1, color: grey100),
+            _recordTile(rows[r]),
+          ],
         ],
       ),
     );
@@ -984,28 +1012,24 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
         padding: const EdgeInsets.symmetric(vertical: Dimens.spacingS),
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(Dimens.radiusM),
-              child: SizedBox(
-                width: 44,
-                height: 44,
-                child: hasPhoto && photo != null
-                    ? Image.file(photo, fit: BoxFit.cover)
-                    : ColoredBox(
-                        color: colorPrimary.withValues(alpha: 0.08),
-                        child: Center(
-                          child: hasPhoto
-                              ? Icon(Icons.add_a_photo_outlined,
-                                  size: 18, color: grey500)
-                              : Text(
-                                  '${index + 1}',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: colorPrimary),
-                                ),
-                        ),
+            _clipPhoto(
+              size: 44,
+              child: hasPhoto && photo != null
+                  ? Image.file(photo, fit: BoxFit.cover)
+                  : ColoredBox(
+                      color: colorPrimary.withValues(alpha: 0.08),
+                      child: Center(
+                        child: hasPhoto
+                            ? Icon(Icons.add_a_photo_outlined,
+                                size: 18, color: grey500)
+                            : Text(
+                                '${index + 1}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: colorPrimary),
+                              ),
                       ),
-              ),
+                    ),
             ),
             const SizedBox(width: Dimens.spacingM),
             Expanded(
@@ -1096,20 +1120,15 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(Dimens.radiusM),
-                            child: SizedBox(
-                              width: 56,
-                              height: 56,
-                              child: photo != null
-                                  ? Image.file(photo!, fit: BoxFit.cover)
-                                  : ColoredBox(
-                                      color: grey100,
-                                      child: Icon(Icons.person_outline,
-                                          color: grey500),
-                                    ),
-                            ),
+                          _clipPhoto(
+                            size: 56,
+                            child: photo != null
+                                ? Image.file(photo!, fit: BoxFit.cover)
+                                : ColoredBox(
+                                    color: grey100,
+                                    child: Icon(Icons.person_outline,
+                                        color: grey500),
+                                  ),
                           ),
                           const SizedBox(width: Dimens.spacingM),
                           Expanded(
@@ -1118,10 +1137,12 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
                               keyboardType: TextInputType.url,
                               decoration: InputDecoration(
                                 labelText: _photoField!.label,
-                                isDense: true,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: Dimens.spacingM,
+                                    vertical: Dimens.spacingM),
                                 border: OutlineInputBorder(
                                   borderRadius:
-                                      BorderRadius.circular(Dimens.radiusM),
+                                      BorderRadius.circular(Dimens.radiusL),
                                 ),
                               ),
                             ),
@@ -1147,11 +1168,22 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
                             label: Text(appLocalizations.bulkPickFile),
                             style: OutlinedButton.styleFrom(
                                 foregroundColor: colorPrimary,
-                                side: const BorderSide(color: colorPrimary)),
+                                side: const BorderSide(color: colorPrimary),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: Dimens.spacingL,
+                                    vertical: Dimens.spacingM)),
                           ),
+                          if (photo != null)
+                            const SizedBox(width: Dimens.spacingS),
                           if (photo != null)
                             TextButton.icon(
                               onPressed: () => setSheet(() => photo = null),
+                              style: TextButton.styleFrom(
+                                foregroundColor: grey600,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: Dimens.spacingM,
+                                    vertical: Dimens.spacingS),
+                              ),
                               icon: Icon(Icons.close, size: 16, color: grey500),
                               label: Text(appLocalizations.bulkRowChangePhoto,
                                   style: TextStyle(color: grey600)),
@@ -1172,10 +1204,12 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
                         controller: controllers[f.key],
                         decoration: InputDecoration(
                           labelText: f.label,
-                          isDense: true,
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: Dimens.spacingM,
+                              vertical: Dimens.spacingM),
                           border: OutlineInputBorder(
                             borderRadius:
-                                BorderRadius.circular(Dimens.radiusM),
+                                BorderRadius.circular(Dimens.radiusL),
                           ),
                         ),
                       ),
@@ -1240,10 +1274,6 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
       },
     );
 
-    for (final c in controllers.values) {
-      c.dispose();
-    }
-
     if (savedEdits != null && mounted) {
       setState(() {
         _rowEdits[index] = savedEdits!;
@@ -1255,6 +1285,12 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
       });
       _resolvePhotoUrls();
     }
+
+    Future.delayed(const Duration(milliseconds: 350), () {
+      for (final c in controllers.values) {
+        c.dispose();
+      }
+    });
   }
 
   Widget _buildBottomBar() {
@@ -1274,25 +1310,39 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
         top: false,
         child: Padding(
           padding: const EdgeInsets.all(Dimens.spacingL),
-          child: SizedBox(
-            width: double.infinity,
-            height: 54,
-            child: ElevatedButton.icon(
-              onPressed: ready ? _generate : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colorPrimary,
-                foregroundColor: colorWhite,
-                disabledBackgroundColor: grey300,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(Dimens.radiusL),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(Dimens.radiusXxl),
+              boxShadow: ready
+                  ? [
+                      BoxShadow(
+                        color: colorPrimary.withValues(alpha: 0.3),
+                        blurRadius: 16,
+                        offset: const Offset(0, 6),
+                      ),
+                    ]
+                  : const [],
+            ),
+            child: SizedBox(
+              width: double.infinity,
+              height: 54,
+              child: ElevatedButton.icon(
+                onPressed: ready ? _generate : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorPrimary,
+                  foregroundColor: colorWhite,
+                  disabledBackgroundColor: grey300,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(Dimens.radiusXxl),
+                  ),
                 ),
-              ),
-              icon: const Icon(Icons.auto_awesome_motion, size: 20),
-              label: Text(
-                appLocalizations.bulkGenerate(_readyCount),
-                style: const TextStyle(
-                    fontSize: Dimens.fontSizeL, fontWeight: FontWeight.bold),
+                icon: const Icon(Icons.auto_awesome_motion, size: 20),
+                label: Text(
+                  appLocalizations.bulkGenerate(_readyCount),
+                  style: const TextStyle(
+                      fontSize: Dimens.fontSizeL, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
@@ -1314,8 +1364,8 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
 
   Widget _tag(String text, Color color) {
     return Container(
-      padding:
-          const EdgeInsets.symmetric(horizontal: Dimens.spacingS, vertical: 2),
+      padding: const EdgeInsets.symmetric(
+          horizontal: Dimens.spacingM, vertical: Dimens.spacingSm),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(Dimens.radiusXl),

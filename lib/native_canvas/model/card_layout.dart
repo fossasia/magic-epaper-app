@@ -4,6 +4,7 @@ import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_element.dart';
 import 'package:magicepaperapp/util/template_util.dart';
 
@@ -41,7 +42,10 @@ List<CanvasElement> toSerializableElements(
     if ((e.elementId == 'profileImage' || e.elementId == 'productImage') &&
         photoBytes != null) {
       result.add(_rebuild(e,
-          kind: CanvasElementKind.image, imageBytes: photoBytes));
+          kind: CanvasElementKind.image,
+          imageBytes: photoBytes,
+          clipOval: e.elementId == 'profileImage',
+          cornerRadius: e.elementId == 'productImage' ? Dimens.radiusM : 0));
     } else if (e.elementId == 'qr' && (qrData ?? '').isNotEmpty) {
       result.add(_rebuild(e,
           kind: CanvasElementKind.barcode,
@@ -61,6 +65,8 @@ CanvasElement _rebuild(
   CanvasElement e, {
   required CanvasElementKind kind,
   Uint8List? imageBytes,
+  bool clipOval = false,
+  double cornerRadius = 0,
   Barcode? barcode,
   String? barcodeData,
 }) {
@@ -73,6 +79,8 @@ CanvasElement _rebuild(
     rotation: e.rotation,
     color: e.color,
     imageBytes: imageBytes,
+    clipOval: clipOval,
+    cornerRadius: cornerRadius,
     barcode: barcode,
     barcodeData: barcodeData,
     elementId: e.elementId,
@@ -111,12 +119,9 @@ class CardLayoutSeeder {
   void seedCardLayout(List<LayerSpec> layers) {
     final w = width.toDouble();
     final h = height.toDouble();
-    final mx = w * 0.05;
-    final my = h * 0.06;
-    final contentTop = my;
-    final contentBottom = h - my;
-    final contentH = contentBottom - contentTop;
-    final fullW = w - 2 * mx;
+    final marginX = w * 0.045;
+    final marginY = h * 0.035;
+    final contentH = h - 2 * marginY;
 
     LayerSpec? photo;
     LayerSpec? qr;
@@ -132,61 +137,64 @@ class CardLayoutSeeder {
     }
 
     LayerSpec? title;
-    var titleFont = -1.0;
     for (final s in texts) {
       final f = s.textStyle?.fontSize ?? 0;
-      if (f > titleFont) {
-        titleFont = f;
-        title = s;
-      }
+      if (title == null || f > (title.textStyle?.fontSize ?? 0)) title = s;
     }
     final details = texts.where((s) => s != title).toList();
 
-    var bodyTop = contentTop;
-    if (title != null) {
-      final titleH = (contentH * 0.22).clamp(0.0, h * 0.30);
-      _seedTextElement(title, mx, contentTop, titleH,
-          columnWidth: fullW, center: true);
-      bodyTop = contentTop + titleH + h * 0.06;
-    }
-    final bodyH = contentBottom - bodyTop;
+    final photoSize = contentH * 0.52;
+    final qrSize = contentH * 0.44;
+    final gap = contentH * 0.04;
+    final leftColX = marginX + photoSize / 2;
 
-    final hasPhoto = photo?.widget != null;
-    final hasQr = qr?.widget != null;
-    var leftColW = 0.0;
-    if (hasPhoto || hasQr) {
-      leftColW = (w * 0.26).clamp(w * 0.20, w * 0.32);
-      final leftCenterX = mx + leftColW / 2;
-      if (hasPhoto && hasQr) {
-        final photoSide =
-            leftColW < bodyH * 0.55 ? leftColW : bodyH * 0.55;
-        _seedWidgetElement(
-            photo!, Offset(leftCenterX, bodyTop + photoSide / 2), photoSide);
-        final qrSide = leftColW < bodyH * 0.42 ? leftColW : bodyH * 0.42;
-        _seedWidgetElement(
-            qr!, Offset(leftCenterX, contentBottom - qrSide / 2), qrSide);
-      } else {
-        final only = hasPhoto ? photo! : qr!;
-        final side = leftColW < bodyH * 0.9 ? leftColW : bodyH * 0.9;
-        _seedWidgetElement(
-            only, Offset(leftCenterX, bodyTop + bodyH / 2), side);
-      }
+    if (photo?.widget != null) {
+      _seedWidgetElement(
+          photo!, Offset(leftColX, marginY + photoSize / 2), photoSize);
+    }
+    if (qr?.widget != null) {
+      _seedWidgetElement(
+        qr!,
+        Offset(leftColX, marginY + photoSize + gap + qrSize / 2),
+        qrSize,
+      );
     }
 
-    if (details.isEmpty) return;
-    final detailX = leftColW > 0 ? mx + leftColW + w * 0.05 : mx;
-    final detailW = (w - mx) - detailX;
-    final n = details.length;
-    final gap = bodyH * 0.05;
-    var lineH = (bodyH - (n - 1) * gap) / n;
-    final maxLineH = h * 0.16;
-    if (lineH > maxLineH) lineH = maxLineH;
-    final block = n * lineH + (n - 1) * gap;
-    var y = bodyTop + (bodyH - block) / 2;
+    final colGapX = w * 0.05;
+    final textLeftX = marginX + photoSize + colGapX;
+    final textColW = w - textLeftX - marginX;
+
+    final titleH = contentH * 0.18;
+    final detailH = contentH * 0.14;
+    final lineGap = contentH * 0.045;
+
+    double detailWidth(LayerSpec s) {
+      final fs = s.textStyle?.fontSize ?? 24;
+      final fw = s.textStyle?.fontWeight ?? FontWeight.normal;
+      final m = _measureText(s.text!, fs, fw);
+      final aspect = m.height == 0 ? 6.0 : m.width / m.height;
+      return detailH * aspect;
+    }
+
+    var detailsW = 0.0;
     for (final d in details) {
-      _seedTextElement(d, detailX, y, lineH,
-          columnWidth: detailW, center: false);
-      y += lineH + gap;
+      final dw = detailWidth(d);
+      if (dw > detailsW) detailsW = dw;
+    }
+    if (detailsW > textColW) detailsW = textColW;
+    final detailsLeftX = textLeftX + (textColW - detailsW) / 2;
+
+    final blockH = (title != null ? titleH + lineGap : 0) +
+        details.length * (detailH + lineGap);
+    var y = marginY + (contentH - blockH) / 2;
+    if (title != null) {
+      _seedTextElement(title, textLeftX, y, titleH,
+          columnWidth: textColW, center: true);
+      y += titleH + lineGap;
+    }
+    for (final d in details) {
+      _seedTextElement(d, detailsLeftX, y, detailH, columnWidth: detailsW);
+      y += detailH + lineGap;
     }
   }
 

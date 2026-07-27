@@ -927,7 +927,7 @@
       }
     }
   },
-  "bulkDownloadSample": "Download sample CSV",
+  "bulkDownloadSample": "Download a sample CSV to see the format",
   "bulkSampleSaved": "Sample CSV saved to your device. Fill it in and upload it.",
   "bulkNameColumnsHint": "Name your spreadsheet columns like these and they line up automatically — no matching needed.",
   "bulkColumnsAutoMatched": "All columns matched automatically",

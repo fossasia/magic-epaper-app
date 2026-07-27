@@ -4,11 +4,13 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/card_templates/bulk/bulk_result.dart';
 import 'package:magicepaperapp/card_templates/bulk/bulk_results_screen.dart';
 import 'package:magicepaperapp/card_templates/bulk/bulk_template.dart';
 import 'package:magicepaperapp/card_templates/bulk/photo_source.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_element.dart';
@@ -79,7 +81,7 @@ class _BulkGenerationScreenState extends State<BulkGenerationScreen> {
       Uint8List? photoBytes;
       if (photo != null && mounted) {
         await precacheImage(FileImage(photo), context);
-        photoBytes = await photo.readAsBytes();
+        photoBytes = _thumbnail(await photo.readAsBytes());
       }
       final layers =
           widget.template.buildLayers(row, photo, widget.width, widget.height);
@@ -131,6 +133,16 @@ class _BulkGenerationScreenState extends State<BulkGenerationScreen> {
     );
   }
 
+  Uint8List _thumbnail(Uint8List bytes, {int maxSide = 512}) {
+    final decoded = img.decodeImage(bytes);
+    if (decoded == null) return bytes;
+    if (decoded.width <= maxSide && decoded.height <= maxSide) return bytes;
+    final resized = decoded.width >= decoded.height
+        ? img.copyResize(decoded, width: maxSide)
+        : img.copyResize(decoded, height: maxSide);
+    return Uint8List.fromList(img.encodePng(resized));
+  }
+
   Future<Uint8List?> _capture() async {
     try {
       final boundary = _boundaryKey.currentContext?.findRenderObject()
@@ -169,28 +181,63 @@ class _BulkGenerationScreenState extends State<BulkGenerationScreen> {
           ),
           Positioned.fill(
             child: ColoredBox(
-              color: colorWhite.withValues(alpha: 0.82),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 220,
-                    child: LinearProgressIndicator(
-                      value: progress == 0 ? null : progress,
-                      color: colorPrimary,
-                      backgroundColor: grey200,
-                    ),
+              color: colorWhite.withValues(alpha: 0.9),
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.all(Dimens.spacingXxl),
+                  decoration: BoxDecoration(
+                    color: colorWhite,
+                    borderRadius: BorderRadius.circular(Dimens.radiusXxl),
+                    border: Border.all(color: grey200),
+                    boxShadow: [
+                      BoxShadow(
+                        color: colorBlack.withValues(alpha: 0.06),
+                        blurRadius: 24,
+                        spreadRadius: -6,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    appLocalizations.bulkGenerating(_done, total),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: colorBlack,
-                    ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 76,
+                        height: 76,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            SizedBox.expand(
+                              child: CircularProgressIndicator(
+                                value: progress == 0 ? null : progress,
+                                strokeWidth: 5,
+                                color: colorPrimary,
+                                backgroundColor: grey200,
+                              ),
+                            ),
+                            Text(
+                              '${(progress * 100).round()}%',
+                              style: const TextStyle(
+                                fontSize: Dimens.fontSizeM,
+                                fontWeight: FontWeight.bold,
+                                color: colorBlack,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: Dimens.spacingL),
+                      Text(
+                        appLocalizations.bulkGenerating(_done, total),
+                        style: const TextStyle(
+                          fontSize: Dimens.fontSizeL,
+                          fontWeight: FontWeight.w600,
+                          color: colorBlack,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
