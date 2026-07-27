@@ -1,19 +1,22 @@
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
 import 'package:intl/intl.dart';
 import 'package:magicepaperapp/card_templates/calendar_card_widget.dart';
 import 'package:magicepaperapp/card_templates/calendar_model.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
+import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
+import 'package:magicepaperapp/image_library/services/image_save_handler.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/theme/colors.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+import 'package:provider/provider.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
@@ -88,14 +91,18 @@ class _CalendarFormState extends State<CalendarForm> {
   }
 
   void _step(int direction) {
+    HapticFeedback.selectionClick();
     setState(() => _anchor = _model.step(direction));
   }
 
   void _goToToday() {
+    HapticFeedback.selectionClick();
     setState(() => _anchor = DateTime(_today.year, _today.month, _today.day));
   }
 
   void _setView(CalendarView view) {
+    if (_view == view) return;
+    HapticFeedback.selectionClick();
     setState(() => _view = view);
   }
 
@@ -142,6 +149,7 @@ class _CalendarFormState extends State<CalendarForm> {
   }
 
   Future<void> _writeToBadge() async {
+    HapticFeedback.lightImpact();
     final device = widget.device;
     if (device == null) {
       await _openInEditor();
@@ -172,6 +180,31 @@ class _CalendarFormState extends State<CalendarForm> {
     }
   }
 
+  Future<void> _saveToLibrary() async {
+    HapticFeedback.lightImpact();
+    final bytes = await _capture();
+    if (!mounted || bytes == null) return;
+    final decoded = img.decodeImage(bytes);
+    if (decoded == null) return;
+    final device = widget.device;
+    final handler = ImageSaveHandler(
+      context: context,
+      provider: context.read<ImageLibraryProvider>(),
+    );
+    await handler.saveCurrentImage(
+      rawImages: [decoded],
+      selectedFilterIndex: 0,
+      flipHorizontal: false,
+      flipVertical: false,
+      currentImageSource: 'template',
+      processingMethods: device?.processingMethods ?? const [],
+      modelId: device?.modelId ?? '',
+      deviceWidth: widget.width,
+      deviceHeight: widget.height,
+      deviceColors: device?.colors ?? const [],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
@@ -199,23 +232,35 @@ class _CalendarFormState extends State<CalendarForm> {
         bottom: true,
         child: Stack(
           children: [
-            SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(Dimens.spacingL,
-                  Dimens.spacingL, Dimens.spacingL, Dimens.spacingL),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _buildViewSelector(),
-                  const SizedBox(height: Dimens.spacingL),
-                  _buildPreview(),
-                  const SizedBox(height: Dimens.spacingL),
-                  _buildNavigator(),
-                  const SizedBox(height: Dimens.spacingL),
-                  _buildOptionsCard(),
-                  const SizedBox(height: Dimens.spacingXxl),
-                  _buildActions(),
-                ],
-              ),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(Dimens.spacingL,
+                      Dimens.spacingL, Dimens.spacingL, Dimens.spacingL),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight - Dimens.spacingL * 2,
+                    ),
+                    child: IntrinsicHeight(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _buildViewSelector(),
+                          const SizedBox(height: Dimens.spacingL),
+                          _buildPreview(),
+                          const SizedBox(height: Dimens.spacingL),
+                          _buildNavigator(),
+                          const SizedBox(height: Dimens.spacingL),
+                          _buildOptionsCard(),
+                          const SizedBox(height: Dimens.spacingL),
+                          const Spacer(),
+                          _buildActions(),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
             Positioned(
               left: 0,
@@ -260,60 +305,36 @@ class _CalendarFormState extends State<CalendarForm> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(Dimens.spacingM),
-                    decoration: BoxDecoration(
-                      color: colorAccent.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(Dimens.radiusXl),
-                    ),
-                    child: const Icon(Icons.calendar_month,
-                        color: colorAccent, size: Dimens.iconSizeL),
-                  ),
-                  const SizedBox(width: Dimens.spacingL),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          appLocalizations.calendarHowItWorks,
-                          style: const TextStyle(
-                            fontSize: Dimens.fontSizeXxl,
-                            fontWeight: FontWeight.bold,
-                            color: colorBlack87,
-                          ),
-                        ),
-                        const SizedBox(height: Dimens.spacingXs),
-                        Text(
-                          appLocalizations.calendarInfoOffline,
-                          style: const TextStyle(
-                            fontSize: Dimens.fontSizeM,
-                            color: grey500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              Text(
+                appLocalizations.calendarHowItWorks,
+                style: const TextStyle(
+                  fontSize: Dimens.fontSizeXxl,
+                  fontWeight: FontWeight.bold,
+                  color: colorBlack87,
+                ),
+              ),
+              const SizedBox(height: Dimens.spacingXs),
+              Text(
+                appLocalizations.calendarInfoOffline,
+                style: const TextStyle(
+                  fontSize: Dimens.fontSizeM,
+                  color: grey500,
+                ),
               ),
               const SizedBox(height: Dimens.spacingXl),
               _infoStep(1, appLocalizations.calendarInfoSelect),
               _infoStep(2, appLocalizations.calendarInfoViews),
               _infoStep(3, appLocalizations.calendarInfoWrite),
-              const SizedBox(height: Dimens.spacingL),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
+              const SizedBox(height: Dimens.spacingS),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colorAccent,
-                    foregroundColor: colorWhite,
-                    elevation: 0,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: Dimens.spacingL),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(Dimens.radiusXl),
+                  style: TextButton.styleFrom(
+                    foregroundColor: colorPrimary,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Dimens.spacingL,
+                      vertical: Dimens.spacingS,
                     ),
                   ),
                   child: Text(
@@ -401,7 +422,27 @@ class _CalendarFormState extends State<CalendarForm> {
                     ],
                   ),
                   clipBehavior: Clip.antiAlias,
-                  child: _buildCard(),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 280),
+                    switchInCurve: Curves.easeOutCubic,
+                    switchOutCurve: Curves.easeIn,
+                    transitionBuilder: (child, animation) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: ScaleTransition(
+                          scale: Tween<double>(begin: 0.97, end: 1.0)
+                              .animate(animation),
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: KeyedSubtree(
+                      key: ValueKey(
+                        '${_view}_${_anchor.toIso8601String()}_${_inverted}_$_weekStartsMonday',
+                      ),
+                      child: _buildCard(),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: Dimens.spacingS),
@@ -634,7 +675,12 @@ class _CalendarFormState extends State<CalendarForm> {
           Switch(
             value: value,
             activeThumbColor: colorPrimary,
-            onChanged: _isBusy ? null : onChanged,
+            onChanged: _isBusy
+                ? null
+                : (v) {
+                    HapticFeedback.selectionClick();
+                    onChanged(v);
+                  },
           ),
         ],
       ),
@@ -681,30 +727,50 @@ class _CalendarFormState extends State<CalendarForm> {
         ),
         if (canWrite) ...[
           const SizedBox(height: Dimens.spacingM),
-          SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: OutlinedButton.icon(
-              onPressed: _isBusy ? null : _openInEditor,
-              style: OutlinedButton.styleFrom(
-                foregroundColor: colorPrimary,
-                side: const BorderSide(color: colorPrimary),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(Dimens.radiusM),
-                ),
-              ),
-              icon: const Icon(Icons.edit_outlined, size: 18),
-              label: Text(
-                appLocalizations.calendarOpenInEditor,
-                style: const TextStyle(
-                  fontSize: Dimens.fontSizeL,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+          _secondaryButton(
+            icon: Icons.edit_outlined,
+            label: appLocalizations.calendarOpenInEditor,
+            onPressed: _isBusy ? null : _openInEditor,
           ),
         ],
+        const SizedBox(height: Dimens.spacingM),
+        _secondaryButton(
+          icon: Icons.bookmark_border,
+          label: appLocalizations.saveToLibrary,
+          onPressed: _saveToLibrary,
+        ),
       ],
+    );
+  }
+
+  Widget _secondaryButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback? onPressed,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: OutlinedButton.icon(
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          foregroundColor: colorPrimary,
+          side: const BorderSide(color: colorPrimary),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusM),
+          ),
+        ),
+        icon: Icon(icon, size: 18),
+        label: Text(
+          label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            fontSize: Dimens.fontSizeL,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
   }
 
