@@ -35,6 +35,20 @@ void main() {
       ]);
     });
 
+    test('handles classic Mac CR-only line endings', () {
+      final rows = parseCsv('a,b\r1,2\r3,4');
+      expect(rows, [
+        ['a', 'b'],
+        ['1', '2'],
+        ['3', '4'],
+      ]);
+    });
+
+    test('strips a leading UTF-8 BOM', () {
+      final rows = parseCsv('﻿name,role\nAlice,Speaker');
+      expect(rows[0], ['name', 'role']);
+    });
+
     test('drops trailing empty line', () {
       final rows = parseCsv('a,b\n1,2\n');
       expect(rows.length, 2);

@@ -1,4 +1,7 @@
 List<List<String>> parseCsv(String input) {
+  if (input.startsWith('﻿')) {
+    input = input.substring(1);
+  }
   final rows = <List<String>>[];
   var field = StringBuffer();
   var row = <String>[];
@@ -42,6 +45,10 @@ List<List<String>> parseCsv(String input) {
         endField();
         break;
       case '\r':
+        if (i + 1 < input.length && input[i + 1] == '\n') {
+          i++;
+        }
+        endRow();
         break;
       case '\n':
         endRow();
