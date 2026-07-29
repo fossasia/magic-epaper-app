@@ -15,13 +15,15 @@ Future<Uint8List> processImageRust(
         required int targetWidth,
         required int targetHeight,
         required DitherMethod method,
-        required bool isBwr}) =>
+        required bool isBwr,
+        required bool isFourColor}) =>
     RustLib.instance.api.crateApiSimpleProcessImageRust(
         imageBytes: imageBytes,
         targetWidth: targetWidth,
         targetHeight: targetHeight,
         method: method,
-        isBwr: isBwr);
+        isBwr: isBwr,
+        isFourColor: isFourColor);
 
 enum DitherMethod {
   floydSteinberg,
