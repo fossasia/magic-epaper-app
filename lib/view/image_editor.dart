@@ -833,6 +833,7 @@ class BottomActionMenu extends StatelessWidget {
                       builder: (context) => CardTemplateSelectionView(
                         width: epd.width,
                         height: epd.height,
+                        device: epd,
                       ),
                     ),
                   );
