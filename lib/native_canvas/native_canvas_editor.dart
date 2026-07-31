@@ -135,7 +135,11 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     }
     final layers = widget.initialLayers;
     if (layers == null) return;
-    if (layers.any((s) => s.elementId == 'qr')) {
+    if (layers.length == 1 &&
+        layers.first.elementId == 'contactCard' &&
+        layers.first.widget != null) {
+      _seedFullCanvasElement(layers.first);
+    } else if (layers.any((s) => s.elementId == 'qr')) {
       _seedCardLayout(layers);
     } else {
       _seedOffsetLayers(layers);
@@ -153,6 +157,21 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
       }
     }
     _idCounter = maxId + 1;
+  }
+
+  void _seedFullCanvasElement(LayerSpec spec) {
+    _controller.addElement(
+      CanvasElement(
+        id: _nextId(),
+        kind: CanvasElementKind.widget,
+        position: _canvasCenter,
+        baseSize: Size(widget.width.toDouble(), widget.height.toDouble()),
+        scale: 1.0,
+        child: spec.widget,
+        elementId: spec.elementId,
+      ),
+      record: false,
+    );
   }
 
   void _seedCardLayout(List<LayerSpec> layers) {
@@ -717,6 +736,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                         controller: _controller,
                         canvasKey: _canvasKey,
                         onRequestEdit: element.elementId != null &&
+                                element.elementId != 'contactCard' &&
                                 !widget.returnDocument
                             ? () => Navigator.pop(context, element.elementId)
                             : switch (element.kind) {
