@@ -8,6 +8,7 @@ import 'package:magicepaperapp/card_templates/employee_id_form.dart';
 import 'package:magicepaperapp/card_templates/price_tag_form.dart';
 import 'package:magicepaperapp/card_templates/entry_pass_tag_form.dart';
 import 'package:magicepaperapp/card_templates/event_badge_form.dart';
+import 'package:magicepaperapp/card_templates/calendar_form.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
@@ -136,6 +137,21 @@ class CardTemplateSelectionView extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) =>
                   EventBadgeForm(width: width, height: height, device: device),
+            ),
+          );
+        },
+      ),
+      TemplateItem(
+        title: appLocalizations.calendarTitle,
+        description: appLocalizations.calendarDescription,
+        icon: Icons.calendar_month_outlined,
+        color: Colors.teal,
+        isEnabled: true,
+        onTap: (context) async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  CalendarForm(width: width, height: height, device: device),
             ),
           );
         },

@@ -267,6 +267,7 @@
   "colorHalftone": "Color Newspaper",
   "bayer": "Grid",
   "sierra2": "Smooth",
+  "burkes": "Soft",
 
   "searchingForDevice": "Searching for Device",
   "displayRefreshing": "Display Refreshing",
@@ -626,7 +627,8 @@
   "switchCamera": "Switch camera",
   "scanFromGallery": "Scan from gallery",
   "noCodeFound": "No QR code or barcode found in the image",
-  "cropImage": "Crop & rotate",
+  "cropImage": "Crop",
+  "cropFree": "Free",
   "previewIdCard": "Preview of your ID card",
   "previewPriceTag": "Preview of your price tag",
   "previewBadge": "Preview of your badge",
@@ -1028,5 +1030,43 @@
   "couldntLoadLibrary": "Couldn't load your image library",
   "couldntLoadLibrarySubtitle": "Something went wrong while loading your saved images. Please try again.",
   "retry": "Retry",
-  "imageUnavailable": "Image unavailable"
+  "imageUnavailable": "Image unavailable",
+  "calendarTitle": "Calendar",
+  "calendarDescription": "Month, week or day view with today highlighted",
+  "calendarCard": "Calendar",
+  "calendarHint": "Built from your phone's date. Tap to write it to the badge, tap again to update.",
+  "calendarViewMonth": "Month",
+  "calendarViewWeek": "Week",
+  "calendarViewDay": "Day",
+  "calendarPrevious": "Previous",
+  "calendarNext": "Next",
+  "calendarToday": "Today",
+  "calendarJumpToDate": "Jump to date",
+  "calendarHowItWorks": "How it works",
+  "calendarGotIt": "Got it",
+  "calendarInfoOffline": "Works without internet.",
+  "calendarInfoSelect": "Pick a date and a view.",
+  "calendarInfoViews": "Tap Write to send it to your badge.",
+  "calendarInfoWrite": "Tap Write again whenever the date changes.",
+  "calendarStartMonday": "Start week on Monday",
+  "calendarWeekSunSat": "Sun – Sat",
+  "calendarWeekMonSun": "Mon – Sun",
+  "calendarInvertStyle": "Dark style",
+  "calendarInvertOn": "White on black",
+  "calendarInvertOff": "Black on white",
+  "calendarTodayLabel": "Today",
+  "calendarDaysToGo": "{days, plural, =1{1 day to go} other{{days} days to go}}",
+  "@calendarDaysToGo": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "calendarDaysAgo": "{days, plural, =1{1 day ago} other{{days} days ago}}",
+  "@calendarDaysAgo": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "calendarWriteToBadge": "Write to badge",
+  "calendarOpenInEditor": "Open in editor"
 }
