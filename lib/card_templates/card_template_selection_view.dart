@@ -91,7 +91,7 @@ class CardTemplateSelectionView extends StatelessWidget {
           await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) =>
-                  EmployeeIdForm(width: width, height: height),
+                  EmployeeIdForm(width: width, height: height, device: device),
             ),
           );
         },
@@ -105,7 +105,8 @@ class CardTemplateSelectionView extends StatelessWidget {
         onTap: (context) async {
           await Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => PriceTagForm(width: width, height: height),
+              builder: (context) =>
+                  PriceTagForm(width: width, height: height, device: device),
             ),
           );
         },
@@ -119,8 +120,8 @@ class CardTemplateSelectionView extends StatelessWidget {
         onTap: (context) async {
           await Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) =>
-                  EntryPassTagForm(width: width, height: height),
+              builder: (context) => EntryPassTagForm(
+                  width: width, height: height, device: device),
             ),
           );
         },
@@ -135,7 +136,7 @@ class CardTemplateSelectionView extends StatelessWidget {
           await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) =>
-                  EventBadgeForm(width: width, height: height),
+                  EventBadgeForm(width: width, height: height, device: device),
             ),
           );
         },

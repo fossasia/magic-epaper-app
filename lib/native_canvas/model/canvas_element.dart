@@ -39,6 +39,8 @@ class CanvasElement {
   final String? fontFamily;
 
   final Uint8List? imageBytes;
+  final bool clipOval;
+  final double cornerRadius;
 
   final String? barcodeData;
 
@@ -62,6 +64,8 @@ class CanvasElement {
     this.textAlign = TextAlign.center,
     this.fontFamily,
     this.imageBytes,
+    this.clipOval = false,
+    this.cornerRadius = 0,
     this.barcodeData,
     this.barcode,
     this.child,
@@ -101,6 +105,8 @@ class CanvasElement {
           ? this.fontFamily
           : fontFamily as String?,
       imageBytes: imageBytes ?? this.imageBytes,
+      clipOval: clipOval,
+      cornerRadius: cornerRadius,
       barcodeData: barcodeData ?? this.barcodeData,
       barcode: barcode ?? this.barcode,
       child: child,
@@ -124,6 +130,8 @@ class CanvasElement {
       'textAlign': textAlign.index,
       if (fontFamily != null) 'fontFamily': fontFamily,
       if (imageBytes != null) 'imageBytes': base64Encode(imageBytes!),
+      if (clipOval) 'clipOval': true,
+      if (cornerRadius > 0) 'cornerRadius': cornerRadius,
       if (barcode != null) 'barcodeName': barcode!.name,
       if (barcodeData != null) 'barcodeData': barcodeData,
       'followCanvasTheme': followCanvasTheme,
@@ -159,6 +167,8 @@ class CanvasElement {
       textAlign: TextAlign.values[json['textAlign'] as int],
       fontFamily: json['fontFamily'] as String?,
       imageBytes: imageB64 == null ? null : base64Decode(imageB64),
+      clipOval: json['clipOval'] as bool? ?? false,
+      cornerRadius: (json['cornerRadius'] as num?)?.toDouble() ?? 0,
       barcode: barcodeName == null ? null : barcodeByName(barcodeName),
       barcodeData: json['barcodeData'] as String?,
       followCanvasTheme: json['followCanvasTheme'] as bool? ?? true,
