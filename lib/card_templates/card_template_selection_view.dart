@@ -8,6 +8,7 @@ import 'package:magicepaperapp/card_templates/employee_id_form.dart';
 import 'package:magicepaperapp/card_templates/price_tag_form.dart';
 import 'package:magicepaperapp/card_templates/entry_pass_tag_form.dart';
 import 'package:magicepaperapp/card_templates/event_badge_form.dart';
+import 'package:magicepaperapp/card_templates/qr_tag_form.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
@@ -132,6 +133,20 @@ class CardTemplateSelectionView extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) =>
                   EventBadgeForm(width: width, height: height),
+            ),
+          );
+        },
+      ),
+      TemplateItem(
+        title: appLocalizations.qrTagTitle,
+        description: appLocalizations.qrTagDescription,
+        icon: Icons.qr_code_2,
+        color: Colors.teal,
+        isEnabled: true,
+        onTap: (context) async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => QrTagForm(width: width, height: height),
             ),
           );
         },

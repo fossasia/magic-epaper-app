@@ -137,12 +137,31 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     }
     final layers = widget.initialLayers;
     if (layers == null) return;
-    if (layers.any((s) => s.elementId == 'qr')) {
+    if (layers.length == 1 &&
+        layers.first.elementId == 'qrTag' &&
+        layers.first.widget != null) {
+      _seedFullCanvasElement(layers.first);
+    } else if (layers.any((s) => s.elementId == 'qr')) {
       _seedCardLayout(layers);
     } else {
       _seedOffsetLayers(layers);
     }
     _controller.select(null);
+  }
+
+  void _seedFullCanvasElement(LayerSpec spec) {
+    _controller.addElement(
+      CanvasElement(
+        id: _nextId(),
+        kind: CanvasElementKind.widget,
+        position: _canvasCenter,
+        baseSize: Size(widget.width.toDouble(), widget.height.toDouble()),
+        scale: 1.0,
+        child: spec.widget,
+        elementId: spec.elementId,
+      ),
+      record: false,
+    );
   }
 
   void _resumeIdCounter() {
