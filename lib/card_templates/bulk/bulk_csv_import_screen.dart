@@ -45,6 +45,7 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
   List<List<String>> _dataRows = const [];
   final Map<String, int> _mapping = {};
   final Set<String> _autoMapped = {};
+  final Set<String> _clearedFields = {};
   final Map<int, File> _rowPhotos = {};
   final Map<int, Map<String, String>> _rowEdits = {};
   final PhotoResolver _resolver = PhotoResolver();
@@ -130,23 +131,84 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
 
     _mapping.clear();
     _autoMapped.clear();
+    _clearedFields.clear();
     _rowPhotos.clear();
     _rowEdits.clear();
-    for (final field in widget.template.fields) {
-      final col = _autoMatch(field, headers);
-      if (col != null) {
-        _mapping[field.key] = col;
-        _autoMapped.add(field.key);
-      }
-    }
+    _headers = List<String>.from(headers);
+    _dataRows = data;
+    _fileName = file.name;
+    _autoMapFields();
 
     setState(() {
-      _headers = headers;
-      _dataRows = data;
-      _fileName = file.name;
       _showMapping = _missingRequired.isNotEmpty;
     });
     _resolvePhotoUrls();
+  }
+
+  void _autoMapFields() {
+    for (final field in widget.template.fields) {
+      if (_clearedFields.contains(field.key)) continue;
+      final manual =
+          _mapping.containsKey(field.key) && !_autoMapped.contains(field.key);
+      if (manual) continue;
+      final col = _autoMatch(field, _headers);
+      if (col != null) {
+        _mapping[field.key] = col;
+        _autoMapped.add(field.key);
+      } else {
+        _mapping.remove(field.key);
+        _autoMapped.remove(field.key);
+      }
+    }
+  }
+
+  Future<void> _renameColumn(int index) async {
+    final controller = TextEditingController(text: _headers[index]);
+    final result = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusL),
+          ),
+          title: Text(appLocalizations.bulkRenameColumn),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            textInputAction: TextInputAction.done,
+            onSubmitted: (value) => Navigator.pop(dialogContext, value.trim()),
+            decoration: InputDecoration(
+              labelText: appLocalizations.bulkColumnNameLabel,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(Dimens.radiusL),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              style: TextButton.styleFrom(foregroundColor: grey600),
+              child: Text(appLocalizations.bulkCancel),
+            ),
+            ElevatedButton(
+              onPressed: () =>
+                  Navigator.pop(dialogContext, controller.text.trim()),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colorPrimary,
+                foregroundColor: colorWhite,
+              ),
+              child: Text(appLocalizations.bulkSaveChanges),
+            ),
+          ],
+        );
+      },
+    );
+    controller.dispose();
+    if (result == null || result.isEmpty || result == _headers[index]) return;
+    setState(() {
+      _headers[index] = result;
+      _autoMapFields();
+    });
   }
 
   // Downloads/decodes any photo-column links (http/https or data URIs) into
@@ -915,8 +977,75 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
               ),
             ),
           ),
-          if (_showMapping) ...widget.template.fields.map(_buildFieldCard),
+          if (_showMapping) ...[
+            _buildColumnEditor(),
+            const Divider(height: 1),
+            const SizedBox(height: Dimens.spacingM),
+            ...widget.template.fields.map(_buildFieldCard),
+          ],
         ],
+      ),
+    );
+  }
+
+  Widget _buildColumnEditor() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Dimens.spacingM),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            appLocalizations.bulkYourColumns,
+            style:
+                const TextStyle(fontWeight: FontWeight.bold, color: colorBlack),
+          ),
+          const SizedBox(height: Dimens.spacingXs),
+          Text(
+            appLocalizations.bulkRenameColumnsHint,
+            style: TextStyle(fontSize: Dimens.fontSizeXs, color: grey600),
+          ),
+          const SizedBox(height: Dimens.spacingM),
+          Wrap(
+            spacing: Dimens.spacingS,
+            runSpacing: Dimens.spacingS,
+            children: [
+              for (var i = 0; i < _headers.length; i++) _headerChip(i),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _headerChip(int index) {
+    final label =
+        _headers[index].isEmpty ? 'Column ${index + 1}' : _headers[index];
+    return InkWell(
+      onTap: () => _renameColumn(index),
+      borderRadius: BorderRadius.circular(Dimens.radiusXl),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+            horizontal: Dimens.spacingM, vertical: Dimens.spacingSm),
+        decoration: BoxDecoration(
+          color: colorWhite,
+          borderRadius: BorderRadius.circular(Dimens.radiusXl),
+          border: Border.all(color: grey300),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
+                label,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    fontSize: Dimens.fontSizeS, color: colorBlack),
+              ),
+            ),
+            const SizedBox(width: Dimens.spacingXs),
+            Icon(Icons.edit_outlined, size: 14, color: colorPrimary),
+          ],
+        ),
       ),
     );
   }
@@ -1038,8 +1167,10 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
                 _autoMapped.remove(field.key);
                 if (value == null) {
                   _mapping.remove(field.key);
+                  _clearedFields.add(field.key);
                 } else {
                   _mapping[field.key] = value;
+                  _clearedFields.remove(field.key);
                 }
               });
               if (field.isPhoto && value != null) _resolvePhotoUrls();

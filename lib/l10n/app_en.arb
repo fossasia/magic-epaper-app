@@ -854,6 +854,10 @@
   "bulkAutoMatched": "Auto",
   "bulkColumnLabel": "Spreadsheet column",
   "bulkColumnDontUse": "Don't use",
+  "bulkYourColumns": "Your CSV columns",
+  "bulkRenameColumnsHint": "Tap a column to rename it, then it re-matches automatically.",
+  "bulkRenameColumn": "Rename column",
+  "bulkColumnNameLabel": "Column name",
   "bulkPhotoColumnUnmapped": "Tip: map the photo column on the previous step so photos attach to the right rows by file name.",
   "bulkReviewReady": "{count} cards ready to generate",
   "@bulkReviewReady": {
