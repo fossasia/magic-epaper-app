@@ -744,6 +744,7 @@ class BottomActionMenu extends StatelessWidget {
                 label: appLocalizations.import,
                 onTap: () async {
                   final success = await imgLoader.pickImage(
+                    context: context,
                     width: epd.width,
                     height: epd.height,
                   );
@@ -830,9 +831,11 @@ class BottomActionMenu extends StatelessWidget {
                 onTap: () async {
                   final result = await Navigator.of(context).push<Uint8List>(
                     MaterialPageRoute(
+                      settings: const RouteSettings(name: 'cardTemplates'),
                       builder: (context) => CardTemplateSelectionView(
                         width: epd.width,
                         height: epd.height,
+                        device: epd,
                       ),
                     ),
                   );
