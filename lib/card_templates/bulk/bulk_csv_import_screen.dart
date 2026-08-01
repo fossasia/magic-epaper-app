@@ -203,12 +203,16 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
         );
       },
     );
-    controller.dispose();
-    if (result == null || result.isEmpty || result == _headers[index]) return;
-    setState(() {
-      _headers[index] = result;
-      _autoMapFields();
-    });
+    if (result != null &&
+        result.isNotEmpty &&
+        result != _headers[index] &&
+        mounted) {
+      setState(() {
+        _headers[index] = result;
+        _autoMapFields();
+      });
+    }
+    Future.delayed(const Duration(milliseconds: 350), controller.dispose);
   }
 
   // Downloads/decodes any photo-column links (http/https or data URIs) into
