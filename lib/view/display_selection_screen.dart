@@ -7,6 +7,7 @@ import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/util/epd/gdeq031t10.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
+import 'package:magicepaperapp/util/epd/gicisky/gicisky_display.dart';
 import 'package:magicepaperapp/util/epd/waveshare_displays.dart';
 import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
@@ -33,6 +34,8 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
     Waveshare4in2(),
     Waveshare7in5(),
     Waveshare7in5HD(),
+    // Experimental BLE ESL support (issue #182)
+    Gicisky250x122Bwr(),
   ];
 
   static const double _scrollbarGutter = 16.0;
