@@ -32,16 +32,9 @@ struct Colorf32 {
     b: f32,
 }
 
-const PALETTE_BW: [Colorf32; 2] = [
-    Colorf32 { r: 0.0, g: 0.0, b: 0.0 },
-    Colorf32 { r: 255.0, g: 255.0, b: 255.0 },
-];
-
-const PALETTE_BWR: [Colorf32; 3] = [
-    Colorf32 { r: 0.0, g: 0.0, b: 0.0 },
-    Colorf32 { r: 255.0, g: 255.0, b: 255.0 },
-    Colorf32 { r: 255.0, g: 0.0, b: 0.0 },
-];
+const BLACK: Colorf32 = Colorf32 { r: 0.0, g: 0.0, b: 0.0 };
+const WHITE: Colorf32 = Colorf32 { r: 255.0, g: 255.0, b: 255.0 };
+const RED: Colorf32 = Colorf32 { r: 255.0, g: 0.0, b: 0.0 };
 
 const DITHER_GAMMA: f32 = 1.5;
 
@@ -61,22 +54,48 @@ fn dither_gamma_lut() -> &'static [f32; 256] {
     })
 }
 
-fn closest_color(pixel: Colorf32, palette: &[Colorf32]) -> Colorf32 {
-    let mut min_dist = f32::MAX;
-    let mut best_color = palette[0];
-
-    for c in palette {
-        let dr = pixel.r - c.r;
-        let dg = pixel.g - c.g;
-        let db = pixel.b - c.b;
-        let dist = dr * dr + dg * dg + db * db;
-
-        if dist < min_dist {
-            min_dist = dist;
-            best_color = *c;
-        }
+/// Specialized closest color for black/white palette (2 colors).
+#[inline(always)]
+fn closest_color_bw(pixel: Colorf32) -> Colorf32 {
+    // Squared Euclidean distance to black vs white.
+    // Black: r² + g² + b²
+    // White: (r-255)² + (g-255)² + (b-255)² = r²+g²+b² - 510*(r+g+b) + 3*255²
+    // Prefer black when dist_black <= dist_white
+    // => 0 <= -510*(r+g+b) + 3*65025
+    // => r+g+b <= (3*65025)/510 ≈ 382.5
+    let sum = pixel.r + pixel.g + pixel.b;
+    if sum <= 382.5 {
+        BLACK
+    } else {
+        WHITE
     }
-    best_color
+}
+
+/// Specialized closest color for black/white/red palette (3 colors).
+#[inline(always)]
+fn closest_color_bwr(pixel: Colorf32) -> Colorf32 {
+    let dr_b = pixel.r;
+    let dg_b = pixel.g;
+    let db_b = pixel.b;
+    let dist_black = dr_b * dr_b + dg_b * dg_b + db_b * db_b;
+
+    let dr_w = pixel.r - 255.0;
+    let dg_w = pixel.g - 255.0;
+    let db_w = pixel.b - 255.0;
+    let dist_white = dr_w * dr_w + dg_w * dg_w + db_w * db_w;
+
+    let dr_r = pixel.r - 255.0;
+    let dg_r = pixel.g;
+    let db_r = pixel.b;
+    let dist_red = dr_r * dr_r + dg_r * dg_r + db_r * db_r;
+
+    if dist_black <= dist_white && dist_black <= dist_red {
+        BLACK
+    } else if dist_white <= dist_red {
+        WHITE
+    } else {
+        RED
+    }
 }
 
 #[flutter_rust_bridge::frb(init)]
@@ -97,24 +116,31 @@ pub fn process_image_rust(
 
     let img = dynamic_img.to_rgba8();
     let (width, height) = img.dimensions();
+    let pixel_count = (width * height) as usize;
 
-    let mut buffer: Vec<Colorf32> = img.pixels()
-        .map(|p| Colorf32 { r: p[0] as f32, g: p[1] as f32, b: p[2] as f32 }).collect();
+    // Convert to floating-point buffer
+    let mut buffer: Vec<Colorf32> = Vec::with_capacity(pixel_count);
+    buffer.extend(img.pixels().map(|p| Colorf32 {
+        r: p[0] as f32,
+        g: p[1] as f32,
+        b: p[2] as f32,
+    }));
 
+    // Apply gamma (except for pure Threshold)
     if !matches!(method, DitherMethod::Threshold) {
         let gamma_lut = dither_gamma_lut();
         for px in buffer.iter_mut() {
-            px.r = gamma_lut[px.r.clamp(0.0, 255.0) as usize];
-            px.g = gamma_lut[px.g.clamp(0.0, 255.0) as usize];
-            px.b = gamma_lut[px.b.clamp(0.0, 255.0) as usize];
+            // Safe because input is 0-255 from u8
+            px.r = gamma_lut[px.r as usize];
+            px.g = gamma_lut[px.g as usize];
+            px.b = gamma_lut[px.b as usize];
         }
     }
-
-    let palette = if is_bwr { &PALETTE_BWR[..] } else { &PALETTE_BW[..] };
 
     let w = width as i32;
     let h = height as i32;
 
+    // Main dithering loop – specialized closest-color path
     for y in 0..h {
         for x in 0..w {
             let idx = (y * w + x) as usize;
@@ -124,12 +150,20 @@ pub fn process_image_rust(
                 DitherMethod::Bayer => {
                     let t = (BAYER_8X8[(y & 7) as usize][(x & 7) as usize] + 0.5) / 64.0 - 0.5;
                     let off = t * 255.0;
-                    Colorf32 { r: old_pixel.r + off, g: old_pixel.g + off, b: old_pixel.b + off }
+                    Colorf32 {
+                        r: old_pixel.r + off,
+                        g: old_pixel.g + off,
+                        b: old_pixel.b + off,
+                    }
                 }
                 _ => old_pixel,
             };
 
-            let new_pixel = closest_color(quant_input, palette);
+            let new_pixel = if is_bwr {
+                closest_color_bwr(quant_input)
+            } else {
+                closest_color_bw(quant_input)
+            };
 
             buffer[idx] = new_pixel;
 
@@ -139,7 +173,7 @@ pub fn process_image_rust(
 
             match method {
                 DitherMethod::Threshold | DitherMethod::Bayer => {}
-               
+
                 DitherMethod::FloydSteinberg | DitherMethod::Halftone => {
                     distribute_error(&mut buffer, x, y, w, h, 1, 0, err_r, err_g, err_b, 7.0 / 16.0);
                     distribute_error(&mut buffer, x, y, w, h, -1, 1, err_r, err_g, err_b, 3.0 / 16.0);
@@ -199,31 +233,47 @@ pub fn process_image_rust(
         }
     }
 
-    let mut out_img = RgbaImage::new(width, height);
-    for y in 0..height {
-        for x in 0..width {
-            let idx = (y * width + x) as usize;
-            let c = buffer[idx];
-            out_img.put_pixel(
-                x, y,
-                Rgba([c.r.clamp(0.0, 255.0) as u8, c.g.clamp(0.0, 255.0) as u8, c.b.clamp(0.0, 255.0) as u8, 255]),
-            );
-        }
+    // Fast output construction – build raw RGBA buffer then wrap
+    let mut raw = Vec::with_capacity(pixel_count * 4);
+    for c in &buffer {
+        raw.push(c.r.clamp(0.0, 255.0) as u8);
+        raw.push(c.g.clamp(0.0, 255.0) as u8);
+        raw.push(c.b.clamp(0.0, 255.0) as u8);
+        raw.push(255);
     }
 
+    let out_img = RgbaImage::from_raw(width, height, raw)
+        .expect("Failed to create image from raw buffer");
+
     let mut png_bytes: Vec<u8> = Vec::new();
-    out_img.write_to(&mut Cursor::new(&mut png_bytes), ImageFormat::Png).expect("Failed to encode PNG");
+    out_img
+        .write_to(&mut Cursor::new(&mut png_bytes), ImageFormat::Png)
+        .expect("Failed to encode PNG");
     png_bytes
 }
 
 #[inline(always)]
-fn distribute_error(buffer: &mut Vec<Colorf32>, x: i32, y: i32, w: i32, h: i32, dx: i32, dy: i32, err_r: f32, err_g: f32, err_b: f32, weight: f32) {
+fn distribute_error(
+    buffer: &mut [Colorf32],
+    x: i32,
+    y: i32,
+    w: i32,
+    h: i32,
+    dx: i32,
+    dy: i32,
+    err_r: f32,
+    err_g: f32,
+    err_b: f32,
+    weight: f32,
+) {
     let nx = x + dx;
     let ny = y + dy;
     if nx >= 0 && nx < w && ny >= 0 && ny < h {
         let idx = (ny * w + nx) as usize;
-        buffer[idx].r += err_r * weight;
-        buffer[idx].g += err_g * weight;
-        buffer[idx].b += err_b * weight;
+        // Safety: bounds already checked
+        let px = unsafe { buffer.get_unchecked_mut(idx) };
+        px.r += err_r * weight;
+        px.g += err_g * weight;
+        px.b += err_b * weight;
     }
 }
