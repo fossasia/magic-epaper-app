@@ -40,6 +40,7 @@ dependencies:
   ndef: ^0.4.0
   logger: ^2.4.0
   ffi: ^2.2.0
+  flutter_blue_plus: ^1.35.3
   rust_lib_magicepaperapp:
     path: rust_builder
   flutter_rust_bridge: 2.12.0
