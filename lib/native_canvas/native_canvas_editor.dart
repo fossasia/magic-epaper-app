@@ -269,7 +269,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
       final blockTop = pad + (identH - (nameH + subH)) / 2;
       if (showName) {
         addLeftText(
-            name!, textColLeft, blockTop + nameH / 2, nameFs, identTextW);
+            name, textColLeft, blockTop + nameH / 2, nameFs, identTextW);
       }
       if (hasSub) {
         final subTop = blockTop + nameH;
