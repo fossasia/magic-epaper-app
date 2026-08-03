@@ -197,8 +197,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     final showName = name != null;
     final subEntries = [jobTitle, company].whereType<LayerSpec>().toList();
     final hasSub = subEntries.isNotEmpty;
-    final contactEntries =
-        [phone, email, link].whereType<LayerSpec>().toList();
+    final contactEntries = [phone, email, link].whereType<LayerSpec>().toList();
 
     final nameH = showName ? ch * 0.28 : 0.0;
     final subH = hasSub ? ch * 0.16 : 0.0;
@@ -269,12 +268,13 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
       }
       final blockTop = pad + (identH - (nameH + subH)) / 2;
       if (showName) {
-        addLeftText(name!, textColLeft, blockTop + nameH / 2, nameFs, identTextW);
+        addLeftText(
+            name!, textColLeft, blockTop + nameH / 2, nameFs, identTextW);
       }
       if (hasSub) {
         final subTop = blockTop + nameH;
-        addLeftText(
-            subEntries.first, textColLeft, subTop + subH / 2, subFs, identTextW);
+        addLeftText(subEntries.first, textColLeft, subTop + subH / 2, subFs,
+            identTextW);
       }
       yCursor = pad + identH;
       if (showDivider) {
