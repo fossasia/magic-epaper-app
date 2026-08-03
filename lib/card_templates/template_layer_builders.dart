@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/card_templates/contact_card_model.dart';
 import 'package:magicepaperapp/card_templates/employee_id_model.dart';
 import 'package:magicepaperapp/card_templates/entry_pass_tag_model.dart';
 import 'package:magicepaperapp/card_templates/event_badge_model.dart';
@@ -375,6 +376,105 @@ List<LayerSpec> buildEntryPassTagLayers({
   }
 
   return layers;
+}
+
+List<LayerSpec> buildContactCardLayers({
+  required ContactCardModel data,
+  required int width,
+  required int height,
+  File? photo,
+}) {
+  final layers = <LayerSpec>[];
+
+  if (photo != null) {
+    layers.add(LayerSpec.widget(
+      widget: Container(
+        width: 200,
+        height: 200,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: colorBlack, width: 7),
+          image: DecorationImage(image: FileImage(photo), fit: BoxFit.cover),
+        ),
+      ),
+      kind: LayerKind.image,
+      elementId: 'profileImage',
+    ));
+  }
+
+  if (data.fullName.trim().isNotEmpty) {
+    layers.add(LayerSpec.text(
+      text: data.fullName.trim(),
+      textStyle: const TextStyle(fontSize: 44, fontWeight: FontWeight.bold),
+      textAlign: TextAlign.center,
+      followCanvasTheme: true,
+      elementId: 'fullName',
+    ));
+  }
+
+  final subParts = [
+    if (data.jobTitle.trim().isNotEmpty) data.jobTitle.trim(),
+    if (data.company.trim().isNotEmpty) data.company.trim(),
+  ];
+  if (subParts.isNotEmpty) {
+    layers.add(LayerSpec.text(
+      text: subParts.join('  •  '),
+      textStyle: const TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
+      followCanvasTheme: true,
+      elementId: data.jobTitle.trim().isNotEmpty ? 'jobTitle' : 'company',
+    ));
+  }
+
+  if (data.phone.trim().isNotEmpty) {
+    layers.add(LayerSpec.text(
+      text: data.phone.trim(),
+      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+      followCanvasTheme: true,
+      elementId: 'phone',
+    ));
+  }
+
+  if (data.email.trim().isNotEmpty) {
+    layers.add(LayerSpec.text(
+      text: data.email.trim(),
+      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+      followCanvasTheme: true,
+      elementId: 'email',
+    ));
+  }
+
+  final prettyLink = _prettyLink(data.link);
+  if (prettyLink.isNotEmpty) {
+    layers.add(LayerSpec.text(
+      text: prettyLink,
+      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+      followCanvasTheme: true,
+      elementId: 'link',
+    ));
+  }
+
+  final qrData = data.qrData;
+  if (qrData.isNotEmpty) {
+    layers.add(_qrLayer(qrData, const Size(200, 200), Offset.zero, 1.0));
+    layers.add(LayerSpec.text(
+      text: data.isLinkQr ? _l10n.contactScanMe : _l10n.contactScanToSave,
+      textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+      textAlign: TextAlign.center,
+      followCanvasTheme: true,
+      elementId: 'qrCaption',
+    ));
+  }
+
+  return layers;
+}
+
+String _prettyLink(String link) {
+  var s = link.trim();
+  if (s.isEmpty) return '';
+  s = s.replaceFirst(RegExp(r'^https?://'), '');
+  s = s.replaceFirst(RegExp(r'^www\.'), '');
+  s = s.replaceFirst(RegExp(r'/+$'), '');
+  return s;
 }
 
 void _addPrefixedDetail(

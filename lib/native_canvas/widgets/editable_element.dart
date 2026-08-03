@@ -217,8 +217,22 @@ class CanvasElementContent extends StatelessWidget {
           fontWeight: element.fontWeight,
           color: element.color,
         );
+        final Alignment fitAlignment;
+        switch (element.textAlign) {
+          case TextAlign.left:
+          case TextAlign.start:
+            fitAlignment = Alignment.centerLeft;
+            break;
+          case TextAlign.right:
+          case TextAlign.end:
+            fitAlignment = Alignment.centerRight;
+            break;
+          default:
+            fitAlignment = Alignment.center;
+        }
         return FittedBox(
           fit: BoxFit.contain,
+          alignment: fitAlignment,
           child: Text(
             element.text ?? '',
             textAlign: element.textAlign,

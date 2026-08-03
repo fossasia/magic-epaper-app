@@ -3,16 +3,15 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/card_templates/util/image_picker_util.dart';
 import 'package:magicepaperapp/card_templates/card_template_result.dart';
-import 'package:magicepaperapp/card_templates/contact_card_badge.dart';
 import 'package:magicepaperapp/card_templates/contact_card_card_widget.dart';
 import 'package:magicepaperapp/card_templates/contact_card_model.dart';
+import 'package:magicepaperapp/card_templates/template_layer_builders.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:magicepaperapp/util/page_route_util.dart';
-import 'package:magicepaperapp/util/template_util.dart';
 import 'package:magicepaperapp/card_templates/util/barcode_scanner_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
@@ -168,17 +167,12 @@ class _ContactCardFormState extends State<ContactCardForm> {
     });
 
     try {
-      final layers = <LayerSpec>[
-        LayerSpec.widget(
-          widget: SizedBox(
-            width: widget.width.toDouble(),
-            height: widget.height.toDouble(),
-            child: ContactCardBadge(data: _contactData, interactive: true),
-          ),
-          kind: LayerKind.generic,
-          elementId: 'contactCard',
-        ),
-      ];
+      final layers = buildContactCardLayers(
+        data: _contactData,
+        width: widget.width,
+        height: widget.height,
+        photo: _profileImage,
+      );
 
       final result = await Navigator.of(context).push<Object>(
         buildOpaqueSlideRoute(
