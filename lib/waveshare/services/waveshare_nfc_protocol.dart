@@ -418,8 +418,9 @@ class WaveshareNfcProtocol {
 
     // Reg 0x01 — Driver output control: gate lines, scanning direction
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 1]))) return false;
-    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 3, yMaxLow, yMaxHigh, 1])))
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 3, yMaxLow, yMaxHigh, 1]))) {
       return false;
+    }
 
     // Reg 0x11 — Data entry mode: X/Y increment direction for RAM write
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 17]))) return false;
@@ -428,14 +429,16 @@ class WaveshareNfcProtocol {
 
     // Reg 0x44 — RAM X address start/end (gate window, in bytes)
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 68]))) return false;
-    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 2, xStart, xEnd])))
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 2, xStart, xEnd]))) {
       return false;
+    }
 
     // Reg 0x45 — RAM Y address start/end (source window, in lines)
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 69]))) return false;
     if (!_isIsoDepOk(
-        await _send([116, 154, 0, 14, 4, yMaxLow, yMaxHigh, 0, 0])))
+        await _send([116, 154, 0, 14, 4, yMaxLow, yMaxHigh, 0, 0]))) {
       return false;
+    }
 
     // Reg 0x3C — Border waveform control
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 60]))) return false;
@@ -453,8 +456,9 @@ class WaveshareNfcProtocol {
 
     // Reg 0x4F — RAM Y address counter (set write cursor to row 199, top of display)
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 79]))) return false;
-    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 2, yMaxLow, yMaxHigh])))
+    if (!_isIsoDepOk(await _send([116, 154, 0, 14, 2, yMaxLow, yMaxHigh]))) {
       return false;
+    }
     await _sleep(100);
 
     // Calculate the exact bytes needed by multiplying the packets by their useful length
