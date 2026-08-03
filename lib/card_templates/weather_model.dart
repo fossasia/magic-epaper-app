@@ -56,6 +56,35 @@ class WeatherData {
 
   static double _convert(double celsius, TemperatureUnit unit) =>
       unit == TemperatureUnit.fahrenheit ? celsius * 9 / 5 + 32 : celsius;
+
+  Map<String, dynamic> toJson() => {
+        'cityName': cityName,
+        'temperatureC': temperatureC,
+        'apparentTemperatureC': apparentTemperatureC,
+        'tempMaxC': tempMaxC,
+        'tempMinC': tempMinC,
+        'humidity': humidity,
+        'windSpeedKmh': windSpeedKmh,
+        'weatherCode': weatherCode,
+        'isDay': isDay,
+        'time': time.toIso8601String(),
+      };
+
+  factory WeatherData.fromJson(Map<String, dynamic> json) {
+    double d(String key) => (json[key] as num?)?.toDouble() ?? 0;
+    return WeatherData(
+      cityName: json['cityName'] as String? ?? '',
+      temperatureC: d('temperatureC'),
+      apparentTemperatureC: d('apparentTemperatureC'),
+      tempMaxC: d('tempMaxC'),
+      tempMinC: d('tempMinC'),
+      humidity: (json['humidity'] as num?)?.round() ?? 0,
+      windSpeedKmh: d('windSpeedKmh'),
+      weatherCode: (json['weatherCode'] as num?)?.toInt() ?? 0,
+      isDay: json['isDay'] as bool? ?? true,
+      time: DateTime.tryParse(json['time'] as String? ?? '') ?? DateTime.now(),
+    );
+  }
 }
 
 WeatherCondition conditionForCode(int code) {

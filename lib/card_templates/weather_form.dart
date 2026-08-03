@@ -7,6 +7,7 @@ import 'package:magicepaperapp/card_templates/weather_card_widget.dart';
 import 'package:magicepaperapp/card_templates/weather_model.dart';
 import 'package:magicepaperapp/card_templates/weather_recent_cities.dart';
 import 'package:magicepaperapp/card_templates/weather_service.dart';
+import 'package:magicepaperapp/card_templates/weather_template_result.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
@@ -21,8 +22,16 @@ AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 class WeatherForm extends StatefulWidget {
   final int width;
   final int height;
+  final Map<String, dynamic>? initialData;
+  final bool fromLibrary;
 
-  const WeatherForm({super.key, required this.width, required this.height});
+  const WeatherForm({
+    super.key,
+    required this.width,
+    required this.height,
+    this.initialData,
+    this.fromLibrary = false,
+  });
 
   @override
   State<WeatherForm> createState() => _WeatherFormState();
@@ -44,11 +53,35 @@ class _WeatherFormState extends State<WeatherForm> {
   final RecentCitiesStore _recentStore = RecentCitiesStore();
   List<GeoResult> _recent = const <GeoResult>[];
   DateTime? _lastUpdated;
+  String? _initialCityText;
 
   @override
   void initState() {
     super.initState();
+    _restoreInitialData();
     _loadRecent();
+  }
+
+  void _restoreInitialData() {
+    final initial = widget.initialData;
+    if (initial == null) return;
+    final rawData = initial['data'];
+    if (rawData is Map) {
+      _data = WeatherData.fromJson(Map<String, dynamic>.from(rawData));
+    }
+    _unit = initial['unit'] == 'f'
+        ? TemperatureUnit.fahrenheit
+        : TemperatureUnit.celsius;
+    final geo = initial['geo'];
+    if (geo is Map && geo['lat'] is num && geo['lon'] is num) {
+      _selectedGeo = GeoResult(
+        displayName: geo['name'] as String? ?? '',
+        latitude: (geo['lat'] as num).toDouble(),
+        longitude: (geo['lon'] as num).toDouble(),
+      );
+    }
+    _initialCityText = _selectedGeo?.displayName ?? _data?.cityName;
+    if (_data != null) _lastUpdated = DateTime.now();
   }
 
   Future<void> _loadRecent() async {
@@ -148,6 +181,20 @@ class _WeatherFormState extends State<WeatherForm> {
     return '${two(dt.hour)}:${two(dt.minute)}';
   }
 
+  Map<String, dynamic> _buildTemplateData(WeatherData data) {
+    return <String, dynamic>{
+      'type': 'weather',
+      'unit': _unit == TemperatureUnit.fahrenheit ? 'f' : 'c',
+      'data': data.toJson(),
+      if (_selectedGeo != null)
+        'geo': {
+          'name': _selectedGeo!.displayName,
+          'lat': _selectedGeo!.latitude,
+          'lon': _selectedGeo!.longitude,
+        },
+    };
+  }
+
   void _setUnit(TemperatureUnit unit) {
     if (_unit == unit) return;
     setState(() => _unit = unit);
@@ -190,9 +237,14 @@ class _WeatherFormState extends State<WeatherForm> {
 
       if (!mounted) return;
       if (result is Uint8List) {
-        Navigator.of(context)
-          ..pop()
-          ..pop(result);
+        final out = WeatherTemplateResult(result, _buildTemplateData(data));
+        if (widget.fromLibrary) {
+          Navigator.of(context).pop(out);
+        } else {
+          Navigator.of(context)
+            ..pop()
+            ..pop(out);
+        }
       }
     } finally {
       if (mounted) setState(() => _isGenerating = false);
@@ -439,6 +491,10 @@ class _WeatherFormState extends State<WeatherForm> {
         },
         fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
           _cityFieldController = controller;
+          if (_initialCityText != null && controller.text.isEmpty) {
+            controller.text = _initialCityText!;
+            _initialCityText = null;
+          }
           return TextField(
             controller: controller,
             focusNode: focusNode,
