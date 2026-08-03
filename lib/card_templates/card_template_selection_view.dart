@@ -94,6 +94,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                   EmployeeIdForm(width: width, height: height, device: device),
             ),
           );
+          if (!context.mounted) return;
         },
       ),
       TemplateItem(
@@ -109,6 +110,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                   PriceTagForm(width: width, height: height, device: device),
             ),
           );
+          if (!context.mounted) return;
         },
       ),
       TemplateItem(
@@ -124,6 +126,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                   width: width, height: height, device: device),
             ),
           );
+          if (!context.mounted) return;
         },
       ),
       TemplateItem(
@@ -139,6 +142,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                   EventBadgeForm(width: width, height: height, device: device),
             ),
           );
+          if (!context.mounted) return;
         },
       ),
       TemplateItem(
@@ -154,6 +158,7 @@ class CardTemplateSelectionView extends StatelessWidget {
                   CalendarForm(width: width, height: height, device: device),
             ),
           );
+          if (!context.mounted) return;
         },
       ),
     ];
