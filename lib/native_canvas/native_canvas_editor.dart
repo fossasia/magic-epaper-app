@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -8,9 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image/image.dart' as img;
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:magicepaperapp/util/image_crop_screen.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_controller.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_element.dart';
@@ -483,6 +481,23 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   Future<void> _editText(CanvasElement element) async {
     final result = await _showTextSheet(existing: element);
     if (result == null) return;
+    final measured = _measureText(
+        result.text, result.fontSize, FontWeight.normal, result.fontFamily);
+    final aspect =
+        measured.height == 0 ? 6.0 : measured.width / measured.height;
+    final oldFont = element.fontSize;
+    final targetH = oldFont > 0
+        ? element.baseSize.height * (result.fontSize / oldFont)
+        : measured.height;
+    final newWidth = targetH * aspect;
+    final dw = newWidth - element.baseSize.width;
+    final align = element.textAlign;
+    double dx = 0;
+    if (align == TextAlign.left || align == TextAlign.start) {
+      dx = dw * element.scale / 2;
+    } else if (align == TextAlign.right || align == TextAlign.end) {
+      dx = -dw * element.scale / 2;
+    }
     _controller.beginChange();
     _controller.updateElement(
       element.copyWith(
@@ -491,8 +506,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
         color: result.color,
         fontFamily: result.fontFamily,
         followCanvasTheme: !result.manualColor,
-        baseSize: _measureText(
-            result.text, result.fontSize, FontWeight.normal, result.fontFamily),
+        baseSize: Size(newWidth, targetH),
+        position: Offset(element.position.dx + dx, element.position.dy),
       ),
     );
   }
@@ -556,6 +571,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     );
     if (picked == null) return;
     final bytes = await picked.readAsBytes();
+    final keepFrame = element.clipOval || element.cornerRadius > 0;
     final decoded = img.decodeImage(bytes);
     final aspect = (decoded == null || decoded.height == 0)
         ? 1.0
@@ -563,51 +579,30 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     final w = element.baseSize.width;
     _controller.beginChange();
     _controller.updateElement(
-      element.copyWith(imageBytes: bytes, baseSize: Size(w, w / aspect)),
+      element.copyWith(
+        imageBytes: bytes,
+        baseSize: keepFrame ? element.baseSize : Size(w, w / aspect),
+      ),
     );
   }
 
   Future<void> _cropImage(CanvasElement element) async {
-    final appLocalizations = AppLocalizations.of(context)!;
     final bytes = element.imageBytes;
     if (bytes == null) return;
-    final dir = await getTemporaryDirectory();
-    final file = File(
-      '${dir.path}/mep_crop_${DateTime.now().microsecondsSinceEpoch}.png',
-    );
-    await file.writeAsBytes(bytes);
-    final cropped = await ImageCropper().cropImage(
-      sourcePath: file.path,
-      compressFormat: ImageCompressFormat.png,
-      compressQuality: 100,
-      uiSettings: [
-        AndroidUiSettings(
-          toolbarTitle: appLocalizations.crop,
-          toolbarColor: colorAccent,
-          toolbarWidgetColor: colorWhite,
-          activeControlsWidgetColor: colorAccent,
-          backgroundColor: colorBlack,
-          initAspectRatio: CropAspectRatioPreset.original,
-          lockAspectRatio: false,
-          hideBottomControls: false,
-        ),
-        IOSUiSettings(
-          title: appLocalizations.crop,
-          aspectRatioLockEnabled: false,
-          resetAspectRatioEnabled: true,
-        ),
-      ],
-    );
-    if (cropped == null) return;
-    final newBytes = await File(cropped.path).readAsBytes();
-    final decoded = img.decodeImage(newBytes);
+    final cropped = await showImageCropScreen(context, bytes);
+    if (cropped == null || !mounted) return;
+    final keepFrame = element.clipOval || element.cornerRadius > 0;
+    final decoded = img.decodeImage(cropped);
     final aspect = (decoded == null || decoded.height == 0)
         ? 1.0
         : decoded.width / decoded.height;
     final w = element.baseSize.width;
     _controller.beginChange();
     _controller.updateElement(
-      element.copyWith(imageBytes: newBytes, baseSize: Size(w, w / aspect)),
+      element.copyWith(
+        imageBytes: cropped,
+        baseSize: keepFrame ? element.baseSize : Size(w, w / aspect),
+      ),
     );
   }
 
@@ -688,7 +683,12 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     try {
       final boundary = _boundaryKey.currentContext!.findRenderObject()
           as RenderRepaintBoundary;
-      final image = await boundary.toImage(pixelRatio: 1 / _displayScale);
+      final longSide =
+          (widget.width > widget.height ? widget.width : widget.height)
+              .toDouble();
+      final supersample = (2048 / longSide).clamp(2.0, 4.0);
+      final image =
+          await boundary.toImage(pixelRatio: supersample / _displayScale);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       image.dispose();
       if (!mounted || byteData == null) return;
@@ -803,7 +803,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                         selected: _controller.selectedId == element.id,
                         controller: _controller,
                         canvasKey: _canvasKey,
-                        onRequestEdit: element.elementId != null
+                        onRequestEdit: element.elementId != null &&
+                                !widget.returnDocument
                             ? () => Navigator.pop(context, element.elementId)
                             : switch (element.kind) {
                                 CanvasElementKind.text => () =>
