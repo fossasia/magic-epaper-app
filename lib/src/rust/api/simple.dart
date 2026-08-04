@@ -32,5 +32,6 @@ enum DitherMethod {
   halftone,
   bayer,
   sierra2,
+  burkes,
   ;
 }
