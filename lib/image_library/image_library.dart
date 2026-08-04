@@ -14,6 +14,8 @@ import 'package:magicepaperapp/image_library/widgets/search_and_filter_widget.da
 import 'package:magicepaperapp/card_templates/card_template_result.dart';
 import 'package:magicepaperapp/card_templates/qr_tag_form.dart';
 import 'package:magicepaperapp/card_templates/qr_tag_model.dart';
+import 'package:magicepaperapp/card_templates/contact_card_form.dart';
+import 'package:magicepaperapp/card_templates/contact_card_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
@@ -180,6 +182,10 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
       await _editQrTag(image);
       return;
     }
+    if (image.isContactCard) {
+      await _editContactCard(image);
+      return;
+    }
     final epd = _operationsService.getEpdFromImage(image);
     final doc = image.canvasDocument ?? await _singleImageDocument(image, epd);
     if (doc == null || !mounted) return;
@@ -206,6 +212,39 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
       epd,
       pendingCanvasDocument: result.document.toJson(),
       editingImageId: image.id,
+      initialFilterIndex: _savedFilterIndex(image),
+      initialFlipHorizontal: _savedFlag(image, 'flipHorizontal'),
+      initialFlipVertical: _savedFlag(image, 'flipVertical'),
+    );
+  }
+
+  Future<void> _editContactCard(SavedImage image) async {
+    final data = image.contactCardData;
+    if (data == null) return;
+    final epd = _operationsService.getEpdFromImage(image);
+    final result = await Navigator.of(context).push<CardTemplateResult>(
+      MaterialPageRoute(
+        builder: (_) => ContactCardForm(
+          width: epd.width,
+          height: epd.height,
+          initialModel: ContactCardModel.fromJson(data),
+          existingImageId: image.id,
+        ),
+      ),
+    );
+    if (result == null || !mounted) return;
+    final imgLoader = context.read<ImageLoader>();
+    await imgLoader.updateImage(
+      bytes: result.png,
+      width: epd.width,
+      height: epd.height,
+    );
+    await imgLoader.saveFinalizedImageBytes(result.png);
+    if (!mounted) return;
+    _loadIntoImageEditor(
+      epd,
+      editingImageId: image.id,
+      pendingTemplateMetadata: result.metadata,
       initialFilterIndex: _savedFilterIndex(image),
       initialFlipHorizontal: _savedFlag(image, 'flipHorizontal'),
       initialFlipVertical: _savedFlag(image, 'flipVertical'),
