@@ -154,6 +154,7 @@ class ImageOperationsService {
     Map<String, dynamic>? canvasDocument,
     Uint8List? sourceImage,
     String? existingImageId,
+    Map<String, dynamic>? extraMetadata,
   }) async {
     try {
       _showSaveLoadingSnackBar();
@@ -170,6 +171,7 @@ class ImageOperationsService {
           'epdColors': [for (final c in deviceColors) c.toARGB32()],
         if (canvasDocument != null) 'canvasDocument': canvasDocument,
         if (sourceImage != null) 'sourceImage': base64Encode(sourceImage),
+        ...?extraMetadata,
       };
 
       if (existingImageId != null) {

@@ -27,7 +27,7 @@ class Protocol {
 
   Protocol({required this.epd});
 
-  Future<Uint8List> _transceive(nfcvCmd, Uint8List msg) async {
+  Future<Uint8List> _transceive(int nfcvCmd, Uint8List msg) async {
     final raw = fw.tagChip.buildMessage(nfcvCmd, tagId, msg);
     return await FlutterNfcKit.transceive(raw, timeout: timeout);
   }
