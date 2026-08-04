@@ -58,6 +58,13 @@ class SavedImage {
 
   bool get hasCanvasDocument => metadata?['canvasDocument'] != null;
 
+  bool get isContactCard => metadata?['contactCard'] is Map;
+
+  Map<String, dynamic>? get contactCardData {
+    final raw = metadata?['contactCard'];
+    return raw is Map ? Map<String, dynamic>.from(raw) : null;
+  }
+
   String get imageCacheKey =>
       '$filePath#${metadata?['updatedAt'] ?? createdAt.millisecondsSinceEpoch}';
 
