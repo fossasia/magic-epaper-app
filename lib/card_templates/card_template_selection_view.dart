@@ -10,6 +10,7 @@ import 'package:magicepaperapp/card_templates/entry_pass_tag_form.dart';
 import 'package:magicepaperapp/card_templates/event_badge_form.dart';
 import 'package:magicepaperapp/card_templates/calendar_form.dart';
 import 'package:magicepaperapp/card_templates/weather_form.dart';
+import 'package:magicepaperapp/card_templates/contact_card_form.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
@@ -167,6 +168,21 @@ class CardTemplateSelectionView extends StatelessWidget {
           await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => WeatherForm(width: width, height: height),
+            ),
+          );
+        },
+      ),
+      TemplateItem(
+        title: appLocalizations.contactTagTitle,
+        description: appLocalizations.contactTagDescription,
+        icon: Icons.contact_page_outlined,
+        color: Colors.indigo,
+        isEnabled: true,
+        onTap: (context) async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  ContactCardForm(width: width, height: height),
             ),
           );
         },

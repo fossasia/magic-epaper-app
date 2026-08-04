@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -139,6 +140,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
         layers.first.elementId == 'weatherSnapshot' &&
         layers.first.widget != null) {
       _seedFullCanvasElement(layers.first);
+    } else if (layers.any((s) => s.elementId == 'qrCaption')) {
+      _seedContactCardLayout(layers);
     } else if (layers.any((s) => s.elementId == 'qr')) {
       _seedCardLayout(layers);
     } else {
@@ -160,6 +163,180 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
       ),
       record: false,
     );
+  }
+
+  void _seedContactCardLayout(List<LayerSpec> layers) {
+    final w = widget.width.toDouble();
+    final h = widget.height.toDouble();
+    final pad = h * 0.06;
+    final cw = w - pad * 2;
+    final ch = h - pad * 2;
+
+    LayerSpec? name, jobTitle, company, phone, email, link, photo, qr, caption;
+    for (final s in layers) {
+      switch (s.elementId) {
+        case 'fullName':
+          name = s;
+          break;
+        case 'jobTitle':
+          jobTitle = s;
+          break;
+        case 'company':
+          company = s;
+          break;
+        case 'phone':
+          phone = s;
+          break;
+        case 'email':
+          email = s;
+          break;
+        case 'link':
+          link = s;
+          break;
+        case 'profileImage':
+          photo = s;
+          break;
+        case 'qr':
+          qr = s;
+          break;
+        case 'qrCaption':
+          caption = s;
+          break;
+      }
+    }
+
+    final hasQr = qr?.widget != null;
+    final rightW = hasQr ? math.min(w * 0.32, ch * 0.94) : 0.0;
+    final gapX = hasQr ? cw * 0.04 : 0.0;
+    final leftW = cw - rightW - gapX;
+    final leftX0 = pad;
+    final rightX0 = pad + leftW + gapX;
+
+    final hasPhoto = photo?.widget != null;
+    final showName = name != null;
+    final subEntries = [jobTitle, company].whereType<LayerSpec>().toList();
+    final hasSub = subEntries.isNotEmpty;
+    final contactEntries = [phone, email, link].whereType<LayerSpec>().toList();
+
+    final nameH = showName ? ch * 0.28 : 0.0;
+    final subH = hasSub ? ch * 0.16 : 0.0;
+    var identH = nameH + subH;
+    if (hasPhoto && identH < ch * 0.4) identH = ch * 0.4;
+    final hasIdentity = identH > 0;
+
+    final divTh = math.max(1.0, ch * 0.012);
+    final showDivider = hasIdentity && contactEntries.isNotEmpty;
+    final divBlockH = showDivider ? ch * 0.1 : 0.0;
+
+    final contactsH = ch - identH - divBlockH;
+    final perContactH = contactEntries.isEmpty
+        ? 0.0
+        : math.min(contactsH / contactEntries.length, ch * 0.32);
+
+    final nameFs = nameH * 0.92;
+    final subFs = subH * 0.9;
+    final contactFs = perContactH * 0.92;
+
+    final photoD = hasPhoto ? identH * 0.9 : 0.0;
+    final photoGap = hasPhoto ? cw * 0.03 : 0.0;
+    final textColLeft = leftX0 + (hasPhoto ? photoD + photoGap : 0.0);
+    final identTextW = leftW - (hasPhoto ? photoD + photoGap : 0.0);
+
+    // Places a left-anchored text element whose box aspect matches the glyph
+    // aspect exactly (using the unpadded measurement), so a width-capped line
+    // still hugs the left edge instead of getting centered/indented. Left
+    // anchoring also keeps the position stable when the text is later edited.
+    void addLeftText(LayerSpec s, double leftX, double centerY, double targetH,
+        double availW) {
+      final fs = s.textStyle?.fontSize ?? 24;
+      final fw = s.textStyle?.fontWeight ?? FontWeight.w500;
+      final m = _measureText(s.text!, fs, fw);
+      final rawW = math.max(1.0, m.width - 8);
+      final rawH = math.max(1.0, m.height - 4);
+      final aspect = rawW / rawH;
+      var boxH = targetH;
+      var boxW = boxH * aspect;
+      if (boxW > availW) {
+        boxW = availW;
+        boxH = boxW / aspect;
+      }
+      _controller.addElement(
+        CanvasElement(
+          id: _nextId(),
+          kind: CanvasElementKind.text,
+          position: Offset(leftX + boxW / 2, centerY),
+          baseSize: Size(boxW, boxH),
+          scale: 1.0,
+          color: _sanitizeColor(s.textColor ?? s.textStyle?.color),
+          text: s.text,
+          fontSize: fs,
+          fontWeight: fw,
+          textAlign: TextAlign.left,
+          followCanvasTheme: s.followCanvasTheme,
+          elementId: s.elementId,
+        ),
+        record: false,
+      );
+    }
+
+    double yCursor;
+    if (hasIdentity) {
+      if (hasPhoto) {
+        _seedWidgetElement(
+            photo!, Offset(leftX0 + photoD / 2, pad + identH / 2), photoD);
+      }
+      final blockTop = pad + (identH - (nameH + subH)) / 2;
+      if (showName) {
+        addLeftText(
+            name, textColLeft, blockTop + nameH / 2, nameFs, identTextW);
+      }
+      if (hasSub) {
+        final subTop = blockTop + nameH;
+        addLeftText(subEntries.first, textColLeft, subTop + subH / 2, subFs,
+            identTextW);
+      }
+      yCursor = pad + identH;
+      if (showDivider) {
+        final divTop = yCursor + divBlockH * 0.35;
+        _controller.addElement(
+          CanvasElement(
+            id: _nextId(),
+            kind: CanvasElementKind.widget,
+            position: Offset(leftX0 + leftW / 2, divTop + divTh / 2),
+            baseSize: Size(leftW, divTh),
+            scale: 1.0,
+            child: SizedBox(
+              width: leftW,
+              height: divTh,
+              child: const ColoredBox(color: colorBlack),
+            ),
+          ),
+          record: false,
+        );
+        yCursor += divBlockH;
+      }
+    } else {
+      yCursor = pad + (ch - contactEntries.length * perContactH) / 2;
+    }
+
+    for (var i = 0; i < contactEntries.length; i++) {
+      final centerY = yCursor + i * perContactH + perContactH / 2;
+      addLeftText(contactEntries[i], leftX0, centerY, contactFs, leftW);
+    }
+
+    if (hasQr) {
+      final captionH = ch * 0.1;
+      final qrSide = math.min(rightW, ch - captionH - ch * 0.04);
+      final blockTop = pad + (ch - (qrSide + ch * 0.04 + captionH)) / 2;
+      _seedWidgetElement(
+          qr!, Offset(rightX0 + rightW / 2, blockTop + qrSide / 2), qrSide);
+      if (caption != null) {
+        final capFs = captionH * 0.7;
+        final capTop = blockTop + qrSide + ch * 0.04 + (captionH - capFs) / 2;
+        _seedTextElement(caption, rightX0, capTop, capFs,
+            columnWidth: rightW, center: true);
+      }
+    }
   }
 
   void _resumeIdCounter() {

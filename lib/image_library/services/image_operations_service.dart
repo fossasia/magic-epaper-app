@@ -155,6 +155,7 @@ class ImageOperationsService {
     Map<String, dynamic>? templateData,
     Uint8List? sourceImage,
     String? existingImageId,
+    Map<String, dynamic>? extraMetadata,
   }) async {
     try {
       _showSaveLoadingSnackBar();
@@ -172,6 +173,7 @@ class ImageOperationsService {
         if (canvasDocument != null) 'canvasDocument': canvasDocument,
         if (templateData != null) 'templateData': templateData,
         if (sourceImage != null) 'sourceImage': base64Encode(sourceImage),
+        ...?extraMetadata,
       };
 
       if (existingImageId != null) {

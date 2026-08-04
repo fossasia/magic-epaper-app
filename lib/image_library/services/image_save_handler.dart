@@ -32,6 +32,7 @@ class ImageSaveHandler {
     Map<String, dynamic>? templateData,
     Uint8List? sourceImage,
     String? existingImageId,
+    Map<String, dynamic>? extraMetadata,
   }) async {
     if (rawImages.isEmpty) return;
 
@@ -60,6 +61,7 @@ class ImageSaveHandler {
         templateData: templateData,
         sourceImage: sourceImage,
         existingImageId: existingImageId,
+        extraMetadata: extraMetadata,
       );
       return;
     }
@@ -78,6 +80,7 @@ class ImageSaveHandler {
       canvasDocument,
       templateData,
       sourceImage,
+      extraMetadata,
     );
   }
 
@@ -106,6 +109,7 @@ class ImageSaveHandler {
     Map<String, dynamic>? canvasDocument,
     Map<String, dynamic>? templateData,
     Uint8List? sourceImage,
+    Map<String, dynamic>? extraMetadata,
   ) {
     showDialog(
       context: context,
@@ -131,6 +135,7 @@ class ImageSaveHandler {
           canvasDocument,
           templateData,
           sourceImage,
+          extraMetadata,
         ),
       ),
     );
@@ -151,6 +156,7 @@ class ImageSaveHandler {
     Map<String, dynamic>? canvasDocument,
     Map<String, dynamic>? templateData,
     Uint8List? sourceImage,
+    Map<String, dynamic>? extraMetadata,
   ) async {
     if (context.mounted) Navigator.pop(context);
 
@@ -170,6 +176,7 @@ class ImageSaveHandler {
       canvasDocument: canvasDocument,
       templateData: templateData,
       sourceImage: sourceImage,
+      extraMetadata: extraMetadata,
     );
   }
 }

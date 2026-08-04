@@ -11,6 +11,9 @@ import 'package:magicepaperapp/image_library/widgets/error_state_widget.dart';
 import 'package:magicepaperapp/image_library/widgets/image_grid_widget.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_preview_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/search_and_filter_widget.dart';
+import 'package:magicepaperapp/card_templates/card_template_result.dart';
+import 'package:magicepaperapp/card_templates/contact_card_form.dart';
+import 'package:magicepaperapp/card_templates/contact_card_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
@@ -91,6 +94,7 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
     DisplayDevice epd, {
     Map<String, dynamic>? pendingCanvasDocument,
     Map<String, dynamic>? pendingTemplateData,
+    Map<String, dynamic>? pendingTemplateMetadata,
     required String editingImageId,
     int? initialFilterIndex,
     bool initialFlipHorizontal = false,
@@ -103,6 +107,7 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
           device: epd,
           pendingCanvasDocument: pendingCanvasDocument,
           pendingTemplateData: pendingTemplateData,
+          pendingTemplateMetadata: pendingTemplateMetadata,
           editingImageId: editingImageId,
           initialFilterIndex: initialFilterIndex,
           initialFlipHorizontal: initialFlipHorizontal,
@@ -176,6 +181,10 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
   }
 
   Future<void> _editImage(SavedImage image) async {
+    if (image.isContactCard) {
+      await _editContactCard(image);
+      return;
+    }
     final epd = _operationsService.getEpdFromImage(image);
     final weather = image.weatherTemplateData;
     if (weather != null) {
@@ -207,6 +216,39 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
       epd,
       pendingCanvasDocument: result.document.toJson(),
       editingImageId: image.id,
+      initialFilterIndex: _savedFilterIndex(image),
+      initialFlipHorizontal: _savedFlag(image, 'flipHorizontal'),
+      initialFlipVertical: _savedFlag(image, 'flipVertical'),
+    );
+  }
+
+  Future<void> _editContactCard(SavedImage image) async {
+    final data = image.contactCardData;
+    if (data == null) return;
+    final epd = _operationsService.getEpdFromImage(image);
+    final result = await Navigator.of(context).push<CardTemplateResult>(
+      MaterialPageRoute(
+        builder: (_) => ContactCardForm(
+          width: epd.width,
+          height: epd.height,
+          initialModel: ContactCardModel.fromJson(data),
+          existingImageId: image.id,
+        ),
+      ),
+    );
+    if (result == null || !mounted) return;
+    final imgLoader = context.read<ImageLoader>();
+    await imgLoader.updateImage(
+      bytes: result.png,
+      width: epd.width,
+      height: epd.height,
+    );
+    await imgLoader.saveFinalizedImageBytes(result.png);
+    if (!mounted) return;
+    _loadIntoImageEditor(
+      epd,
+      editingImageId: image.id,
+      pendingTemplateMetadata: result.metadata,
       initialFilterIndex: _savedFilterIndex(image),
       initialFlipHorizontal: _savedFlag(image, 'flipHorizontal'),
       initialFlipVertical: _savedFlag(image, 'flipVertical'),
@@ -291,42 +333,46 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
       body: SafeArea(
         top: false,
         bottom: true,
-        child: Consumer<ImageLibraryProvider>(
-          builder: (context, provider, child) {
-            if (provider.isLoading) {
-              return const Center(
-                child: CircularProgressIndicator(color: colorAccent),
-              );
-            }
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 900),
+            child: Consumer<ImageLibraryProvider>(
+              builder: (context, provider, child) {
+                if (provider.isLoading) {
+                  return const Center(
+                      child: CircularProgressIndicator(color: colorAccent));
+                }
 
-            if (provider.hasError) {
-              return ErrorStateWidget(
-                onRetry: () =>
-                    context.read<ImageLibraryProvider>().loadSavedImages(),
-              );
-            }
+                if (provider.hasError) {
+                  return ErrorStateWidget(
+                    onRetry: () =>
+                        context.read<ImageLibraryProvider>().loadSavedImages(),
+                  );
+                }
 
-            if (provider.savedImages.isEmpty) {
-              return const EmptyStateWidget();
-            }
+                if (provider.savedImages.isEmpty) {
+                  return const EmptyStateWidget();
+                }
 
-            return Column(
-              children: [
-                SearchAndFilterWidget(
-                  searchController: _searchController,
-                  provider: provider,
-                ),
-                Expanded(
-                  child: ImageGridWidget(
-                    images: provider.filteredImages,
-                    isDeleteMode: _isDeleteMode,
-                    selectedImages: _selectedImages,
-                    onImageTap: _handleImageTap,
-                  ),
-                ),
-              ],
-            );
-          },
+                return Column(
+                  children: [
+                    SearchAndFilterWidget(
+                      searchController: _searchController,
+                      provider: provider,
+                    ),
+                    Expanded(
+                      child: ImageGridWidget(
+                        images: provider.filteredImages,
+                        isDeleteMode: _isDeleteMode,
+                        selectedImages: _selectedImages,
+                        onImageTap: _handleImageTap,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
