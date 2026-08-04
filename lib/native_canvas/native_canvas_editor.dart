@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -137,10 +138,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     }
     final layers = widget.initialLayers;
     if (layers == null) return;
-    if (layers.length == 1 &&
-        layers.first.elementId == 'qrTag' &&
-        layers.first.widget != null) {
-      _seedFullCanvasElement(layers.first);
+    if (layers.any((s) => s.elementId == 'qrCode')) {
+      _seedQrLayout(layers);
     } else if (layers.any((s) => s.elementId == 'qr')) {
       _seedCardLayout(layers);
     } else {
@@ -149,19 +148,88 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     _controller.select(null);
   }
 
-  void _seedFullCanvasElement(LayerSpec spec) {
-    _controller.addElement(
-      CanvasElement(
-        id: _nextId(),
-        kind: CanvasElementKind.widget,
-        position: _canvasCenter,
-        baseSize: Size(widget.width.toDouble(), widget.height.toDouble()),
-        scale: 1.0,
-        child: spec.widget,
-        elementId: spec.elementId,
-      ),
-      record: false,
-    );
+  void _seedQrLayout(List<LayerSpec> layers) {
+    final w = widget.width.toDouble();
+    final h = widget.height.toDouble();
+    final pad = math.min(w, h) * 0.08;
+    final cw = w - 2 * pad;
+    final ch = h - 2 * pad;
+    final landscape = w >= h * 1.15;
+
+    LayerSpec? qr;
+    LayerSpec? icon;
+    LayerSpec? caption;
+    for (final s in layers) {
+      switch (s.elementId) {
+        case 'qrCode':
+          qr = s;
+        case 'qrIcon':
+          icon = s;
+        case 'qrCaption':
+          caption = s;
+      }
+    }
+
+    final hasExtras = icon != null || caption != null;
+    if (!hasExtras) {
+      if (qr?.widget != null) {
+        _seedWidgetElement(qr!, _canvasCenter, math.min(cw, ch));
+      }
+      return;
+    }
+
+    if (landscape) {
+      final qrSide = ch;
+      final gap = cw * 0.05;
+      final rightW = math.max(0.0, cw - qrSide - gap);
+      if (qr?.widget != null) {
+        _seedWidgetElement(qr!, Offset(pad + qrSide / 2, h / 2), qrSide);
+      }
+      final rightLeftX = pad + qrSide + gap;
+      final rightCenterX = rightLeftX + rightW / 2;
+      final iconSide = icon != null ? ch * 0.3 : 0.0;
+      final captionH = caption != null ? ch * 0.18 : 0.0;
+      final gapV = (icon != null && caption != null) ? ch * 0.06 : 0.0;
+      var y = h / 2 - (iconSide + gapV + captionH) / 2;
+      if (icon?.widget != null) {
+        _seedWidgetElement(
+            icon!, Offset(rightCenterX, y + iconSide / 2), iconSide);
+        y += iconSide + gapV;
+      }
+      if (caption != null) {
+        _seedTextElement(caption, rightLeftX, y, captionH,
+            columnWidth: rightW, center: true);
+      }
+    } else {
+      final iconSide = icon != null ? ch * 0.16 : 0.0;
+      final captionH = caption != null ? ch * 0.16 : 0.0;
+      final gapV = ch * 0.05;
+      var qrSide = ch -
+          iconSide -
+          captionH -
+          (icon != null ? gapV : 0) -
+          (caption != null ? gapV : 0);
+      if (qrSide > cw) qrSide = cw;
+      final totalH = iconSide +
+          (icon != null ? gapV : 0) +
+          qrSide +
+          (caption != null ? gapV : 0) +
+          captionH;
+      final centerX = w / 2;
+      var y = h / 2 - totalH / 2;
+      if (icon?.widget != null) {
+        _seedWidgetElement(icon!, Offset(centerX, y + iconSide / 2), iconSide);
+        y += iconSide + gapV;
+      }
+      if (qr?.widget != null) {
+        _seedWidgetElement(qr!, Offset(centerX, y + qrSide / 2), qrSide);
+        y += qrSide + (caption != null ? gapV : 0);
+      }
+      if (caption != null) {
+        _seedTextElement(caption, pad, y, captionH,
+            columnWidth: cw, center: true);
+      }
+    }
   }
 
   void _resumeIdCounter() {

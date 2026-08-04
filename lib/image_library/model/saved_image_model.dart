@@ -58,6 +58,13 @@ class SavedImage {
 
   bool get hasCanvasDocument => metadata?['canvasDocument'] != null;
 
+  bool get isQrTag => metadata?['qrTag'] is Map;
+
+  Map<String, dynamic>? get qrTagData {
+    final raw = metadata?['qrTag'];
+    return raw is Map ? Map<String, dynamic>.from(raw) : null;
+  }
+
   String get imageCacheKey =>
       '$filePath#${metadata?['updatedAt'] ?? createdAt.millisecondsSinceEpoch}';
 

@@ -8,6 +8,30 @@ import 'package:magicepaperapp/theme/colors.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
+class QrCodeView extends StatelessWidget {
+  final String data;
+
+  const QrCodeView({super.key, required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    if (data.trim().isEmpty) {
+      return const FittedBox(
+        fit: BoxFit.contain,
+        child: Icon(Icons.qr_code_2, color: grey400),
+      );
+    }
+    return BarcodeWidget(
+      barcode: Barcode.qrCode(),
+      data: data,
+      color: colorBlack,
+      backgroundColor: colorWhite,
+      drawText: false,
+      errorBuilder: (context, error) => const SizedBox.shrink(),
+    );
+  }
+}
+
 class QrTagBadge extends StatelessWidget {
   final QrTagModel data;
   final bool isPreview;

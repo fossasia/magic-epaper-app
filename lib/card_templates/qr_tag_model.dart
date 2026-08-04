@@ -35,6 +35,41 @@ class QrTagModel {
     this.wifiHidden = false,
   });
 
+  Map<String, dynamic> toJson() => {
+        'type': type.name,
+        'caption': caption,
+        'iconKey': iconKey,
+        'content': content,
+        'emailAddress': emailAddress,
+        'emailSubject': emailSubject,
+        'smsNumber': smsNumber,
+        'smsMessage': smsMessage,
+        'ssid': ssid,
+        'wifiPassword': wifiPassword,
+        'wifiSecurity': wifiSecurity,
+        'wifiHidden': wifiHidden,
+      };
+
+  factory QrTagModel.fromJson(Map<String, dynamic> json) {
+    return QrTagModel(
+      type: QrTagType.values.firstWhere(
+        (t) => t.name == json['type'],
+        orElse: () => QrTagType.link,
+      ),
+      caption: json['caption'] as String? ?? '',
+      iconKey: json['iconKey'] as String? ?? 'none',
+      content: json['content'] as String? ?? '',
+      emailAddress: json['emailAddress'] as String? ?? '',
+      emailSubject: json['emailSubject'] as String? ?? '',
+      smsNumber: json['smsNumber'] as String? ?? '',
+      smsMessage: json['smsMessage'] as String? ?? '',
+      ssid: json['ssid'] as String? ?? '',
+      wifiPassword: json['wifiPassword'] as String? ?? '',
+      wifiSecurity: json['wifiSecurity'] as String? ?? 'WPA',
+      wifiHidden: json['wifiHidden'] as bool? ?? false,
+    );
+  }
+
   QrTagModel copyWith({
     QrTagType? type,
     String? caption,

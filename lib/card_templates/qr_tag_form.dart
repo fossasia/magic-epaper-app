@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:magicepaperapp/card_templates/card_template_result.dart';
 import 'package:magicepaperapp/card_templates/qr_tag_badge.dart';
 import 'package:magicepaperapp/card_templates/qr_tag_card_widget.dart';
 import 'package:magicepaperapp/card_templates/qr_tag_model.dart';
@@ -19,8 +20,16 @@ AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 class QrTagForm extends StatefulWidget {
   final int width;
   final int height;
+  final QrTagModel? initialModel;
+  final String? existingImageId;
 
-  const QrTagForm({super.key, required this.width, required this.height});
+  const QrTagForm({
+    super.key,
+    required this.width,
+    required this.height,
+    this.initialModel,
+    this.existingImageId,
+  });
 
   @override
   State<QrTagForm> createState() => _QrTagFormState();
@@ -51,6 +60,22 @@ class _QrTagFormState extends State<QrTagForm> {
   @override
   void initState() {
     super.initState();
+    final initial = widget.initialModel;
+    if (initial != null) {
+      _type = initial.type;
+      _selectedIconKey = initial.iconKey;
+      _iconTouched = true;
+      _wifiSecurity = initial.wifiSecurity;
+      _wifiHidden = initial.wifiHidden;
+      _contentController.text = initial.content;
+      _emailController.text = initial.emailAddress;
+      _emailSubjectController.text = initial.emailSubject;
+      _smsNumberController.text = initial.smsNumber;
+      _smsMessageController.text = initial.smsMessage;
+      _ssidController.text = initial.ssid;
+      _wifiPasswordController.text = initial.wifiPassword;
+      _captionController.text = initial.caption;
+    }
     _data = _buildModel();
     for (final c in _controllers) {
       c.addListener(_updatePreview);
@@ -129,15 +154,37 @@ class _QrTagFormState extends State<QrTagForm> {
     try {
       final layers = <LayerSpec>[
         LayerSpec.widget(
-          widget: SizedBox(
-            width: widget.width.toDouble(),
-            height: widget.height.toDouble(),
-            child: QrTagBadge(data: _data),
-          ),
-          kind: LayerKind.generic,
-          elementId: 'qrTag',
+          widget: QrCodeView(data: _data.qrData),
+          kind: LayerKind.barcode,
+          elementId: 'qrCode',
         ),
       ];
+
+      final icon = qrTagIconFor(_data.iconKey);
+      if (icon != null) {
+        layers.add(LayerSpec.widget(
+          widget: FittedBox(
+            fit: BoxFit.contain,
+            child: Icon(icon, size: 100, color: colorBlack),
+          ),
+          kind: LayerKind.generic,
+          elementId: 'qrIcon',
+        ));
+      }
+
+      final caption = _data.caption.trim();
+      if (caption.isNotEmpty) {
+        layers.add(LayerSpec.text(
+          text: caption,
+          textAlign: TextAlign.center,
+          textStyle: const TextStyle(
+            fontWeight: FontWeight.w700,
+            color: colorBlack,
+          ),
+          followCanvasTheme: true,
+          elementId: 'qrCaption',
+        ));
+      }
 
       final result = await Navigator.of(context).push<Object>(
         buildOpaqueSlideRoute(
@@ -151,9 +198,17 @@ class _QrTagFormState extends State<QrTagForm> {
 
       if (!mounted) return;
       if (result is Uint8List) {
-        Navigator.of(context)
-          ..pop()
-          ..pop(result);
+        final templateResult = CardTemplateResult(
+          result,
+          metadata: {'qrTag': _data.toJson()},
+        );
+        if (widget.existingImageId != null) {
+          Navigator.of(context).pop(templateResult);
+        } else {
+          Navigator.of(context)
+            ..pop()
+            ..pop(templateResult);
+        }
       }
     } finally {
       if (mounted) setState(() => _isGenerating = false);
