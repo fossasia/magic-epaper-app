@@ -24,6 +24,10 @@ class WaveShareNfcServices {
       await _ensureNfcAvailable();
       onProgress?.call(0);
 
+      try {
+        await platform.invokeMethod('pauseNfcReaderMode');
+      } catch (_) {}
+
       final tag = await FlutterNfcKit.poll(
         timeout: _pollTimeout,
         androidCheckNDEF: false,
@@ -90,7 +94,7 @@ class WaveShareNfcServices {
 
   Future<void> restoreSilentReaderMode() async {
     try {
-      await platform.invokeMethod('disableNfcReaderMode');
+      await platform.invokeMethod('resumeNfcReaderMode');
     } on MissingPluginException {
       // Ignoring exception on platforms without the Android NFC bridge.
     } on PlatformException {
