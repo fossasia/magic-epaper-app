@@ -9,14 +9,18 @@ import 'package:magicepaperapp/waveshare/services/waveshare_nfc_protocol.dart';
 class WaveShareNfcServices {
   static const platform = MethodChannel('org.fossasia.magicepaperapp/nfc');
   static const _pollTimeout = Duration(minutes: 2);
+  static const _retryPollTimeout = Duration(seconds: 20);
+  static const _recoveryWindow = Duration(seconds: 60);
+  static const _maxAttempts = 25;
+
+  static const _retryableCodes = {'NFC_COMMUNICATION', 'FLASH_FAILED'};
 
   Future<void> flashImage(
     img.Image image,
     int ePaperSize, {
     WaveshareProgressCallback? onProgress,
+    void Function()? onWaitingForTag,
   }) async {
-    var sessionStarted = false;
-
     try {
       final profile = WaveshareNfcProfile.fromType(ePaperSize);
       final imageData = WaveshareImageCodec().encode(profile, image);
@@ -24,12 +28,59 @@ class WaveShareNfcServices {
       await _ensureNfcAvailable();
       onProgress?.call(0);
 
-      try {
-        await platform.invokeMethod('pauseNfcReaderMode');
-      } catch (_) {}
+      DateTime? recoveryDeadline;
+      WaveshareNfcException? lastError;
+
+      for (var attempt = 1; attempt <= _maxAttempts; attempt++) {
+        onWaitingForTag?.call();
+        try {
+          await _flashOnce(profile, imageData, attempt, onProgress: onProgress);
+          return;
+        } on WaveshareNfcException catch (error) {
+          if (!_retryableCodes.contains(error.code)) {
+            throw PlatformException(code: error.code);
+          }
+          lastError = error;
+          recoveryDeadline ??= DateTime.now().add(_recoveryWindow);
+        } on PlatformException {
+          if (recoveryDeadline == null) {
+            rethrow;
+          }
+        }
+
+        if (DateTime.now().isAfter(recoveryDeadline)) {
+          throw PlatformException(code: lastError?.code ?? 'FLASH_FAILED');
+        }
+
+        onProgress?.call(0);
+        await Future.delayed(const Duration(milliseconds: 150));
+      }
+
+      throw PlatformException(code: lastError?.code ?? 'FLASH_FAILED');
+    } on PlatformException {
+      rethrow;
+    } catch (error) {
+      throw PlatformException(
+        code: 'NFC_ERROR',
+        details: error.toString(),
+      );
+    } finally {
+      await restoreSilentReaderMode();
+    }
+  }
+
+  Future<void> _flashOnce(
+    WaveshareNfcProfile profile,
+    WaveshareImageData imageData,
+    int attempt, {
+    WaveshareProgressCallback? onProgress,
+  }) async {
+    var sessionStarted = false;
+    try {
+      await _pauseSilentReaderMode();
 
       final tag = await FlutterNfcKit.poll(
-        timeout: _pollTimeout,
+        timeout: attempt == 1 ? _pollTimeout : _retryPollTimeout,
         androidCheckNDEF: false,
         readIso14443A: true,
         readIso14443B: false,
@@ -38,7 +89,6 @@ class WaveShareNfcServices {
       );
       sessionStarted = true;
 
-      final bool isIsoDep = tag.type == NFCTagType.iso7816;
       if (!_isSupportedWaveshareTag(tag)) {
         throw WaveshareNfcException(
           'TAG_NOT_SUPPORTED',
@@ -46,6 +96,7 @@ class WaveShareNfcServices {
         );
       }
 
+      final bool isIsoDep = tag.type == NFCTagType.iso7816;
       final protocol = WaveshareNfcProtocol(
         transceive: (command, timeout) {
           return FlutterNfcKit.transceive<Uint8List>(
@@ -67,28 +118,21 @@ class WaveShareNfcServices {
           'Failed to write over NFC, unknown reason.',
         );
       }
-
-      await _finishSession();
-    } on WaveshareNfcException catch (error) {
-      if (sessionStarted) {
-        await _finishSession();
-      }
-      throw PlatformException(code: error.code);
-    } on PlatformException {
-      if (sessionStarted) {
-        await _finishSession();
-      }
-      rethrow;
-    } catch (error) {
-      if (sessionStarted) {
-        await _finishSession();
-      }
-      throw PlatformException(
-        code: 'NFC_ERROR',
-        details: error.toString(),
-      );
     } finally {
+      if (sessionStarted) {
+        await _finishSession();
+      }
       await restoreSilentReaderMode();
+    }
+  }
+
+  Future<void> _pauseSilentReaderMode() async {
+    try {
+      await platform.invokeMethod('pauseNfcReaderMode');
+    } on MissingPluginException {
+      return;
+    } on PlatformException {
+      return;
     }
   }
 

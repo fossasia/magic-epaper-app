@@ -12,7 +12,7 @@ typedef WaveshareTransceive = Future<Uint8List> Function(
 typedef WaveshareProgressCallback = void Function(int progress);
 
 class WaveshareNfcProtocol {
-  static const _transceiveTimeout = Duration(milliseconds: 2000);
+  static const _transceiveTimeout = Duration(milliseconds: 3000);
   static const _maxBusyPolls = 240;
 
   static const _androidPackageRecord = [
@@ -214,7 +214,7 @@ class WaveshareNfcProtocol {
 
     await _sleep(200);
     if (!await _sendOk([0xcd, 0x09])) return false;
-    await _sleep(3000);
+    await _sleep(2000);
 
     for (var attempt = 0; attempt < _maxBusyPolls; attempt++) {
       try {
