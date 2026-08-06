@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:magicepaperapp/card_templates/weather_model.dart';
+import 'package:magicepaperapp/constants/api_constants.dart';
 
 class WeatherException implements Exception {
   final String messageKey;
@@ -25,8 +26,8 @@ class WeatherService {
 
   WeatherService({http.Client? client}) : _client = client ?? http.Client();
 
-  static const _geocodeHost = 'geocoding-api.open-meteo.com';
-  static const _forecastHost = 'api.open-meteo.com';
+  static const _geocodeHost = ApiConstants.openMeteoGeocodeHost;
+  static const _forecastHost = ApiConstants.openMeteoForecastHost;
 
   Future<GeoResult> geocodeCity(String city) async {
     final name = city.trim();
