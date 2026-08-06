@@ -29,6 +29,7 @@ class ImageSaveHandler {
     required int deviceHeight,
     required List<Color> deviceColors,
     Map<String, dynamic>? canvasDocument,
+    Map<String, dynamic>? templateData,
     Uint8List? sourceImage,
     String? existingImageId,
     Map<String, dynamic>? extraMetadata,
@@ -57,6 +58,7 @@ class ImageSaveHandler {
         deviceHeight: deviceHeight,
         deviceColors: deviceColors,
         canvasDocument: canvasDocument,
+        templateData: templateData,
         sourceImage: sourceImage,
         existingImageId: existingImageId,
         extraMetadata: extraMetadata,
@@ -76,6 +78,7 @@ class ImageSaveHandler {
       deviceHeight,
       deviceColors,
       canvasDocument,
+      templateData,
       sourceImage,
       extraMetadata,
     );
@@ -104,6 +107,7 @@ class ImageSaveHandler {
     int deviceHeight,
     List<Color> deviceColors,
     Map<String, dynamic>? canvasDocument,
+    Map<String, dynamic>? templateData,
     Uint8List? sourceImage,
     Map<String, dynamic>? extraMetadata,
   ) {
@@ -129,6 +133,7 @@ class ImageSaveHandler {
           deviceHeight,
           deviceColors,
           canvasDocument,
+          templateData,
           sourceImage,
           extraMetadata,
         ),
@@ -149,6 +154,7 @@ class ImageSaveHandler {
     int deviceHeight,
     List<Color> deviceColors,
     Map<String, dynamic>? canvasDocument,
+    Map<String, dynamic>? templateData,
     Uint8List? sourceImage,
     Map<String, dynamic>? extraMetadata,
   ) async {
@@ -168,6 +174,7 @@ class ImageSaveHandler {
       deviceHeight: deviceHeight,
       deviceColors: deviceColors,
       canvasDocument: canvasDocument,
+      templateData: templateData,
       sourceImage: sourceImage,
       extraMetadata: extraMetadata,
     );

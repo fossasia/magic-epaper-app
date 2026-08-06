@@ -65,6 +65,14 @@ class SavedImage {
     return raw is Map ? Map<String, dynamic>.from(raw) : null;
   }
 
+  Map<String, dynamic>? get weatherTemplateData {
+    final raw = metadata?['templateData'];
+    if (raw is Map && raw['type'] == 'weather') {
+      return Map<String, dynamic>.from(raw);
+    }
+    return null;
+  }
+
   bool get isContactCard => metadata?['contactCard'] is Map;
 
   Map<String, dynamic>? get contactCardData {

@@ -1147,5 +1147,47 @@
     }
   },
   "calendarWriteToBadge": "Write to badge",
-  "calendarOpenInEditor": "Open in editor"
+  "calendarOpenInEditor": "Open in editor",
+  "weatherSnapshotTitle": "Weather Snapshot",
+  "weatherSnapshotDescription": "Live weather for any city, drawn onto your badge",
+  "weatherPreviewTitle": "Preview of your weather badge",
+  "weatherPreviewPlaceholder": "Enter a city and tap Get weather to see the forecast",
+  "weatherDetails": "Weather Details",
+  "weatherDetailsSubtitle": "Search for a city, then generate the badge to write it over NFC.",
+  "weatherCityLabel": "City",
+  "weatherCityHint": "e.g. London",
+  "weatherUnitLabel": "Temperature unit",
+  "weatherGenerate": "Generate Weather Badge",
+  "weatherGenerating": "Generating...",
+  "weatherFetchFirst": "Get the weather for a city first",
+  "weatherRecent": "Recent",
+  "weatherClearRecent": "Clear",
+  "weatherRefresh": "Refresh",
+  "weatherUpdatedAt": "Last updated {time}",
+  "@weatherUpdatedAt": {
+    "description": "Shows when the weather was last fetched",
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "weatherWindValue": "{speed} km/h",
+  "@weatherWindValue": {
+    "description": "Wind speed with unit on the weather badge",
+    "placeholders": { "speed": { "type": "int" } }
+  },
+  "weatherErrorEmptyCity": "Please enter a city name",
+  "weatherErrorCityNotFound": "Couldn't find that city. Check the spelling and try again.",
+  "weatherErrorNetwork": "Couldn't reach the weather service. Check your connection.",
+  "weatherErrorGeneric": "Something went wrong fetching the weather. Please try again.",
+  "weatherConditionClear": "Clear sky",
+  "weatherConditionMainlyClear": "Mainly clear",
+  "weatherConditionPartlyCloudy": "Partly cloudy",
+  "weatherConditionOvercast": "Overcast",
+  "weatherConditionFog": "Fog",
+  "weatherConditionDrizzle": "Drizzle",
+  "weatherConditionFreezingRain": "Freezing rain",
+  "weatherConditionRain": "Rain",
+  "weatherConditionRainShowers": "Rain showers",
+  "weatherConditionSnow": "Snow",
+  "weatherConditionSnowGrains": "Snow grains",
+  "weatherConditionSnowShowers": "Snow showers",
+  "weatherConditionThunderstorm": "Thunderstorm"
 }

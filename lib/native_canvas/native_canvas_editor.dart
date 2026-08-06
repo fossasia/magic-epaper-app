@@ -138,6 +138,10 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     if (layers == null) return;
     if (layers.any((s) => s.elementId == 'qrCode')) {
       _seedQrLayout(layers);
+    } else if (layers.length == 1 &&
+        layers.first.elementId == 'weatherSnapshot' &&
+        layers.first.widget != null) {
+      _seedFullCanvasElement(layers.first);
     } else if (layers.any((s) => s.elementId == 'qrCaption')) {
       _seedContactCardLayout(layers);
     } else if (layers.any((s) => s.elementId == 'qr')) {
@@ -230,6 +234,21 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
             columnWidth: cw, center: true);
       }
     }
+  }
+
+  void _seedFullCanvasElement(LayerSpec spec) {
+    _controller.addElement(
+      CanvasElement(
+        id: _nextId(),
+        kind: CanvasElementKind.widget,
+        position: _canvasCenter,
+        baseSize: Size(widget.width.toDouble(), widget.height.toDouble()),
+        scale: 1.0,
+        child: spec.widget,
+        elementId: spec.elementId,
+      ),
+      record: false,
+    );
   }
 
   void _seedContactCardLayout(List<LayerSpec> layers) {

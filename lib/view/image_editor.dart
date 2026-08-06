@@ -7,6 +7,7 @@ import 'package:magicepaperapp/image_library/services/image_save_handler.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
 import 'package:magicepaperapp/card_templates/card_template_selection_view.dart';
+import 'package:magicepaperapp/card_templates/weather_template_result.dart';
 import 'package:magicepaperapp/card_templates/card_template_result.dart';
 import 'package:magicepaperapp/util/color_util.dart';
 import 'package:magicepaperapp/util/epd/driver/waveform.dart';
@@ -32,6 +33,7 @@ class ImageEditor extends StatefulWidget {
   final bool isExportOnly;
 
   final Map<String, dynamic>? pendingCanvasDocument;
+  final Map<String, dynamic>? pendingTemplateData;
   final Map<String, dynamic>? pendingTemplateMetadata;
   final String? editingImageId;
 
@@ -44,6 +46,7 @@ class ImageEditor extends StatefulWidget {
     required this.device,
     this.isExportOnly = false,
     this.pendingCanvasDocument,
+    this.pendingTemplateData,
     this.pendingTemplateMetadata,
     this.editingImageId,
     this.initialFilterIndex,
@@ -71,6 +74,7 @@ class _ImageEditorState extends State<ImageEditor> {
   bool _isInitializing = true;
 
   Map<String, dynamic>? _pendingCanvasDocument;
+  Map<String, dynamic>? _pendingTemplateData;
   Map<String, dynamic>? _pendingTemplateMetadata;
   String? _editingLibraryImageId;
   int? _pendingInitialFilterIndex;
@@ -86,6 +90,7 @@ class _ImageEditorState extends State<ImageEditor> {
     _selectedWaveform = null;
     _selectedWaveformName = null;
     _pendingCanvasDocument = widget.pendingCanvasDocument;
+    _pendingTemplateData = widget.pendingTemplateData;
     _pendingTemplateMetadata = widget.pendingTemplateMetadata;
     _editingLibraryImageId = widget.editingImageId;
     _pendingInitialFilterIndex = widget.initialFilterIndex;
@@ -168,6 +173,7 @@ class _ImageEditorState extends State<ImageEditor> {
       deviceHeight: widget.device.height,
       deviceColors: widget.device.colors,
       canvasDocument: _pendingCanvasDocument,
+      templateData: _pendingTemplateData,
       sourceImage: sourceBytes,
       existingImageId: _editingLibraryImageId,
       extraMetadata: _pendingTemplateMetadata,
@@ -679,6 +685,11 @@ class _ImageEditorState extends State<ImageEditor> {
               _pendingCanvasDocument = doc;
             });
           },
+          onTemplateData: (data) {
+            setState(() {
+              _pendingTemplateData = data;
+            });
+          },
           onSourceChanged: (String source) {
             setState(() {
               _currentImageSource = source;
@@ -686,6 +697,7 @@ class _ImageEditorState extends State<ImageEditor> {
                 _pendingCanvasDocument = null;
               }
               if (source != 'template') {
+                _pendingTemplateData = null;
                 _pendingTemplateMetadata = null;
               }
             });
@@ -705,6 +717,7 @@ class BottomActionMenu extends StatelessWidget {
   final ImageSaveHandler? imageSaveHandler;
   final Function(String)? onSourceChanged;
   final Function(Map<String, dynamic>)? onCanvasDocument;
+  final Function(Map<String, dynamic>?)? onTemplateData;
   final Function(Map<String, dynamic>?)? onTemplateMetadata;
 
   const BottomActionMenu({
@@ -714,6 +727,7 @@ class BottomActionMenu extends StatelessWidget {
     required this.imageSaveHandler,
     this.onSourceChanged,
     this.onCanvasDocument,
+    this.onTemplateData,
     this.onTemplateMetadata,
   });
 
@@ -857,10 +871,14 @@ class BottomActionMenu extends StatelessWidget {
                   );
 
                   Uint8List? png;
+                  Map<String, dynamic>? templateData;
                   Map<String, dynamic>? metadata;
                   if (result is CardTemplateResult) {
                     png = result.png;
                     metadata = result.metadata;
+                  } else if (result is WeatherTemplateResult) {
+                    png = result.png;
+                    templateData = result.data;
                   } else if (result is Uint8List) {
                     png = result;
                   }
@@ -873,6 +891,7 @@ class BottomActionMenu extends StatelessWidget {
                     );
                     await imgLoader.saveFinalizedImageBytes(png);
 
+                    onTemplateData?.call(templateData);
                     onSourceChanged?.call('template');
                     onTemplateMetadata?.call(metadata);
                   }
