@@ -152,6 +152,7 @@ class ImageOperationsService {
     int? deviceHeight,
     List<Color>? deviceColors,
     Map<String, dynamic>? canvasDocument,
+    Map<String, dynamic>? templateData,
     Uint8List? sourceImage,
     String? existingImageId,
     Map<String, dynamic>? extraMetadata,
@@ -170,6 +171,7 @@ class ImageOperationsService {
         if (deviceColors != null)
           'epdColors': [for (final c in deviceColors) c.toARGB32()],
         if (canvasDocument != null) 'canvasDocument': canvasDocument,
+        if (templateData != null) 'templateData': templateData,
         if (sourceImage != null) 'sourceImage': base64Encode(sourceImage),
         ...?extraMetadata,
       };
