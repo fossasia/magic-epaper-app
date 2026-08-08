@@ -16,9 +16,9 @@ class WaveshareNfcProtocol {
   static const _maxBusyPolls = 240;
 
   static const _androidPackageRecord = [
-    3,
     0,
-    254,
+    0,
+    0,
     0,
     0,
     0,

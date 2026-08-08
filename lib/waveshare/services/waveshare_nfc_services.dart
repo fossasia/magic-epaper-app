@@ -9,9 +9,9 @@ import 'package:magicepaperapp/waveshare/services/waveshare_nfc_protocol.dart';
 class WaveShareNfcServices {
   static const platform = MethodChannel('org.fossasia.magicepaperapp/nfc');
   static const _pollTimeout = Duration(minutes: 2);
-  static const _retryPollTimeout = Duration(seconds: 20);
-  static const _recoveryWindow = Duration(seconds: 60);
-  static const _maxAttempts = 25;
+  static const _retryPollTimeout = Duration(seconds: 8);
+  static const _recoveryWindow = Duration(seconds: 12);
+  static const _maxAttempts = 3;
 
   static const _retryableCodes = {'NFC_COMMUNICATION', 'FLASH_FAILED'};
 
