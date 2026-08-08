@@ -54,8 +54,11 @@ class MainActivity : FlutterActivity() {
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, NFC_CHANNEL).setMethodCallHandler { call, result ->
             when (call.method) {
-                "disableNfcReaderMode" -> {
+                "pauseNfcReaderMode" -> {
                     nfcAdapter?.disableReaderMode(this@MainActivity)
+                    result.success(null)
+                }
+                "resumeNfcReaderMode" -> {
                     enableSilentNfcReaderMode()
                     result.success(null)
                 }

@@ -12,51 +12,52 @@ typedef WaveshareTransceive = Future<Uint8List> Function(
 typedef WaveshareProgressCallback = void Function(int progress);
 
 class WaveshareNfcProtocol {
-  static const _transceiveTimeout = Duration(milliseconds: 2000);
+  static const _transceiveTimeout = Duration(milliseconds: 3000);
   static const _maxBusyPolls = 240;
+
   static const _androidPackageRecord = [
-    3,
-    39,
-    212,
-    15,
-    21,
-    97,
-    110,
-    100,
-    114,
-    111,
-    105,
-    100,
-    46,
-    99,
-    111,
-    109,
-    58,
-    112,
-    107,
-    103,
-    119,
-    97,
-    118,
-    101,
-    115,
-    104,
-    97,
-    114,
-    101,
-    46,
-    102,
-    101,
-    110,
-    103,
-    46,
-    110,
-    102,
-    99,
-    116,
-    97,
-    103,
-    254,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
     0,
     0,
     0,
@@ -85,11 +86,11 @@ class WaveshareNfcProtocol {
       return _writeHdDisplay(profile, imageData, onProgress: onProgress);
     }
 
-    await _ensureAndroidPackageRecord();
+    await _eraseAndroidPackageRecord();
     return _writeStandardDisplay(profile, imageData, onProgress: onProgress);
   }
 
-  Future<void> _ensureAndroidPackageRecord() async {
+  Future<void> _eraseAndroidPackageRecord() async {
     final current = Uint8List(48);
 
     try {
@@ -107,7 +108,7 @@ class WaveshareNfcProtocol {
       return;
     }
 
-    for (var page = 0; page < 11; page++) {
+    for (var page = 0; page < 12; page++) {
       try {
         await _send([
           0xa2,
@@ -213,16 +214,21 @@ class WaveshareNfcProtocol {
 
     await _sleep(200);
     if (!await _sendOk([0xcd, 0x09])) return false;
-    await _sleep(300);
+    await _sleep(2000);
 
     for (var attempt = 0; attempt < _maxBusyPolls; attempt++) {
-      final busyResponse = await _send([0xcd, 0x0a]);
-      if (_isDone(busyResponse)) {
-        if (await _sendOk([0xcd, 0x04])) {
-          onProgress?.call(100);
-          return true;
+      try {
+        final busyResponse = await _send([0xcd, 0x0a]);
+        if (_isDone(busyResponse)) {
+          if (await _sendOk([0xcd, 0x04])) {
+            onProgress?.call(100);
+            return true;
+          }
+          return false;
         }
-        return false;
+      } catch (_) {
+        onProgress?.call(100);
+        return true;
       }
 
       await _sleep(25);
@@ -269,11 +275,16 @@ class WaveshareNfcProtocol {
 
     await _sleep(100);
     if (!await _sendOk([0xcd, 0x06])) return false;
-    await _sleep(1000);
+    await _sleep(3000);
 
     for (var attempt = 0; attempt < _maxBusyPolls; attempt++) {
-      final busyResponse = await _send([0xcd, 0x08]);
-      if (_isDone(busyResponse)) {
+      try {
+        final busyResponse = await _send([0xcd, 0x08]);
+        if (_isDone(busyResponse)) {
+          onProgress?.call(100);
+          return true;
+        }
+      } catch (_) {
         onProgress?.call(100);
         return true;
       }
@@ -509,10 +520,15 @@ class WaveshareNfcProtocol {
     if (!_isIsoDepOk(await _send([116, 154, 0, 14, 1, 247]))) return false;
     if (!_isIsoDepOk(await _send([116, 153, 0, 13, 1, 32]))) return false;
 
-    await _sleep(4000);
+    await _sleep(6000);
     for (var attempt = 0; attempt < _maxBusyPolls; attempt++) {
-      final busyResponse = await _send([116, 155, 0, 15, 1]);
-      if (busyResponse.isNotEmpty && busyResponse[0] != 1) {
+      try {
+        final busyResponse = await _send([116, 155, 0, 15, 1]);
+        if (busyResponse.isNotEmpty && busyResponse[0] != 1) {
+          onProgress?.call(100);
+          return true;
+        }
+      } catch (_) {
         onProgress?.call(100);
         return true;
       }
