@@ -58,6 +58,13 @@ class SavedImage {
 
   bool get hasCanvasDocument => metadata?['canvasDocument'] != null;
 
+  bool get isQrTag => metadata?['qrTag'] is Map;
+
+  Map<String, dynamic>? get qrTagData {
+    final raw = metadata?['qrTag'];
+    return raw is Map ? Map<String, dynamic>.from(raw) : null;
+  }
+
   Map<String, dynamic>? get weatherTemplateData {
     final raw = metadata?['templateData'];
     if (raw is Map && raw['type'] == 'weather') {
