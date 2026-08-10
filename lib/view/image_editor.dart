@@ -310,7 +310,7 @@ class _ImageEditorState extends State<ImageEditor> {
     );
 
     try {
-      img.Image baseImage = _rawImages[_selectedFilterIndex];
+      img.Image baseImage = img.Image.from(_rawImages[_selectedFilterIndex]);
 
       if (flipHorizontal) {
         baseImage = img.flipHorizontal(baseImage);
@@ -480,7 +480,8 @@ class _ImageEditorState extends State<ImageEditor> {
       onPressed: widget.isExportOnly
           ? _exportXbmFiles
           : () async {
-              img.Image finalImg = _rawImages[_selectedFilterIndex];
+              img.Image finalImg =
+                  img.Image.from(_rawImages[_selectedFilterIndex]);
 
               if (flipHorizontal) {
                 finalImg = img.flipHorizontal(finalImg);
