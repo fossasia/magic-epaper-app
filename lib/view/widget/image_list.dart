@@ -94,12 +94,14 @@ class ImageList extends StatelessWidget {
               onPressed: onFlipHorizontal,
               tooltip: appLocalizations.flipHorizontally,
               rotation: -1.5708,
+              isActive: flipHorizontal,
             ),
             const SizedBox(width: Dimens.spacingL),
             _buildFlipButton(
               assetPath: ImageAssets.flipHorizontal,
               onPressed: onFlipVertical,
               tooltip: appLocalizations.flipVertically,
+              isActive: flipVertical,
             ),
             if (onAdjustColors != null) ...[
               const SizedBox(width: 16),
@@ -149,18 +151,23 @@ class ImageList extends StatelessWidget {
     required VoidCallback onPressed,
     required String tooltip,
     double rotation = 0.0,
+    bool isActive = false,
   }) {
     assert(assetPath != null || icon != null,
         'Either assetPath or icon must be provided');
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: colorWhite,
+        color: isActive ? colorPrimary : colorWhite,
+        border:
+            Border.all(color: isActive ? colorPrimary : mdGrey400, width: 2),
         boxShadow: [
           BoxShadow(
-            color: colorBlack.withValues(alpha: .1),
+            color: isActive
+                ? colorPrimary.withValues(alpha: .4)
+                : colorBlack.withValues(alpha: .1),
             spreadRadius: 1,
-            blurRadius: 3,
+            blurRadius: isActive ? 6 : 3,
             offset: const Offset(0, 1),
           ),
         ],
@@ -170,8 +177,12 @@ class ImageList extends StatelessWidget {
           angle: rotation,
           child: assetPath != null
               ? Image.asset(assetPath,
-                  height: Dimens.iconSizeL, width: Dimens.iconSizeL)
-              : Icon(icon, size: Dimens.iconSizeL, color: colorBlack),
+                  height: Dimens.iconSizeL,
+                  width: Dimens.iconSizeL,
+                  color: isActive ? colorWhite : null)
+              : Icon(icon,
+                  size: Dimens.iconSizeL,
+                  color: isActive ? colorWhite : colorBlack),
         ),
         onPressed: onPressed,
         tooltip: tooltip,

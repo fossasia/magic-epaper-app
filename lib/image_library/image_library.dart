@@ -11,6 +11,11 @@ import 'package:magicepaperapp/image_library/widgets/error_state_widget.dart';
 import 'package:magicepaperapp/image_library/widgets/image_grid_widget.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_preview_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/search_and_filter_widget.dart';
+import 'package:magicepaperapp/card_templates/card_template_result.dart';
+import 'package:magicepaperapp/card_templates/qr_tag_form.dart';
+import 'package:magicepaperapp/card_templates/qr_tag_model.dart';
+import 'package:magicepaperapp/card_templates/contact_card_form.dart';
+import 'package:magicepaperapp/card_templates/contact_card_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
@@ -18,6 +23,8 @@ import 'package:magicepaperapp/native_canvas/model/canvas_element.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/provider/image_loader.dart';
+import 'package:magicepaperapp/card_templates/weather_form.dart';
+import 'package:magicepaperapp/card_templates/weather_template_result.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:provider/provider.dart';
@@ -88,6 +95,8 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
   void _loadIntoImageEditor(
     DisplayDevice epd, {
     Map<String, dynamic>? pendingCanvasDocument,
+    Map<String, dynamic>? pendingTemplateData,
+    Map<String, dynamic>? pendingTemplateMetadata,
     required String editingImageId,
     int? initialFilterIndex,
     bool initialFlipHorizontal = false,
@@ -99,6 +108,8 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
         builder: (_) => ImageEditor(
           device: epd,
           pendingCanvasDocument: pendingCanvasDocument,
+          pendingTemplateData: pendingTemplateData,
+          pendingTemplateMetadata: pendingTemplateMetadata,
           editingImageId: editingImageId,
           initialFilterIndex: initialFilterIndex,
           initialFlipHorizontal: initialFlipHorizontal,
@@ -137,8 +148,88 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
     );
   }
 
-  Future<void> _editImage(SavedImage image) async {
+  Future<void> _editQrTag(SavedImage image) async {
+    final data = image.qrTagData;
+    if (data == null) return;
     final epd = _operationsService.getEpdFromImage(image);
+    final result = await Navigator.of(context).push<CardTemplateResult>(
+      MaterialPageRoute(
+        builder: (_) => QrTagForm(
+          width: epd.width,
+          height: epd.height,
+          initialModel: QrTagModel.fromJson(data),
+          existingImageId: image.id,
+        ),
+      ),
+    );
+    if (result == null || !mounted) return;
+    final imgLoader = context.read<ImageLoader>();
+    await imgLoader.updateImage(
+      bytes: result.png,
+      width: epd.width,
+      height: epd.height,
+    );
+    await imgLoader.saveFinalizedImageBytes(result.png);
+    if (!mounted) return;
+    _loadIntoImageEditor(
+      epd,
+      editingImageId: image.id,
+      pendingTemplateMetadata: result.metadata,
+      initialFilterIndex: _savedFilterIndex(image),
+      initialFlipHorizontal: _savedFlag(image, 'flipHorizontal'),
+      initialFlipVertical: _savedFlag(image, 'flipVertical'),
+    );
+  }
+
+  Future<void> _editWeatherImage(
+    SavedImage image,
+    DisplayDevice epd,
+    Map<String, dynamic> weather,
+  ) async {
+    final result = await Navigator.of(context).push<WeatherTemplateResult>(
+      MaterialPageRoute(
+        builder: (_) => WeatherForm(
+          width: epd.width,
+          height: epd.height,
+          initialData: weather,
+          fromLibrary: true,
+        ),
+      ),
+    );
+    if (result == null || !mounted) return;
+    final imgLoader = context.read<ImageLoader>();
+    await imgLoader.updateImage(
+      bytes: result.png,
+      width: epd.width,
+      height: epd.height,
+    );
+    await imgLoader.saveFinalizedImageBytes(result.png);
+    if (!mounted) return;
+    _loadIntoImageEditor(
+      epd,
+      pendingTemplateData: result.data,
+      editingImageId: image.id,
+      initialFilterIndex: _savedFilterIndex(image),
+      initialFlipHorizontal: _savedFlag(image, 'flipHorizontal'),
+      initialFlipVertical: _savedFlag(image, 'flipVertical'),
+    );
+  }
+
+  Future<void> _editImage(SavedImage image) async {
+    if (image.isQrTag) {
+      await _editQrTag(image);
+      return;
+    }
+    if (image.isContactCard) {
+      await _editContactCard(image);
+      return;
+    }
+    final epd = _operationsService.getEpdFromImage(image);
+    final weather = image.weatherTemplateData;
+    if (weather != null) {
+      await _editWeatherImage(image, epd, weather);
+      return;
+    }
     final doc = image.canvasDocument ?? await _singleImageDocument(image, epd);
     if (doc == null || !mounted) return;
     final result = await Navigator.of(context).push<CanvasEditorResult>(
@@ -164,6 +255,39 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
       epd,
       pendingCanvasDocument: result.document.toJson(),
       editingImageId: image.id,
+      initialFilterIndex: _savedFilterIndex(image),
+      initialFlipHorizontal: _savedFlag(image, 'flipHorizontal'),
+      initialFlipVertical: _savedFlag(image, 'flipVertical'),
+    );
+  }
+
+  Future<void> _editContactCard(SavedImage image) async {
+    final data = image.contactCardData;
+    if (data == null) return;
+    final epd = _operationsService.getEpdFromImage(image);
+    final result = await Navigator.of(context).push<CardTemplateResult>(
+      MaterialPageRoute(
+        builder: (_) => ContactCardForm(
+          width: epd.width,
+          height: epd.height,
+          initialModel: ContactCardModel.fromJson(data),
+          existingImageId: image.id,
+        ),
+      ),
+    );
+    if (result == null || !mounted) return;
+    final imgLoader = context.read<ImageLoader>();
+    await imgLoader.updateImage(
+      bytes: result.png,
+      width: epd.width,
+      height: epd.height,
+    );
+    await imgLoader.saveFinalizedImageBytes(result.png);
+    if (!mounted) return;
+    _loadIntoImageEditor(
+      epd,
+      editingImageId: image.id,
+      pendingTemplateMetadata: result.metadata,
       initialFilterIndex: _savedFilterIndex(image),
       initialFlipHorizontal: _savedFlag(image, 'flipHorizontal'),
       initialFlipVertical: _savedFlag(image, 'flipVertical'),

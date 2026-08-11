@@ -9,6 +9,8 @@ import 'package:magicepaperapp/image_library/services/image_save_handler.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
 import 'package:magicepaperapp/card_templates/card_template_selection_view.dart';
+import 'package:magicepaperapp/card_templates/weather_template_result.dart';
+import 'package:magicepaperapp/card_templates/card_template_result.dart';
 import 'package:magicepaperapp/util/color_util.dart';
 import 'package:magicepaperapp/util/epd/driver/waveform.dart';
 import 'package:magicepaperapp/util/xbm_encoder.dart';
@@ -33,6 +35,8 @@ class ImageEditor extends StatefulWidget {
   final bool isExportOnly;
 
   final Map<String, dynamic>? pendingCanvasDocument;
+  final Map<String, dynamic>? pendingTemplateData;
+  final Map<String, dynamic>? pendingTemplateMetadata;
   final String? editingImageId;
 
   final int? initialFilterIndex;
@@ -44,6 +48,8 @@ class ImageEditor extends StatefulWidget {
     required this.device,
     this.isExportOnly = false,
     this.pendingCanvasDocument,
+    this.pendingTemplateData,
+    this.pendingTemplateMetadata,
     this.editingImageId,
     this.initialFilterIndex,
     this.initialFlipHorizontal = false,
@@ -74,6 +80,8 @@ class _ImageEditorState extends State<ImageEditor> {
   img.Image? _pristineImage;
 
   Map<String, dynamic>? _pendingCanvasDocument;
+  Map<String, dynamic>? _pendingTemplateData;
+  Map<String, dynamic>? _pendingTemplateMetadata;
   String? _editingLibraryImageId;
   int? _pendingInitialFilterIndex;
   bool _pendingInitialFlipH = false;
@@ -88,6 +96,8 @@ class _ImageEditorState extends State<ImageEditor> {
     _selectedWaveform = null;
     _selectedWaveformName = null;
     _pendingCanvasDocument = widget.pendingCanvasDocument;
+    _pendingTemplateData = widget.pendingTemplateData;
+    _pendingTemplateMetadata = widget.pendingTemplateMetadata;
     _editingLibraryImageId = widget.editingImageId;
     _pendingInitialFilterIndex = widget.initialFilterIndex;
     _pendingInitialFlipH = widget.initialFlipHorizontal;
@@ -169,8 +179,10 @@ class _ImageEditorState extends State<ImageEditor> {
       deviceHeight: widget.device.height,
       deviceColors: widget.device.colors,
       canvasDocument: _pendingCanvasDocument,
+      templateData: _pendingTemplateData,
       sourceImage: sourceBytes,
       existingImageId: _editingLibraryImageId,
+      extraMetadata: _pendingTemplateMetadata,
     );
   }
 
@@ -304,7 +316,7 @@ class _ImageEditorState extends State<ImageEditor> {
     );
 
     try {
-      img.Image baseImage = _rawImages[_selectedFilterIndex];
+      img.Image baseImage = img.Image.from(_rawImages[_selectedFilterIndex]);
 
       if (flipHorizontal) {
         baseImage = img.flipHorizontal(baseImage);
@@ -474,7 +486,8 @@ class _ImageEditorState extends State<ImageEditor> {
       onPressed: widget.isExportOnly
           ? _exportXbmFiles
           : () async {
-              img.Image finalImg = _rawImages[_selectedFilterIndex];
+              img.Image finalImg =
+                  img.Image.from(_rawImages[_selectedFilterIndex]);
 
               if (flipHorizontal) {
                 finalImg = img.flipHorizontal(finalImg);
@@ -828,6 +841,11 @@ class _ImageEditorState extends State<ImageEditor> {
               _pendingCanvasDocument = doc;
             });
           },
+          onTemplateData: (data) {
+            setState(() {
+              _pendingTemplateData = data;
+            });
+          },
           onSourceChanged: (String source) {
             setState(() {
               _currentBrightness = 1.0;
@@ -837,6 +855,15 @@ class _ImageEditorState extends State<ImageEditor> {
               if (source != 'editor') {
                 _pendingCanvasDocument = null;
               }
+              if (source != 'template') {
+                _pendingTemplateData = null;
+                _pendingTemplateMetadata = null;
+              }
+            });
+          },
+          onTemplateMetadata: (metadata) {
+            setState(() {
+              _pendingTemplateMetadata = metadata;
             });
           }),
     );
@@ -861,6 +888,8 @@ class BottomActionMenu extends StatelessWidget {
   final ImageSaveHandler? imageSaveHandler;
   final Function(String)? onSourceChanged;
   final Function(Map<String, dynamic>)? onCanvasDocument;
+  final Function(Map<String, dynamic>?)? onTemplateData;
+  final Function(Map<String, dynamic>?)? onTemplateMetadata;
 
   const BottomActionMenu({
     super.key,
@@ -869,6 +898,8 @@ class BottomActionMenu extends StatelessWidget {
     required this.imageSaveHandler,
     this.onSourceChanged,
     this.onCanvasDocument,
+    this.onTemplateData,
+    this.onTemplateMetadata,
   });
 
   @override
@@ -999,7 +1030,7 @@ class BottomActionMenu extends StatelessWidget {
                 fontSize: fontSize,
                 label: appLocalizations.templates,
                 onTap: () async {
-                  final result = await Navigator.of(context).push<Uint8List>(
+                  final result = await Navigator.of(context).push<Object>(
                     MaterialPageRoute(
                       settings: const RouteSettings(name: 'cardTemplates'),
                       builder: (context) => CardTemplateSelectionView(
@@ -1010,15 +1041,30 @@ class BottomActionMenu extends StatelessWidget {
                     ),
                   );
 
-                  if (result != null) {
+                  Uint8List? png;
+                  Map<String, dynamic>? templateData;
+                  Map<String, dynamic>? metadata;
+                  if (result is CardTemplateResult) {
+                    png = result.png;
+                    metadata = result.metadata;
+                  } else if (result is WeatherTemplateResult) {
+                    png = result.png;
+                    templateData = result.data;
+                  } else if (result is Uint8List) {
+                    png = result;
+                  }
+
+                  if (png != null) {
                     await imgLoader.updateImage(
-                      bytes: result,
+                      bytes: png,
                       width: epd.width,
                       height: epd.height,
                     );
-                    await imgLoader.saveFinalizedImageBytes(result);
+                    await imgLoader.saveFinalizedImageBytes(png);
 
+                    onTemplateData?.call(templateData);
                     onSourceChanged?.call('template');
+                    onTemplateMetadata?.call(metadata);
                   }
                 },
               ),
