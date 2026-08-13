@@ -20,7 +20,10 @@ class ClearAllConfirmationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
-      child: SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: Dimens.dialogMaxWidth,
+        ),
         child: Container(
           padding: const EdgeInsets.all(Dimens.spacingXxl),
           margin: const EdgeInsets.symmetric(vertical: 48),
