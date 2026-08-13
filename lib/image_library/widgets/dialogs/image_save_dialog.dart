@@ -48,36 +48,41 @@ class _ImageSaveDialogState extends State<ImageSaveDialog> {
     return Dialog(
       backgroundColor: Colors.transparent,
       child: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(Dimens.spacingXxl),
-          margin: const EdgeInsets.symmetric(vertical: 48),
-          decoration: BoxDecoration(
-            color: colorWhite,
-            borderRadius: BorderRadius.circular(Dimens.radiusRound),
-            boxShadow: [
-              BoxShadow(
-                color: colorBlack.withValues(alpha: 0.1),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: Dimens.dialogMaxWidth,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(),
-              const SizedBox(height: Dimens.spacingL),
-              _buildImagePreview(),
-              const SizedBox(height: Dimens.spacingL),
-              _buildTextFieldSection(),
-              const SizedBox(height: Dimens.spacingXxl),
-              if (widget.filterName != null) ...[
-                _buildFilterInfoChip(),
-                const SizedBox(height: Dimens.spacingXl),
+          child: Container(
+            padding: const EdgeInsets.all(Dimens.spacingXxl),
+            margin: const EdgeInsets.symmetric(vertical: 48),
+            decoration: BoxDecoration(
+              color: colorWhite,
+              borderRadius: BorderRadius.circular(Dimens.radiusRound),
+              boxShadow: [
+                BoxShadow(
+                  color: colorBlack.withValues(alpha: 0.1),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
               ],
-              _buildActionButtons(context),
-            ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(),
+                const SizedBox(height: Dimens.spacingL),
+                _buildImagePreview(),
+                const SizedBox(height: Dimens.spacingL),
+                _buildTextFieldSection(),
+                const SizedBox(height: Dimens.spacingXxl),
+                if (widget.filterName != null) ...[
+                  _buildFilterInfoChip(),
+                  const SizedBox(height: Dimens.spacingXl),
+                ],
+                _buildActionButtons(context),
+              ],
+            ),
           ),
         ),
       ),
