@@ -379,3 +379,20 @@ jobs:
         uses: ./.github/actions/screenshot-ipad
         with:
           IPAD_DEVICE_MODEL: ${{ env.IPAD_DEVICE_MODEL }}
+
+  cleanup-conflicting-branches:
+    name: Clean Up Branches Conflicting with Dependabot
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Delete stale 'dependabot' branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh api repos/${{ github.repository }}/git/refs/heads/dependabot --silent 2>/dev/null; then
+            gh api repos/${{ github.repository }}/git/refs/heads/dependabot -X DELETE
+            echo "Deleted stale 'dependabot' branch"
+          else
+            echo "Branch 'dependabot' does not exist, nothing to do"
+          fi
