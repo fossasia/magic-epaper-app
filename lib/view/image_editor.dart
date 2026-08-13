@@ -8,6 +8,7 @@ import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
 import 'package:magicepaperapp/card_templates/card_template_selection_view.dart';
 import 'package:magicepaperapp/card_templates/weather_template_result.dart';
+import 'package:magicepaperapp/card_templates/menu_template_result.dart';
 import 'package:magicepaperapp/card_templates/card_template_result.dart';
 import 'package:magicepaperapp/util/color_util.dart';
 import 'package:magicepaperapp/util/epd/driver/waveform.dart';
@@ -878,6 +879,9 @@ class BottomActionMenu extends StatelessWidget {
                     png = result.png;
                     metadata = result.metadata;
                   } else if (result is WeatherTemplateResult) {
+                    png = result.png;
+                    templateData = result.data;
+                  } else if (result is MenuTemplateResult) {
                     png = result.png;
                     templateData = result.data;
                   } else if (result is Uint8List) {

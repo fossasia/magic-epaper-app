@@ -25,6 +25,8 @@ import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/provider/image_loader.dart';
 import 'package:magicepaperapp/card_templates/weather_form.dart';
 import 'package:magicepaperapp/card_templates/weather_template_result.dart';
+import 'package:magicepaperapp/card_templates/restaurant_menu_form.dart';
+import 'package:magicepaperapp/card_templates/menu_template_result.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:provider/provider.dart';
@@ -215,6 +217,40 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
     );
   }
 
+  Future<void> _editMenuImage(
+    SavedImage image,
+    DisplayDevice epd,
+    Map<String, dynamic> menu,
+  ) async {
+    final result = await Navigator.of(context).push<MenuTemplateResult>(
+      MaterialPageRoute(
+        builder: (_) => RestaurantMenuForm(
+          width: epd.width,
+          height: epd.height,
+          initialData: menu,
+          fromLibrary: true,
+        ),
+      ),
+    );
+    if (result == null || !mounted) return;
+    final imgLoader = context.read<ImageLoader>();
+    await imgLoader.updateImage(
+      bytes: result.png,
+      width: epd.width,
+      height: epd.height,
+    );
+    await imgLoader.saveFinalizedImageBytes(result.png);
+    if (!mounted) return;
+    _loadIntoImageEditor(
+      epd,
+      pendingTemplateData: result.data,
+      editingImageId: image.id,
+      initialFilterIndex: _savedFilterIndex(image),
+      initialFlipHorizontal: _savedFlag(image, 'flipHorizontal'),
+      initialFlipVertical: _savedFlag(image, 'flipVertical'),
+    );
+  }
+
   Future<void> _editImage(SavedImage image) async {
     if (image.isQrTag) {
       await _editQrTag(image);
@@ -228,6 +264,11 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
     final weather = image.weatherTemplateData;
     if (weather != null) {
       await _editWeatherImage(image, epd, weather);
+      return;
+    }
+    final menu = image.menuTemplateData;
+    if (menu != null) {
+      await _editMenuImage(image, epd, menu);
       return;
     }
     final doc = image.canvasDocument ?? await _singleImageDocument(image, epd);
