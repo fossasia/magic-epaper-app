@@ -1,61 +1,88 @@
 import 'dart:io';
-import 'package:magicepaperapp/theme/colors.dart';
+
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/theme/colors.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
-class DeleteConfirmationDialog extends StatelessWidget {
-  final SavedImage image;
+class SharedDeleteConfirmationDialog extends StatelessWidget {
+  final SavedImage? image;
+  final List<SavedImage>? selectedImages;
   final VoidCallback onConfirm;
+  final bool isBatchDelete;
 
-  const DeleteConfirmationDialog({
+  const SharedDeleteConfirmationDialog.single({
     super.key,
-    required this.image,
+    required SavedImage image,
     required this.onConfirm,
-  });
+  })  : image = image,
+        selectedImages = null,
+        isBatchDelete = false;
+
+  const SharedDeleteConfirmationDialog.batch({
+    super.key,
+    required List<SavedImage> selectedImages,
+    required this.onConfirm,
+  })  : image = null,
+        selectedImages = selectedImages,
+        isBatchDelete = true;
 
   @override
   Widget build(BuildContext context) {
+    final images = isBatchDelete
+        ? selectedImages ?? <SavedImage>[]
+        : <SavedImage>[
+            if (image != null) image!,
+          ];
+
     return Dialog(
       backgroundColor: Colors.transparent,
-      child: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(Dimens.spacingXxl),
-          margin: const EdgeInsets.symmetric(vertical: 48),
-          decoration: BoxDecoration(
-            color: colorWhite,
-            borderRadius: BorderRadius.circular(Dimens.radiusRound),
-            boxShadow: [
-              BoxShadow(
-                color: colorBlack.withValues(alpha: 0.1),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(),
-              const SizedBox(height: Dimens.spacingXxl),
-              _buildImagePreview(),
-              const SizedBox(height: Dimens.spacingXl),
-              _buildWarningMessage(),
-              const SizedBox(height: Dimens.spacingXxl),
-              _buildActionButtons(context),
-            ],
+      insetPadding: const EdgeInsets.symmetric(
+        horizontal: Dimens.spacingL,
+        vertical: Dimens.spacingXxl,
+      ),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: Dimens.dialogMaxWidth,
+        ),
+        child: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.all(Dimens.spacingXxl),
+            decoration: BoxDecoration(
+              color: colorWhite,
+              borderRadius: BorderRadius.circular(Dimens.radiusRound),
+              boxShadow: [
+                BoxShadow(
+                  color: colorBlack.withValues(alpha: 0.1),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(images.length),
+                const SizedBox(height: Dimens.spacingXxl),
+                _buildPreview(images),
+                const SizedBox(height: Dimens.spacingXl),
+                _buildWarningMessage(images.length),
+                const SizedBox(height: Dimens.spacingXxl),
+                _buildActionButtons(context, images.length),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(int imageCount) {
     return Row(
       children: [
         Container(
@@ -64,8 +91,11 @@ class DeleteConfirmationDialog extends StatelessWidget {
             color: Colors.red.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(Dimens.radiusXl),
           ),
-          child: const Icon(Icons.delete_outline,
-              color: Colors.red, size: Dimens.iconSizeL),
+          child: Icon(
+            isBatchDelete ? Icons.delete_sweep_outlined : Icons.delete_outline,
+            color: Colors.red,
+            size: Dimens.iconSizeL,
+          ),
         ),
         const SizedBox(width: Dimens.spacingL),
         Expanded(
@@ -73,7 +103,9 @@ class DeleteConfirmationDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                appLocalizations.deleteImage,
+                isBatchDelete
+                    ? appLocalizations.deleteMultipleImages
+                    : appLocalizations.deleteImage,
                 style: const TextStyle(
                   fontSize: Dimens.fontSizeXxl,
                   fontWeight: FontWeight.bold,
@@ -82,7 +114,9 @@ class DeleteConfirmationDialog extends StatelessWidget {
               ),
               const SizedBox(height: Dimens.spacingXs),
               Text(
-                appLocalizations.thisActionCannotBeUndone,
+                isBatchDelete
+                    ? appLocalizations.imagesSelected(imageCount)
+                    : appLocalizations.thisActionCannotBeUndone,
                 style: const TextStyle(
                   fontSize: Dimens.fontSizeM,
                   color: Colors.red,
@@ -96,7 +130,87 @@ class DeleteConfirmationDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildImagePreview() {
+  Widget _buildPreview(List<SavedImage> images) {
+    if (isBatchDelete) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(Dimens.spacingL),
+        decoration: BoxDecoration(
+          color: Colors.red.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(Dimens.radiusXxl),
+          border: Border.all(color: Colors.red.withValues(alpha: 0.2)),
+        ),
+        child: Column(
+          children: [
+            if (images.isNotEmpty)
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: Dimens.spacingS,
+                runSpacing: Dimens.spacingS,
+                children: [
+                  ...images.take(3).map(
+                        (image) => Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(Dimens.radiusM),
+                            border: Border.all(
+                              color: Colors.red.withValues(alpha: 0.3),
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(Dimens.radiusM),
+                            child: Image.file(
+                              File(image.filePath),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                  if (images.length > 3)
+                    Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        color: grey500.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(Dimens.radiusM),
+                        border: Border.all(
+                          color: grey500.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '+${images.length - 3}',
+                          style: const TextStyle(
+                            fontSize: Dimens.fontSizeM,
+                            fontWeight: FontWeight.bold,
+                            color: grey500,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            const SizedBox(height: Dimens.spacingM),
+            Text(
+              appLocalizations.imagesSelectedForDeletion(images.length),
+              style: const TextStyle(
+                fontSize: Dimens.fontSizeL,
+                fontWeight: FontWeight.w600,
+                color: colorBlack87,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
+
+    final currentImage = image;
+    if (currentImage == null) {
+      return const SizedBox.shrink();
+    }
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(Dimens.spacingL),
@@ -116,12 +230,12 @@ class DeleteConfirmationDialog extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(Dimens.radiusXl),
-              child: Image.file(File(image.filePath), fit: BoxFit.cover),
+              child: Image.file(File(currentImage.filePath), fit: BoxFit.cover),
             ),
           ),
           const SizedBox(height: Dimens.spacingM),
           Text(
-            image.name,
+            currentImage.name,
             style: const TextStyle(
               fontSize: Dimens.fontSizeL,
               fontWeight: FontWeight.w600,
@@ -132,16 +246,19 @@ class DeleteConfirmationDialog extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: Dimens.spacingXs),
-          if (image.metadata != null && image.metadata!['filter'] != null)
+          if (currentImage.metadata != null &&
+              currentImage.metadata!['filter'] != null)
             Container(
               padding: const EdgeInsets.symmetric(
-                  horizontal: Dimens.spacingS, vertical: Dimens.spacingXs),
+                horizontal: Dimens.spacingS,
+                vertical: Dimens.spacingXs,
+              ),
               decoration: BoxDecoration(
                 color: grey500.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(Dimens.radiusXl),
               ),
               child: Text(
-                '${appLocalizations.filterLabel} ${image.metadata!['filter']}',
+                '${appLocalizations.filterLabel} ${currentImage.metadata!['filter']}',
                 style: const TextStyle(
                   fontSize: Dimens.fontSizeS,
                   color: grey500,
@@ -154,7 +271,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildWarningMessage() {
+  Widget _buildWarningMessage(int imageCount) {
     return Container(
       padding: const EdgeInsets.all(Dimens.spacingL),
       decoration: BoxDecoration(
@@ -164,12 +281,20 @@ class DeleteConfirmationDialog extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.warning_amber_outlined,
-              color: Colors.amber.shade700, size: Dimens.iconSizeM),
+          Icon(
+            Icons.warning_amber_outlined,
+            color: Colors.amber.shade700,
+            size: Dimens.iconSizeM,
+          ),
           const SizedBox(width: Dimens.spacingM),
           Expanded(
             child: Text(
-              appLocalizations.areYouSureDeleteImage,
+              isBatchDelete
+                  ? (imageCount > 1
+                      ? appLocalizations
+                          .areYouSureDeleteMultipleImages(imageCount)
+                      : appLocalizations.areYouSureDeleteSingleImage)
+                  : appLocalizations.areYouSureDeleteImage,
               style: TextStyle(
                 fontSize: Dimens.fontSizeM,
                 color: Colors.amber.shade800,
@@ -182,7 +307,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context) {
+  Widget _buildActionButtons(BuildContext context, int imageCount) {
     return Row(
       children: [
         Expanded(
@@ -191,7 +316,9 @@ class DeleteConfirmationDialog extends StatelessWidget {
             child: Text(
               appLocalizations.cancel,
               style: const TextStyle(
-                  fontSize: Dimens.fontSizeL, fontWeight: FontWeight.w600),
+                fontSize: Dimens.fontSizeL,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ),
@@ -205,9 +332,15 @@ class DeleteConfirmationDialog extends StatelessWidget {
                 const Icon(Icons.delete_forever, size: Dimens.iconSizeM),
                 const SizedBox(width: Dimens.spacingS),
                 Text(
-                  appLocalizations.delete,
+                  isBatchDelete
+                      ? (imageCount > 1
+                          ? appLocalizations.deleteAll
+                          : appLocalizations.delete)
+                      : appLocalizations.delete,
                   style: const TextStyle(
-                      fontSize: Dimens.fontSizeL, fontWeight: FontWeight.w600),
+                    fontSize: Dimens.fontSizeL,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
