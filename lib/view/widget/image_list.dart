@@ -5,6 +5,7 @@ import 'package:magicepaperapp/image_library/services/image_filter_helper.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/util/epd/configurable_editor.dart';
 
 class ImageList extends StatelessWidget {
@@ -17,6 +18,7 @@ class ImageList extends StatelessWidget {
   final Function() onFlipHorizontal;
   final Function() onFlipVertical;
   final Function()? onSave;
+  final VoidCallback? onAdjustColors;
   final int width;
   final int height;
 
@@ -33,6 +35,7 @@ class ImageList extends StatelessWidget {
     required this.width,
     required this.height,
     this.onSave,
+    this.onAdjustColors,
   });
 
   String getFilterNameByIndex(int index) {
@@ -50,6 +53,7 @@ class ImageList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final double aspectRatio = height / width;
     return Column(
       children: [
@@ -88,21 +92,31 @@ class ImageList extends StatelessWidget {
             _buildFlipButton(
               assetPath: ImageAssets.flipHorizontal,
               onPressed: onFlipHorizontal,
-              tooltip: 'Flip Horizontally',
+              tooltip: appLocalizations.flipHorizontally,
               rotation: -1.5708,
+              isActive: flipHorizontal,
             ),
             const SizedBox(width: Dimens.spacingL),
             _buildFlipButton(
               assetPath: ImageAssets.flipHorizontal,
               onPressed: onFlipVertical,
-              tooltip: 'Flip Vertically',
+              tooltip: appLocalizations.flipVertically,
+              isActive: flipVertical,
             ),
+            if (onAdjustColors != null) ...[
+              const SizedBox(width: 16),
+              _buildFlipButton(
+                icon: Icons.tune_rounded,
+                onPressed: onAdjustColors!,
+                tooltip: 'Adjust Brightness & Contrast',
+              ),
+            ],
             if (onSave != null) ...[
               const SizedBox(width: Dimens.spacingL),
               _buildFlipButton(
                 icon: Icons.save_outlined,
                 onPressed: onSave!,
-                tooltip: 'Save to Library',
+                tooltip: appLocalizations.saveToLibrary,
               ),
             ],
           ],
@@ -137,18 +151,23 @@ class ImageList extends StatelessWidget {
     required VoidCallback onPressed,
     required String tooltip,
     double rotation = 0.0,
+    bool isActive = false,
   }) {
     assert(assetPath != null || icon != null,
         'Either assetPath or icon must be provided');
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: colorWhite,
+        color: isActive ? colorPrimary : colorWhite,
+        border:
+            Border.all(color: isActive ? colorPrimary : mdGrey400, width: 2),
         boxShadow: [
           BoxShadow(
-            color: colorBlack.withValues(alpha: .1),
+            color: isActive
+                ? colorPrimary.withValues(alpha: .4)
+                : colorBlack.withValues(alpha: .1),
             spreadRadius: 1,
-            blurRadius: 3,
+            blurRadius: isActive ? 6 : 3,
             offset: const Offset(0, 1),
           ),
         ],
@@ -158,8 +177,12 @@ class ImageList extends StatelessWidget {
           angle: rotation,
           child: assetPath != null
               ? Image.asset(assetPath,
-                  height: Dimens.iconSizeL, width: Dimens.iconSizeL)
-              : Icon(icon, size: Dimens.iconSizeL, color: colorBlack),
+                  height: Dimens.iconSizeL,
+                  width: Dimens.iconSizeL,
+                  color: isActive ? colorWhite : null)
+              : Icon(icon,
+                  size: Dimens.iconSizeL,
+                  color: isActive ? colorWhite : colorBlack),
         ),
         onPressed: onPressed,
         tooltip: tooltip,

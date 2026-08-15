@@ -183,7 +183,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
                   color: colorPrimary,
                 ),
                 const SizedBox(height: Dimens.spacingM),
-                Text("${(_progress * 100).toInt()}%"),
+                Text(appLocalizations.percentage((_progress * 100).toInt())),
                 const SizedBox(height: Dimens.spacingXl),
                 Text(
                   appLocalizations.keepPhoneStill,

@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
 import '../../util/app_logger.dart';
 
 class SavedImage {
@@ -52,6 +54,46 @@ class SavedImage {
       AppLogger.error('Error reading image file: $e');
       return null;
     }
+  }
+
+  bool get hasCanvasDocument => metadata?['canvasDocument'] != null;
+
+  bool get isQrTag => metadata?['qrTag'] is Map;
+
+  Map<String, dynamic>? get qrTagData {
+    final raw = metadata?['qrTag'];
+    return raw is Map ? Map<String, dynamic>.from(raw) : null;
+  }
+
+  Map<String, dynamic>? get weatherTemplateData {
+    final raw = metadata?['templateData'];
+    if (raw is Map && raw['type'] == 'weather') {
+      return Map<String, dynamic>.from(raw);
+    }
+    return null;
+  }
+
+  bool get isContactCard => metadata?['contactCard'] is Map;
+
+  Map<String, dynamic>? get contactCardData {
+    final raw = metadata?['contactCard'];
+    return raw is Map ? Map<String, dynamic>.from(raw) : null;
+  }
+
+  String get imageCacheKey =>
+      '$filePath#${metadata?['updatedAt'] ?? createdAt.millisecondsSinceEpoch}';
+
+  Uint8List? get sourceImageBytes {
+    final raw = metadata?['sourceImage'];
+    return raw is String ? base64Decode(raw) : null;
+  }
+
+  CanvasDocument? get canvasDocument {
+    final raw = metadata?['canvasDocument'];
+    if (raw is Map) {
+      return CanvasDocument.fromJson(Map<String, dynamic>.from(raw));
+    }
+    return null;
   }
 
   Future<bool> fileExists() async {

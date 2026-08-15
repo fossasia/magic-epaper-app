@@ -7,10 +7,26 @@ import 'package:magicepaperapp/image_library/widgets/dialogs/batch_delete_confir
 import 'package:magicepaperapp/image_library/widgets/dialogs/clear_all_confirmation_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/delete_confirmation_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/empty_state_widget.dart';
+import 'package:magicepaperapp/image_library/widgets/error_state_widget.dart';
 import 'package:magicepaperapp/image_library/widgets/image_grid_widget.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_preview_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/search_and_filter_widget.dart';
+import 'package:magicepaperapp/card_templates/card_template_result.dart';
+import 'package:magicepaperapp/card_templates/qr_tag_form.dart';
+import 'package:magicepaperapp/card_templates/qr_tag_model.dart';
+import 'package:magicepaperapp/card_templates/contact_card_form.dart';
+import 'package:magicepaperapp/card_templates/contact_card_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
+import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
+import 'package:magicepaperapp/native_canvas/model/canvas_element.dart';
+import 'package:magicepaperapp/provider/color_palette_provider.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/provider/image_loader.dart';
+import 'package:magicepaperapp/card_templates/weather_form.dart';
+import 'package:magicepaperapp/card_templates/weather_template_result.dart';
+import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:provider/provider.dart';
 
 class ImageLibraryScreen extends StatefulWidget {
@@ -71,7 +87,210 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
         onRename: (newName) =>
             _operationsService.renameImage(image, newName, provider),
         onTransfer: () => _operationsService.transferSingleImage(image),
+        onEdit: () => _editImage(image),
       ),
+    );
+  }
+
+  void _loadIntoImageEditor(
+    DisplayDevice epd, {
+    Map<String, dynamic>? pendingCanvasDocument,
+    Map<String, dynamic>? pendingTemplateData,
+    Map<String, dynamic>? pendingTemplateMetadata,
+    required String editingImageId,
+    int? initialFilterIndex,
+    bool initialFlipHorizontal = false,
+    bool initialFlipVertical = false,
+  }) {
+    getIt<ColorPaletteProvider>().updateColors(epd.colors);
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (_) => ImageEditor(
+          device: epd,
+          pendingCanvasDocument: pendingCanvasDocument,
+          pendingTemplateData: pendingTemplateData,
+          pendingTemplateMetadata: pendingTemplateMetadata,
+          editingImageId: editingImageId,
+          initialFilterIndex: initialFilterIndex,
+          initialFlipHorizontal: initialFlipHorizontal,
+          initialFlipVertical: initialFlipVertical,
+        ),
+      ),
+      (route) => route.isFirst,
+    );
+  }
+
+  int? _savedFilterIndex(SavedImage image) {
+    final raw = image.metadata?['filterIndex'];
+    return raw is int ? raw : null;
+  }
+
+  bool _savedFlag(SavedImage image, String key) => image.metadata?[key] == true;
+
+  Future<CanvasDocument?> _singleImageDocument(
+      SavedImage image, DisplayDevice epd) async {
+    final bytes = image.sourceImageBytes ?? await image.getImageData();
+    if (bytes == null) return null;
+    return CanvasDocument(
+      width: epd.width,
+      height: epd.height,
+      canvasColor: Colors.white,
+      elements: [
+        CanvasElement(
+          id: 'el_0',
+          kind: CanvasElementKind.image,
+          position: Offset(epd.width / 2, epd.height / 2),
+          baseSize: Size(epd.width.toDouble(), epd.height.toDouble()),
+          imageBytes: bytes,
+        ),
+      ],
+      strokes: const [],
+    );
+  }
+
+  Future<void> _editQrTag(SavedImage image) async {
+    final data = image.qrTagData;
+    if (data == null) return;
+    final epd = _operationsService.getEpdFromImage(image);
+    final result = await Navigator.of(context).push<CardTemplateResult>(
+      MaterialPageRoute(
+        builder: (_) => QrTagForm(
+          width: epd.width,
+          height: epd.height,
+          initialModel: QrTagModel.fromJson(data),
+          existingImageId: image.id,
+        ),
+      ),
+    );
+    if (result == null || !mounted) return;
+    final imgLoader = context.read<ImageLoader>();
+    await imgLoader.updateImage(
+      bytes: result.png,
+      width: epd.width,
+      height: epd.height,
+    );
+    await imgLoader.saveFinalizedImageBytes(result.png);
+    if (!mounted) return;
+    _loadIntoImageEditor(
+      epd,
+      editingImageId: image.id,
+      pendingTemplateMetadata: result.metadata,
+      initialFilterIndex: _savedFilterIndex(image),
+      initialFlipHorizontal: _savedFlag(image, 'flipHorizontal'),
+      initialFlipVertical: _savedFlag(image, 'flipVertical'),
+    );
+  }
+
+  Future<void> _editWeatherImage(
+    SavedImage image,
+    DisplayDevice epd,
+    Map<String, dynamic> weather,
+  ) async {
+    final result = await Navigator.of(context).push<WeatherTemplateResult>(
+      MaterialPageRoute(
+        builder: (_) => WeatherForm(
+          width: epd.width,
+          height: epd.height,
+          initialData: weather,
+          fromLibrary: true,
+        ),
+      ),
+    );
+    if (result == null || !mounted) return;
+    final imgLoader = context.read<ImageLoader>();
+    await imgLoader.updateImage(
+      bytes: result.png,
+      width: epd.width,
+      height: epd.height,
+    );
+    await imgLoader.saveFinalizedImageBytes(result.png);
+    if (!mounted) return;
+    _loadIntoImageEditor(
+      epd,
+      pendingTemplateData: result.data,
+      editingImageId: image.id,
+      initialFilterIndex: _savedFilterIndex(image),
+      initialFlipHorizontal: _savedFlag(image, 'flipHorizontal'),
+      initialFlipVertical: _savedFlag(image, 'flipVertical'),
+    );
+  }
+
+  Future<void> _editImage(SavedImage image) async {
+    if (image.isQrTag) {
+      await _editQrTag(image);
+      return;
+    }
+    if (image.isContactCard) {
+      await _editContactCard(image);
+      return;
+    }
+    final epd = _operationsService.getEpdFromImage(image);
+    final weather = image.weatherTemplateData;
+    if (weather != null) {
+      await _editWeatherImage(image, epd, weather);
+      return;
+    }
+    final doc = image.canvasDocument ?? await _singleImageDocument(image, epd);
+    if (doc == null || !mounted) return;
+    final result = await Navigator.of(context).push<CanvasEditorResult>(
+      MaterialPageRoute(
+        builder: (_) => NativeCanvasEditor(
+          width: doc.width,
+          height: doc.height,
+          returnDocument: true,
+          initialDocument: doc,
+        ),
+      ),
+    );
+    if (result == null || !mounted) return;
+    final imgLoader = context.read<ImageLoader>();
+    await imgLoader.updateImage(
+      bytes: result.png,
+      width: epd.width,
+      height: epd.height,
+    );
+    await imgLoader.saveFinalizedImageBytes(result.png);
+    if (!mounted) return;
+    _loadIntoImageEditor(
+      epd,
+      pendingCanvasDocument: result.document.toJson(),
+      editingImageId: image.id,
+      initialFilterIndex: _savedFilterIndex(image),
+      initialFlipHorizontal: _savedFlag(image, 'flipHorizontal'),
+      initialFlipVertical: _savedFlag(image, 'flipVertical'),
+    );
+  }
+
+  Future<void> _editContactCard(SavedImage image) async {
+    final data = image.contactCardData;
+    if (data == null) return;
+    final epd = _operationsService.getEpdFromImage(image);
+    final result = await Navigator.of(context).push<CardTemplateResult>(
+      MaterialPageRoute(
+        builder: (_) => ContactCardForm(
+          width: epd.width,
+          height: epd.height,
+          initialModel: ContactCardModel.fromJson(data),
+          existingImageId: image.id,
+        ),
+      ),
+    );
+    if (result == null || !mounted) return;
+    final imgLoader = context.read<ImageLoader>();
+    await imgLoader.updateImage(
+      bytes: result.png,
+      width: epd.width,
+      height: epd.height,
+    );
+    await imgLoader.saveFinalizedImageBytes(result.png);
+    if (!mounted) return;
+    _loadIntoImageEditor(
+      epd,
+      editingImageId: image.id,
+      pendingTemplateMetadata: result.metadata,
+      initialFilterIndex: _savedFilterIndex(image),
+      initialFlipHorizontal: _savedFlag(image, 'flipHorizontal'),
+      initialFlipVertical: _savedFlag(image, 'flipVertical'),
     );
   }
 
@@ -153,35 +372,46 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
       body: SafeArea(
         top: false,
         bottom: true,
-        child: Consumer<ImageLibraryProvider>(
-          builder: (context, provider, child) {
-            if (provider.isLoading) {
-              return const Center(
-                child: CircularProgressIndicator(color: colorAccent),
-              );
-            }
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 900),
+            child: Consumer<ImageLibraryProvider>(
+              builder: (context, provider, child) {
+                if (provider.isLoading) {
+                  return const Center(
+                      child: CircularProgressIndicator(color: colorAccent));
+                }
 
-            if (provider.savedImages.isEmpty) {
-              return const EmptyStateWidget();
-            }
+                if (provider.hasError) {
+                  return ErrorStateWidget(
+                    onRetry: () =>
+                        context.read<ImageLibraryProvider>().loadSavedImages(),
+                  );
+                }
 
-            return Column(
-              children: [
-                SearchAndFilterWidget(
-                  searchController: _searchController,
-                  provider: provider,
-                ),
-                Expanded(
-                  child: ImageGridWidget(
-                    images: provider.filteredImages,
-                    isDeleteMode: _isDeleteMode,
-                    selectedImages: _selectedImages,
-                    onImageTap: _handleImageTap,
-                  ),
-                ),
-              ],
-            );
-          },
+                if (provider.savedImages.isEmpty) {
+                  return const EmptyStateWidget();
+                }
+
+                return Column(
+                  children: [
+                    SearchAndFilterWidget(
+                      searchController: _searchController,
+                      provider: provider,
+                    ),
+                    Expanded(
+                      child: ImageGridWidget(
+                        images: provider.filteredImages,
+                        isDeleteMode: _isDeleteMode,
+                        selectedImages: _selectedImages,
+                        onImageTap: _handleImageTap,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
         ),
       ),
     );

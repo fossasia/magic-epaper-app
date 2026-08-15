@@ -3,6 +3,7 @@ import 'package:magicepaperapp/theme/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/util/orientation_util.dart';
 import 'package:magicepaperapp/util/url_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
@@ -23,6 +24,8 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return CommonScaffold(
       index: 6,
       body: SingleChildScrollView(
@@ -49,7 +52,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                     children: [
                       const SizedBox(height: Dimens.spacingXl),
                       Text(
-                        'Thank you for your interest in the FOSSASIA Badges. Currently the Magic ePaper Badge is still in prototype stage. You can order in future on FOSSASIA.com. In the meantime please check out our prototypes on the Git repository.',
+                        appLocalizations.buyBadgeDescription,
                         textAlign: TextAlign.justify,
                         style: GoogleFonts.sora(
                           wordSpacing: 3,
@@ -83,7 +86,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                       padding: const EdgeInsets.only(
                           left: Dimens.spacingM, top: Dimens.spacingM),
                       child: Text(
-                        'Links',
+                        appLocalizations.links,
                         style: GoogleFonts.sora(
                           fontSize: Dimens.fontSizeL,
                           fontWeight: FontWeight.w500,
@@ -98,7 +101,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                         color: Colors.red,
                       ),
                       title: Text(
-                        'FOSSASIA Website',
+                        appLocalizations.fossasiaWebsite,
                         style: GoogleFonts.sora(
                           fontSize: Dimens.fontSizeL,
                           fontWeight: FontWeight.w500,
@@ -106,7 +109,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                         ),
                       ),
                       subtitle: Text(
-                        'Visit fossasia.com for future badge orders',
+                        appLocalizations.visitFossasiaForFutureBadgeOrders,
                         style: GoogleFonts.sora(
                           fontSize: Dimens.fontSizeS,
                           fontWeight: FontWeight.w500,
@@ -123,7 +126,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                         fit: BoxFit.contain,
                       ),
                       title: Text(
-                        'Hardware Repository',
+                        appLocalizations.hardwareRepository,
                         style: GoogleFonts.sora(
                           fontSize: Dimens.fontSizeL,
                           fontWeight: FontWeight.w500,
@@ -131,7 +134,8 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
                         ),
                       ),
                       subtitle: Text(
-                        'Check out our badge prototypes and hardware designs',
+                        appLocalizations
+                            .checkOutBadgePrototypesAndHardwareDesigns,
                         style: GoogleFonts.sora(
                           fontSize: Dimens.fontSizeS,
                           fontWeight: FontWeight.w500,
@@ -149,7 +153,7 @@ class _BuyBadgeScreenState extends State<BuyBadgeScreen> {
           ),
         ),
       ),
-      title: 'Get Badge',
+      title: appLocalizations.getBadge,
     );
   }
 }
