@@ -25,7 +25,7 @@ dependencies:
   image_picker: ^1.2.1
   crop_your_image: ^2.0.0
   app_settings: ^7.0.0
-  fluttertoast: ^9.0.0
+  fluttertoast: ^10.0.0
   file_saver: ^0.3.1
   url_launcher: ^6.3.1
   google_fonts: ^7.0.0
