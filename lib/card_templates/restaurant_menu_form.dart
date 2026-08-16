@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:magicepaperapp/card_templates/menu_template_result.dart';
 import 'package:magicepaperapp/card_templates/restaurant_menu_badge.dart';
 import 'package:magicepaperapp/card_templates/restaurant_menu_card_widget.dart';
@@ -18,6 +19,14 @@ AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 const List<String> _currencyOptions = ['\$', '€', '£', '₹', '¥'];
 const int _maxItems = 5;
+
+const List<({String label, String family})> _fontOptions = [
+  (label: 'Classic', family: ''),
+  (label: 'Playfair', family: 'Playfair Display'),
+  (label: 'Lobster', family: 'Lobster'),
+  (label: 'Oswald', family: 'Oswald'),
+  (label: 'Merriweather', family: 'Merriweather'),
+];
 
 class _ItemControllers {
   final TextEditingController name;
@@ -81,10 +90,10 @@ class _RestaurantMenuFormState extends State<RestaurantMenuForm> {
   late final TextEditingController _titleController;
   late final TextEditingController _subtitleController;
   late final TextEditingController _dateController;
-  late final TextEditingController _footerController;
   late final TextEditingController _menuUrlController;
   late String _currency;
   late MenuBoardStyle _style;
+  late String _fontFamily;
   final List<_ItemControllers> _items = <_ItemControllers>[];
   bool _isGenerating = false;
 
@@ -97,10 +106,10 @@ class _RestaurantMenuFormState extends State<RestaurantMenuForm> {
       _titleController = TextEditingController(text: model.title);
       _subtitleController = TextEditingController(text: model.subtitle);
       _dateController = TextEditingController(text: model.dateLabel);
-      _footerController = TextEditingController(text: model.footer);
       _menuUrlController = TextEditingController(text: model.menuUrl);
       _currency = model.currency;
       _style = model.style;
+      _fontFamily = model.fontFamily;
       for (final item in model.items) {
         _items.add(_ItemControllers(
           name: item.name,
@@ -117,12 +126,13 @@ class _RestaurantMenuFormState extends State<RestaurantMenuForm> {
           TextEditingController(text: appLocalizations.menuSampleTitle);
       _subtitleController =
           TextEditingController(text: appLocalizations.menuSampleSubtitle);
-      _dateController = TextEditingController(text: _todayLabel());
-      _footerController = TextEditingController();
+      _dateController =
+          TextEditingController(text: _formatDate(DateTime.now()));
       _menuUrlController =
           TextEditingController(text: appLocalizations.menuSampleUrl);
       _currency = '₹';
       _style = MenuBoardStyle.list;
+      _fontFamily = '';
       _items.addAll([
         _ItemControllers(
           name: appLocalizations.menuSampleItem1Name,
@@ -145,7 +155,7 @@ class _RestaurantMenuFormState extends State<RestaurantMenuForm> {
     _attachListeners();
   }
 
-  String _todayLabel() {
+  String _formatDate(DateTime date) {
     const months = [
       'Jan',
       'Feb',
@@ -160,15 +170,25 @@ class _RestaurantMenuFormState extends State<RestaurantMenuForm> {
       'Nov',
       'Dec',
     ];
+    return '${date.day} ${months[date.month - 1]} ${date.year}';
+  }
+
+  Future<void> _pickDate() async {
     final now = DateTime.now();
-    return '${appLocalizations.menuToday} · ${now.day} ${months[now.month - 1]}';
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: DateTime(now.year - 1),
+      lastDate: DateTime(now.year + 5),
+    );
+    if (!mounted || picked == null) return;
+    _dateController.text = _formatDate(picked);
   }
 
   void _attachListeners() {
     _titleController.addListener(_onChanged);
     _subtitleController.addListener(_onChanged);
     _dateController.addListener(_onChanged);
-    _footerController.addListener(_onChanged);
     _menuUrlController.addListener(_onChanged);
     for (final item in _items) {
       item.name.addListener(_onChanged);
@@ -185,7 +205,6 @@ class _RestaurantMenuFormState extends State<RestaurantMenuForm> {
     _titleController.dispose();
     _subtitleController.dispose();
     _dateController.dispose();
-    _footerController.dispose();
     _menuUrlController.dispose();
     for (final item in _items) {
       item.dispose();
@@ -199,9 +218,9 @@ class _RestaurantMenuFormState extends State<RestaurantMenuForm> {
       subtitle: _subtitleController.text.trim(),
       dateLabel: _dateController.text.trim(),
       currency: _currency,
-      footer: _footerController.text.trim(),
       style: _style,
       menuUrl: _menuUrlController.text.trim(),
+      fontFamily: _fontFamily,
       items: _items.map((c) => c.toItem()).toList(),
     );
   }
@@ -350,6 +369,8 @@ class _RestaurantMenuFormState extends State<RestaurantMenuForm> {
               const SizedBox(height: Dimens.spacingL),
               _buildHeaderCard(),
               const SizedBox(height: Dimens.spacingL),
+              _buildFontCard(),
+              const SizedBox(height: Dimens.spacingL),
               if (_style == MenuBoardStyle.scanToView)
                 _buildLinkCard()
               else
@@ -400,6 +421,66 @@ class _RestaurantMenuFormState extends State<RestaurantMenuForm> {
     setState(() => _style = style);
   }
 
+  Widget _buildFontCard() {
+    return _sectionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _sectionTitle(
+              Icons.font_download_outlined, appLocalizations.menuFontSection),
+          const SizedBox(height: Dimens.spacingM),
+          DropdownButtonFormField<String>(
+            initialValue: _fontFamily,
+            isExpanded: true,
+            icon: const Icon(Icons.arrow_drop_down, color: colorAccent),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: grey50,
+              prefixIcon:
+                  const Icon(Icons.text_fields, color: colorAccent, size: 20),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: Dimens.spacingM,
+                vertical: 4,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(Dimens.radiusM),
+                borderSide: BorderSide(color: grey300),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(Dimens.radiusM),
+                borderSide: BorderSide(color: grey300, width: 1.5),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(Dimens.radiusM),
+                borderSide: const BorderSide(color: colorPrimary, width: 2),
+              ),
+            ),
+            items: [
+              for (final option in _fontOptions)
+                DropdownMenuItem<String>(
+                  value: option.family,
+                  child: Text(
+                    option.label,
+                    style: option.family.isEmpty
+                        ? const TextStyle(
+                            fontSize: Dimens.fontSizeL, color: colorBlack)
+                        : GoogleFonts.getFont(
+                            option.family,
+                            textStyle: const TextStyle(
+                                fontSize: Dimens.fontSizeL, color: colorBlack),
+                          ),
+                  ),
+                ),
+            ],
+            onChanged: _isGenerating
+                ? null
+                : (value) => setState(() => _fontFamily = value ?? ''),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildStyleCard() {
     return _sectionCard(
       child: Column(
@@ -422,7 +503,7 @@ class _RestaurantMenuFormState extends State<RestaurantMenuForm> {
               Expanded(
                 child: _styleOption(
                   style: MenuBoardStyle.list,
-                  icon: Icons.list_alt,
+                  icon: Icons.star_border,
                   label: appLocalizations.menuStyleList,
                 ),
               ),
@@ -541,66 +622,50 @@ class _RestaurantMenuFormState extends State<RestaurantMenuForm> {
             hint: appLocalizations.menuSubtitleHint,
             icon: Icons.subtitles_outlined,
           ),
-          const SizedBox(height: Dimens.spacingM),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: _textField(
-                  controller: _dateController,
-                  label: appLocalizations.menuDateLabel,
-                  hint: appLocalizations.menuDateHint,
-                  icon: Icons.event_outlined,
-                ),
-              ),
-              const SizedBox(width: Dimens.spacingS),
-              TextButton.icon(
-                onPressed: _isGenerating
-                    ? null
-                    : () => _dateController.text = _todayLabel(),
-                style: TextButton.styleFrom(foregroundColor: colorPrimary),
-                icon: const Icon(Icons.today, size: 18),
-                label: Text(appLocalizations.menuUseToday),
-              ),
-            ],
-          ),
-          const SizedBox(height: Dimens.spacingL),
-          Text(
-            appLocalizations.menuCurrencyLabel,
-            style: TextStyle(
-              fontSize: Dimens.fontSizeM,
-              fontWeight: FontWeight.w600,
-              color: colorBlack.withValues(alpha: 0.8),
-            ),
-          ),
-          const SizedBox(height: Dimens.spacingS),
-          Wrap(
-            spacing: Dimens.spacingS,
-            children: [
-              for (final option in _currencyOptions)
-                ChoiceChip(
-                  label: Text(option),
-                  selected: _currency == option,
-                  showCheckmark: false,
-                  onSelected: _isGenerating
-                      ? null
-                      : (_) => setState(() => _currency = option),
-                  selectedColor: colorPrimary,
-                  labelStyle: TextStyle(
-                    color: _currency == option ? colorWhite : colorBlack,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  backgroundColor: grey50,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(Dimens.radiusL),
-                    side: BorderSide(
-                        color: _currency == option ? colorPrimary : grey300),
-                  ),
-                ),
-            ],
-          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildCurrencySelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          appLocalizations.menuCurrencyLabel,
+          style: TextStyle(
+            fontSize: Dimens.fontSizeM,
+            fontWeight: FontWeight.w600,
+            color: colorBlack.withValues(alpha: 0.8),
+          ),
+        ),
+        const SizedBox(height: Dimens.spacingS),
+        Wrap(
+          spacing: Dimens.spacingS,
+          children: [
+            for (final option in _currencyOptions)
+              ChoiceChip(
+                label: Text(option),
+                selected: _currency == option,
+                showCheckmark: false,
+                onSelected: _isGenerating
+                    ? null
+                    : (_) => setState(() => _currency = option),
+                selectedColor: colorPrimary,
+                labelStyle: TextStyle(
+                  color: _currency == option ? colorWhite : colorBlack,
+                  fontWeight: FontWeight.w700,
+                ),
+                backgroundColor: grey50,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(Dimens.radiusL),
+                  side: BorderSide(
+                      color: _currency == option ? colorPrimary : grey300),
+                ),
+              ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -625,24 +690,18 @@ class _RestaurantMenuFormState extends State<RestaurantMenuForm> {
               ),
             ],
           ),
-          const SizedBox(height: Dimens.spacingXs),
-          Row(
-            children: [
-              Icon(Icons.lightbulb_outline, size: 14, color: grey600),
-              const SizedBox(width: Dimens.spacingXs),
-              Expanded(
-                child: Text(
-                  appLocalizations.menuItemsHint,
-                  style: TextStyle(
-                    fontSize: Dimens.fontSizeXs,
-                    color: grey600,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-              ),
-            ],
-          ),
           const SizedBox(height: Dimens.spacingM),
+          _textField(
+            controller: _dateController,
+            label: appLocalizations.menuDateLabel,
+            hint: appLocalizations.menuDateHint,
+            icon: Icons.event_outlined,
+            readOnly: true,
+            onTap: _isGenerating ? null : _pickDate,
+          ),
+          const SizedBox(height: Dimens.spacingL),
+          _buildCurrencySelector(),
+          const SizedBox(height: Dimens.spacingL),
           for (var i = 0; i < _items.length; i++) _buildItemEditor(i),
           const SizedBox(height: Dimens.spacingS),
           Align(
@@ -872,10 +931,14 @@ class _RestaurantMenuFormState extends State<RestaurantMenuForm> {
     bool dense = false,
     TextInputType? keyboardType,
     String? prefixText,
+    bool readOnly = false,
+    VoidCallback? onTap,
   }) {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
+      readOnly: readOnly,
+      onTap: onTap,
       cursorColor: colorPrimary,
       style: const TextStyle(fontSize: Dimens.fontSizeM, color: colorBlack),
       decoration: InputDecoration(

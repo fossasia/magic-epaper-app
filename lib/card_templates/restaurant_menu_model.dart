@@ -146,6 +146,7 @@ class RestaurantMenuModel {
   final String footer;
   final MenuBoardStyle style;
   final String menuUrl;
+  final String fontFamily;
 
   const RestaurantMenuModel({
     required this.title,
@@ -156,6 +157,7 @@ class RestaurantMenuModel {
     this.footer = '',
     this.style = MenuBoardStyle.list,
     this.menuUrl = '',
+    this.fontFamily = '',
   });
 
   List<MenuItem> get visibleItems =>
@@ -192,6 +194,7 @@ class RestaurantMenuModel {
         'footer': footer,
         'style': style.name,
         'menuUrl': menuUrl,
+        'fontFamily': fontFamily,
         'items': items.map((i) => i.toJson()).toList(),
       };
 
@@ -213,6 +216,7 @@ class RestaurantMenuModel {
       footer: json['footer'] as String? ?? '',
       style: menuBoardStyleFromName(json['style'] as String? ?? 'list'),
       menuUrl: json['menuUrl'] as String? ?? '',
+      fontFamily: json['fontFamily'] as String? ?? '',
       items: items,
     );
   }

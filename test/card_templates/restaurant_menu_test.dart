@@ -164,6 +164,19 @@ void main() {
           RestaurantMenuModel(title: '', menuUrl: 'https://x.example.com');
       expect(model.hasAnyData, isTrue);
     });
+
+    test('round-trips fontFamily', () {
+      const model =
+          RestaurantMenuModel(title: 'M', fontFamily: 'Playfair Display');
+      final restored = RestaurantMenuModel.fromJson(model.toJson());
+      expect(restored.fontFamily, 'Playfair Display');
+    });
+
+    test('fontFamily defaults to empty', () {
+      const model = RestaurantMenuModel(title: 'M');
+      expect(model.fontFamily, '');
+      expect(RestaurantMenuModel.fromJson({'title': 'M'}).fontFamily, '');
+    });
   });
 
   group('RestaurantMenuBadge renders without overflow', () {

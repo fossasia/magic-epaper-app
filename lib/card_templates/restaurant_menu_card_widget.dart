@@ -41,14 +41,16 @@ class RestaurantMenuCardWidget extends StatelessWidget {
           clipBehavior: Clip.antiAlias,
           child: AspectRatio(
             aspectRatio: width / height,
-            child: menu.visibleItems.isEmpty
-                ? _placeholder()
-                : RestaurantMenuBadge(menu: menu),
+            child: _isEmpty ? _placeholder() : RestaurantMenuBadge(menu: menu),
           ),
         ),
       ),
     );
   }
+
+  bool get _isEmpty => menu.style == MenuBoardStyle.scanToView
+      ? menu.title.trim().isEmpty && menu.menuUrl.trim().isEmpty
+      : menu.visibleItems.isEmpty;
 
   Widget _placeholder() {
     return Container(
