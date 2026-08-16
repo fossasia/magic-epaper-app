@@ -28,7 +28,7 @@ dependencies:
   fluttertoast: ^10.0.0
   file_saver: ^0.4.0
   url_launcher: ^6.3.1
-  google_fonts: ^7.0.0
+  google_fonts: ^8.2.1
   file_picker: ^10.3.8
   mobile_scanner: ^7.4.0
   barcode_widget: ^2.0.4
