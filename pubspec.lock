@@ -339,10 +339,10 @@ packages:
     dependency: "direct main"
     description:
       name: google_fonts
-      sha256: eefe5ee217f331627d8bbcf01f91b21c730bf66e225d6dc8a148370b0819168d
+      sha256: e3cb3ee6b47fd2472c23de6da5744796a4da195137759ddb3fbcc9467b7b3c7d
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.0"
+    version: "8.2.1"
   http:
     dependency: "direct main"
     description:
