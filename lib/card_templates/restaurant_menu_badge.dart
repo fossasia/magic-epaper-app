@@ -30,18 +30,18 @@ class RestaurantMenuBadge extends StatelessWidget {
           final pad = minSide * 0.05;
           final items = menu.visibleItems;
 
-        return Container(
-          width: w,
-          height: h,
-          color: colorWhite,
-          padding: EdgeInsets.symmetric(
-            horizontal: pad,
-            vertical: pad * 0.8,
-          ),
-          child: menu.style == MenuBoardStyle.scanToView
-              ? _scanBoard(minSide)
-              : _listBoard(h, items, minSide),
-        );
+          return Container(
+            width: w,
+            height: h,
+            color: colorWhite,
+            padding: EdgeInsets.symmetric(
+              horizontal: pad,
+              vertical: pad * 0.8,
+            ),
+            child: menu.style == MenuBoardStyle.scanToView
+                ? _scanBoard(minSide)
+                : _listBoard(h, items, minSide),
+          );
         },
       ),
     );
