@@ -39,29 +39,34 @@ class _ImageRenameDialogState extends State<ImageRenameDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
-      child: Container(
-        padding: const EdgeInsets.all(Dimens.spacingXxl),
-        decoration: BoxDecoration(
-          color: colorWhite,
-          borderRadius: BorderRadius.circular(Dimens.radiusRound),
-          boxShadow: [
-            BoxShadow(
-              color: colorBlack.withValues(alpha: 0.1),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: Dimens.dialogMaxWidth,
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            const SizedBox(height: Dimens.spacingXxl),
-            _buildTextFieldSection(context),
-            const SizedBox(height: Dimens.spacingXxxl),
-            _buildActionButtons(context),
-          ],
+        child: Container(
+          padding: const EdgeInsets.all(Dimens.spacingXxl),
+          decoration: BoxDecoration(
+            color: colorWhite,
+            borderRadius: BorderRadius.circular(Dimens.radiusRound),
+            boxShadow: [
+              BoxShadow(
+                color: colorBlack.withValues(alpha: 0.1),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(),
+              const SizedBox(height: Dimens.spacingXxl),
+              _buildTextFieldSection(context),
+              const SizedBox(height: Dimens.spacingXxxl),
+              _buildActionButtons(context),
+            ],
+          ),
         ),
       ),
     );
