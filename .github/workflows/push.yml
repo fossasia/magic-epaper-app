@@ -99,13 +99,13 @@ jobs:
           VERSION_CODE: ${{needs.common.outputs.VERSION_CODE}}
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: android-apk
           path: build/app/outputs/flutter-apk
 
       - name: Upload AAB Release
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: android-aab
           path: build/app/outputs/bundle
@@ -184,7 +184,7 @@ jobs:
           VERSION_CODE: ${{needs.common.outputs.VERSION_CODE}}
 
       - name: Upload Web App Archive
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: web-artifact
           path: build/magic-epaper-web-app-${{ needs.common.outputs.VERSION_NAME }}.zip
@@ -202,7 +202,7 @@ jobs:
           VERSION_CODE: ${{needs.common.outputs.VERSION_CODE}}
 
       - name: Upload Windows Installer
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-artifact
           path: build/windows/x64/installer/Release/*.exe
@@ -220,7 +220,7 @@ jobs:
           VERSION_CODE: ${{needs.common.outputs.VERSION_CODE}}
 
       - name: Upload Linux Packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: linux-artifact
           path: |
@@ -244,7 +244,7 @@ jobs:
           VERSION_CODE: ${{needs.common.outputs.VERSION_CODE}}
 
       - name: Upload macOS DMG
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: macos-artifact
           path: "*.dmg"

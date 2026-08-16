@@ -19,14 +19,14 @@ dependencies:
   provider: ^6.1.5+1
   shared_preferences: ^2.5.3
   # nfc_manager: ^3.5.0
-  flutter_nfc_kit: ^3.6.0
+  flutter_nfc_kit: ^3.6.2
   convert: ^3.1.2
   image: ^4.7.2
   image_picker: ^1.2.1
   crop_your_image: ^2.0.0
   app_settings: ^7.0.0
-  fluttertoast: ^9.0.0
-  file_saver: ^0.3.1
+  fluttertoast: ^10.0.0
+  file_saver: ^0.4.0
   url_launcher: ^6.3.1
   google_fonts: ^7.0.0
   file_picker: ^10.3.8
@@ -34,8 +34,8 @@ dependencies:
   barcode_widget: ^2.0.4
   currency_picker: ^2.0.21
   intl: ^0.20.2
-  path_provider: ^2.0.15
-  get_it: ^9.2.0
+  path_provider: ^2.1.6
+  get_it: ^9.2.1
   path: ^1.9.1
   ndef: ^0.4.0
   logger: ^2.4.0
