@@ -22,7 +22,7 @@ jobs:
     outputs:
       is_code: ${{ steps.check.outputs.is_code }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -39,7 +39,7 @@ jobs:
     needs: changes
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: needs.changes.outputs.is_code == 'true'
 
       - name: Common Workflow
@@ -67,7 +67,7 @@ jobs:
     needs: [changes, common]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: needs.changes.outputs.is_code == 'true'
 
       - name: Android Workflow
@@ -85,11 +85,11 @@ jobs:
     steps:
       - name: Set up Xcode
         if: needs.changes.outputs.is_code == 'true'
-        uses: maxim-lobanov/setup-xcode@v1.6.0
+        uses: maxim-lobanov/setup-xcode@v1.7.0
         with:
           xcode-version: latest-stable
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: needs.changes.outputs.is_code == 'true'
 
       - name: iOS Workflow
@@ -105,7 +105,7 @@ jobs:
     needs: [changes, common]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: needs.changes.outputs.is_code == 'true'
 
       - name: Web App Workflow
@@ -121,7 +121,7 @@ jobs:
     needs: [changes, common]
     runs-on: ${{ needs.changes.outputs.is_code == 'true' && 'windows-latest' || 'ubuntu-latest' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: needs.changes.outputs.is_code == 'true'
 
       - name: Windows Workflow
@@ -137,7 +137,7 @@ jobs:
     needs: [changes, common]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: needs.changes.outputs.is_code == 'true'
 
       - name: Linux Workflow
@@ -155,11 +155,11 @@ jobs:
     steps:
       - name: Set up Xcode
         if: needs.changes.outputs.is_code == 'true'
-        uses: maxim-lobanov/setup-xcode@v1.6.0
+        uses: maxim-lobanov/setup-xcode@v1.7.0
         with:
           xcode-version: latest-stable
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: needs.changes.outputs.is_code == 'true'
 
       - name: macOS Workflow
@@ -176,7 +176,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: needs.changes.outputs.is_code == 'true'
 
       - name: Android Screenshot Workflow
@@ -198,11 +198,11 @@ jobs:
     steps:
       - name: Set up Xcode
         if: needs.changes.outputs.is_code == 'true'
-        uses: maxim-lobanov/setup-xcode@v1.6.0
+        uses: maxim-lobanov/setup-xcode@v1.7.0
         with:
           xcode-version: latest-stable
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: needs.changes.outputs.is_code == 'true'
 
       - name: iPhone Screenshot Workflow
@@ -223,11 +223,11 @@ jobs:
     steps:
       - name: Set up Xcode
         if: needs.changes.outputs.is_code == 'true'
-        uses: maxim-lobanov/setup-xcode@v1.6.0
+        uses: maxim-lobanov/setup-xcode@v1.7.0
         with:
           xcode-version: latest-stable
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: needs.changes.outputs.is_code == 'true'
 
       - name: iPad Screenshot Workflow

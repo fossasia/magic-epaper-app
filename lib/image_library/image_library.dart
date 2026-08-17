@@ -3,7 +3,6 @@ import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/image_library/services/image_operations_service.dart';
 import 'package:magicepaperapp/image_library/widgets/app_bar_widget.dart';
-import 'package:magicepaperapp/image_library/widgets/dialogs/batch_delete_confirmation_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/clear_all_confirmation_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/delete_confirmation_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/empty_state_widget.dart';
@@ -339,7 +338,7 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => DeleteConfirmationDialog(
+      builder: (context) => SharedDeleteConfirmationDialog.single(
         image: image,
         onConfirm: () => _operationsService.deleteImage(image, provider),
       ),
@@ -355,7 +354,7 @@ class _ImageLibraryScreenState extends State<ImageLibraryScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => BatchDeleteConfirmationDialog(
+      builder: (context) => SharedDeleteConfirmationDialog.batch(
         selectedImages: selectedImageObjects,
         onConfirm: () => _performBatchDelete(selectedImageObjects, provider),
       ),
