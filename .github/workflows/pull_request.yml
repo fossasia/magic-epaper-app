@@ -85,7 +85,7 @@ jobs:
     steps:
       - name: Set up Xcode
         if: needs.changes.outputs.is_code == 'true'
-        uses: maxim-lobanov/setup-xcode@v1.6.0
+        uses: maxim-lobanov/setup-xcode@v1.7.0
         with:
           xcode-version: latest-stable
 
@@ -155,7 +155,7 @@ jobs:
     steps:
       - name: Set up Xcode
         if: needs.changes.outputs.is_code == 'true'
-        uses: maxim-lobanov/setup-xcode@v1.6.0
+        uses: maxim-lobanov/setup-xcode@v1.7.0
         with:
           xcode-version: latest-stable
 
@@ -198,7 +198,7 @@ jobs:
     steps:
       - name: Set up Xcode
         if: needs.changes.outputs.is_code == 'true'
-        uses: maxim-lobanov/setup-xcode@v1.6.0
+        uses: maxim-lobanov/setup-xcode@v1.7.0
         with:
           xcode-version: latest-stable
 
@@ -223,7 +223,7 @@ jobs:
     steps:
       - name: Set up Xcode
         if: needs.changes.outputs.is_code == 'true'
-        uses: maxim-lobanov/setup-xcode@v1.6.0
+        uses: maxim-lobanov/setup-xcode@v1.7.0
         with:
           xcode-version: latest-stable
 
