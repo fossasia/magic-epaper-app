@@ -12,6 +12,7 @@ import 'package:magicepaperapp/util/magic_epaper_firmware.dart';
 import 'package:magicepaperapp/util/nfc_settings_launcher.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/ndef_screen/services/nfc_availability_service.dart';
 import 'app_logger.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
@@ -109,31 +110,33 @@ class Protocol {
     return chunks;
   }
 
+  Future<void> ensureNfcAvailable() async {
+    final availability = await NFCAvailabilityService.checkAvailability();
+
+    switch (availability) {
+      case NFCAvailability.available:
+        return;
+
+      case NFCAvailability.disabled:
+        if (Platform.isAndroid) {
+          await NFCSettingsLauncher.openNFCSettings();
+        } else if (Platform.isIOS) {
+          await AppSettings.openAppSettings();
+        }
+        throw appLocalizations.nfcIsDisabledPleaseEnableIt;
+
+      case NFCAvailability.not_supported:
+        throw appLocalizations.thisDeviceDoesNotSupportNfc;
+    }
+  }
+
   Future<void> writeImages(
     img.Image image, {
     ProgressCallback? onProgress,
     TagDetectedCallback? onTagDetected,
     Waveform? waveform,
   }) async {
-    var availability = await FlutterNfcKit.nfcAvailability;
-    switch (availability) {
-      case NFCAvailability.available:
-        break;
-      case NFCAvailability.disabled:
-        Fluttertoast.showToast(
-            msg: appLocalizations.nfcIsDisabledPleaseEnableIt);
-        if (Platform.isAndroid) {
-          await NFCSettingsLauncher.openNFCSettings();
-        } else if (Platform.isIOS) {
-          await AppSettings.openAppSettings();
-        }
-        return;
-      case NFCAvailability.not_supported:
-        Fluttertoast.showToast(
-            msg: appLocalizations.thisDeviceDoesNotSupportNfc);
-        return;
-    }
-
+    await ensureNfcAvailable();
     onProgress?.call(0.0, appLocalizations.waitingForNfcTag);
     Fluttertoast.showToast(
         msg: appLocalizations.bringPhoneNearMagicEpaperHardware);
