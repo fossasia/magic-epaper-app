@@ -22,7 +22,7 @@ dependencies:
   flutter_nfc_kit: ^3.6.2
   convert: ^3.1.2
   image: ^4.7.2
-  image_picker: ^1.2.1
+  image_picker: ^1.2.3
   crop_your_image: ^2.0.0
   app_settings: ^8.0.3
   fluttertoast: ^10.0.0
