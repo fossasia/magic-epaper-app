@@ -32,7 +32,7 @@ jobs:
       VERSION_CODE: ${{ steps.flutter-version.outputs.VERSION_CODE }}
     steps:
       - name: Checkout main
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Common Workflow
         uses: ./.github/actions/common
@@ -79,7 +79,7 @@ jobs:
     needs: common
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Prepare Build Keys
         if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
@@ -133,7 +133,7 @@ jobs:
         with:
           xcode-version: latest-stable
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Prepare Build Keys
         if: ${{ github.repository == 'fossasia/magic-epaper-app' }}
@@ -176,7 +176,7 @@ jobs:
     needs: common
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Web App Workflow
         uses: ./.github/actions/web
         with:
@@ -194,7 +194,7 @@ jobs:
     needs: common
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Windows Workflow
         uses: ./.github/actions/windows
         with:
@@ -212,7 +212,7 @@ jobs:
     needs: common
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Linux Workflow
         uses: ./.github/actions/linux
         with:
@@ -236,7 +236,7 @@ jobs:
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
           xcode-version: latest-stable
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: macOS Workflow
         uses: ./.github/actions/macos
         with:
@@ -258,7 +258,7 @@ jobs:
       group: upload-to-app-branch
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Download all artifacts
         uses: actions/download-artifact@v8
@@ -316,7 +316,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Run Release Drafter
         id: run-release-drafter
@@ -338,7 +338,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Android Screenshot Workflow
         uses: ./.github/actions/screenshot-android
@@ -356,7 +356,7 @@ jobs:
         with:
           xcode-version: latest-stable
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: iPhone Screenshot Workflow
         uses: ./.github/actions/screenshot-iphone
@@ -373,7 +373,7 @@ jobs:
         with:
           xcode-version: latest-stable
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: iPad Screenshot Workflow
         uses: ./.github/actions/screenshot-ipad
