@@ -49,7 +49,7 @@ class PhotoResolver {
     if (!meta.contains('base64')) return null;
     try {
       final bytes = base64.decode(uri.substring(comma + 1));
-      return _writeTemp(bytes, 'embed');
+      return await _writeTemp(bytes, 'embed');
     } catch (_) {
       return null;
     }
@@ -66,7 +66,7 @@ class PhotoResolver {
       await for (final chunk in response) {
         chunks.addAll(chunk);
       }
-      return _writeTemp(Uint8List.fromList(chunks), 'url');
+      return await _writeTemp(Uint8List.fromList(chunks), 'url');
     } catch (_) {
       return null;
     } finally {
