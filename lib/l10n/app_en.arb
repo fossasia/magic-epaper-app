@@ -305,6 +305,7 @@
   "tapBelowAndHold": "Tap below and hold your phone near the display.",
   "startFlashing": "Start Flashing",
   "flashing": "Flashing...",
+  "finishingRefresh": "Finishing, refreshing display...",
   "keepPhoneStill": "Keep your phone still.",
   "success": "Success!",
   "transferCompleteMessage": "Transfer complete!",
