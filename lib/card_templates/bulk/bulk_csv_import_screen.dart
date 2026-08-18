@@ -105,16 +105,14 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
   // ---------- CSV + photos ----------
 
   Future<void> _pickCsv() async {
-    final result = await FilePicker.platform.pickFiles(
+    final file = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: const ['csv'],
-      withData: true,
     );
-    if (result == null || result.files.isEmpty) return;
-    final file = result.files.single;
+    if (file == null) return;
     String content;
-    if (file.bytes != null) {
-      content = utf8.decode(file.bytes!, allowMalformed: true);
+    if (await file.length() > 0) {
+      content = utf8.decode(await file.readAsBytes(), allowMalformed: true);
     } else if (file.path != null) {
       content = await File(file.path!).readAsString();
     } else {
@@ -246,13 +244,12 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
       value.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
 
   Future<void> _pickPhotosInOrder() async {
-    final result = await FilePicker.platform.pickFiles(
+    final files = await FilePicker.pickFiles(
       type: FileType.image,
-      allowMultiple: true,
     );
-    if (result == null) return;
+    if (files.isEmpty) return;
     var row = 0;
-    for (final f in result.files) {
+    for (final f in files) {
       if (f.path == null) continue;
       if (row >= _dataRows.length) break;
       _rowPhotos[row] = File(f.path!);
@@ -1428,9 +1425,9 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
                         children: [
                           OutlinedButton.icon(
                             onPressed: () async {
-                              final result = await FilePicker.platform
-                                  .pickFiles(type: FileType.image);
-                              final path = result?.files.single.path;
+                              final file = await FilePicker.pickFile(
+                                  type: FileType.image);
+                              final path = file?.path;
                               if (path != null) {
                                 setSheet(() {
                                   photo = File(path);
