@@ -38,7 +38,7 @@ dependencies:
   get_it: ^9.2.1
   path: ^1.9.1
   ndef: ^0.4.0
-  logger: ^2.4.0
+  logger: ^2.7.0
   http: ^1.2.2
   ffi: ^2.2.0
   rust_lib_magicepaperapp:
