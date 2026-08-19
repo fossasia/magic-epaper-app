@@ -30,28 +30,40 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
       iconTheme: const IconThemeData(color: colorWhite),
       backgroundColor: colorAccent,
       elevation: 0,
-      title: Text(
-        isDeleteMode
-            ? appLocalizations.selectImagesToDelete
-            : appLocalizations.imageLibrary,
-        style: const TextStyle(color: colorWhite, fontWeight: FontWeight.bold),
+      titleSpacing: 0,
+      title: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: AlignmentDirectional.centerStart,
+        child: Text(
+          isDeleteMode
+              ? appLocalizations.selectImagesToDelete
+              : appLocalizations.imageLibrary,
+          maxLines: 1,
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
       actions: [
         if (isDeleteMode) ...[
           if (selectedCount > 0)
             Padding(
-              padding: const EdgeInsets.only(right: Dimens.spacingS),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimens.spacingS, vertical: Dimens.spacingSm),
               child: TextButton(
                 onPressed: onDeletePressed,
                 style: TextButton.styleFrom(
                   backgroundColor: colorAccent,
-                  foregroundColor: colorWhite,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(Dimens.radiusM),
-                    side: const BorderSide(color: colorWhite, width: 1),
+                  foregroundColor: Colors.white,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  minimumSize: Size.zero,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 18, vertical: Dimens.spacingMd),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero,
+                    side: BorderSide(color: Colors.white, width: 1),
                   ),
                 ),
-                child: Text('${appLocalizations.delete} ($selectedCount)'),
+                child: Text(appLocalizations.deleteCount(selectedCount)),
               ),
             ),
           IconButton(

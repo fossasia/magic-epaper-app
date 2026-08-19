@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
@@ -146,23 +147,50 @@ class ImageOperationsService {
     List<ImageProcessingMethod> processingMethods,
     bool flipHorizontal,
     bool flipVertical,
-    String epdModelId,
-  ) async {
+    String epdModelId, {
+    int? deviceWidth,
+    int? deviceHeight,
+    List<Color>? deviceColors,
+    Map<String, dynamic>? canvasDocument,
+    Map<String, dynamic>? templateData,
+    Uint8List? sourceImage,
+    String? existingImageId,
+    Map<String, dynamic>? extraMetadata,
+  }) async {
     try {
       _showSaveLoadingSnackBar();
 
-      await provider.saveImage(
-        name: imageName,
-        imageData: imageData,
-        source: currentImageSource,
-        metadata: {
-          'filter':
-              getFilterNameByIndex(selectedFilterIndex, processingMethods),
-          'flipHorizontal': flipHorizontal,
-          'flipVertical': flipVertical,
-          'epdModel': epdModelId,
-        },
-      );
+      final metadata = <String, dynamic>{
+        'filter': getFilterNameByIndex(selectedFilterIndex, processingMethods),
+        'filterIndex': selectedFilterIndex,
+        'flipHorizontal': flipHorizontal,
+        'flipVertical': flipVertical,
+        'epdModel': epdModelId,
+        if (deviceWidth != null) 'epdWidth': deviceWidth,
+        if (deviceHeight != null) 'epdHeight': deviceHeight,
+        if (deviceColors != null)
+          'epdColors': [for (final c in deviceColors) c.toARGB32()],
+        if (canvasDocument != null) 'canvasDocument': canvasDocument,
+        if (templateData != null) 'templateData': templateData,
+        if (sourceImage != null) 'sourceImage': base64Encode(sourceImage),
+        ...?extraMetadata,
+      };
+
+      if (existingImageId != null) {
+        metadata['updatedAt'] = DateTime.now().millisecondsSinceEpoch;
+        await provider.updateSavedImage(
+          existingImageId,
+          imageData: imageData,
+          metadata: metadata,
+        );
+      } else {
+        await provider.saveImage(
+          name: imageName,
+          imageData: imageData,
+          source: currentImageSource,
+          metadata: metadata,
+        );
+      }
 
       _showSaveSuccessSnackBar();
     } catch (e) {
@@ -433,8 +461,7 @@ class ImageOperationsService {
               size: Dimens.iconSizeM,
             ),
             const SizedBox(width: Dimens.spacingM),
-            Expanded(
-                child: Text('${appLocalizations.failedToSaveImage}$error')),
+            Expanded(child: Text(appLocalizations.failedToSaveImage(error))),
           ],
         ),
         backgroundColor: Colors.red,

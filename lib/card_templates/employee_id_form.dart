@@ -9,10 +9,11 @@ import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
-import 'package:barcode_widget/barcode_widget.dart';
+import 'package:magicepaperapp/card_templates/template_layer_builders.dart';
+import 'package:magicepaperapp/card_templates/bulk/bulk_csv_import_screen.dart';
+import 'package:magicepaperapp/card_templates/bulk/bulk_template.dart';
+import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/util/page_route_util.dart';
-import 'package:magicepaperapp/util/template_util.dart';
-import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
 import 'package:magicepaperapp/card_templates/util/barcode_scanner_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
@@ -21,8 +22,10 @@ AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 class EmployeeIdForm extends StatefulWidget {
   final int width;
   final int height;
+  final DisplayDevice? device;
 
-  const EmployeeIdForm({super.key, required this.width, required this.height});
+  const EmployeeIdForm(
+      {super.key, required this.width, required this.height, this.device});
 
   @override
   State<EmployeeIdForm> createState() => _EmployeeIdFormState();
@@ -143,104 +146,12 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
     });
 
     try {
-      final List<LayerSpec> layers = [];
-
-      final layoutParams =
-          ResponsiveLayoutUtil.getEmployeeIdLayout(widget.width, widget.height);
-
-      if (_profileImage != null) {
-        layers.add(LayerSpec.widget(
-          widget: ClipOval(
-            child: Image.file(_profileImage!,
-                width: 200, height: 200, fit: BoxFit.cover),
-          ),
-          offset: layoutParams.profileImageOffset,
-          scale: layoutParams.profileImageScale,
-          kind: LayerKind.image,
-          elementId: 'profileImage',
-        ));
-      }
-
-      if (_employeeData.companyName.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          textStyle: TextStyle(
-            fontSize: layoutParams.companyNameFontSize,
-            fontWeight: FontWeight.bold,
-            color: colorBlack,
-          ),
-          text: _employeeData.companyName,
-          textAlign: TextAlign.center,
-          offset: layoutParams.companyNameOffset,
-          scale: layoutParams.companyNameScale,
-          followCanvasTheme: true,
-          elementId: 'companyName',
-        ));
-      }
-
-      if (_employeeData.name.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          text: '${appLocalizations.namePrefix}${_employeeData.name}',
-          textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['name']!,
-          scale: layoutParams.textFieldScale,
-          followCanvasTheme: true,
-          elementId: 'name',
-        ));
-      }
-
-      if (_employeeData.position.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          text: '${appLocalizations.positionPrefix}${_employeeData.position}',
-          textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['position']!,
-          scale: layoutParams.textFieldScale,
-          followCanvasTheme: true,
-          elementId: 'position',
-        ));
-      }
-
-      if (_employeeData.division.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          text: '${appLocalizations.divisionPrefix}${_employeeData.division}',
-          textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['division']!,
-          scale: layoutParams.textFieldScale,
-          followCanvasTheme: true,
-          elementId: 'division',
-        ));
-      }
-
-      if (_employeeData.idNumber.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          text: '${appLocalizations.idPrefix}${_employeeData.idNumber}',
-          textStyle: TextStyle(fontSize: layoutParams.textFieldFontSize),
-          textAlign: TextAlign.left,
-          offset: layoutParams.textOffsets['idNumber']!,
-          scale: layoutParams.textFieldScale,
-          followCanvasTheme: true,
-          elementId: 'idNumber',
-        ));
-      }
-
-      if (_employeeData.qrData.isNotEmpty) {
-        layers.add(LayerSpec.widget(
-          widget: BarcodeWidget(
-            padding: const EdgeInsets.all(Dimens.spacingXxs),
-            backgroundColor: colorWhite,
-            barcode: Barcode.qrCode(),
-            data: _employeeData.qrData,
-            width: layoutParams.qrCodeSize.width,
-            height: layoutParams.qrCodeSize.height,
-          ),
-          offset: layoutParams.qrCodeOffset,
-          scale: layoutParams.qrCodeScale,
-          kind: LayerKind.barcode,
-          elementId: 'qr',
-        ));
-      }
+      final layers = buildEmployeeIdLayers(
+        data: _employeeData,
+        width: widget.width,
+        height: widget.height,
+        photo: _profileImage,
+      );
 
       final result = await Navigator.of(context).push<Object>(
         buildOpaqueSlideRoute(
@@ -452,8 +363,43 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
                         ),
                 ),
               ),
+              const SizedBox(height: Dimens.spacingM),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: OutlinedButton.icon(
+                  onPressed: _openBulkImport,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: colorPrimary,
+                    side: const BorderSide(color: colorPrimary),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(Dimens.radiusM),
+                    ),
+                  ),
+                  icon: const Icon(Icons.table_view, size: 18),
+                  label: Text(
+                    appLocalizations.bulkImportCsv,
+                    style: const TextStyle(
+                        fontSize: Dimens.fontSizeL,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  void _openBulkImport() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => BulkCsvImportScreen(
+          template: employeeIdBulkTemplate(),
+          width: widget.width,
+          height: widget.height,
+          device: widget.device,
         ),
       ),
     );

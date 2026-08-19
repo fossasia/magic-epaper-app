@@ -7,6 +7,7 @@ import 'package:magicepaperapp/image_library/services/image_operations_service.d
 import 'package:magicepaperapp/image_library/utils/date_utils.dart' as dt;
 import 'package:magicepaperapp/image_library/utils/filter_utils.dart';
 import 'package:magicepaperapp/image_library/utils/source_utils.dart';
+import 'package:magicepaperapp/image_library/widgets/image_error_placeholder.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import '../../../util/app_logger.dart';
 
@@ -152,16 +153,10 @@ class _ImagePropertiesDialogState extends State<ImagePropertiesDialog> {
           borderRadius: BorderRadius.circular(Dimens.radiusM),
           child: Image.file(
             File(widget.image.filePath),
+            key: ValueKey(widget.image.imageCacheKey),
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
-              return Container(
-                color: grey100,
-                child: const Icon(
-                  Icons.broken_image,
-                  size: 40,
-                  color: grey500,
-                ),
-              );
+              return const ImageErrorPlaceholder(iconSize: 40);
             },
           ),
         ),

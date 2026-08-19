@@ -35,4 +35,6 @@ class Dimens {
 
   static const double borderWidthThin = 1.0;
   static const double borderWidthThick = 2.0;
+
+  static const double dialogMaxWidth = 550.0;
 }

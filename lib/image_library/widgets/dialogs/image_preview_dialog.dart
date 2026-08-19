@@ -7,6 +7,7 @@ import 'package:magicepaperapp/image_library/utils/filter_utils.dart';
 import 'package:magicepaperapp/image_library/utils/source_utils.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_properties_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_rename_dialog.dart';
+import 'package:magicepaperapp/image_library/widgets/image_error_placeholder.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
@@ -20,6 +21,7 @@ class ImagePreviewDialog extends StatelessWidget {
   final VoidCallback onDelete;
   final Function(String) onRename;
   final VoidCallback onTransfer;
+  final VoidCallback? onEdit;
 
   const ImagePreviewDialog({
     super.key,
@@ -28,6 +30,7 @@ class ImagePreviewDialog extends StatelessWidget {
     required this.onDelete,
     required this.onRename,
     required this.onTransfer,
+    this.onEdit,
   });
 
   @override
@@ -38,17 +41,27 @@ class ImagePreviewDialog extends StatelessWidget {
         borderRadius: BorderRadius.circular(Dimens.radiusXxl),
       ),
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.8,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildHeader(context),
-              _buildContent(context),
-            ],
-          ),
+        constraints: const BoxConstraints(maxWidth: 500),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildHeader(context),
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(Dimens.spacingM),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildImageContainer(),
+                    const SizedBox(height: Dimens.spacingL),
+                    _buildImageInfo(),
+                    const SizedBox(height: Dimens.spacingXxl),
+                    _buildActionButtons(context),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -87,34 +100,28 @@ class ImagePreviewDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(Dimens.spacingM),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildImageContainer(),
-          const SizedBox(height: Dimens.spacingL),
-          _buildImageInfo(),
-          const SizedBox(height: Dimens.spacingXxl),
-          _buildActionButtons(context),
-        ],
-      ),
-    );
-  }
-
   Widget _buildImageContainer() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: mdGrey400),
-        borderRadius: BorderRadius.circular(Dimens.radiusM),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(Dimens.radiusM),
-        child: Image.file(
-          File(image.filePath),
-          fit: BoxFit.contain,
-          isAntiAlias: false,
+    return AspectRatio(
+      aspectRatio: 16 / 9,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: mdGrey400),
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(Dimens.radiusM),
+          child: Image.file(
+            File(image.filePath),
+            key: ValueKey(image.imageCacheKey),
+            fit: BoxFit.contain,
+            isAntiAlias: false,
+            errorBuilder: (context, error, stackTrace) {
+              return const AspectRatio(
+                aspectRatio: 1,
+                child: ImageErrorPlaceholder(showLabel: true),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -191,6 +198,20 @@ class ImagePreviewDialog extends StatelessWidget {
             ),
           ],
         ),
+        if (onEdit != null) ...[
+          const SizedBox(height: Dimens.spacingS),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                onEdit!();
+              },
+              icon: const Icon(Icons.brush_outlined),
+              label: Text(appLocalizations.edit),
+            ),
+          ),
+        ],
         const SizedBox(height: Dimens.spacingS),
         SizedBox(
           width: double.infinity,
