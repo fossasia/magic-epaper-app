@@ -33,7 +33,7 @@ dependencies:
   mobile_scanner: ^7.4.0
   barcode_widget: ^2.0.4
   currency_picker: ^2.0.21
-  intl: ^0.20.2
+  intl: ^0.20.3
   path_provider: ^2.1.6
   get_it: ^9.2.1
   path: ^1.9.1
