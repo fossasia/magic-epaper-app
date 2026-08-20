@@ -4,9 +4,9 @@ import 'package:magicepaperapp/util/epd/driver/driver.dart';
 import 'package:magicepaperapp/util/epd/driver/waveform.dart';
 import 'package:magicepaperapp/util/protocol.dart';
 
-class Gdey029f52Driver extends Driver {
+class Gdey029f51Driver extends Driver {
   @override
-  String get driverName => 'GDEY029F52_Driver';
+  String get driverName => 'GDEY029F51_Driver';
 
   @override
   int get refresh => 0x12; // Display Refresh
