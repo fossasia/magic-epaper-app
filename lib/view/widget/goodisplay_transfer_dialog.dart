@@ -38,7 +38,8 @@ class GoodisplayTransferDialog extends StatefulWidget {
   }
 
   @override
-  State<GoodisplayTransferDialog> createState() => _GoodisplayTransferDialogState();
+  State<GoodisplayTransferDialog> createState() =>
+      _GoodisplayTransferDialogState();
 }
 
 class _GoodisplayTransferDialogState extends State<GoodisplayTransferDialog> {
@@ -92,10 +93,12 @@ class _GoodisplayTransferDialogState extends State<GoodisplayTransferDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimens.radiusL)),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Dimens.radiusL)),
       title: Text(
         'Goodisplay NFC Transfer',
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: Dimens.fontSizeL),
+        style: const TextStyle(
+            fontWeight: FontWeight.bold, fontSize: Dimens.fontSizeL),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -103,7 +106,8 @@ class _GoodisplayTransferDialogState extends State<GoodisplayTransferDialog> {
           LinearProgressIndicator(
             value: _progress > 0 ? _progress : null,
             backgroundColor: grey200,
-            valueColor: AlwaysStoppedAnimation<Color>(_isError ? Colors.red : colorAccent),
+            valueColor: AlwaysStoppedAnimation<Color>(
+                _isError ? Colors.red : colorAccent),
           ),
           const SizedBox(height: Dimens.spacingL),
           Text(
@@ -120,7 +124,8 @@ class _GoodisplayTransferDialogState extends State<GoodisplayTransferDialog> {
         if (_isError)
           TextButton(
             onPressed: _startTransmission,
-            child: Text(appLocalizations.retry, style: const TextStyle(color: colorAccent)),
+            child: Text(appLocalizations.retry,
+                style: const TextStyle(color: colorAccent)),
           ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
