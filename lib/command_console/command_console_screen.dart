@@ -138,7 +138,8 @@ class _CommandConsoleScreenState extends State<CommandConsoleScreen>
 
   Future<void> _connect() async {
     if (_service.isConnected) {
-      _append(const ConsoleLine.info('Already connected. Run disconnect first.'));
+      _append(
+          const ConsoleLine.info('Already connected. Run disconnect first.'));
       return;
     }
     if (_availability != NFCAvailability.available) {
@@ -175,7 +176,8 @@ class _CommandConsoleScreenState extends State<CommandConsoleScreen>
     }
     await _guard(() async {
       final response = await _service.transceive(command.bytes!);
-      _append(ConsoleLine.output('< ${ConsoleInterpreter.formatHex(response)}'));
+      _append(
+          ConsoleLine.output('< ${ConsoleInterpreter.formatHex(response)}'));
     }, 'Transceive failed');
   }
 
@@ -195,7 +197,8 @@ class _CommandConsoleScreenState extends State<CommandConsoleScreen>
     }, 'Read block failed');
   }
 
-  Future<void> _guard(Future<void> Function() action, String errorPrefix) async {
+  Future<void> _guard(
+      Future<void> Function() action, String errorPrefix) async {
     setState(() => _busy = true);
     try {
       await action();
@@ -293,11 +296,11 @@ class _CommandConsoleScreenState extends State<CommandConsoleScreen>
                     ),
                   ),
                   ElevatedButton.icon(
-                    onPressed: _busy
-                        ? null
-                        : (connected ? _disconnect : _connect),
+                    onPressed:
+                        _busy ? null : (connected ? _disconnect : _connect),
                     icon: Icon(connected ? Icons.stop : Icons.nfc, size: 18),
-                    label: Text(connected ? _l10n.disconnect : _l10n.connectTag),
+                    label:
+                        Text(connected ? _l10n.disconnect : _l10n.connectTag),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: connected ? Colors.red : colorAccent,
                       foregroundColor: colorWhite,
@@ -334,8 +337,8 @@ class _CommandConsoleScreenState extends State<CommandConsoleScreen>
                 ? () {
                     final command = line.text.replaceFirst('> ', '');
                     _input.text = command;
-                    _input.selection = TextSelection.collapsed(
-                        offset: command.length);
+                    _input.selection =
+                        TextSelection.collapsed(offset: command.length);
                     _inputFocus.requestFocus();
                   }
                 : null,
