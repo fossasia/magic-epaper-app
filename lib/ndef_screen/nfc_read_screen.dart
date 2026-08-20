@@ -2,16 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:magicepaperapp/theme/colors.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
-import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/provider/getitlocator.dart';
-import 'package:magicepaperapp/ndef_screen/controller/nfc_controller.dart';
+import 'package:magicepaperapp/ndef_screen/nfc_base_screen_state.dart';
+import 'package:magicepaperapp/ndef_screen/widgets/nfc_disabled_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_status_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_read_card.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
-import 'dart:async';
-import '../util/app_logger.dart';
-
-AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class NFCReadScreen extends StatefulWidget {
   const NFCReadScreen({super.key});
@@ -20,121 +15,7 @@ class NFCReadScreen extends StatefulWidget {
   State<NFCReadScreen> createState() => _NFCReadScreenState();
 }
 
-class _NFCReadScreenState extends State<NFCReadScreen>
-    with WidgetsBindingObserver {
-  late NFCController _nfcController;
-  Timer? _nfcAvailabilityTimer;
-
-  @override
-  void initState() {
-    super.initState();
-    _nfcController = NFCController();
-    _nfcController.addListener(_onNFCStateChanged);
-
-    WidgetsBinding.instance.addObserver(this);
-
-    _checkNFCAvailability();
-    _startNFCAvailabilityListener();
-  }
-
-  @override
-  void dispose() {
-    _nfcController.removeListener(_onNFCStateChanged);
-    _nfcController.dispose();
-    _stopNFCAvailabilityListener();
-
-    WidgetsBinding.instance.removeObserver(this);
-
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.resumed) {
-      _checkNFCAvailability();
-      _startNFCAvailabilityListener();
-    } else if (state == AppLifecycleState.paused) {
-      _stopNFCAvailabilityListener();
-    }
-  }
-
-  void _startNFCAvailabilityListener() {
-    _stopNFCAvailabilityListener();
-
-    _nfcAvailabilityTimer = Timer.periodic(const Duration(seconds: 2), (
-      timer,
-    ) async {
-      await _checkNFCAvailabilityWithChangeDetection();
-    });
-  }
-
-  void _stopNFCAvailabilityListener() {
-    _nfcAvailabilityTimer?.cancel();
-    _nfcAvailabilityTimer = null;
-  }
-
-  Future<void> _checkNFCAvailabilityWithChangeDetection() async {
-    try {
-      NFCAvailability previousAvailability = _nfcController.availability;
-      await _nfcController.checkNFCAvailability();
-
-      if (previousAvailability != _nfcController.availability) {
-        _showNFCStatusChangeMessage(
-          previousAvailability,
-          _nfcController.availability,
-        );
-      }
-    } catch (e) {
-      AppLogger.error('Error checking NFC availability: $e');
-    }
-  }
-
-  void _showNFCStatusChangeMessage(NFCAvailability from, NFCAvailability to) {
-    String message;
-    bool isError = false;
-
-    switch (to) {
-      case NFCAvailability.available:
-        message = appLocalizations.nfcIsNowEnabledAndReady;
-        break;
-      case NFCAvailability.disabled:
-        message = appLocalizations.nfcHasBeenDisabled;
-        isError = true;
-        break;
-      case NFCAvailability.not_supported:
-        message = appLocalizations.nfcIsNotSupportedOnDevice;
-        isError = true;
-        break;
-    }
-
-    _showSnackBar(message, isError: isError);
-  }
-
-  void _onNFCStateChanged() {
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  Future<void> _checkNFCAvailability() async {
-    await _nfcController.checkNFCAvailability();
-  }
-
-  void _showSnackBar(String message, {bool isError = false}) {
-    if (!mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? Colors.red : Colors.green,
-        duration: const Duration(seconds: 3),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
-
+class _NFCReadScreenState extends NFCBaseScreenState<NFCReadScreen> {
   Future<bool> _showConfirmDialog(String title, String content) async {
     return await showDialog<bool>(
           context: context,
@@ -145,12 +26,12 @@ class _NFCReadScreenState extends State<NFCReadScreen>
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(appLocalizations.cancel),
+                  child: Text(this.appLocalizations.cancel),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   style: TextButton.styleFrom(foregroundColor: Colors.red),
-                  child: Text(appLocalizations.confirm),
+                  child: Text(this.appLocalizations.confirm),
                 ),
               ],
             );
@@ -162,20 +43,20 @@ class _NFCReadScreenState extends State<NFCReadScreen>
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      title: appLocalizations.readNfcTags,
+      title: this.appLocalizations.readNfcTags,
       index: 1,
       actions: [
         IconButton(
           icon: const Icon(Icons.delete_sweep, color: colorWhite),
           onPressed: () {
-            if (_nfcController.result.isNotEmpty) {
-              _nfcController.clearResult();
-              _showSnackBar(appLocalizations.resultsCleared);
+            if (nfcController.result.isNotEmpty) {
+              nfcController.clearResult();
+              showSnackBar(this.appLocalizations.resultsCleared);
             } else {
-              _showSnackBar(appLocalizations.nothingToClear, isError: true);
+              showSnackBar(this.appLocalizations.nothingToClear, isError: true);
             }
           },
-          tooltip: appLocalizations.clearResults,
+          tooltip: this.appLocalizations.clearResults,
         ),
       ],
       body: SafeArea(
@@ -185,116 +66,65 @@ class _NFCReadScreenState extends State<NFCReadScreen>
           child: Column(
             children: [
               NFCStatusCard(
-                availability: _nfcController.availability,
-                onRefresh: _checkNFCAvailability,
+                availability: nfcController.availability,
+                onRefresh: checkNFCAvailability,
               ),
               const SizedBox(height: Dimens.spacingL),
-              if (_nfcController.availability == NFCAvailability.available) ...[
+              if (nfcController.availability == NFCAvailability.available) ...[
                 NFCReadCard(
-                  isReading: _nfcController.isReading,
-                  isClearing: _nfcController.isClearing,
-                  result: _nfcController.result,
+                  isReading: nfcController.isReading,
+                  isClearing: nfcController.isClearing,
+                  result: nfcController.result,
                   onRead: () async {
-                    await _nfcController.readNDEF();
-                    if (_nfcController.result
-                        .contains(appLocalizations.error)) {
-                      _showSnackBar(
-                        appLocalizations.readOperationFailed,
+                    await nfcController.readNDEF();
+                    if (nfcController.result
+                        .contains(this.appLocalizations.error)) {
+                      showSnackBar(
+                        this.appLocalizations.readOperationFailed,
                         isError: true,
                       );
                     } else {
-                      _showSnackBar(appLocalizations.tagReadSuccessfully);
+                      showSnackBar(this.appLocalizations.tagReadSuccessfully);
                     }
                   },
                   onVerify: () async {
-                    await _nfcController.verifyWrite();
-                    if (_nfcController.result
-                        .contains(appLocalizations.error)) {
-                      _showSnackBar(
-                        appLocalizations.verificationFailed,
+                    await nfcController.verifyWrite();
+                    if (nfcController.result
+                        .contains(this.appLocalizations.error)) {
+                      showSnackBar(
+                        this.appLocalizations.verificationFailed,
                         isError: true,
                       );
                     } else {
-                      _showSnackBar(appLocalizations.tagVerifiedSuccessfully);
+                      showSnackBar(
+                          this.appLocalizations.tagVerifiedSuccessfully);
                     }
                   },
                   onClear: () async {
                     bool confirmed = await _showConfirmDialog(
-                      appLocalizations.clearNfcTag,
-                      appLocalizations.clearNfcTagConfirmation,
+                      this.appLocalizations.clearNfcTag,
+                      this.appLocalizations.clearNfcTagConfirmation,
                     );
                     if (confirmed) {
-                      await _nfcController.clearNDEF();
-                      if (_nfcController.result.contains(
-                        appLocalizations.error,
+                      await nfcController.clearNDEF();
+                      if (nfcController.result.contains(
+                        this.appLocalizations.error,
                       )) {
-                        _showSnackBar(
-                          appLocalizations.clearOperationFailed,
+                        showSnackBar(
+                          this.appLocalizations.clearOperationFailed,
                           isError: true,
                         );
                       } else {
-                        _showSnackBar(appLocalizations.tagClearedSuccessfully);
+                        showSnackBar(
+                            this.appLocalizations.tagClearedSuccessfully);
                       }
                     }
                   },
                 ),
                 const SizedBox(height: Dimens.spacingL),
-              ] else ...[
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: Dimens.spacingS),
-                  decoration: BoxDecoration(
-                    color: colorWhite,
-                    borderRadius: BorderRadius.circular(Dimens.radiusXl),
-                    boxShadow: [
-                      BoxShadow(
-                        color: colorBlack.withValues(alpha: 0.08),
-                        spreadRadius: 0,
-                        blurRadius: 10,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(Dimens.spacingXxl),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(Dimens.spacingL),
-                          decoration: BoxDecoration(
-                            color: Colors.orange.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: const Icon(
-                            Icons.warning_outlined,
-                            size: 48,
-                            color: Colors.orange,
-                          ),
-                        ),
-                        const SizedBox(height: Dimens.spacingXxl),
-                        Text(
-                          appLocalizations.nfcNotAvailable,
-                          style: const TextStyle(
-                            fontSize: Dimens.fontSizeXxl,
-                            fontWeight: FontWeight.bold,
-                            color: colorBlack87,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: Dimens.spacingM),
-                        Text(
-                          appLocalizations.enableNfcMessage,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: Dimens.fontSizeL,
-                            color: grey600,
-                            height: 1.4,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              ] else if (nfcController.availability ==
+                  NFCAvailability.disabled) ...[
+                const NFCDisabledCard(),
               ],
               const SizedBox(height: Dimens.spacingL),
             ],

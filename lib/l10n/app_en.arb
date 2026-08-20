@@ -267,6 +267,7 @@
   "colorHalftone": "Color Newspaper",
   "bayer": "Grid",
   "sierra2": "Smooth",
+  "burkes": "Soft",
 
   "searchingForDevice": "Searching for Device",
   "displayRefreshing": "Display Refreshing",
@@ -304,6 +305,7 @@
   "tapBelowAndHold": "Tap below and hold your phone near the display.",
   "startFlashing": "Start Flashing",
   "flashing": "Flashing...",
+  "finishingRefresh": "Finishing, refreshing display...",
   "keepPhoneStill": "Keep your phone still.",
   "success": "Success!",
   "transferCompleteMessage": "Transfer complete!",
@@ -502,6 +504,53 @@
   "entryPassTagDescription": "Generate entry passes for events and venues",
   "eventBadgeTitle": "Event Badge",
   "eventBadgeDescription": "Create personalized event badges and name tags",
+  "qrTagTitle": "QR Tag",
+  "qrTagDescription": "A QR code with your own caption and icon",
+  "qrTagGenerator": "QR Tag",
+  "previewQrTag": "Preview of your QR tag",
+  "qrTagDetails": "QR Tag Details",
+  "qrTagDetailsSubtitle": "Add any link or text, a caption, and an optional icon.",
+  "qrContentLabel": "QR content",
+  "qrContentHint": "URL or text to encode",
+  "qrContentRequired": "Enter the QR content first",
+  "qrCaptionLabel": "Caption",
+  "qrCaptionHint": "e.g. Scan me",
+  "qrTagIconLabel": "Icon",
+  "qrTagIconNone": "None",
+  "generateQrTag": "Generate QR Tag",
+  "generatingQrTag": "Generating...",
+  "qrTypeLabel": "What does this QR do?",
+  "qrTypeLink": "Link",
+  "qrTypeWifi": "Wi-Fi",
+  "qrTypePhone": "Phone",
+  "qrTypeEmail": "Email",
+  "qrTypeSms": "SMS",
+  "qrTypeText": "Text",
+  "qrLinkLabel": "Website URL",
+  "qrLinkHint": "https://example.com",
+  "qrTextLabel": "Text",
+  "qrTextHint": "Any text to encode",
+  "qrPhoneLabel": "Phone number",
+  "qrPhoneHint": "+1 555 123 4567",
+  "qrEmailLabel": "Email address",
+  "qrEmailHint": "name@example.com",
+  "qrEmailSubjectLabel": "Subject (optional)",
+  "qrSmsNumberLabel": "Phone number",
+  "qrSmsMessageLabel": "Message (optional)",
+  "qrWifiSsidLabel": "Network name (SSID)",
+  "qrWifiPasswordLabel": "Wi-Fi password",
+  "qrWifiSecurityLabel": "Security",
+  "qrWifiSecurityWpa": "WPA/WPA2",
+  "qrWifiSecurityWep": "WEP",
+  "qrWifiSecurityNone": "None",
+  "qrWifiHiddenLabel": "Hidden network",
+  "qrWifiSsidRequired": "Enter the network name",
+  "qrHintLink": "Opens a website when scanned.",
+  "qrHintWifi": "Guests scan to join your Wi-Fi — no typing.",
+  "qrHintPhone": "Scan to call this number.",
+  "qrHintEmail": "Scan to start an email to you.",
+  "qrHintSms": "Scan to send you a text message.",
+  "qrHintText": "Shows this text when scanned.",
   "comingSoon": "Coming Soon",
   "comingSoonMessage": "This template is currently under development and will be available soon.",
   "ok": "OK",
@@ -626,11 +675,40 @@
   "switchCamera": "Switch camera",
   "scanFromGallery": "Scan from gallery",
   "noCodeFound": "No QR code or barcode found in the image",
-  "cropImage": "Crop & rotate",
+  "cropImage": "Crop",
+  "cropFree": "Free",
   "previewIdCard": "Preview of your ID card",
   "previewPriceTag": "Preview of your price tag",
   "previewBadge": "Preview of your badge",
   "previewPass": "Preview of your tag",
+
+  "contactTagTitle": "Contact & Business Tag",
+  "contactTagDescription": "Share your contact info with a scannable QR",
+  "previewContactCard": "Preview of your contact tag",
+  "contactCardDetails": "Contact Details",
+  "fillDetailsToCreateContact": "Fill in the details below to create your contact tag",
+  "fullName": "Full Name",
+  "enterFullName": "Enter full name",
+  "yourName": "Your Name",
+  "enterJobTitle": "Enter job title (e.g. Product Designer)",
+  "companyOrganization": "Company / Organization",
+  "enterCompanyOrganization": "Enter company or organization",
+  "phoneNumber": "Phone",
+  "enterPhoneNumber": "Enter phone number",
+  "enterEmailAddress": "Enter email address",
+  "contactLinkLabel": "Link",
+  "contactWebsiteLabel": "Website (optional)",
+  "contactLinkHint": "https://…",
+  "qrCodeContent": "QR Code Content",
+  "qrContentVcard": "Contact card",
+  "qrContentLink": "Link only",
+  "qrContentVcardHint": "Scanning the QR adds you to contacts (vCard)",
+  "qrContentLinkHint": "Scanning the QR opens your link",
+  "generatingContactTag": "Generating...",
+  "generateContactTag": "Generate Contact Tag",
+  "contactFillAtLeastOneField": "Please fill in at least one field",
+  "contactScanMe": "SCAN ME",
+  "contactScanToSave": "SCAN TO SAVE",
 
   "processingImages": "Processing images...",
   "refreshModeInfo": "Refresh Mode Information",
@@ -758,6 +836,21 @@
   "dataTransferSuccessfulMessage": "Data transfer successful. The display will now refresh.",
   "readyToTransfer": "Ready to Transfer",
   "holdPhoneNearDisplay": "Hold your phone near the display to begin.",
+  "adjustImage": "Adjust Image",
+  "brightness": "Brightness",
+  "contrast": "Contrast",
+  "resetToDefault": "Reset to default",
+  "bulkImportCsv": "Bulk import (CSV)",
+  "bulkImportTitle": "Bulk Import",
+  "bulkSelectCsv": "Select a CSV file",
+  "bulkRowsDetected": "{count} rows detected",
+  "@bulkRowsDetected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "privacyPolicy": "Privacy Policy",
   "flipHorizontally": "Flip Horizontally",
   "flipVertically": "Flip Vertically",
@@ -768,6 +861,170 @@
     "placeholders": {
       "value": {
         "type": "int"
+      }
+    }
+  },
+  "bulkMapColumns": "Map columns",
+  "bulkMapColumnsSubtitle": "Match each field to a column from your file.",
+  "bulkColumnNone": "— None —",
+  "bulkAddPhotos": "Add photos",
+  "bulkPhotosSelected": "{count} photos added",
+  "@bulkPhotosSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkPhotosHint": "Photos are matched to rows by file name using the photo column.",
+  "bulkGenerate": "Generate {count} cards",
+  "@bulkGenerate": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkGenerating": "Generating {current} of {total}…",
+  "@bulkGenerating": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkResultsTitle": "Generated Cards",
+  "bulkSaveAll": "Save all to Library",
+  "bulkTransfer": "Transfer",
+  "bulkSavedCount": "Saved {count} cards to Library",
+  "@bulkSavedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkSaveFailed": "Could not save card",
+  "bulkNoRows": "No data rows found in the CSV.",
+  "bulkMapRequired": "Map all required fields first.",
+  "bulkNothingGenerated": "No cards were generated.",
+  "bulkCardNumber": "Card {number}",
+  "@bulkCardNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkPhotoFileName": "Photo (file name)",
+  "productDescription": "Product Description",
+  "bulkStepUpload": "Upload",
+  "bulkStepMap": "Map",
+  "bulkStepPhotos": "Photos",
+  "bulkStepReview": "Review",
+  "bulkUploadHint": "Row 1 should be the column names; each row after it becomes one card.",
+  "bulkChangeFile": "Change file",
+  "bulkExpectedColumns": "Columns this template uses (* = required)",
+  "bulkLivePreview": "Live preview",
+  "bulkFirstRowNote": "Showing the first row from your file.",
+  "bulkRequired": "Required",
+  "bulkAutoMatched": "Auto",
+  "bulkColumnLabel": "Spreadsheet column",
+  "bulkColumnDontUse": "Don't use",
+  "bulkYourColumns": "Your CSV columns",
+  "bulkRenameColumnsHint": "Tap a column to rename it, then it re-matches automatically.",
+  "bulkRenameColumn": "Rename column",
+  "bulkColumnNameLabel": "Column name",
+  "bulkPhotoColumnUnmapped": "Tip: map the photo column on the previous step so photos attach to the right rows by file name.",
+  "bulkReviewReady": "{count} cards ready to generate",
+  "@bulkReviewReady": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkBack": "Back",
+  "bulkNext": "Next",
+  "bulkAdjustMapping": "Adjust column mapping",
+  "bulkAllRequiredMatched": "All required fields are matched.",
+  "bulkRequiredMissing": "Still needs a column: {fields}",
+  "@bulkRequiredMissing": {
+    "placeholders": {
+      "fields": {
+        "type": "String"
+      }
+    }
+  },
+  "bulkColumnsMatched": "{matched} of {total} fields matched to a column",
+  "@bulkColumnsMatched": {
+    "placeholders": {
+      "matched": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkPhotosMatched": "Matched {matched} of {total} rows by file name",
+  "@bulkPhotosMatched": {
+    "placeholders": {
+      "matched": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkPhotosOptional": "Photos (optional)",
+  "bulkPhotoColumnLabel": "Photo (link or file)",
+  "bulkRecordsTitle": "Records",
+  "bulkRecordsHint": "Tap any record to edit its details",
+  "bulkEditRecordTitle": "Edit details",
+  "bulkSaveChanges": "Save",
+  "bulkCancel": "Cancel",
+  "bulkResultsCount": "{count} cards generated",
+  "@bulkResultsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkEdit": "Edit",
+  "bulkDone": "Done",
+  "bulkSaveAllDone": "Save all & Done",
+  "bulkPhotoLinkHint": "Paste an image link (https://…) or use \"Pick file\" for a photo on your device.",
+  "bulkPickFile": "Pick file",
+  "bulkPhotosOrderHint": "Add a photo to each row below. No file names needed.",
+  "bulkAddPhotosInOrder": "Add photos in order",
+  "bulkRowAddPhoto": "Add photo",
+  "bulkRowChangePhoto": "Change",
+  "bulkPhotosAddedInOrder": "{count} photos added to the first rows. Tap any row to change.",
+  "@bulkPhotosAddedInOrder": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkDownloadSample": "Download a sample CSV to see the format",
+  "bulkSampleSaved": "Sample CSV saved to your device. Fill it in and upload it.",
+  "bulkNameColumnsHint": "Name your spreadsheet columns like these and they line up automatically — no matching needed.",
+  "bulkColumnsAutoMatched": "All columns matched automatically",
+  "bulkEditColumns": "Edit",
+  "bulkFixColumns": "One column needs matching",
+  "bulkPhotoInstructions": "1. In your CSV, add a column with each row's image file name (e.g. john.jpg).\n2. Tap \"Add photos\" and choose those same image files.",
+  "bulkPhotosUnmatched": "Couldn't find files for: {names}",
+  "@bulkPhotosUnmatched": {
+    "placeholders": {
+      "names": {
+        "type": "String"
       }
     }
   },
@@ -857,5 +1114,85 @@
   "couldntLoadLibrary": "Couldn't load your image library",
   "couldntLoadLibrarySubtitle": "Something went wrong while loading your saved images. Please try again.",
   "retry": "Retry",
-  "imageUnavailable": "Image unavailable"
+  "imageUnavailable": "Image unavailable",
+  "calendarTitle": "Calendar",
+  "calendarDescription": "Month, week or day view with today highlighted",
+  "calendarCard": "Calendar",
+  "calendarHint": "Built from your phone's date. Tap to write it to the badge, tap again to update.",
+  "calendarViewMonth": "Month",
+  "calendarViewWeek": "Week",
+  "calendarViewDay": "Day",
+  "calendarPrevious": "Previous",
+  "calendarNext": "Next",
+  "calendarToday": "Today",
+  "calendarJumpToDate": "Jump to date",
+  "calendarHowItWorks": "How it works",
+  "calendarGotIt": "Got it",
+  "calendarInfoOffline": "Works without internet.",
+  "calendarInfoSelect": "Pick a date and a view.",
+  "calendarInfoViews": "Tap Write to send it to your badge.",
+  "calendarInfoWrite": "Tap Write again whenever the date changes.",
+  "calendarStartMonday": "Start week on Monday",
+  "calendarWeekSunSat": "Sun – Sat",
+  "calendarWeekMonSun": "Mon – Sun",
+  "calendarInvertStyle": "Dark style",
+  "calendarInvertOn": "White on black",
+  "calendarInvertOff": "Black on white",
+  "calendarTodayLabel": "Today",
+  "calendarDaysToGo": "{days, plural, =1{1 day to go} other{{days} days to go}}",
+  "@calendarDaysToGo": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "calendarDaysAgo": "{days, plural, =1{1 day ago} other{{days} days ago}}",
+  "@calendarDaysAgo": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "calendarWriteToBadge": "Write to badge",
+  "calendarOpenInEditor": "Open in editor",
+  "weatherSnapshotTitle": "Weather Snapshot",
+  "weatherSnapshotDescription": "Live weather for any city, drawn onto your badge",
+  "weatherPreviewTitle": "Preview of your weather badge",
+  "weatherPreviewPlaceholder": "Enter a city and tap Get weather to see the forecast",
+  "weatherDetails": "Weather Details",
+  "weatherDetailsSubtitle": "Search for a city, then generate the badge to write it over NFC.",
+  "weatherCityLabel": "City",
+  "weatherCityHint": "e.g. London",
+  "weatherUnitLabel": "Temperature unit",
+  "weatherGenerate": "Generate Weather Badge",
+  "weatherGenerating": "Generating...",
+  "weatherFetchFirst": "Get the weather for a city first",
+  "weatherRecent": "Recent",
+  "weatherClearRecent": "Clear",
+  "weatherRefresh": "Refresh",
+  "weatherUpdatedAt": "Last updated {time}",
+  "@weatherUpdatedAt": {
+    "description": "Shows when the weather was last fetched",
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "weatherWindValue": "{speed} km/h",
+  "@weatherWindValue": {
+    "description": "Wind speed with unit on the weather badge",
+    "placeholders": { "speed": { "type": "int" } }
+  },
+  "weatherErrorEmptyCity": "Please enter a city name",
+  "weatherErrorCityNotFound": "Couldn't find that city. Check the spelling and try again.",
+  "weatherErrorNetwork": "Couldn't reach the weather service. Check your connection.",
+  "weatherErrorGeneric": "Something went wrong fetching the weather. Please try again.",
+  "weatherConditionClear": "Clear sky",
+  "weatherConditionMainlyClear": "Mainly clear",
+  "weatherConditionPartlyCloudy": "Partly cloudy",
+  "weatherConditionOvercast": "Overcast",
+  "weatherConditionFog": "Fog",
+  "weatherConditionDrizzle": "Drizzle",
+  "weatherConditionFreezingRain": "Freezing rain",
+  "weatherConditionRain": "Rain",
+  "weatherConditionRainShowers": "Rain showers",
+  "weatherConditionSnow": "Snow",
+  "weatherConditionSnowGrains": "Snow grains",
+  "weatherConditionSnowShowers": "Snow showers",
+  "weatherConditionThunderstorm": "Thunderstorm"
 }
