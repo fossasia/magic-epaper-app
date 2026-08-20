@@ -6,7 +6,7 @@ import 'package:magicepaperapp/util/epd/driver/waveform.dart';
 import 'package:magicepaperapp/util/image_processing/image_processing.dart';
 import 'package:magicepaperapp/view/widget/goodisplay_transfer_dialog.dart';
 
-class GDEY029F52 extends DisplayDevice {
+class GDEY029F51 extends DisplayDevice {
   @override
   int get width => 296;
 
@@ -14,13 +14,13 @@ class GDEY029F52 extends DisplayDevice {
   int get height => 128;
 
   @override
-  String get name => 'Goodisplay 2.9" 4-Color';
+  String get name => 'Goodisplay 2.9" 4-Color (GDEY029F51)';
 
   @override
-  String get modelId => 'GDEY029F52';
+  String get modelId => 'GDEY029F51';
 
   @override
-  String get imgPath => ImageAssets.epaper37Bw; // Use your 2.9" display mockup
+  String get imgPath => ImageAssets.gdey037z03Display;
 
   @override
   List<Color> get colors => [

@@ -141,7 +141,7 @@ Uint8List encodeGoodisplayDualPlane(img.Image image, int width, int height) {
     // 5. HEADER DI START (Offset 0x0000)
     // Struttura: [Magic: 0xA5, Mode/Flag: 0x01, Model: 0x29, W_H, W_L, H_H, H_L]
     final startPacket = Uint8List.fromList([
-      0xA5, 0x01, 0x29,
+      0xA5, 0x01, 0x19, // <-- 0x19 specifico per GDEY029F51
       (width >> 8) & 0xFF, width & 0xFF,
       (height >> 8) & 0xFF, height & 0xFF,
     ]);
@@ -212,8 +212,8 @@ Uint8List encodeGoodisplayDualPlane(img.Image image, int width, int height) {
     await FlutterNfcKit.transceive(refreshApdu, timeout: timeout);
 
     // 8. Mantieni il campo RF attivo durante l'avvio del refresh fisico
-    AppLogger.info('Powering EPD physical refresh via RF harvesting...');
-    await Future.delayed(const Duration(seconds: 8));
+    AppLogger.info('Powering EPD physical refresh for GDEY029F51 (16s)...');
+    await Future.delayed(const Duration(seconds: 16)); // <-- Aumentato a 16s
 
     onProgress?.call(1.0, appLocalizations.transferComplete);
     await FlutterNfcKit.finish();
