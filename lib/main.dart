@@ -10,6 +10,7 @@ import 'package:magicepaperapp/view/settings_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:magicepaperapp/ndef_screen/nfc_read_screen.dart';
 import 'package:magicepaperapp/ndef_screen/nfc_write_screen.dart';
+import 'package:magicepaperapp/command_console/command_console_screen.dart';
 import 'package:magicepaperapp/view/display_selection_screen.dart';
 import 'package:magicepaperapp/src/rust/frb_generated.dart';
 import 'package:magicepaperapp/theme/app_theme.dart';
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
             '/settings': (context) => const SettingsScreen(),
             '/nfcReadScreen': (context) => const NFCReadScreen(),
             '/nfcWriteScreen': (context) => const NFCWriteScreen(),
+            '/commandConsole': (context) => const CommandConsoleScreen(),
           },
           theme: AppTheme.lightTheme,
         );

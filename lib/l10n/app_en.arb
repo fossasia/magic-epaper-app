@@ -1194,5 +1194,13 @@
   "weatherConditionSnow": "Snow",
   "weatherConditionSnowGrains": "Snow grains",
   "weatherConditionSnowShowers": "Snow showers",
-  "weatherConditionThunderstorm": "Thunderstorm"
+  "weatherConditionThunderstorm": "Thunderstorm",
+  "commandConsole": "Command Console",
+  "clearConsole": "Clear console",
+  "enterCommandHint": "Enter a command…",
+  "connectTag": "Connect",
+  "noTagConnected": "No tag connected",
+  "tagConnected": "Tag connected",
+  "disconnect": "Disconnect",
+  "run": "Run"
 }
