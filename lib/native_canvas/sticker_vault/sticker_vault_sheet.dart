@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/native_canvas/sticker_vault/iconify_service.dart';
+import 'package:magicepaperapp/native_canvas/sticker_vault/sticker_recents.dart';
 
 class _StickerCategory {
   const _StickerCategory(this.label, this.icons);
@@ -96,6 +97,7 @@ class _StickerVaultSheet extends StatefulWidget {
 
 class _StickerVaultSheetState extends State<_StickerVaultSheet> {
   final IconifyService _service = IconifyService();
+  final StickerRecents _recentsStore = StickerRecents();
   final TextEditingController _searchCtrl = TextEditingController();
   final Color _previewColor = grey900;
 
@@ -104,10 +106,27 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
   String _query = '';
 
   List<String> _results = const [];
+  List<String> _recents = const [];
+  bool _tabTouched = false;
   bool _loading = false;
   Object? _error;
 
   String? _placing;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRecents();
+  }
+
+  Future<void> _loadRecents() async {
+    final recents = await _recentsStore.load();
+    if (!mounted) return;
+    setState(() {
+      _recents = recents;
+      if (!_tabTouched && recents.isEmpty) _categoryIndex = 1;
+    });
+  }
 
   @override
   void dispose() {
@@ -119,8 +138,13 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
 
   bool get _isSearching => _query.trim().isNotEmpty;
 
-  List<String> get _visibleIcons =>
-      _isSearching ? _results : _categories[_categoryIndex].icons;
+  bool get _isRecentTab => !_isSearching && _categoryIndex == 0;
+
+  List<String> get _visibleIcons {
+    if (_isSearching) return _results;
+    if (_categoryIndex == 0) return _recents;
+    return _categories[_categoryIndex - 1].icons;
+  }
 
   void _onSearchChanged(String value) {
     _debounce?.cancel();
@@ -161,10 +185,12 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
 
   Future<void> _pick(String iconName) async {
     if (_placing != null) return;
+    HapticFeedback.selectionClick();
     setState(() => _placing = iconName);
     try {
       final bytes =
-          await _service.fetchPng(iconName, color: widget.inkColor);
+          await _service.renderPng(iconName, color: widget.inkColor);
+      await _recentsStore.add(iconName);
       if (!mounted) return;
       Navigator.pop(context, bytes);
     } catch (e) {
@@ -176,10 +202,33 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
     }
   }
 
+  Future<void> _removeRecent(String iconName) async {
+    final index = _recents.indexOf(iconName);
+    if (index < 0) return;
+    HapticFeedback.mediumImpact();
+    final updated = await _recentsStore.remove(iconName);
+    if (!mounted) return;
+    setState(() => _recents = updated);
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(
+        SnackBar(
+          content: const Text('Removed from recent'),
+          action: SnackBarAction(
+            label: 'Undo',
+            onPressed: () async {
+              final restored = await _recentsStore.insertAt(iconName, index);
+              if (mounted) setState(() => _recents = restored);
+            },
+          ),
+        ),
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      initialChildSize: 0.75,
+      initialChildSize: 0.8,
       minChildSize: 0.5,
       maxChildSize: 0.95,
       expand: false,
@@ -187,7 +236,7 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
         return Container(
           decoration: const BoxDecoration(
             color: colorWhite,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: Column(
             children: [
@@ -195,9 +244,7 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
               _buildHeader(),
               _buildSearchField(),
               if (!_isSearching) _buildCategoryChips(),
-              const SizedBox(height: 4),
               Expanded(child: _buildBody(scrollController)),
-              _buildFooter(),
             ],
           ),
         );
@@ -207,8 +254,8 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
 
   Widget _buildHandle() {
     return Container(
-      margin: const EdgeInsets.only(top: 10, bottom: 6),
-      width: 40,
+      margin: const EdgeInsets.only(top: 12, bottom: 4),
+      width: 36,
       height: 4,
       decoration: BoxDecoration(
         color: grey300,
@@ -219,27 +266,16 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
 
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 2, 8, 6),
+      padding: const EdgeInsets.fromLTRB(20, 8, 8, 8),
       child: Row(
         children: [
-          const Icon(Icons.auto_awesome, color: colorAccent, size: 22),
-          const SizedBox(width: 8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Sticker Vault',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: colorBlack87,
-                ),
-              ),
-              Text(
-                'Free, open-licensed icons & stickers',
-                style: TextStyle(fontSize: 12, color: grey600),
-              ),
-            ],
+          const Text(
+            'Stickers',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: colorBlack87,
+            ),
           ),
           const Spacer(),
           IconButton(
@@ -254,19 +290,19 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
 
   Widget _buildSearchField() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
       child: TextField(
         controller: _searchCtrl,
         onChanged: _onSearchChanged,
         textInputAction: TextInputAction.search,
         onSubmitted: (_) => _runSearch(),
         decoration: InputDecoration(
-          hintText: 'Search thousands of stickers…',
+          hintText: 'Search icons',
           prefixIcon: const Icon(Icons.search),
           suffixIcon: _query.isEmpty
               ? null
               : IconButton(
-                  icon: const Icon(Icons.clear),
+                  icon: const Icon(Icons.close),
                   onPressed: () {
                     _searchCtrl.clear();
                     _onSearchChanged('');
@@ -275,9 +311,9 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
           isDense: true,
           filled: true,
           fillColor: grey100,
-          contentPadding: const EdgeInsets.symmetric(vertical: 12),
+          contentPadding: const EdgeInsets.symmetric(vertical: 14),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide.none,
           ),
         ),
@@ -287,28 +323,42 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
 
   Widget _buildCategoryChips() {
     return SizedBox(
-      height: 44,
+      height: 40,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: _categories.length,
+        itemCount: _categories.length + 1,
         separatorBuilder: (_, __) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
           final selected = index == _categoryIndex;
+          final label = index == 0 ? 'Recent' : _categories[index - 1].label;
           return Center(
-            child: ChoiceChip(
-              label: Text(_categories[index].label),
-              selected: selected,
-              showCheckmark: false,
-              onSelected: (_) => setState(() => _categoryIndex = index),
-              selectedColor: colorAccent,
-              backgroundColor: grey100,
-              labelStyle: TextStyle(
-                color: selected ? colorWhite : colorBlack87,
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
+            child: GestureDetector(
+              onTap: () {
+                HapticFeedback.selectionClick();
+                setState(() {
+                  _tabTouched = true;
+                  _categoryIndex = index;
+                });
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 150),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                height: 34,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: selected ? colorAccent : grey100,
+                  borderRadius: BorderRadius.circular(17),
+                ),
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    color: selected ? colorWhite : colorBlack87,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
               ),
-              side: BorderSide(color: selected ? colorAccent : grey300),
             ),
           );
         },
@@ -326,7 +376,6 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
       return _buildMessage(
         icon: Icons.wifi_off,
         title: 'Couldn\'t load stickers',
-        subtitle: 'Check your connection and try again.',
         action: TextButton(
           onPressed: _runSearch,
           child: const Text('Retry'),
@@ -335,35 +384,38 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
     }
     final icons = _visibleIcons;
     if (icons.isEmpty) {
-      return _buildMessage(
-        icon: Icons.search_off,
-        title: 'No stickers found',
-        subtitle: 'Try a different word, like “star” or “coffee”.',
-      );
+      if (_isRecentTab) {
+        return _buildMessage(
+          icon: Icons.history,
+          title: 'Stickers you use appear here',
+        );
+      }
+      return _buildMessage(icon: Icons.search_off, title: 'No results');
     }
     return GridView.builder(
       controller: scrollController,
-      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
       ),
       itemCount: icons.length,
-      itemBuilder: (context, index) => _buildTile(icons[index]),
+      itemBuilder: (context, index) =>
+          _buildTile(icons[index], removable: _isRecentTab),
     );
   }
 
-  Widget _buildTile(String iconName) {
+  Widget _buildTile(String iconName, {bool removable = false}) {
     final isPlacing = _placing == iconName;
-    return Material(
+    final tile = Material(
       color: grey100,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(14),
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         onTap: () => _pick(iconName),
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(14),
           child: isPlacing
               ? const Center(
                   child: SizedBox(
@@ -375,71 +427,78 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
                     ),
                   ),
                 )
-              : SvgPicture.network(
-                  _service.previewUrl(iconName, color: _previewColor),
-                  fit: BoxFit.contain,
-                  placeholderBuilder: (_) => Center(
-                    child: Icon(Icons.image_outlined, color: grey400, size: 20),
-                  ),
+              : FutureBuilder<String>(
+                  future: _service.loadSvg(iconName),
+                  builder: (context, snap) {
+                    if (snap.hasData) {
+                      return SvgPicture.string(
+                        snap.data!,
+                        fit: BoxFit.contain,
+                        theme: SvgTheme(currentColor: _previewColor),
+                      );
+                    }
+                    if (snap.hasError) {
+                      return Center(
+                        child: Icon(Icons.broken_image_outlined,
+                            color: grey400, size: 20),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
                 ),
         ),
       ),
+    );
+    if (!removable) return tile;
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        tile,
+        Positioned(
+          top: -8,
+          right: -8,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => _removeRecent(iconName),
+            child: Padding(
+              padding: const EdgeInsets.all(6),
+              child: Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  color: grey800,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: colorWhite, width: 1.5),
+                ),
+                child: const Icon(Icons.close, size: 12, color: colorWhite),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildMessage({
     required IconData icon,
     required String title,
-    required String subtitle,
     Widget? action,
   }) {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 44, color: grey400),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                color: colorBlack87,
-              ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 40, color: grey400),
+          const SizedBox(height: 12),
+          Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              color: colorBlack87,
             ),
-            const SizedBox(height: 4),
-            Text(
-              subtitle,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: grey600, fontSize: 13),
-            ),
-            if (action != null) ...[const SizedBox(height: 8), action],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFooter() {
-    return SafeArea(
-      top: false,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 6, 16, 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.info_outline, size: 14, color: grey500),
-            const SizedBox(width: 6),
-            Flexible(
-              child: Text(
-                'Powered by Iconify — open-source (CC0 / MIT / Apache) icons',
-                style: TextStyle(fontSize: 11, color: grey500),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        ),
+          ),
+          if (action != null) ...[const SizedBox(height: 8), action],
+        ],
       ),
     );
   }
