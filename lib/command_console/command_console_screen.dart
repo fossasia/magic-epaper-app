@@ -252,6 +252,160 @@ class _CommandConsoleScreenState extends State<CommandConsoleScreen>
     }
   }
 
+  void _showGuide() {
+    const commands = <List<String>>[
+      ['connect', 'Poll and hold a tag session.'],
+      ['disconnect', 'End the tag session.'],
+      ['info', 'Print connected tag details (type, id, sak…).'],
+      ['tx <hex>', 'Send raw bytes to the tag, print the response.'],
+      ['<hex>', 'Shorthand for tx (bare hex is sent as-is).'],
+      ['readblock <n>', 'ISO15693 read of a single block n (0-255).'],
+      ['help', 'Print the command list in the console.'],
+      ['clear', 'Clear the console.'],
+    ];
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusL),
+          ),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.7,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(Dimens.spacingL),
+                  decoration: const BoxDecoration(
+                    color: colorAccent,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(Dimens.radiusL),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.terminal, color: colorWhite, size: 22),
+                      const SizedBox(width: Dimens.spacingS),
+                      Text(
+                        _l10n.commandGuide,
+                        style: const TextStyle(
+                          color: colorWhite,
+                          fontSize: Dimens.fontSizeL,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(Dimens.spacingL),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _l10n.commandGuideIntro,
+                          style: const TextStyle(
+                            fontSize: Dimens.fontSizeM,
+                            height: 1.4,
+                          ),
+                        ),
+                        const SizedBox(height: Dimens.spacingL),
+                        for (final entry in commands)
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(bottom: Dimens.spacingM),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: Dimens.spacingS,
+                                    vertical: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: grey100,
+                                    borderRadius:
+                                        BorderRadius.circular(Dimens.radiusS),
+                                    border: Border.all(color: grey300),
+                                  ),
+                                  child: Text(
+                                    entry[0],
+                                    style: const TextStyle(
+                                      fontFamily: 'monospace',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: Dimens.fontSizeS,
+                                      color: grey900,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: Dimens.spacingM),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 3),
+                                    child: Text(
+                                      entry[1],
+                                      style: const TextStyle(
+                                        fontSize: Dimens.fontSizeS,
+                                        height: 1.35,
+                                        color: grey700,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(Dimens.spacingM),
+                          decoration: BoxDecoration(
+                            color: grey50,
+                            borderRadius: BorderRadius.circular(Dimens.radiusM),
+                            border: Border.all(color: grey200),
+                          ),
+                          child: Text(
+                            _l10n.commandGuideHexNote,
+                            style: const TextStyle(
+                              fontSize: Dimens.fontSizeS,
+                              height: 1.35,
+                              color: grey600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    Dimens.spacingS,
+                    0,
+                    Dimens.spacingS,
+                    Dimens.spacingS,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(_l10n.gotIt),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final connected = _service.isConnected;
@@ -260,9 +414,9 @@ class _CommandConsoleScreenState extends State<CommandConsoleScreen>
       index: 9,
       actions: [
         IconButton(
-          icon: const Icon(Icons.delete_sweep, color: colorWhite),
-          tooltip: _l10n.clearConsole,
-          onPressed: () => setState(() => _lines.clear()),
+          icon: const Icon(Icons.info_outline, color: colorWhite),
+          tooltip: _l10n.commandGuide,
+          onPressed: _showGuide,
         ),
       ],
       body: SafeArea(
