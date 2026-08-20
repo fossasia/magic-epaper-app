@@ -11,6 +11,7 @@ pub enum DitherMethod {
     Halftone,
     Bayer,
     Sierra2,
+    Burkes,
 }
 
 const BAYER_8X8: [[f32; 8]; 8] = [
@@ -183,6 +184,16 @@ pub fn process_image_rust(
                     distribute_error(&mut buffer, x, y, w, h, 0, 1, err_r, err_g, err_b, 3.0 * w16);
                     distribute_error(&mut buffer, x, y, w, h, 1, 1, err_r, err_g, err_b, 2.0 * w16);
                     distribute_error(&mut buffer, x, y, w, h, 2, 1, err_r, err_g, err_b, 1.0 * w16);
+                }
+                DitherMethod::Burkes => {
+                    let w32 = 1.0 / 32.0;
+                    distribute_error(&mut buffer, x, y, w, h, 1, 0, err_r, err_g, err_b, 8.0 * w32);
+                    distribute_error(&mut buffer, x, y, w, h, 2, 0, err_r, err_g, err_b, 4.0 * w32);
+                    distribute_error(&mut buffer, x, y, w, h, -2, 1, err_r, err_g, err_b, 2.0 * w32);
+                    distribute_error(&mut buffer, x, y, w, h, -1, 1, err_r, err_g, err_b, 4.0 * w32);
+                    distribute_error(&mut buffer, x, y, w, h, 0, 1, err_r, err_g, err_b, 8.0 * w32);
+                    distribute_error(&mut buffer, x, y, w, h, 1, 1, err_r, err_g, err_b, 4.0 * w32);
+                    distribute_error(&mut buffer, x, y, w, h, 2, 1, err_r, err_g, err_b, 2.0 * w32);
                 }
             }
         }

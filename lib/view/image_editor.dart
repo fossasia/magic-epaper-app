@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,8 @@ import 'package:magicepaperapp/image_library/services/image_save_handler.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
 import 'package:magicepaperapp/card_templates/card_template_selection_view.dart';
+import 'package:magicepaperapp/card_templates/weather_template_result.dart';
+import 'package:magicepaperapp/card_templates/card_template_result.dart';
 import 'package:magicepaperapp/util/color_util.dart';
 import 'package:magicepaperapp/util/epd/driver/waveform.dart';
 import 'package:magicepaperapp/util/xbm_encoder.dart';
@@ -31,6 +35,8 @@ class ImageEditor extends StatefulWidget {
   final bool isExportOnly;
 
   final Map<String, dynamic>? pendingCanvasDocument;
+  final Map<String, dynamic>? pendingTemplateData;
+  final Map<String, dynamic>? pendingTemplateMetadata;
   final String? editingImageId;
 
   final int? initialFilterIndex;
@@ -42,6 +48,8 @@ class ImageEditor extends StatefulWidget {
     required this.device,
     this.isExportOnly = false,
     this.pendingCanvasDocument,
+    this.pendingTemplateData,
+    this.pendingTemplateMetadata,
     this.editingImageId,
     this.initialFilterIndex,
     this.initialFlipHorizontal = false,
@@ -66,8 +74,14 @@ class _ImageEditorState extends State<ImageEditor> {
   ImageSaveHandler? _imageSaveHandler;
   bool _isProcessingImages = false;
   bool _isInitializing = true;
+  Timer? _colorDebounce;
+  double _currentBrightness = 1.0;
+  double _currentContrast = 1.0;
+  img.Image? _pristineImage;
 
   Map<String, dynamic>? _pendingCanvasDocument;
+  Map<String, dynamic>? _pendingTemplateData;
+  Map<String, dynamic>? _pendingTemplateMetadata;
   String? _editingLibraryImageId;
   int? _pendingInitialFilterIndex;
   bool _pendingInitialFlipH = false;
@@ -82,6 +96,8 @@ class _ImageEditorState extends State<ImageEditor> {
     _selectedWaveform = null;
     _selectedWaveformName = null;
     _pendingCanvasDocument = widget.pendingCanvasDocument;
+    _pendingTemplateData = widget.pendingTemplateData;
+    _pendingTemplateMetadata = widget.pendingTemplateMetadata;
     _editingLibraryImageId = widget.editingImageId;
     _pendingInitialFilterIndex = widget.initialFilterIndex;
     _pendingInitialFlipH = widget.initialFlipHorizontal;
@@ -163,8 +179,10 @@ class _ImageEditorState extends State<ImageEditor> {
       deviceHeight: widget.device.height,
       deviceColors: widget.device.colors,
       canvasDocument: _pendingCanvasDocument,
+      templateData: _pendingTemplateData,
       sourceImage: sourceBytes,
       existingImageId: _editingLibraryImageId,
+      extraMetadata: _pendingTemplateMetadata,
     );
   }
 
@@ -204,7 +222,7 @@ class _ImageEditorState extends State<ImageEditor> {
     if (_processedSourceImage == sourceImage) {
       return;
     }
-
+    _pristineImage ??= img.Image.from(sourceImage);
     _processImagesAsync(sourceImage);
   }
 
@@ -298,7 +316,7 @@ class _ImageEditorState extends State<ImageEditor> {
     );
 
     try {
-      img.Image baseImage = _rawImages[_selectedFilterIndex];
+      img.Image baseImage = img.Image.from(_rawImages[_selectedFilterIndex]);
 
       if (flipHorizontal) {
         baseImage = img.flipHorizontal(baseImage);
@@ -468,7 +486,8 @@ class _ImageEditorState extends State<ImageEditor> {
       onPressed: widget.isExportOnly
           ? _exportXbmFiles
           : () async {
-              img.Image finalImg = _rawImages[_selectedFilterIndex];
+              img.Image finalImg =
+                  img.Image.from(_rawImages[_selectedFilterIndex]);
 
               if (flipHorizontal) {
                 finalImg = img.flipHorizontal(finalImg);
@@ -569,6 +588,153 @@ class _ImageEditorState extends State<ImageEditor> {
     );
   }
 
+  void _showColorAdjustmentDialog(BuildContext context, ImageLoader imgLoader) {
+    if (imgLoader.image == null) return;
+
+    _pristineImage ??= img.Image.from(imgLoader.image!);
+
+    void applyFiltersRealtime() {
+      if (_colorDebounce?.isActive ?? false) _colorDebounce!.cancel();
+
+      _colorDebounce = Timer(const Duration(milliseconds: 300), () async {
+        if (_pristineImage == null) return;
+
+        final adjusted = await compute(_applyAdjustments,
+            [_pristineImage!, _currentBrightness, _currentContrast]);
+
+        final bytes = await compute(
+            (img.Image image) => Uint8List.fromList(img.encodePng(image)),
+            adjusted);
+        if (!mounted) return;
+
+        await imgLoader.updateImage(
+            bytes: bytes,
+            width: widget.device.width,
+            height: widget.device.height);
+      });
+    }
+
+    showModalBottomSheet(
+      isDismissible: false,
+      context: context,
+      backgroundColor: Colors.white,
+      barrierColor: Colors.black.withValues(alpha: 0.2),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    appLocalizations.adjustImage,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      const Icon(Icons.light_mode_outlined),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                "${appLocalizations.brightness}: ${_currentBrightness.toStringAsFixed(2)}"),
+                            Slider(
+                              value: _currentBrightness,
+                              min: 0.0,
+                              max: 2.0,
+                              activeColor: colorAccent,
+                              onChanged: (val) {
+                                setModalState(() => _currentBrightness = val);
+                                applyFiltersRealtime();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      const Icon(Icons.contrast_outlined),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                "${appLocalizations.contrast}: ${_currentContrast.toStringAsFixed(2)}"),
+                            Slider(
+                              value: _currentContrast,
+                              min: 0.0,
+                              max: 2.0,
+                              activeColor: colorAccent,
+                              onChanged: (val) {
+                                setModalState(() => _currentContrast = val);
+                                applyFiltersRealtime();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: colorAccent,
+                            side: const BorderSide(color: colorAccent),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          onPressed: () {
+                            setModalState(() {
+                              _currentBrightness = 1.0;
+                              _currentContrast = 1.0;
+                            });
+                            applyFiltersRealtime();
+                          },
+                          child: Text(
+                            appLocalizations.resetToDefault,
+                            style: const TextStyle(fontSize: 14),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: colorAccent,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                          child: Text(appLocalizations.done,
+                              style: const TextStyle(fontSize: 14)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context)!;
@@ -654,6 +820,8 @@ class _ImageEditorState extends State<ImageEditor> {
                         onFlipHorizontal: toggleFlipHorizontal,
                         onFlipVertical: toggleFlipVertical,
                         onSave: _saveCurrentImage,
+                        onAdjustColors: () =>
+                            _showColorAdjustmentDialog(context, imgLoader),
                       )
                     : Center(
                         child: Text(
@@ -673,16 +841,45 @@ class _ImageEditorState extends State<ImageEditor> {
               _pendingCanvasDocument = doc;
             });
           },
+          onTemplateData: (data) {
+            setState(() {
+              _pendingTemplateData = data;
+            });
+          },
           onSourceChanged: (String source) {
             setState(() {
+              _currentBrightness = 1.0;
+              _currentContrast = 1.0;
+              _pristineImage = null;
               _currentImageSource = source;
               if (source != 'editor') {
                 _pendingCanvasDocument = null;
               }
+              if (source != 'template') {
+                _pendingTemplateData = null;
+                _pendingTemplateMetadata = null;
+              }
+            });
+          },
+          onTemplateMetadata: (metadata) {
+            setState(() {
+              _pendingTemplateMetadata = metadata;
             });
           }),
     );
   }
+}
+
+img.Image _applyAdjustments(List<dynamic> args) {
+  final img.Image pristine = args[0];
+  final double brightness = args[1];
+  final double contrast = args[2];
+
+  return img.adjustColor(
+    img.Image.from(pristine),
+    brightness: brightness,
+    contrast: contrast,
+  );
 }
 
 class BottomActionMenu extends StatelessWidget {
@@ -691,6 +888,8 @@ class BottomActionMenu extends StatelessWidget {
   final ImageSaveHandler? imageSaveHandler;
   final Function(String)? onSourceChanged;
   final Function(Map<String, dynamic>)? onCanvasDocument;
+  final Function(Map<String, dynamic>?)? onTemplateData;
+  final Function(Map<String, dynamic>?)? onTemplateMetadata;
 
   const BottomActionMenu({
     super.key,
@@ -699,6 +898,8 @@ class BottomActionMenu extends StatelessWidget {
     required this.imageSaveHandler,
     this.onSourceChanged,
     this.onCanvasDocument,
+    this.onTemplateData,
+    this.onTemplateMetadata,
   });
 
   @override
@@ -744,6 +945,7 @@ class BottomActionMenu extends StatelessWidget {
                 label: appLocalizations.import,
                 onTap: () async {
                   final success = await imgLoader.pickImage(
+                    context: context,
                     width: epd.width,
                     height: epd.height,
                   );
@@ -828,24 +1030,41 @@ class BottomActionMenu extends StatelessWidget {
                 fontSize: fontSize,
                 label: appLocalizations.templates,
                 onTap: () async {
-                  final result = await Navigator.of(context).push<Uint8List>(
+                  final result = await Navigator.of(context).push<Object>(
                     MaterialPageRoute(
+                      settings: const RouteSettings(name: 'cardTemplates'),
                       builder: (context) => CardTemplateSelectionView(
                         width: epd.width,
                         height: epd.height,
+                        device: epd,
                       ),
                     ),
                   );
 
-                  if (result != null) {
+                  Uint8List? png;
+                  Map<String, dynamic>? templateData;
+                  Map<String, dynamic>? metadata;
+                  if (result is CardTemplateResult) {
+                    png = result.png;
+                    metadata = result.metadata;
+                  } else if (result is WeatherTemplateResult) {
+                    png = result.png;
+                    templateData = result.data;
+                  } else if (result is Uint8List) {
+                    png = result;
+                  }
+
+                  if (png != null) {
                     await imgLoader.updateImage(
-                      bytes: result,
+                      bytes: png,
                       width: epd.width,
                       height: epd.height,
                     );
-                    await imgLoader.saveFinalizedImageBytes(result);
+                    await imgLoader.saveFinalizedImageBytes(png);
 
+                    onTemplateData?.call(templateData);
                     onSourceChanged?.call('template');
+                    onTemplateMetadata?.call(metadata);
                   }
                 },
               ),

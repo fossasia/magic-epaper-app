@@ -105,6 +105,13 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
             _progress = progress.clamp(0, 100) / 100.0;
           });
         },
+        onWaitingForTag: () {
+          if (!mounted) return;
+          setState(() {
+            _currentState = _TransferState.waitingForNfc;
+            _progress = 0.0;
+          });
+        },
       );
       if (!mounted) return;
       setState(() {
@@ -169,6 +176,7 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
           ),
         );
       case _TransferState.flashing:
+        final bool finishing = _progress >= 0.99;
         return _buildStateColumn(
             key: 'flashing',
             icon: Icons.nfc,
@@ -177,13 +185,15 @@ class _WaveshareTransferDialogState extends State<WaveshareTransferDialog>
             child: Column(
               children: [
                 LinearProgressIndicator(
-                  value: _progress,
+                  value: finishing ? null : _progress,
                   minHeight: 10,
                   backgroundColor: grey300,
                   color: colorPrimary,
                 ),
                 const SizedBox(height: Dimens.spacingM),
-                Text(appLocalizations.percentage((_progress * 100).toInt())),
+                Text(finishing
+                    ? appLocalizations.finishingRefresh
+                    : appLocalizations.percentage((_progress * 100).toInt())),
                 const SizedBox(height: Dimens.spacingXl),
                 Text(
                   appLocalizations.keepPhoneStill,
