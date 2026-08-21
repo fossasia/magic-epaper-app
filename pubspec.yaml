@@ -21,6 +21,7 @@ dependencies:
   # nfc_manager: ^3.5.0
   flutter_nfc_kit: ^3.6.2
   convert: ^3.1.2
+  flutter_svg: ^2.0.16
   image: ^4.9.1
   image_picker: ^1.2.3
   crop_your_image: ^2.0.0
