@@ -15,15 +15,16 @@ typedef GoodisplayProgressCallback = void Function(
     double progress, String status);
 
 class GoodisplayNfcProtocol {
-  final Duration timeout = const Duration(seconds: 8);
+  final Duration timeout = const Duration(seconds: 50);
 
-  // 1. Select NDEF Application (AID: D2760000850101)
-  static final Uint8List selectAppletApdu = Uint8List.fromList(
-      [0x00, 0xA4, 0x04, 0x00, 0x07, 0xD2, 0x76, 0x00, 0x00, 0x85, 0x01, 0x01]);
-
-  // 2. Select NDEF Data File (File ID: E104)
-  static final Uint8List selectNdefFileApdu =
-      Uint8List.fromList([0x00, 0xA4, 0x00, 0x0C, 0x02, 0xE1, 0x04]);
+  Uint8List _hexToBytes(String hex) {
+    hex = hex.replaceAll(' ', '');
+    final result = Uint8List(hex.length ~/ 2);
+    for (int i = 0; i < hex.length; i += 2) {
+      result[i ~/ 2] = int.parse(hex.substring(i, i + 2), radix: 16);
+    }
+    return result;
+  }
 
   Future<bool> _isNfcAvailable() async {
     final availability = await FlutterNfcKit.nfcAvailability;
@@ -46,52 +47,41 @@ class GoodisplayNfcProtocol {
     }
   }
 
-  bool _isApduSuccess(Uint8List res) {
-    if (res.length < 2) return false;
-    return res[res.length - 2] == 0x90 && res[res.length - 1] == 0x00;
-  }
+  /// Codifica Goodisplay 4G (GetPictureData_4G estratto da App2.dll)
+  /// Scansione verticale colonne da destra a sinistra a blocchi di 4 pixel
+  Uint8List encodeGoodisplay4G(img.Image bitmap) {
+    final int width = bitmap.width;
+    final int height = bitmap.height;
+    final Uint8List imageBuffer = Uint8List(100000);
+    int num = 0;
 
-  /// Codifica l'immagine 4 colori (296x128) in formato BWRY 2-bit per pixel
-  /// Genera il payload a 2 piani separati (BW Plane + Red/Yellow Plane)
-  Uint8List encodeGoodisplayDualPlane(img.Image image, int width, int height) {
-    final int planeSize = (width * height) ~/ 8; // 4736 byte per piano
-    final Uint8List bwPlane = Uint8List(planeSize);
-    final Uint8List ryPlane = Uint8List(planeSize);
+    for (int num2 = width - 1; num2 >= 0; num2--) {
+      for (int i = 0; i <= (height ~/ 4) - 1; i++) {
+        int b = 0;
+        for (int j = 0; j < 4; j++) {
+          b = (b * 4) & 0xFF;
+          final pixel = bitmap.getPixel(num2, i * 4 + j);
 
-    // Inizializza tutto a 1 (Bianco di default per E-Paper)
-    bwPlane.fillRange(0, planeSize, 0xFF);
-    ryPlane.fillRange(0, planeSize, 0x00);
+          final int r = pixel.r.toInt();
+          final int g = pixel.g.toInt();
+          final int bCol = pixel.b.toInt();
 
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        final pixel = image.getPixel(x, y);
-        final r = pixel.r.toInt();
-        final g = pixel.g.toInt();
-        final b = pixel.b.toInt();
-
-        final int byteIndex = (y * width + x) ~/ 8;
-        final int bitOffset = 7 - (x % 8);
-
-        // Riconoscimento colori
-        final bool isBlack = (r < 80 && g < 80 && b < 80);
-        final bool isRed = (r > 160 && g < 90 && b < 90);
-        final bool isYellow = (r > 160 && g > 160 && b < 90);
-
-        if (isBlack) {
-          bwPlane[byteIndex] &= ~(1 << bitOffset); // 0 = Black nel piano BW
-        } else if (isRed || isYellow) {
-          ryPlane[byteIndex] |=
-              (1 << bitOffset); // 1 = Colore nel piano Red/Yellow
-          if (isYellow) {
-            bwPlane[byteIndex] &=
-                ~(1 << bitOffset); // Bitmask differenziata per Yellow
+          if (r <= 100 && g <= 100 && bCol <= 100) {
+            continue; // 00 = Nero
           }
+          if (r >= 200 && g >= 200 && bCol >= 200) {
+            b = (b + 1) & 0xFF; // 01 = Bianco
+            continue;
+          }
+
+          final int avg = (r + g + bCol) ~/ 3;
+          b = (avg > 127 ? (b + 2) : (b + 3)) & 0xFF;
         }
+        imageBuffer[num] = b;
+        num++;
       }
     }
-
-    // Unisce i due piani in un unico stream di dati continuo
-    return Uint8List.fromList([...bwPlane, ...ryPlane]);
+    return imageBuffer;
   }
 
   Future<void> sendImage({
@@ -106,122 +96,108 @@ class GoodisplayNfcProtocol {
     Fluttertoast.showToast(
         msg: appLocalizations.bringPhoneNearMagicEpaperHardware);
 
-    // 1. Polling
-    final tag = await FlutterNfcKit.poll(
+    await FlutterNfcKit.poll(
       timeout: timeout,
       iosAlertMessage: appLocalizations.bringPhoneNearMagicEpaperHardware,
     );
 
-    if (tag.type != NFCTagType.iso7816 &&
-        tag.type != NFCTagType.mifare_ultralight &&
-        tag.type != NFCTagType.mifare_classic) {
-      await FlutterNfcKit.finish();
-      throw Exception('Target is not an ISO 14443-A Goodisplay badge');
-    }
+    try {
+      onProgress?.call(0.05, appLocalizations.tagDetectedInitializing);
 
-    onProgress?.call(0.1, appLocalizations.tagDetectedInitializing);
+      // --- 1. HANDSHAKE IC_DIY & SEQUENZA INIT GDEY029F51 (Estratta da App2.dll) ---
+      await FlutterNfcKit.transceive('F0DB020000');
+      await Future.delayed(const Duration(milliseconds: 10));
 
-    // 2. Select NDEF Application
-    final selectRes =
-        await FlutterNfcKit.transceive(selectAppletApdu, timeout: timeout);
-    if (!_isApduSuccess(selectRes)) {
-      await FlutterNfcKit.finish();
-      throw Exception('Failed to select NDEF Applet');
-    }
+      const String initCmd0 =
+          "F0DB00007AA006012001000128A40108A5020028A4010CA5020028A40103A1024D78A103000F29A103010700A10403105444A1080605003F0A25121AA1025037A103600202A1056100800128A102E71CA102E322A102B4D0A102B503A102E901A1023008A10104A40103A30110A2021200A40103A2020200A40103A20207A5";
+      const String initCmd1 = "F0DA000003F00120";
 
-    // 3. Select Data File (E104)
-    final selectFileRes =
-        await FlutterNfcKit.transceive(selectNdefFileApdu, timeout: timeout);
-    if (!_isApduSuccess(selectFileRes)) {
-      await FlutterNfcKit.finish();
-      throw Exception('Failed to select File E104');
-    }
+      await FlutterNfcKit.transceive(initCmd0);
+      await Future.delayed(const Duration(milliseconds: 10));
+      await FlutterNfcKit.transceive(initCmd1);
+      await Future.delayed(const Duration(milliseconds: 100));
 
-    // 4. Preparazione buffer a 2 Piani
-    onProgress?.call(0.2, appLocalizations.processingImageData);
-    final Uint8List rawFrame = encodeGoodisplayDualPlane(image, width, height);
+      // --- 2. TRASMISSIONE PAYLOAD PACCHETTIZZATO (250 byte per blocco) ---
+      onProgress?.call(0.20, appLocalizations.processingImageData);
 
-    // 5. HEADER DI START (Offset 0x0000)
-    // Struttura: [Magic: 0xA5, Mode/Flag: 0x01, Model: 0x29, W_H, W_L, H_H, H_L]
-    final startPacket = Uint8List.fromList([
-      0xA5, 0x01, 0x19, // <-- 0x19 specifico per GDEY029F51
-      (width >> 8) & 0xFF, width & 0xFF,
-      (height >> 8) & 0xFF, height & 0xFF,
-    ]);
-    final startApdu = Uint8List.fromList(
-        [0x00, 0xD6, 0x00, 0x00, startPacket.length, ...startPacket]);
-    await FlutterNfcKit.transceive(startApdu, timeout: timeout);
-    await Future.delayed(const Duration(milliseconds: 30));
+      // Orientamento pannello a 90°
+      final rotatedImage = img.copyRotate(image, angle: 90);
+      final imageBuffer = encodeGoodisplay4G(rotatedImage);
+      final int totalBytes =
+          (rotatedImage.width * rotatedImage.height) ~/ 4; // 9472 byte
 
-    // 6. INVIO CHUNKS con flag di aggiornamento a offset 0x0000
-    const int dataChunkSize = 56;
-    final int totalChunks = (rawFrame.length / dataChunkSize).ceil();
+      const int chunkSize = 250;
+      final int totalChunks = totalBytes ~/ chunkSize;
+      const int screenIndexBW = 0;
 
-    for (int i = 0; i < totalChunks; i++) {
-      final int start = i * dataChunkSize;
-      final int end = (start + dataChunkSize > rawFrame.length)
-          ? rawFrame.length
-          : start + dataChunkSize;
-      final Uint8List chunkData = rawFrame.sublist(start, end);
+      for (int i = 0; i < totalChunks; i++) {
+        final packet = Uint8List(255);
+        packet[0] = 240; // 0xF0
+        packet[1] = 210; // 0xD2
+        packet[2] = screenIndexBW;
+        packet[3] = i;
+        packet[4] = 250;
 
-      final int packetIndex = i + 1;
+        for (int j = 0; j < 250; j++) {
+          packet[j + 5] = imageBuffer[j + (250 * i)];
+        }
 
-      // Header pacchetto: [Flag: 0xA5, BlockIdx_H, BlockIdx_L, DataLen]
-      final packetPayload = Uint8List.fromList([
-        0xA5,
-        (packetIndex >> 8) & 0xFF,
-        packetIndex & 0xFF,
-        chunkData.length,
-        ...chunkData,
-      ]);
+        await FlutterNfcKit.transceive(
+          packet.map((b) => b.toRadixString(16).padLeft(2, '0')).join(),
+        );
+        await Future.delayed(const Duration(milliseconds: 50));
 
-      // Scrittura a partire dall'offset 0x0000 così l'MCU legge sia la flag che il blocco
-      final apduWrite = Uint8List.fromList([
-        0x00,
-        0xD6,
-        0x00,
-        0x00, // Scrive dall'inizio della mailbox (0x0000)
-        packetPayload.length,
-        ...packetPayload,
-      ]);
-
-      final writeRes =
-          await FlutterNfcKit.transceive(apduWrite, timeout: timeout);
-      if (!_isApduSuccess(writeRes)) {
-        await FlutterNfcKit.finish();
-        throw Exception('Failed block $packetIndex/$totalChunks');
+        final double progress = 0.20 + (0.70 * ((250 * i) / totalBytes));
+        onProgress?.call(
+            progress, '${appLocalizations.writingChunk} ${i + 1}/$totalChunks');
       }
 
-      // IMPORTANTE: Pausa minima per il DMA/I2C dell'MCU Goodisplay
-      await Future.delayed(const Duration(milliseconds: 18));
+      // Invio byte residui
+      if (totalBytes % chunkSize != 0) {
+        final packet = Uint8List(255);
+        packet[0] = 240;
+        packet[1] = 210;
+        packet[2] = screenIndexBW;
+        packet[3] = totalChunks;
+        packet[4] = 250;
 
-      final progress = 0.2 + (0.75 * ((i + 1) / totalChunks));
-      onProgress?.call(
-          progress, '${appLocalizations.writingChunk} ${i + 1}/$totalChunks');
+        for (int k = 0; k < 250; k++) {
+          final int srcIdx = k + (250 * totalChunks);
+          packet[k + 5] = srcIdx < imageBuffer.length ? imageBuffer[srcIdx] : 0;
+        }
+
+        await FlutterNfcKit.transceive(
+          packet.map((b) => b.toRadixString(16).padLeft(2, '0')).join(),
+        );
+      }
+
+      // --- 3. REFRESH CONTROLLER 4-COLOR ---
+      onProgress?.call(0.95, appLocalizations.refreshingDisplay);
+
+      // Trigger Refresh Mode 4: 0xF0, 0xD4, 0x85, 0x80, 0x00
+      final refreshCmd = Uint8List.fromList([240, 212, 133, 128, 0]);
+      final respHex = await FlutterNfcKit.transceive(
+        refreshCmd.map((b) => b.toRadixString(16).padLeft(2, '0')).join(),
+      );
+
+      final respBytes = _hexToBytes(respHex);
+      if (respBytes.isNotEmpty && respBytes[0] == 144) {
+        // 0x90 Status OK
+        AppLogger.info(
+            'Alimentazione RF per completamento refresh (24s per GDEY029F51)...');
+
+        // Ciclo di mantenimento campo RF: 24 secondi per GDEY029F51
+        const int refreshDurationSeconds = 24;
+        for (int s = 1; s <= refreshDurationSeconds; s++) {
+          await Future.delayed(const Duration(seconds: 1));
+          onProgress?.call(0.95 + (0.05 * (s / refreshDurationSeconds)),
+              '${appLocalizations.refreshingDisplay} (${s}s/$refreshDurationSeconds)');
+        }
+      }
+
+      onProgress?.call(1.0, appLocalizations.transferComplete);
+    } finally {
+      await FlutterNfcKit.finish();
     }
-
-    // 7. TRIGGER DI REFRESH FINALE
-    onProgress?.call(0.95, appLocalizations.refreshingDisplay);
-
-    // Pacchetto di fine e start refresh display:
-    // Offset 0x0000: [0x5A, 0xFF, 0xFF, 0x01, totalChunks_H, totalChunks_L]
-    final refreshPacket = Uint8List.fromList([
-      0x5A,
-      0xFF,
-      0xFF,
-      0x01,
-      (totalChunks >> 8) & 0xFF,
-      totalChunks & 0xFF,
-    ]);
-    final refreshApdu = Uint8List.fromList(
-        [0x00, 0xD6, 0x00, 0x00, refreshPacket.length, ...refreshPacket]);
-    await FlutterNfcKit.transceive(refreshApdu, timeout: timeout);
-
-    // 8. Mantieni il campo RF attivo durante l'avvio del refresh fisico
-    AppLogger.info('Powering EPD physical refresh for GDEY029F51 (16s)...');
-    await Future.delayed(const Duration(seconds: 16)); // <-- Aumentato a 16s
-
-    onProgress?.call(1.0, appLocalizations.transferComplete);
-    await FlutterNfcKit.finish();
   }
 }
