@@ -65,7 +65,7 @@ class GoodisplayNfcProtocol {
           final int bCol = pixel.b.toInt();
 
           if (r <= 100 && g <= 100 && bCol <= 100) {
-            continue; 
+            continue;
           }
           if (r >= 200 && g >= 200 && bCol >= 200) {
             b = (b + 1) & 0xFF;
@@ -116,10 +116,9 @@ class GoodisplayNfcProtocol {
 
       onProgress?.call(0.20, appLocalizations.processingImageData);
 
-      final panelImage =img.copyResize(image, width: 296, height: 128);
+      final panelImage = img.copyResize(image, width: 296, height: 128);
       final imageBuffer = encodeGoodisplay4G(panelImage);
-      final int totalBytes =
-          (panelImage.width * panelImage.height) ~/ 4;
+      final int totalBytes = (panelImage.width * panelImage.height) ~/ 4;
 
       const int chunkSize = 250;
       final int totalChunks = totalBytes ~/ chunkSize;
