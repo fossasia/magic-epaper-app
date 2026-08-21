@@ -47,8 +47,6 @@ class GoodisplayNfcProtocol {
     }
   }
 
-  /// Codifica Goodisplay 4G (GetPictureData_4G estratto da App2.dll)
-  /// Scansione verticale colonne da destra a sinistra a blocchi di 4 pixel
   Uint8List encodeGoodisplay4G(img.Image bitmap) {
     final int width = bitmap.width;
     final int height = bitmap.height;
@@ -67,10 +65,10 @@ class GoodisplayNfcProtocol {
           final int bCol = pixel.b.toInt();
 
           if (r <= 100 && g <= 100 && bCol <= 100) {
-            continue; // 00 = Nero
+            continue; 
           }
           if (r >= 200 && g >= 200 && bCol >= 200) {
-            b = (b + 1) & 0xFF; // 01 = Bianco
+            b = (b + 1) & 0xFF;
             continue;
           }
 
@@ -104,7 +102,6 @@ class GoodisplayNfcProtocol {
     try {
       onProgress?.call(0.05, appLocalizations.tagDetectedInitializing);
 
-      // --- 1. HANDSHAKE IC_DIY & SEQUENZA INIT GDEY029F51 (Estratta da App2.dll) ---
       await FlutterNfcKit.transceive('F0DB020000');
       await Future.delayed(const Duration(milliseconds: 10));
 
@@ -117,14 +114,12 @@ class GoodisplayNfcProtocol {
       await FlutterNfcKit.transceive(initCmd1);
       await Future.delayed(const Duration(milliseconds: 100));
 
-      // --- 2. TRASMISSIONE PAYLOAD PACCHETTIZZATO (250 byte per blocco) ---
       onProgress?.call(0.20, appLocalizations.processingImageData);
 
-      // Orientamento pannello a 90°
-      final rotatedImage = img.copyRotate(image, angle: 90);
-      final imageBuffer = encodeGoodisplay4G(rotatedImage);
+      final panelImage =img.copyResize(image, width: 296, height: 128);
+      final imageBuffer = encodeGoodisplay4G(panelImage);
       final int totalBytes =
-          (rotatedImage.width * rotatedImage.height) ~/ 4; // 9472 byte
+          (panelImage.width * panelImage.height) ~/ 4;
 
       const int chunkSize = 250;
       final int totalChunks = totalBytes ~/ chunkSize;
@@ -132,8 +127,8 @@ class GoodisplayNfcProtocol {
 
       for (int i = 0; i < totalChunks; i++) {
         final packet = Uint8List(255);
-        packet[0] = 240; // 0xF0
-        packet[1] = 210; // 0xD2
+        packet[0] = 240;
+        packet[1] = 210;
         packet[2] = screenIndexBW;
         packet[3] = i;
         packet[4] = 250;
@@ -152,7 +147,6 @@ class GoodisplayNfcProtocol {
             progress, '${appLocalizations.writingChunk} ${i + 1}/$totalChunks');
       }
 
-      // Invio byte residui
       if (totalBytes % chunkSize != 0) {
         final packet = Uint8List(255);
         packet[0] = 240;
@@ -171,10 +165,8 @@ class GoodisplayNfcProtocol {
         );
       }
 
-      // --- 3. REFRESH CONTROLLER 4-COLOR ---
       onProgress?.call(0.95, appLocalizations.refreshingDisplay);
 
-      // Trigger Refresh Mode 4: 0xF0, 0xD4, 0x85, 0x80, 0x00
       final refreshCmd = Uint8List.fromList([240, 212, 133, 128, 0]);
       final respHex = await FlutterNfcKit.transceive(
         refreshCmd.map((b) => b.toRadixString(16).padLeft(2, '0')).join(),
@@ -182,11 +174,9 @@ class GoodisplayNfcProtocol {
 
       final respBytes = _hexToBytes(respHex);
       if (respBytes.isNotEmpty && respBytes[0] == 144) {
-        // 0x90 Status OK
         AppLogger.info(
-            'Alimentazione RF per completamento refresh (24s per GDEY029F51)...');
+            'RF power for refresh completion (24s for GDEY029F51)...');
 
-        // Ciclo di mantenimento campo RF: 24 secondi per GDEY029F51
         const int refreshDurationSeconds = 24;
         for (int s = 1; s <= refreshDurationSeconds; s++) {
           await Future.delayed(const Duration(seconds: 1));

@@ -9,7 +9,7 @@ class Gdey029f51Driver extends Driver {
   String get driverName => 'GDEY029F51_Driver';
 
   @override
-  int get refresh => 0x12; // Display Refresh
+  int get refresh => 0x12;
 
   @override
   int get panelSetting => 0x00;
@@ -31,7 +31,6 @@ class Gdey029f51Driver extends Driver {
   @override
   WaveformList get waveforms => [];
 
-  // Transmission commands for BW plane and Red/Yellow plane
   @override
   List<int> get transmissionLines => [0x10, 0x13];
 
@@ -40,9 +39,8 @@ class Gdey029f51Driver extends Driver {
 
   @override
   Future<void> init(Protocol p, {Waveform? waveform}) async {
-    // Panel initialization sequence
-    await p.writeMsg(Uint8List.fromList([p.fw.epdCmd, 0x04])); // Power on
-    await p.writeMsg(Uint8List.fromList([p.fw.epdCmd, 0x00])); // Panel setting
+    await p.writeMsg(Uint8List.fromList([p.fw.epdCmd, 0x04]));
+    await p.writeMsg(Uint8List.fromList([p.fw.epdCmd, 0x00]));
     await p.writeMsg(Uint8List.fromList([p.fw.epdSend, 0x0F, 0x89]));
   }
 }
