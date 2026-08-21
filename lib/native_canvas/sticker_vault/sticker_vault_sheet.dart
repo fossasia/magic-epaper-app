@@ -15,62 +15,164 @@ class _StickerCategory {
 
 const List<_StickerCategory> _categories = [
   _StickerCategory('Popular', [
-    'mdi:heart', 'mdi:star', 'mdi:home', 'mdi:map-marker', 'mdi:gift',
-    'mdi:tag', 'mdi:camera', 'mdi:music', 'mdi:fire', 'mdi:crown',
-    'mdi:diamond-stone', 'mdi:flash', 'mdi:check-decagram', 'mdi:bell',
-    'mdi:thumb-up', 'mdi:emoticon-happy', 'mdi:lightbulb-on', 'mdi:rocket',
+    'mdi:heart',
+    'mdi:star',
+    'mdi:home',
+    'mdi:map-marker',
+    'mdi:gift',
+    'mdi:tag',
+    'mdi:camera',
+    'mdi:music',
+    'mdi:fire',
+    'mdi:crown',
+    'mdi:diamond-stone',
+    'mdi:flash',
+    'mdi:check-decagram',
+    'mdi:bell',
+    'mdi:thumb-up',
+    'mdi:emoticon-happy',
+    'mdi:lightbulb-on',
+    'mdi:rocket',
   ]),
   _StickerCategory('Faces', [
-    'mdi:emoticon-happy', 'mdi:emoticon-cool', 'mdi:emoticon-wink',
-    'mdi:emoticon-excited', 'mdi:emoticon-sad', 'mdi:emoticon-cry',
-    'mdi:emoticon-angry', 'mdi:emoticon-kiss', 'mdi:emoticon-neutral',
-    'mdi:emoticon-tongue', 'mdi:heart', 'mdi:heart-broken',
+    'mdi:emoticon-happy',
+    'mdi:emoticon-cool',
+    'mdi:emoticon-wink',
+    'mdi:emoticon-excited',
+    'mdi:emoticon-sad',
+    'mdi:emoticon-cry',
+    'mdi:emoticon-angry',
+    'mdi:emoticon-kiss',
+    'mdi:emoticon-neutral',
+    'mdi:emoticon-tongue',
+    'mdi:heart',
+    'mdi:heart-broken',
   ]),
   _StickerCategory('Weather', [
-    'mdi:weather-sunny', 'mdi:weather-night', 'mdi:weather-cloudy',
-    'mdi:weather-partly-cloudy', 'mdi:weather-rainy', 'mdi:weather-pouring',
-    'mdi:weather-snowy', 'mdi:weather-lightning', 'mdi:weather-windy',
-    'mdi:weather-fog', 'mdi:snowflake', 'mdi:umbrella',
+    'mdi:weather-sunny',
+    'mdi:weather-night',
+    'mdi:weather-cloudy',
+    'mdi:weather-partly-cloudy',
+    'mdi:weather-rainy',
+    'mdi:weather-pouring',
+    'mdi:weather-snowy',
+    'mdi:weather-lightning',
+    'mdi:weather-windy',
+    'mdi:weather-fog',
+    'mdi:snowflake',
+    'mdi:umbrella',
   ]),
   _StickerCategory('Food', [
-    'mdi:food', 'mdi:coffee', 'mdi:pizza', 'mdi:hamburger', 'mdi:cupcake',
-    'mdi:cake-variant', 'mdi:ice-cream', 'mdi:food-apple', 'mdi:bottle-soda',
-    'mdi:glass-cocktail', 'mdi:silverware-fork-knife', 'mdi:cup',
+    'mdi:food',
+    'mdi:coffee',
+    'mdi:pizza',
+    'mdi:hamburger',
+    'mdi:cupcake',
+    'mdi:cake-variant',
+    'mdi:ice-cream',
+    'mdi:food-apple',
+    'mdi:bottle-soda',
+    'mdi:glass-cocktail',
+    'mdi:silverware-fork-knife',
+    'mdi:cup',
   ]),
   _StickerCategory('Nature', [
-    'mdi:leaf', 'mdi:flower', 'mdi:tree', 'mdi:pine-tree', 'mdi:sprout',
-    'mdi:cactus', 'mdi:mushroom', 'mdi:water', 'mdi:fire', 'mdi:paw',
-    'mdi:bee', 'mdi:butterfly',
+    'mdi:leaf',
+    'mdi:flower',
+    'mdi:tree',
+    'mdi:pine-tree',
+    'mdi:sprout',
+    'mdi:cactus',
+    'mdi:mushroom',
+    'mdi:water',
+    'mdi:fire',
+    'mdi:paw',
+    'mdi:bee',
+    'mdi:butterfly',
   ]),
   _StickerCategory('Tech', [
-    'mdi:cellphone', 'mdi:laptop', 'mdi:monitor', 'mdi:wifi', 'mdi:bluetooth',
-    'mdi:battery', 'mdi:camera', 'mdi:headphones', 'mdi:usb', 'mdi:printer',
-    'mdi:cog', 'mdi:robot',
+    'mdi:cellphone',
+    'mdi:laptop',
+    'mdi:monitor',
+    'mdi:wifi',
+    'mdi:bluetooth',
+    'mdi:battery',
+    'mdi:camera',
+    'mdi:headphones',
+    'mdi:usb',
+    'mdi:printer',
+    'mdi:cog',
+    'mdi:robot',
   ]),
   _StickerCategory('Business', [
-    'mdi:briefcase', 'mdi:currency-usd', 'mdi:chart-line', 'mdi:cart',
-    'mdi:credit-card', 'mdi:calendar', 'mdi:email', 'mdi:phone',
-    'mdi:office-building', 'mdi:handshake', 'mdi:clipboard-text', 'mdi:tag',
+    'mdi:briefcase',
+    'mdi:currency-usd',
+    'mdi:chart-line',
+    'mdi:cart',
+    'mdi:credit-card',
+    'mdi:calendar',
+    'mdi:email',
+    'mdi:phone',
+    'mdi:office-building',
+    'mdi:handshake',
+    'mdi:clipboard-text',
+    'mdi:tag',
   ]),
   _StickerCategory('Travel', [
-    'mdi:airplane', 'mdi:car', 'mdi:bicycle', 'mdi:bus', 'mdi:train',
-    'mdi:map-marker', 'mdi:compass', 'mdi:bag-suitcase', 'mdi:ferry',
-    'mdi:rocket', 'mdi:earth', 'mdi:tent',
+    'mdi:airplane',
+    'mdi:car',
+    'mdi:bicycle',
+    'mdi:bus',
+    'mdi:train',
+    'mdi:map-marker',
+    'mdi:compass',
+    'mdi:bag-suitcase',
+    'mdi:ferry',
+    'mdi:rocket',
+    'mdi:earth',
+    'mdi:tent',
   ]),
   _StickerCategory('Arrows', [
-    'mdi:arrow-up', 'mdi:arrow-down', 'mdi:arrow-left', 'mdi:arrow-right',
-    'mdi:arrow-top-right', 'mdi:arrow-bottom-left', 'mdi:chevron-right',
-    'mdi:chevron-left', 'mdi:refresh', 'mdi:undo', 'mdi:redo', 'mdi:sync',
+    'mdi:arrow-up',
+    'mdi:arrow-down',
+    'mdi:arrow-left',
+    'mdi:arrow-right',
+    'mdi:arrow-top-right',
+    'mdi:arrow-bottom-left',
+    'mdi:chevron-right',
+    'mdi:chevron-left',
+    'mdi:refresh',
+    'mdi:undo',
+    'mdi:redo',
+    'mdi:sync',
   ]),
   _StickerCategory('Shapes', [
-    'mdi:circle', 'mdi:square', 'mdi:triangle', 'mdi:star', 'mdi:heart',
-    'mdi:hexagon', 'mdi:rhombus', 'mdi:octagon', 'mdi:cards-diamond',
-    'mdi:cards-club', 'mdi:cards-spade', 'mdi:cards-heart',
+    'mdi:circle',
+    'mdi:square',
+    'mdi:triangle',
+    'mdi:star',
+    'mdi:heart',
+    'mdi:hexagon',
+    'mdi:rhombus',
+    'mdi:octagon',
+    'mdi:cards-diamond',
+    'mdi:cards-club',
+    'mdi:cards-spade',
+    'mdi:cards-heart',
   ]),
   _StickerCategory('Symbols', [
-    'mdi:check-bold', 'mdi:close-thick', 'mdi:plus-thick', 'mdi:minus-thick',
-    'mdi:alert', 'mdi:information', 'mdi:help-circle', 'mdi:lightbulb',
-    'mdi:key', 'mdi:lock', 'mdi:bookmark', 'mdi:flag',
+    'mdi:check-bold',
+    'mdi:close-thick',
+    'mdi:plus-thick',
+    'mdi:minus-thick',
+    'mdi:alert',
+    'mdi:information',
+    'mdi:help-circle',
+    'mdi:lightbulb',
+    'mdi:key',
+    'mdi:lock',
+    'mdi:bookmark',
+    'mdi:flag',
   ]),
 ];
 
@@ -188,17 +290,14 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
     HapticFeedback.selectionClick();
     setState(() => _placing = iconName);
     try {
-      final bytes =
-          await _service.renderPng(iconName, color: widget.inkColor);
+      final bytes = await _service.renderPng(iconName, color: widget.inkColor);
       await _recentsStore.add(iconName);
       if (!mounted) return;
       Navigator.pop(context, bytes);
     } catch (e) {
       if (!mounted) return;
       setState(() => _placing = null);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('$e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
     }
   }
 
@@ -368,18 +467,13 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
 
   Widget _buildBody(ScrollController scrollController) {
     if (_loading) {
-      return const Center(
-        child: CircularProgressIndicator(color: colorAccent),
-      );
+      return const Center(child: CircularProgressIndicator(color: colorAccent));
     }
     if (_error != null) {
       return _buildMessage(
         icon: Icons.wifi_off,
         title: 'Couldn\'t load stickers',
-        action: TextButton(
-          onPressed: _runSearch,
-          child: const Text('Retry'),
-        ),
+        action: TextButton(onPressed: _runSearch, child: const Text('Retry')),
       );
     }
     final icons = _visibleIcons;
@@ -439,8 +533,11 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
                     }
                     if (snap.hasError) {
                       return Center(
-                        child: Icon(Icons.broken_image_outlined,
-                            color: grey400, size: 20),
+                        child: Icon(
+                          Icons.broken_image_outlined,
+                          color: grey400,
+                          size: 20,
+                        ),
                       );
                     }
                     return const SizedBox.shrink();
