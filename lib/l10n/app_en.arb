@@ -1194,5 +1194,16 @@
   "weatherConditionSnow": "Snow",
   "weatherConditionSnowGrains": "Snow grains",
   "weatherConditionSnowShowers": "Snow showers",
-  "weatherConditionThunderstorm": "Thunderstorm"
+  "weatherConditionThunderstorm": "Thunderstorm",
+  "commandConsole": "Command Console",
+  "enterCommandHint": "Enter a command…",
+  "connectTag": "Connect",
+  "noTagConnected": "No tag connected",
+  "tagConnected": "Tag connected",
+  "disconnect": "Disconnect",
+  "run": "Run",
+  "commandGuide": "Command guide",
+  "commandGuideIntro": "Send raw bytes or APDUs to an NFC tag and read the response. Tap Connect, hold your phone to a tag, then run commands.",
+  "commandGuideHexNote": "Hex is case-insensitive and spaces are ignored, e.g. tx 02 AB 26.",
+  "gotIt": "Got it"
 }

@@ -151,6 +151,12 @@ class _AppDrawerState extends State<AppDrawer> {
             title: appLocalizations.writeNfcTags,
             routeName: '/nfcWriteScreen',
           ),
+          _buildListTile(
+            index: 9,
+            icon: Icons.terminal,
+            title: appLocalizations.commandConsole,
+            routeName: '/commandConsole',
+          ),
           _buildListTileWithTooltip(
             index: 3,
             icon: Icons.code,
