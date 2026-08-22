@@ -73,6 +73,14 @@ class SavedImage {
     return null;
   }
 
+  Map<String, dynamic>? get menuTemplateData {
+    final raw = metadata?['templateData'];
+    if (raw is Map && raw['type'] == 'menu') {
+      return Map<String, dynamic>.from(raw);
+    }
+    return null;
+  }
+
   bool get isContactCard => metadata?['contactCard'] is Map;
 
   Map<String, dynamic>? get contactCardData {
