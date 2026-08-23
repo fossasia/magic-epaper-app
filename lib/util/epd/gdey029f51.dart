@@ -32,13 +32,13 @@ class GDEY029F51 extends DisplayDevice {
 
   @override
   List<ImageProcessingMethod> get processingMethods => [
-        ImageProcessing.bwrFloydSteinbergDither,
-        ImageProcessing.bwrFalseFloydSteinbergDither,
-        ImageProcessing.bwrStuckiDither,
-        ImageProcessing.bwrTriColorAtkinsonDither,
-        ImageProcessing.bwrThreshold,
-        ImageProcessing.bwrBayerDither,
-        ImageProcessing.bwrSierra2Dither,
+        ImageProcessing.bwryFloydSteinbergDither,
+        ImageProcessing.bwryFalseFloydSteinbergDither,
+        ImageProcessing.bwryStuckiDither,
+        ImageProcessing.bwryTriColorAtkinsonDither,
+        ImageProcessing.bwryThreshold,
+        ImageProcessing.bwryBayerDither,
+        ImageProcessing.bwrySierra2Dither,
       ];
 
   @override
