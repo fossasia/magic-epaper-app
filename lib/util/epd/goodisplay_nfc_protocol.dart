@@ -142,8 +142,8 @@ class GoodisplayNfcProtocol {
         await Future.delayed(const Duration(milliseconds: 50));
 
         final double progress = 0.20 + (0.70 * ((250 * i) / totalBytes));
-        onProgress?.call(
-            progress, '${appLocalizations.writingChunk} ${i + 1}/$totalChunks');
+        onProgress?.call(progress,
+            '${appLocalizations.transferToEpaper} ${(i / totalChunks * 100).toInt()}%');
       }
 
       if (totalBytes % chunkSize != 0) {
@@ -173,8 +173,7 @@ class GoodisplayNfcProtocol {
 
       final respBytes = _hexToBytes(respHex);
       if (respBytes.isNotEmpty && respBytes[0] == 144) {
-        AppLogger.info(
-            'RF power for refresh completion (24s for GDEY029F51)...');
+        AppLogger.info('RF power for refresh completion...');
 
         const int refreshDurationSeconds = 24;
         for (int s = 1; s <= refreshDurationSeconds; s++) {
