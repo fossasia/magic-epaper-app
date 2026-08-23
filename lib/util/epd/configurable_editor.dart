@@ -91,9 +91,8 @@ class ConfigurableEpd extends Epd {
   /// Populates the list of processing methods based on the color palette.
   void _addProcessingMethods() {
     namedProcessingMethods.clear();
-    final isBlackAndWhite = colors.length <= 2;
 
-    if (isBlackAndWhite) {
+    if (colors.length <= 2) {
       namedProcessingMethods.add(NamedImageFilter(
           ImageProcessing.bwFloydSteinbergDither,
           appLocalizations.floydSteinberg));
@@ -114,7 +113,7 @@ class ConfigurableEpd extends Epd {
           ImageProcessing.bwSierra2Dither, appLocalizations.sierra2));
       namedProcessingMethods.add(NamedImageFilter(
           ImageProcessing.bwBurkesDither, appLocalizations.burkes));
-    } else {
+    } else if (colors.length == 3) {
       namedProcessingMethods.add(NamedImageFilter(
           ImageProcessing.bwrFloydSteinbergDither,
           appLocalizations.floydSteinberg));
@@ -136,6 +135,28 @@ class ConfigurableEpd extends Epd {
           ImageProcessing.bwrSierra2Dither, appLocalizations.sierra2));
       namedProcessingMethods.add(NamedImageFilter(
           ImageProcessing.bwrBurkesDither, appLocalizations.burkes));
+    } else {
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwryFloydSteinbergDither,
+          appLocalizations.floydSteinberg));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwryFalseFloydSteinbergDither,
+          appLocalizations.falseFloydSteinberg));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwryStuckiDither, appLocalizations.stucki));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwryTriColorAtkinsonDither,
+          appLocalizations.atkinson));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwryHalftone, appLocalizations.colorHalftone));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwryThreshold, appLocalizations.threshold));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwryBayerDither, appLocalizations.bayer));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwrySierra2Dither, appLocalizations.sierra2));
+      namedProcessingMethods.add(NamedImageFilter(
+          ImageProcessing.bwryBurkesDither, appLocalizations.burkes));
     }
   }
 }
