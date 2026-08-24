@@ -106,7 +106,7 @@ fn wire__crate__api__simple__process_image_rust_impl(
             let api_target_width = <u32>::sse_decode(&mut deserializer);
             let api_target_height = <u32>::sse_decode(&mut deserializer);
             let api_method = <crate::api::simple::DitherMethod>::sse_decode(&mut deserializer);
-            let api_is_bwr = <bool>::sse_decode(&mut deserializer);
+            let api_color_mode = <crate::api::simple::ColorMode>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
                 transform_result_sse::<_, ()>((move || {
@@ -115,7 +115,7 @@ fn wire__crate__api__simple__process_image_rust_impl(
                         api_target_width,
                         api_target_height,
                         api_method,
-                        api_is_bwr,
+                        api_color_mode,
                     ))?;
                     Ok(output_ok)
                 })())
@@ -126,10 +126,16 @@ fn wire__crate__api__simple__process_image_rust_impl(
 
 // Section: dart2rust
 
-impl SseDecode for bool {
+impl SseDecode for crate::api::simple::ColorMode {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        deserializer.cursor.read_u8().unwrap() != 0
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::api::simple::ColorMode::Bw,
+            1 => crate::api::simple::ColorMode::Bwr,
+            2 => crate::api::simple::ColorMode::Bwry,
+            _ => unreachable!("Invalid variant for ColorMode: {}", inner),
+        };
     }
 }
 
@@ -190,6 +196,13 @@ impl SseDecode for () {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {}
 }
 
+impl SseDecode for bool {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        deserializer.cursor.read_u8().unwrap() != 0
+    }
+}
+
 fn pde_ffi_dispatcher_primary_impl(
     func_id: i32,
     port: flutter_rust_bridge::for_generated::MessagePort,
@@ -220,6 +233,25 @@ fn pde_ffi_dispatcher_sync_impl(
 // Section: rust2dart
 
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::simple::ColorMode {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            Self::Bw => 0.into_dart(),
+            Self::Bwr => 1.into_dart(),
+            Self::Bwry => 2.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::api::simple::ColorMode {}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::simple::ColorMode>
+    for crate::api::simple::ColorMode
+{
+    fn into_into_dart(self) -> crate::api::simple::ColorMode {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::simple::DitherMethod {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
@@ -248,10 +280,20 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::simple::DitherMethod>
     }
 }
 
-impl SseEncode for bool {
+impl SseEncode for crate::api::simple::ColorMode {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        serializer.cursor.write_u8(self as _).unwrap();
+        <i32>::sse_encode(
+            match self {
+                crate::api::simple::ColorMode::Bw => 0,
+                crate::api::simple::ColorMode::Bwr => 1,
+                crate::api::simple::ColorMode::Bwry => 2,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
     }
 }
 
@@ -312,6 +354,13 @@ impl SseEncode for u8 {
 impl SseEncode for () {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {}
+}
+
+impl SseEncode for bool {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        serializer.cursor.write_u8(self as _).unwrap();
+    }
 }
 
 #[cfg(not(target_family = "wasm"))]
