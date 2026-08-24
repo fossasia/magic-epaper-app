@@ -10,6 +10,7 @@ import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
 import 'package:magicepaperapp/card_templates/card_template_selection_view.dart';
 import 'package:magicepaperapp/card_templates/weather_template_result.dart';
+import 'package:magicepaperapp/card_templates/menu_template_result.dart';
 import 'package:magicepaperapp/card_templates/card_template_result.dart';
 import 'package:magicepaperapp/util/color_util.dart';
 import 'package:magicepaperapp/util/epd/driver/waveform.dart';
@@ -251,7 +252,7 @@ class _ImageEditorState extends State<ImageEditor> {
 
         if (filtersToRun[i].useDartHalftone) {
           final tempImg = img.Image.from(sourceImage);
-          if (!filtersToRun[i].isBwr) {
+          if (filtersToRun[i].colorMode == rust_api.ColorMode.bw) {
             img.grayscale(tempImg);
           }
           img.colorHalftone(tempImg, size: 3);
@@ -263,7 +264,7 @@ class _ImageEditorState extends State<ImageEditor> {
           targetWidth: widget.device.width.toInt(),
           targetHeight: widget.device.height.toInt(),
           method: filtersToRun[i].method,
-          isBwr: filtersToRun[i].isBwr,
+          colorMode: filtersToRun[i].colorMode,
         );
 
         final img.Image? decodedImage =
@@ -1048,6 +1049,9 @@ class BottomActionMenu extends StatelessWidget {
                     png = result.png;
                     metadata = result.metadata;
                   } else if (result is WeatherTemplateResult) {
+                    png = result.png;
+                    templateData = result.data;
+                  } else if (result is MenuTemplateResult) {
                     png = result.png;
                     templateData = result.data;
                   } else if (result is Uint8List) {

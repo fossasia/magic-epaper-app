@@ -89,7 +89,7 @@ abstract class RustLibApi extends BaseApi {
       required int targetWidth,
       required int targetHeight,
       required DitherMethod method,
-      required bool isBwr});
+      required ColorMode colorMode});
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -129,7 +129,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       required int targetWidth,
       required int targetHeight,
       required DitherMethod method,
-      required bool isBwr}) {
+      required ColorMode colorMode}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
@@ -137,7 +137,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_u_32(targetWidth, serializer);
         sse_encode_u_32(targetHeight, serializer);
         sse_encode_dither_method(method, serializer);
-        sse_encode_bool(isBwr, serializer);
+        sse_encode_color_mode(colorMode, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 2, port: port_);
       },
@@ -146,7 +146,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeErrorData: null,
       ),
       constMeta: kCrateApiSimpleProcessImageRustConstMeta,
-      argValues: [imageBytes, targetWidth, targetHeight, method, isBwr],
+      argValues: [imageBytes, targetWidth, targetHeight, method, colorMode],
       apiImpl: this,
     ));
   }
@@ -159,14 +159,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           "targetWidth",
           "targetHeight",
           "method",
-          "isBwr"
+          "colorMode"
         ],
       );
 
   @protected
-  bool dco_decode_bool(dynamic raw) {
+  ColorMode dco_decode_color_mode(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return raw as bool;
+    return ColorMode.values[raw as int];
   }
 
   @protected
@@ -212,9 +212,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  bool sse_decode_bool(SseDeserializer deserializer) {
+  ColorMode sse_decode_color_mode(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return deserializer.buffer.getUint8() != 0;
+    var inner = sse_decode_i_32(deserializer);
+    return ColorMode.values[inner];
   }
 
   @protected
@@ -262,9 +263,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_bool(bool self, SseSerializer serializer) {
+  bool sse_decode_bool(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    serializer.buffer.putUint8(self ? 1 : 0);
+    return deserializer.buffer.getUint8() != 0;
+  }
+
+  @protected
+  void sse_encode_color_mode(ColorMode self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
   }
 
   @protected
@@ -311,5 +318,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   void sse_encode_unit(void self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+  }
+
+  @protected
+  void sse_encode_bool(bool self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putUint8(self ? 1 : 0);
   }
 }

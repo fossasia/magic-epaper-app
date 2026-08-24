@@ -140,7 +140,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     if (layers.any((s) => s.elementId == 'qrCode')) {
       _seedQrLayout(layers);
     } else if (layers.length == 1 &&
-        layers.first.elementId == 'weatherSnapshot' &&
+        (layers.first.elementId == 'weatherSnapshot' ||
+            layers.first.elementId == 'restaurantMenu') &&
         layers.first.widget != null) {
       _seedFullCanvasElement(layers.first);
     } else if (layers.any((s) => s.elementId == 'qrCaption')) {

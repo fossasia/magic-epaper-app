@@ -12,6 +12,8 @@ class ImageAssets {
       'assets/images/displays/epaper_3.7_bwr.webp';
   static const String gdeq031t10Display =
       'assets/images/displays/GDEQ031T10_display.png';
+  static const String gdey037z03Display =
+      'assets/images/displays/GDEY029F51.png';
   static const String epaper37Bw = 'assets/images/displays/epaper_3.7_bw.webp';
   static const String customExport = 'assets/images/displays/export_image.webp';
   static const String waveshare2_9 =

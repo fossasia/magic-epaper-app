@@ -32,6 +32,12 @@ struct Colorf32 {
     b: f32,
 }
 
+pub enum ColorMode {
+    Bw,
+    Bwr,
+    Bwry,
+}
+
 const PALETTE_BW: [Colorf32; 2] = [
     Colorf32 { r: 0.0, g: 0.0, b: 0.0 },
     Colorf32 { r: 255.0, g: 255.0, b: 255.0 },
@@ -41,6 +47,13 @@ const PALETTE_BWR: [Colorf32; 3] = [
     Colorf32 { r: 0.0, g: 0.0, b: 0.0 },
     Colorf32 { r: 255.0, g: 255.0, b: 255.0 },
     Colorf32 { r: 255.0, g: 0.0, b: 0.0 },
+];
+
+const PALETTE_BWRY: [Colorf32; 4] = [
+    Colorf32 { r: 0.0, g: 0.0, b: 0.0 },
+    Colorf32 { r: 255.0, g: 255.0, b: 255.0 },
+    Colorf32 { r: 255.0, g: 0.0, b: 0.0 },
+    Colorf32 { r: 255.0, g: 255.0, b: 0.0 },
 ];
 
 const DITHER_GAMMA: f32 = 1.5;
@@ -89,7 +102,7 @@ pub fn process_image_rust(
     target_width: u32,
     target_height: u32,
     method: DitherMethod,
-    is_bwr: bool,
+    color_mode: ColorMode,
 ) -> Vec<u8> {
     let dynamic_img = load_from_memory_with_format(&image_bytes, ImageFormat::Png)
         .expect("Failed to decode image")
@@ -110,7 +123,11 @@ pub fn process_image_rust(
         }
     }
 
-    let palette = if is_bwr { &PALETTE_BWR[..] } else { &PALETTE_BW[..] };
+    let palette: &[Colorf32] = match color_mode {
+            ColorMode::Bw => &PALETTE_BW[..],
+            ColorMode::Bwr => &PALETTE_BWR[..],
+            ColorMode::Bwry => &PALETTE_BWRY[..],
+        };
 
     let w = width as i32;
     let h = height as i32;
