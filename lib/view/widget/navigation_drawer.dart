@@ -3,6 +3,7 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
+import 'package:magicepaperapp/provider/developer_options_provider.dart';
 import 'package:magicepaperapp/util/app_logger.dart';
 import 'package:magicepaperapp/util/epd/configurable_editor.dart';
 import 'package:magicepaperapp/util/url_util.dart';
@@ -111,6 +112,8 @@ class _AppDrawerState extends State<AppDrawer> {
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context)!;
+    final developerOptionsEnabled =
+        context.watch<DeveloperOptionsProvider>().enabled;
 
     return Drawer(
       backgroundColor: drawerHeaderTitle,
@@ -151,12 +154,13 @@ class _AppDrawerState extends State<AppDrawer> {
             title: appLocalizations.writeNfcTags,
             routeName: '/nfcWriteScreen',
           ),
-          _buildListTile(
-            index: 9,
-            icon: Icons.terminal,
-            title: appLocalizations.commandConsole,
-            routeName: '/commandConsole',
-          ),
+          if (developerOptionsEnabled)
+            _buildListTile(
+              index: 9,
+              icon: Icons.terminal,
+              title: appLocalizations.commandConsole,
+              routeName: '/commandConsole',
+            ),
           _buildListTileWithTooltip(
             index: 3,
             icon: Icons.code,

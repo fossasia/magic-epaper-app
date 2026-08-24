@@ -4,6 +4,7 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/provider/image_loader.dart';
 import 'package:magicepaperapp/provider/locale_provider.dart';
+import 'package:magicepaperapp/provider/developer_options_provider.dart';
 import 'package:magicepaperapp/view/about_us_screen.dart';
 import 'package:magicepaperapp/view/buy_badge_screen.dart';
 import 'package:magicepaperapp/view/settings_screen.dart';
@@ -25,12 +26,18 @@ Future<void> main() async {
   final localeProvider = LocaleProvider();
   await localeProvider.loadSavedLocale();
 
+  final developerOptionsProvider = DeveloperOptionsProvider();
+  await developerOptionsProvider.loadSaved();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ImageLoader()),
         ChangeNotifierProvider(create: (_) => ImageLibraryProvider()),
         ChangeNotifierProvider<LocaleProvider>.value(value: localeProvider),
+        ChangeNotifierProvider<DeveloperOptionsProvider>.value(
+          value: developerOptionsProvider,
+        ),
       ],
       child: const MyApp(),
     ),

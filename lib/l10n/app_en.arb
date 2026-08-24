@@ -1207,6 +1207,8 @@
   "commandGuideIntro": "Send raw bytes or APDUs to an NFC tag and read the response. Tap Connect, hold your phone to a tag, then run commands.",
   "commandGuideHexNote": "Hex is case-insensitive and spaces are ignored, e.g. tx 02 AB 26.",
   "gotIt": "Got it",
+  "developerOptions": "Developer Options",
+  "developerOptionsSubtitle": "Show the Command Console in the menu for sending raw NFC commands.",
   "restaurantMenuTitle": "Restaurant Menu",
   "restaurantMenuDescription": "Daily specials board with dishes, prices and dietary tags",
   "menuPreviewTitle": "Preview of your menu board",
