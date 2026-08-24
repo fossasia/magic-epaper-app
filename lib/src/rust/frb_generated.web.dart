@@ -21,7 +21,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   });
 
   @protected
-  bool dco_decode_bool(dynamic raw);
+  ColorMode dco_decode_color_mode(dynamic raw);
 
   @protected
   DitherMethod dco_decode_dither_method(dynamic raw);
@@ -45,7 +45,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void dco_decode_unit(dynamic raw);
 
   @protected
-  bool sse_decode_bool(SseDeserializer deserializer);
+  ColorMode sse_decode_color_mode(SseDeserializer deserializer);
 
   @protected
   DitherMethod sse_decode_dither_method(SseDeserializer deserializer);
@@ -69,7 +69,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_decode_unit(SseDeserializer deserializer);
 
   @protected
-  void sse_encode_bool(bool self, SseSerializer serializer);
+  bool sse_decode_bool(SseDeserializer deserializer);
+
+  @protected
+  void sse_encode_color_mode(ColorMode self, SseSerializer serializer);
 
   @protected
   void sse_encode_dither_method(DitherMethod self, SseSerializer serializer);
@@ -92,6 +95,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_unit(void self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_bool(bool self, SseSerializer serializer);
 }
 
 // Section: wire_class

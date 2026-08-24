@@ -252,7 +252,7 @@ class _ImageEditorState extends State<ImageEditor> {
 
         if (filtersToRun[i].useDartHalftone) {
           final tempImg = img.Image.from(sourceImage);
-          if (!filtersToRun[i].isBwr) {
+          if (filtersToRun[i].colorMode == rust_api.ColorMode.bw) {
             img.grayscale(tempImg);
           }
           img.colorHalftone(tempImg, size: 3);
@@ -264,7 +264,7 @@ class _ImageEditorState extends State<ImageEditor> {
           targetWidth: widget.device.width.toInt(),
           targetHeight: widget.device.height.toInt(),
           method: filtersToRun[i].method,
-          isBwr: filtersToRun[i].isBwr,
+          colorMode: filtersToRun[i].colorMode,
         );
 
         final img.Image? decodedImage =
