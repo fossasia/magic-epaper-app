@@ -18,6 +18,7 @@ import 'package:magicepaperapp/native_canvas/widgets/editable_element.dart';
 import 'package:magicepaperapp/native_canvas/widgets/stroke_painter.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/native_canvas/widgets/barcode_editor.dart';
+import 'package:magicepaperapp/native_canvas/sticker_vault/sticker_vault_sheet.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
@@ -139,7 +140,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     if (layers.any((s) => s.elementId == 'qrCode')) {
       _seedQrLayout(layers);
     } else if (layers.length == 1 &&
-        layers.first.elementId == 'weatherSnapshot' &&
+        (layers.first.elementId == 'weatherSnapshot' ||
+            layers.first.elementId == 'restaurantMenu') &&
         layers.first.widget != null) {
       _seedFullCanvasElement(layers.first);
     } else if (layers.any((s) => s.elementId == 'qrCaption')) {
@@ -756,6 +758,38 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     );
   }
 
+  Future<void> _addSticker() async {
+    _controller.select(null);
+    final bytes = await showStickerVault(context, inkColor: _inkColor);
+    if (bytes == null || !mounted) return;
+    _placeSticker(bytes);
+  }
+
+  void _placeSticker(Uint8List bytes) {
+    final decoded = img.decodeImage(bytes);
+    final aspect = (decoded == null || decoded.height == 0)
+        ? 1.0
+        : decoded.width / decoded.height;
+    final minSide =
+        (widget.width < widget.height ? widget.width : widget.height)
+            .toDouble();
+    var w = minSide * 0.35;
+    var h = w / aspect;
+    if (h > minSide * 0.35) {
+      h = minSide * 0.35;
+      w = h * aspect;
+    }
+    _controller.addElement(
+      CanvasElement(
+        id: _nextId(),
+        kind: CanvasElementKind.image,
+        position: _nextSpawnPosition(),
+        baseSize: Size(w, h),
+        imageBytes: bytes,
+      ),
+    );
+  }
+
   Future<void> _replaceImage(CanvasElement element) async {
     final source = await chooseImageSource(context);
     if (source == null) return;
@@ -1062,40 +1096,55 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
       padding: EdgeInsets.zero,
       height: 72,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _BarButton(
-            label: appLocalizations.canvas,
-            onTap: _controller.cycleCanvasColor,
-            iconWidget: Container(
-              width: 22,
-              height: 22,
-              decoration: BoxDecoration(
-                color: _controller.canvasColor,
-                border: Border.all(color: colorBlack38, width: 2),
-                borderRadius: BorderRadius.circular(4),
+          Expanded(
+            child: _BarButton(
+              label: appLocalizations.canvas,
+              onTap: _controller.cycleCanvasColor,
+              iconWidget: Container(
+                width: 22,
+                height: 22,
+                decoration: BoxDecoration(
+                  color: _controller.canvasColor,
+                  border: Border.all(color: colorBlack38, width: 2),
+                  borderRadius: BorderRadius.circular(4),
+                ),
               ),
             ),
           ),
-          _BarButton(
-              icon: Icons.image_outlined,
-              label: appLocalizations.image,
-              onTap: _addImage),
-          _BarButton(
-              icon: Icons.text_fields,
-              label: AppLocalizations.of(context)!.text,
-              onTap: _addText),
-          _BarButton(
-              icon: Icons.qr_code,
-              label: appLocalizations.barcode,
-              onTap: _addBarcode),
-          _BarButton(
-            icon: Icons.brush_outlined,
-            label: appLocalizations.draw,
-            onTap: () => setState(() {
-              _controller.select(null);
-              _drawMode = true;
-            }),
+          Expanded(
+            child: _BarButton(
+                icon: Icons.image_outlined,
+                label: appLocalizations.image,
+                onTap: _addImage),
+          ),
+          Expanded(
+            child: _BarButton(
+                icon: Icons.auto_awesome,
+                label: appLocalizations.stickers,
+                onTap: _addSticker),
+          ),
+          Expanded(
+            child: _BarButton(
+                icon: Icons.text_fields,
+                label: appLocalizations.text,
+                onTap: _addText),
+          ),
+          Expanded(
+            child: _BarButton(
+                icon: Icons.qr_code,
+                label: appLocalizations.barcode,
+                onTap: _addBarcode),
+          ),
+          Expanded(
+            child: _BarButton(
+              icon: Icons.brush_outlined,
+              label: appLocalizations.draw,
+              onTap: () => setState(() {
+                _controller.select(null);
+                _drawMode = true;
+              }),
+            ),
           ),
         ],
       ),
@@ -1427,9 +1476,8 @@ class _BarButton extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(8),
       onTap: onTap,
-      child: Container(
-        constraints: const BoxConstraints(minWidth: 64),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -1438,6 +1486,8 @@ class _BarButton extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 11, color: colorBlack87),
             ),
           ],
