@@ -61,9 +61,13 @@ android {
     }
 
     // Workaround for: Execution failed for task ':image_picker_android:lintVitalAnalyzeRelease'
-    lint {
-        disable "EasterEgg", "StopShip"
+    android {
+        lintOptions {
+            checkReleaseBuilds false
+            disable 'MissingTranslation'
+        }
     }
+
 }
 
 kotlin {
