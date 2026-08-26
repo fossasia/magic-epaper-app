@@ -246,8 +246,13 @@ class _ImageEditorState extends State<ImageEditor> {
       flipVertical = false;
     });
 
+    final img.Image scaledSource = img.copyResize(
+      sourceImage,
+      width: widget.device.width,
+      height: widget.device.height,
+    );
     final Uint8List sourcePngBytes =
-        Uint8List.fromList(img.encodePng(sourceImage));
+        Uint8List.fromList(img.encodePng(scaledSource));
     final filtersToRun = widget.device.processingMethods;
 
     try {
