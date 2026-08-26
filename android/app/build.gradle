@@ -60,14 +60,6 @@ android {
         }
     }
 
-    // Workaround for: Execution failed for task ':image_picker_android:lintVitalAnalyzeRelease'
-    android {
-        lintOptions {
-            checkReleaseBuilds false
-            disable 'MissingTranslation'
-        }
-    }
-
 }
 
 kotlin {
