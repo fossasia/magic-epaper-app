@@ -1,6 +1,7 @@
-use image::{load_from_memory_with_format, ImageFormat, RgbaImage, Rgba};
+use image::{load_from_memory_with_format, ImageFormat, RgbaImage};
 use std::io::Cursor;
 use std::sync::OnceLock;
+use rayon::prelude::*;
 
 pub enum DitherMethod {
     FloydSteinberg,
@@ -74,16 +75,28 @@ fn dither_gamma_lut() -> &'static [f32; 256] {
     })
 }
 
+fn bayer_offset_lut() -> &'static [[f32; 8]; 8] {
+    static LUT: OnceLock<[[f32; 8]; 8]> = OnceLock::new();
+    LUT.get_or_init(|| {
+        let mut t = [[0.0f32; 8]; 8];
+        for y in 0..8 {
+            for x in 0..8 {
+                t[y][x] = (BAYER_8X8[y][x] + 0.5) / 64.0 * 255.0 - 127.5;
+            }
+        }
+        t
+    })
+}
+
+#[inline(always)]
 fn closest_color(pixel: Colorf32, palette: &[Colorf32]) -> Colorf32 {
     let mut min_dist = f32::MAX;
     let mut best_color = palette[0];
-
     for c in palette {
         let dr = pixel.r - c.r;
         let dg = pixel.g - c.g;
         let db = pixel.b - c.b;
         let dist = dr * dr + dg * dg + db * db;
-
         if dist < min_dist {
             min_dist = dist;
             best_color = *c;
@@ -110,137 +123,214 @@ pub fn process_image_rust(
 
     let img = dynamic_img.to_rgba8();
     let (width, height) = img.dimensions();
+    let w = width as usize;
+    let h = height as usize;
 
     let mut buffer: Vec<Colorf32> = img.pixels()
-        .map(|p| Colorf32 { r: p[0] as f32, g: p[1] as f32, b: p[2] as f32 }).collect();
+        .map(|p| Colorf32 { r: p[0] as f32, g: p[1] as f32, b: p[2] as f32 })
+        .collect();
 
     if !matches!(method, DitherMethod::Threshold) {
         let gamma_lut = dither_gamma_lut();
-        for px in buffer.iter_mut() {
+        buffer.par_iter_mut().for_each(|px| {
             px.r = gamma_lut[px.r.clamp(0.0, 255.0) as usize];
             px.g = gamma_lut[px.g.clamp(0.0, 255.0) as usize];
             px.b = gamma_lut[px.b.clamp(0.0, 255.0) as usize];
-        }
+        });
     }
 
     let palette: &[Colorf32] = match color_mode {
-            ColorMode::Bw => &PALETTE_BW[..],
-            ColorMode::Bwr => &PALETTE_BWR[..],
-            ColorMode::Bwry => &PALETTE_BWRY[..],
-        };
+        ColorMode::Bw => &PALETTE_BW[..],
+        ColorMode::Bwr => &PALETTE_BWR[..],
+        ColorMode::Bwry => &PALETTE_BWRY[..],
+    };
 
-    let w = width as i32;
-    let h = height as i32;
-
-    for y in 0..h {
-        for x in 0..w {
-            let idx = (y * w + x) as usize;
-            let old_pixel = buffer[idx];
-
-            let quant_input = match method {
-                DitherMethod::Bayer => {
-                    let t = (BAYER_8X8[(y & 7) as usize][(x & 7) as usize] + 0.5) / 64.0 - 0.5;
-                    let off = t * 255.0;
-                    Colorf32 { r: old_pixel.r + off, g: old_pixel.g + off, b: old_pixel.b + off }
+    match method {
+        DitherMethod::Threshold => {
+            buffer.par_iter_mut().for_each(|px| {
+                *px = closest_color(*px, palette);
+            });
+        }
+        DitherMethod::Bayer => {
+            let offsets = bayer_offset_lut();
+            buffer.par_chunks_mut(w).enumerate().for_each(|(y, row)| {
+                let brow = &offsets[y & 7];
+                for (x, px) in row.iter_mut().enumerate() {
+                    let off = brow[x & 7];
+                    *px = closest_color(Colorf32 { r: px.r + off, g: px.g + off, b: px.b + off }, palette);
                 }
-                _ => old_pixel,
-            };
+            });
+        }
+        _ => {
+            let ptr = buffer.as_mut_ptr();
+            for y in 0..h {
+                for x in 0..w {
+                    let idx = y * w + x;
+                    let old_pixel = unsafe { *ptr.add(idx) };
+                    let new_pixel = closest_color(old_pixel, palette);
+                    unsafe { ptr.add(idx).write(new_pixel) };
+                    let er = old_pixel.r - new_pixel.r;
+                    let eg = old_pixel.g - new_pixel.g;
+                    let eb = old_pixel.b - new_pixel.b;
 
-            let new_pixel = closest_color(quant_input, palette);
-
-            buffer[idx] = new_pixel;
-
-            let err_r = old_pixel.r - new_pixel.r;
-            let err_g = old_pixel.g - new_pixel.g;
-            let err_b = old_pixel.b - new_pixel.b;
-
-            match method {
-                DitherMethod::Threshold | DitherMethod::Bayer => {}
-               
-                DitherMethod::FloydSteinberg | DitherMethod::Halftone => {
-                    distribute_error(&mut buffer, x, y, w, h, 1, 0, err_r, err_g, err_b, 7.0 / 16.0);
-                    distribute_error(&mut buffer, x, y, w, h, -1, 1, err_r, err_g, err_b, 3.0 / 16.0);
-                    distribute_error(&mut buffer, x, y, w, h, 0, 1, err_r, err_g, err_b, 5.0 / 16.0);
-                    distribute_error(&mut buffer, x, y, w, h, 1, 1, err_r, err_g, err_b, 1.0 / 16.0);
-                }
-                DitherMethod::FalseFloydSteinberg => {
-                    distribute_error(&mut buffer, x, y, w, h, 1, 0, err_r, err_g, err_b, 3.0 / 8.0);
-                    distribute_error(&mut buffer, x, y, w, h, 0, 1, err_r, err_g, err_b, 3.0 / 8.0);
-                    distribute_error(&mut buffer, x, y, w, h, 1, 1, err_r, err_g, err_b, 2.0 / 8.0);
-                }
-                DitherMethod::Atkinson => {
-                    let w8 = 1.0 / 8.0;
-                    distribute_error(&mut buffer, x, y, w, h, 1, 0, err_r, err_g, err_b, w8);
-                    distribute_error(&mut buffer, x, y, w, h, 2, 0, err_r, err_g, err_b, w8);
-                    distribute_error(&mut buffer, x, y, w, h, -1, 1, err_r, err_g, err_b, w8);
-                    distribute_error(&mut buffer, x, y, w, h, 0, 1, err_r, err_g, err_b, w8);
-                    distribute_error(&mut buffer, x, y, w, h, 1, 1, err_r, err_g, err_b, w8);
-                    distribute_error(&mut buffer, x, y, w, h, 0, 2, err_r, err_g, err_b, w8);
-                }
-                DitherMethod::Stucki => {
-                    let w42 = 1.0 / 42.0;
-                    distribute_error(&mut buffer, x, y, w, h, 1, 0, err_r, err_g, err_b, 8.0 * w42);
-                    distribute_error(&mut buffer, x, y, w, h, 2, 0, err_r, err_g, err_b, 4.0 * w42);
-                    distribute_error(&mut buffer, x, y, w, h, -2, 1, err_r, err_g, err_b, 2.0 * w42);
-                    distribute_error(&mut buffer, x, y, w, h, -1, 1, err_r, err_g, err_b, 4.0 * w42);
-                    distribute_error(&mut buffer, x, y, w, h, 0, 1, err_r, err_g, err_b, 8.0 * w42);
-                    distribute_error(&mut buffer, x, y, w, h, 1, 1, err_r, err_g, err_b, 4.0 * w42);
-                    distribute_error(&mut buffer, x, y, w, h, 2, 1, err_r, err_g, err_b, 2.0 * w42);
-                    distribute_error(&mut buffer, x, y, w, h, -2, 2, err_r, err_g, err_b, 1.0 * w42);
-                    distribute_error(&mut buffer, x, y, w, h, -1, 2, err_r, err_g, err_b, 2.0 * w42);
-                    distribute_error(&mut buffer, x, y, w, h, 0, 2, err_r, err_g, err_b, 4.0 * w42);
-                    distribute_error(&mut buffer, x, y, w, h, 1, 2, err_r, err_g, err_b, 2.0 * w42);
-                    distribute_error(&mut buffer, x, y, w, h, 2, 2, err_r, err_g, err_b, 1.0 * w42);
-                }
-                DitherMethod::Sierra2 => {
-                    let w16 = 1.0 / 16.0;
-                    distribute_error(&mut buffer, x, y, w, h, 1, 0, err_r, err_g, err_b, 4.0 * w16);
-                    distribute_error(&mut buffer, x, y, w, h, 2, 0, err_r, err_g, err_b, 3.0 * w16);
-                    distribute_error(&mut buffer, x, y, w, h, -2, 1, err_r, err_g, err_b, 1.0 * w16);
-                    distribute_error(&mut buffer, x, y, w, h, -1, 1, err_r, err_g, err_b, 2.0 * w16);
-                    distribute_error(&mut buffer, x, y, w, h, 0, 1, err_r, err_g, err_b, 3.0 * w16);
-                    distribute_error(&mut buffer, x, y, w, h, 1, 1, err_r, err_g, err_b, 2.0 * w16);
-                    distribute_error(&mut buffer, x, y, w, h, 2, 1, err_r, err_g, err_b, 1.0 * w16);
-                }
-                DitherMethod::Burkes => {
-                    let w32 = 1.0 / 32.0;
-                    distribute_error(&mut buffer, x, y, w, h, 1, 0, err_r, err_g, err_b, 8.0 * w32);
-                    distribute_error(&mut buffer, x, y, w, h, 2, 0, err_r, err_g, err_b, 4.0 * w32);
-                    distribute_error(&mut buffer, x, y, w, h, -2, 1, err_r, err_g, err_b, 2.0 * w32);
-                    distribute_error(&mut buffer, x, y, w, h, -1, 1, err_r, err_g, err_b, 4.0 * w32);
-                    distribute_error(&mut buffer, x, y, w, h, 0, 1, err_r, err_g, err_b, 8.0 * w32);
-                    distribute_error(&mut buffer, x, y, w, h, 1, 1, err_r, err_g, err_b, 4.0 * w32);
-                    distribute_error(&mut buffer, x, y, w, h, 2, 1, err_r, err_g, err_b, 2.0 * w32);
+                    match method {
+                        DitherMethod::FloydSteinberg | DitherMethod::Halftone => {
+                            if x >= 1 && x + 1 < w && y + 1 < h {
+                                unsafe {
+                                    add_err(ptr, idx + 1,     er, eg, eb, 7.0 / 16.0);
+                                    add_err(ptr, idx + w - 1, er, eg, eb, 3.0 / 16.0);
+                                    add_err(ptr, idx + w,     er, eg, eb, 5.0 / 16.0);
+                                    add_err(ptr, idx + w + 1, er, eg, eb, 1.0 / 16.0);
+                                }
+                            } else {
+                                distribute_error(ptr, x, y, w, h,  1,  0, er, eg, eb, 7.0 / 16.0);
+                                distribute_error(ptr, x, y, w, h, -1,  1, er, eg, eb, 3.0 / 16.0);
+                                distribute_error(ptr, x, y, w, h,  0,  1, er, eg, eb, 5.0 / 16.0);
+                                distribute_error(ptr, x, y, w, h,  1,  1, er, eg, eb, 1.0 / 16.0);
+                            }
+                        }
+                        DitherMethod::FalseFloydSteinberg => {
+                            if x + 1 < w && y + 1 < h {
+                                unsafe {
+                                    add_err(ptr, idx + 1,     er, eg, eb, 3.0 / 8.0);
+                                    add_err(ptr, idx + w,     er, eg, eb, 3.0 / 8.0);
+                                    add_err(ptr, idx + w + 1, er, eg, eb, 2.0 / 8.0);
+                                }
+                            } else {
+                                distribute_error(ptr, x, y, w, h, 1, 0, er, eg, eb, 3.0 / 8.0);
+                                distribute_error(ptr, x, y, w, h, 0, 1, er, eg, eb, 3.0 / 8.0);
+                                distribute_error(ptr, x, y, w, h, 1, 1, er, eg, eb, 2.0 / 8.0);
+                            }
+                        }
+                        DitherMethod::Atkinson => {
+                            let w8 = 1.0 / 8.0;
+                            if x >= 1 && x + 2 < w && y + 2 < h {
+                                unsafe {
+                                    add_err(ptr, idx + 1,         er, eg, eb, w8);
+                                    add_err(ptr, idx + 2,         er, eg, eb, w8);
+                                    add_err(ptr, idx + w - 1,     er, eg, eb, w8);
+                                    add_err(ptr, idx + w,         er, eg, eb, w8);
+                                    add_err(ptr, idx + w + 1,     er, eg, eb, w8);
+                                    add_err(ptr, idx + 2 * w,     er, eg, eb, w8);
+                                }
+                            } else {
+                                distribute_error(ptr, x, y, w, h,  1, 0, er, eg, eb, w8);
+                                distribute_error(ptr, x, y, w, h,  2, 0, er, eg, eb, w8);
+                                distribute_error(ptr, x, y, w, h, -1, 1, er, eg, eb, w8);
+                                distribute_error(ptr, x, y, w, h,  0, 1, er, eg, eb, w8);
+                                distribute_error(ptr, x, y, w, h,  1, 1, er, eg, eb, w8);
+                                distribute_error(ptr, x, y, w, h,  0, 2, er, eg, eb, w8);
+                            }
+                        }
+                        DitherMethod::Stucki => {
+                            let w42 = 1.0 / 42.0;
+                            if x >= 2 && x + 2 < w && y + 2 < h {
+                                unsafe {
+                                    add_err(ptr, idx + 1,         er, eg, eb, 8.0 * w42);
+                                    add_err(ptr, idx + 2,         er, eg, eb, 4.0 * w42);
+                                    add_err(ptr, idx + w - 2,     er, eg, eb, 2.0 * w42);
+                                    add_err(ptr, idx + w - 1,     er, eg, eb, 4.0 * w42);
+                                    add_err(ptr, idx + w,         er, eg, eb, 8.0 * w42);
+                                    add_err(ptr, idx + w + 1,     er, eg, eb, 4.0 * w42);
+                                    add_err(ptr, idx + w + 2,     er, eg, eb, 2.0 * w42);
+                                    add_err(ptr, idx + 2 * w - 2, er, eg, eb, 1.0 * w42);
+                                    add_err(ptr, idx + 2 * w - 1, er, eg, eb, 2.0 * w42);
+                                    add_err(ptr, idx + 2 * w,     er, eg, eb, 4.0 * w42);
+                                    add_err(ptr, idx + 2 * w + 1, er, eg, eb, 2.0 * w42);
+                                    add_err(ptr, idx + 2 * w + 2, er, eg, eb, 1.0 * w42);
+                                }
+                            } else {
+                                distribute_error(ptr, x, y, w, h,  1, 0, er, eg, eb, 8.0 * w42);
+                                distribute_error(ptr, x, y, w, h,  2, 0, er, eg, eb, 4.0 * w42);
+                                distribute_error(ptr, x, y, w, h, -2, 1, er, eg, eb, 2.0 * w42);
+                                distribute_error(ptr, x, y, w, h, -1, 1, er, eg, eb, 4.0 * w42);
+                                distribute_error(ptr, x, y, w, h,  0, 1, er, eg, eb, 8.0 * w42);
+                                distribute_error(ptr, x, y, w, h,  1, 1, er, eg, eb, 4.0 * w42);
+                                distribute_error(ptr, x, y, w, h,  2, 1, er, eg, eb, 2.0 * w42);
+                                distribute_error(ptr, x, y, w, h, -2, 2, er, eg, eb, 1.0 * w42);
+                                distribute_error(ptr, x, y, w, h, -1, 2, er, eg, eb, 2.0 * w42);
+                                distribute_error(ptr, x, y, w, h,  0, 2, er, eg, eb, 4.0 * w42);
+                                distribute_error(ptr, x, y, w, h,  1, 2, er, eg, eb, 2.0 * w42);
+                                distribute_error(ptr, x, y, w, h,  2, 2, er, eg, eb, 1.0 * w42);
+                            }
+                        }
+                        DitherMethod::Sierra2 => {
+                            let w16 = 1.0 / 16.0;
+                            if x >= 2 && x + 2 < w && y + 1 < h {
+                                unsafe {
+                                    add_err(ptr, idx + 1,     er, eg, eb, 4.0 * w16);
+                                    add_err(ptr, idx + 2,     er, eg, eb, 3.0 * w16);
+                                    add_err(ptr, idx + w - 2, er, eg, eb, 1.0 * w16);
+                                    add_err(ptr, idx + w - 1, er, eg, eb, 2.0 * w16);
+                                    add_err(ptr, idx + w,     er, eg, eb, 3.0 * w16);
+                                    add_err(ptr, idx + w + 1, er, eg, eb, 2.0 * w16);
+                                    add_err(ptr, idx + w + 2, er, eg, eb, 1.0 * w16);
+                                }
+                            } else {
+                                distribute_error(ptr, x, y, w, h,  1, 0, er, eg, eb, 4.0 * w16);
+                                distribute_error(ptr, x, y, w, h,  2, 0, er, eg, eb, 3.0 * w16);
+                                distribute_error(ptr, x, y, w, h, -2, 1, er, eg, eb, 1.0 * w16);
+                                distribute_error(ptr, x, y, w, h, -1, 1, er, eg, eb, 2.0 * w16);
+                                distribute_error(ptr, x, y, w, h,  0, 1, er, eg, eb, 3.0 * w16);
+                                distribute_error(ptr, x, y, w, h,  1, 1, er, eg, eb, 2.0 * w16);
+                                distribute_error(ptr, x, y, w, h,  2, 1, er, eg, eb, 1.0 * w16);
+                            }
+                        }
+                        DitherMethod::Burkes => {
+                            let w32 = 1.0 / 32.0;
+                            if x >= 2 && x + 2 < w && y + 1 < h {
+                                unsafe {
+                                    add_err(ptr, idx + 1,     er, eg, eb, 8.0 * w32);
+                                    add_err(ptr, idx + 2,     er, eg, eb, 4.0 * w32);
+                                    add_err(ptr, idx + w - 2, er, eg, eb, 2.0 * w32);
+                                    add_err(ptr, idx + w - 1, er, eg, eb, 4.0 * w32);
+                                    add_err(ptr, idx + w,     er, eg, eb, 8.0 * w32);
+                                    add_err(ptr, idx + w + 1, er, eg, eb, 4.0 * w32);
+                                    add_err(ptr, idx + w + 2, er, eg, eb, 2.0 * w32);
+                                }
+                            } else {
+                                distribute_error(ptr, x, y, w, h,  1, 0, er, eg, eb, 8.0 * w32);
+                                distribute_error(ptr, x, y, w, h,  2, 0, er, eg, eb, 4.0 * w32);
+                                distribute_error(ptr, x, y, w, h, -2, 1, er, eg, eb, 2.0 * w32);
+                                distribute_error(ptr, x, y, w, h, -1, 1, er, eg, eb, 4.0 * w32);
+                                distribute_error(ptr, x, y, w, h,  0, 1, er, eg, eb, 8.0 * w32);
+                                distribute_error(ptr, x, y, w, h,  1, 1, er, eg, eb, 4.0 * w32);
+                                distribute_error(ptr, x, y, w, h,  2, 1, er, eg, eb, 2.0 * w32);
+                            }
+                        }
+                        _ => {}
+                    }
                 }
             }
         }
     }
 
-    let mut out_img = RgbaImage::new(width, height);
-    for y in 0..height {
-        for x in 0..width {
-            let idx = (y * width + x) as usize;
-            let c = buffer[idx];
-            out_img.put_pixel(
-                x, y,
-                Rgba([c.r.clamp(0.0, 255.0) as u8, c.g.clamp(0.0, 255.0) as u8, c.b.clamp(0.0, 255.0) as u8, 255]),
-            );
-        }
-    }
+    let raw: Vec<u8> = buffer.iter().flat_map(|c| [
+        c.r.clamp(0.0, 255.0) as u8,
+        c.g.clamp(0.0, 255.0) as u8,
+        c.b.clamp(0.0, 255.0) as u8,
+        255u8,
+    ]).collect();
 
+    let out_img = RgbaImage::from_raw(width, height, raw).expect("Buffer size mismatch");
     let mut png_bytes: Vec<u8> = Vec::new();
     out_img.write_to(&mut Cursor::new(&mut png_bytes), ImageFormat::Png).expect("Failed to encode PNG");
     png_bytes
 }
 
 #[inline(always)]
-fn distribute_error(buffer: &mut Vec<Colorf32>, x: i32, y: i32, w: i32, h: i32, dx: i32, dy: i32, err_r: f32, err_g: f32, err_b: f32, weight: f32) {
-    let nx = x + dx;
-    let ny = y + dy;
-    if nx >= 0 && nx < w && ny >= 0 && ny < h {
-        let idx = (ny * w + nx) as usize;
-        buffer[idx].r += err_r * weight;
-        buffer[idx].g += err_g * weight;
-        buffer[idx].b += err_b * weight;
+unsafe fn add_err(ptr: *mut Colorf32, idx: usize, er: f32, eg: f32, eb: f32, weight: f32) {
+    let p = &mut *ptr.add(idx);
+    p.r += er * weight;
+    p.g += eg * weight;
+    p.b += eb * weight;
+}
+
+#[inline(always)]
+fn distribute_error(ptr: *mut Colorf32, x: usize, y: usize, w: usize, h: usize, dx: i32, dy: i32, er: f32, eg: f32, eb: f32, weight: f32) {
+    let nx = x as i32 + dx;
+    let ny = y as i32 + dy;
+    if nx >= 0 && (nx as usize) < w && ny >= 0 && (ny as usize) < h {
+        unsafe { add_err(ptr, ny as usize * w + nx as usize, er, eg, eb, weight) };
     }
 }
