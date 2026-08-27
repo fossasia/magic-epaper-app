@@ -152,14 +152,16 @@ pub fn process_image_rust(
             });
         }
         DitherMethod::Bayer => {
-            let offsets = bayer_offset_lut();
-            buffer.par_chunks_mut(w).enumerate().for_each(|(y, row)| {
-                let brow = &offsets[y & 7];
-                for (x, px) in row.iter_mut().enumerate() {
-                    let off = brow[x & 7];
-                    *px = closest_color(Colorf32 { r: px.r + off, g: px.g + off, b: px.b + off }, palette);
-                }
-            });
+            if w > 0 {
+                let offsets = bayer_offset_lut();
+                buffer.par_chunks_mut(w).enumerate().for_each(|(y, row)| {
+                    let brow = &offsets[y & 7];
+                    for (x, px) in row.iter_mut().enumerate() {
+                        let off = brow[x & 7];
+                        *px = closest_color(Colorf32 { r: px.r + off, g: px.g + off, b: px.b + off }, palette);
+                    }
+                });
+            }
         }
         _ => {
             let ptr = buffer.as_mut_ptr();
