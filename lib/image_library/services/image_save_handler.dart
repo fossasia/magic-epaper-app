@@ -29,8 +29,10 @@ class ImageSaveHandler {
     required int deviceHeight,
     required List<Color> deviceColors,
     Map<String, dynamic>? canvasDocument,
+    Map<String, dynamic>? templateData,
     Uint8List? sourceImage,
     String? existingImageId,
+    Map<String, dynamic>? extraMetadata,
   }) async {
     if (rawImages.isEmpty) return;
 
@@ -56,8 +58,10 @@ class ImageSaveHandler {
         deviceHeight: deviceHeight,
         deviceColors: deviceColors,
         canvasDocument: canvasDocument,
+        templateData: templateData,
         sourceImage: sourceImage,
         existingImageId: existingImageId,
+        extraMetadata: extraMetadata,
       );
       return;
     }
@@ -74,7 +78,9 @@ class ImageSaveHandler {
       deviceHeight,
       deviceColors,
       canvasDocument,
+      templateData,
       sourceImage,
+      extraMetadata,
     );
   }
 
@@ -101,7 +107,9 @@ class ImageSaveHandler {
     int deviceHeight,
     List<Color> deviceColors,
     Map<String, dynamic>? canvasDocument,
+    Map<String, dynamic>? templateData,
     Uint8List? sourceImage,
+    Map<String, dynamic>? extraMetadata,
   ) {
     showDialog(
       context: context,
@@ -125,7 +133,9 @@ class ImageSaveHandler {
           deviceHeight,
           deviceColors,
           canvasDocument,
+          templateData,
           sourceImage,
+          extraMetadata,
         ),
       ),
     );
@@ -144,7 +154,9 @@ class ImageSaveHandler {
     int deviceHeight,
     List<Color> deviceColors,
     Map<String, dynamic>? canvasDocument,
+    Map<String, dynamic>? templateData,
     Uint8List? sourceImage,
+    Map<String, dynamic>? extraMetadata,
   ) async {
     if (context.mounted) Navigator.pop(context);
 
@@ -162,7 +174,9 @@ class ImageSaveHandler {
       deviceHeight: deviceHeight,
       deviceColors: deviceColors,
       canvasDocument: canvasDocument,
+      templateData: templateData,
       sourceImage: sourceImage,
+      extraMetadata: extraMetadata,
     );
   }
 }

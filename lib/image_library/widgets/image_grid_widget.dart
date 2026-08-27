@@ -35,8 +35,8 @@ class ImageGridWidget extends StatelessWidget {
 
     return GridView.builder(
       padding: const EdgeInsets.all(Dimens.spacingL),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 200.0,
         childAspectRatio: 1.2,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,

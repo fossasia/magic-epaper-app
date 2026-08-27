@@ -143,7 +143,7 @@ class _EditableElementState extends State<EditableElement> {
                       ? BoxDecoration(
                           border: Border.all(color: primary, width: 1.5))
                       : null,
-                  child: _ElementContent(element: el),
+                  child: CanvasElementContent(element: el),
                 ),
               ),
             ),
@@ -203,8 +203,8 @@ class _EditableElementState extends State<EditableElement> {
   }
 }
 
-class _ElementContent extends StatelessWidget {
-  const _ElementContent({required this.element});
+class CanvasElementContent extends StatelessWidget {
+  const CanvasElementContent({super.key, required this.element});
 
   final CanvasElement element;
 
@@ -217,8 +217,22 @@ class _ElementContent extends StatelessWidget {
           fontWeight: element.fontWeight,
           color: element.color,
         );
+        final Alignment fitAlignment;
+        switch (element.textAlign) {
+          case TextAlign.left:
+          case TextAlign.start:
+            fitAlignment = Alignment.centerLeft;
+            break;
+          case TextAlign.right:
+          case TextAlign.end:
+            fitAlignment = Alignment.centerRight;
+            break;
+          default:
+            fitAlignment = Alignment.center;
+        }
         return FittedBox(
           fit: BoxFit.contain,
+          alignment: fitAlignment,
           child: Text(
             element.text ?? '',
             textAlign: element.textAlign,
@@ -229,9 +243,23 @@ class _ElementContent extends StatelessWidget {
           ),
         );
       case CanvasElementKind.image:
-        return element.imageBytes == null
-            ? const SizedBox.shrink()
-            : Image.memory(element.imageBytes!, fit: BoxFit.contain);
+        if (element.imageBytes == null) return const SizedBox.shrink();
+        if (element.clipOval) {
+          return ClipOval(
+            child: SizedBox.expand(
+              child: Image.memory(element.imageBytes!, fit: BoxFit.cover),
+            ),
+          );
+        }
+        if (element.cornerRadius > 0) {
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(element.cornerRadius),
+            child: SizedBox.expand(
+              child: Image.memory(element.imageBytes!, fit: BoxFit.cover),
+            ),
+          );
+        }
+        return Image.memory(element.imageBytes!, fit: BoxFit.contain);
       case CanvasElementKind.barcode:
         return ColoredBox(
           color: colorWhite,

@@ -4,60 +4,72 @@ import 'package:magicepaperapp/src/rust/api/simple.dart';
 
 class ImageProcessingMethod {
   final DitherMethod method;
-  final bool isBwr;
+  final ColorMode colorMode;
   final bool useDartHalftone;
-  final bool is4Color;
-  const ImageProcessingMethod(this.method, this.isBwr,
-      {this.useDartHalftone = false, this.is4Color = false});
+  const ImageProcessingMethod(this.method, this.colorMode,
+      {this.useDartHalftone = false});
 }
 
 class ImageProcessing {
   static const bwFloydSteinbergDither =
-      ImageProcessingMethod(DitherMethod.floydSteinberg, false);
+      ImageProcessingMethod(DitherMethod.floydSteinberg, ColorMode.bw);
   static const bwFalseFloydSteinbergDither =
-      ImageProcessingMethod(DitherMethod.falseFloydSteinberg, false);
+      ImageProcessingMethod(DitherMethod.falseFloydSteinberg, ColorMode.bw);
   static const bwStuckiDither =
-      ImageProcessingMethod(DitherMethod.stucki, false);
+      ImageProcessingMethod(DitherMethod.stucki, ColorMode.bw);
   static const bwAtkinsonDither =
-      ImageProcessingMethod(DitherMethod.atkinson, false);
+      ImageProcessingMethod(DitherMethod.atkinson, ColorMode.bw);
   static const bwThreshold =
-      ImageProcessingMethod(DitherMethod.threshold, false);
-  static const bwBayerDither = ImageProcessingMethod(DitherMethod.bayer, false);
+      ImageProcessingMethod(DitherMethod.threshold, ColorMode.bw);
+  static const bwBayerDither =
+      ImageProcessingMethod(DitherMethod.bayer, ColorMode.bw);
   static const bwSierra2Dither =
-      ImageProcessingMethod(DitherMethod.sierra2, false);
-
+      ImageProcessingMethod(DitherMethod.sierra2, ColorMode.bw);
+  static const bwBurkesDither =
+      ImageProcessingMethod(DitherMethod.burkes, ColorMode.bw);
   static const bwHalftoneDither = ImageProcessingMethod(
-      DitherMethod.halftone, false,
+      DitherMethod.halftone, ColorMode.bw,
       useDartHalftone: true);
 
   static const bwrFloydSteinbergDither =
-      ImageProcessingMethod(DitherMethod.floydSteinberg, true);
+      ImageProcessingMethod(DitherMethod.floydSteinberg, ColorMode.bwr);
   static const bwrFalseFloydSteinbergDither =
-      ImageProcessingMethod(DitherMethod.falseFloydSteinberg, true);
+      ImageProcessingMethod(DitherMethod.falseFloydSteinberg, ColorMode.bwr);
   static const bwrStuckiDither =
-      ImageProcessingMethod(DitherMethod.stucki, true);
+      ImageProcessingMethod(DitherMethod.stucki, ColorMode.bwr);
   static const bwrTriColorAtkinsonDither =
-      ImageProcessingMethod(DitherMethod.atkinson, true);
+      ImageProcessingMethod(DitherMethod.atkinson, ColorMode.bwr);
   static const bwrThreshold =
-      ImageProcessingMethod(DitherMethod.threshold, true);
-  static const bwrBayerDither = ImageProcessingMethod(DitherMethod.bayer, true);
+      ImageProcessingMethod(DitherMethod.threshold, ColorMode.bwr);
+  static const bwrBayerDither =
+      ImageProcessingMethod(DitherMethod.bayer, ColorMode.bwr);
   static const bwrSierra2Dither =
-      ImageProcessingMethod(DitherMethod.sierra2, true);
-
-  static const bwrHalftone =
-      ImageProcessingMethod(DitherMethod.halftone, true, useDartHalftone: true);
+      ImageProcessingMethod(DitherMethod.sierra2, ColorMode.bwr);
+  static const bwrBurkesDither =
+      ImageProcessingMethod(DitherMethod.burkes, ColorMode.bwr);
+  static const bwrHalftone = ImageProcessingMethod(
+      DitherMethod.halftone, ColorMode.bwr,
+      useDartHalftone: true);
 
   static const bwryFloydSteinbergDither =
-      ImageProcessingMethod(DitherMethod.floydSteinberg, true, is4Color: true);
-  static const bwryFalseFloydSteinbergDither = ImageProcessingMethod(
-      DitherMethod.falseFloydSteinberg, true,
-      is4Color: true);
+      ImageProcessingMethod(DitherMethod.floydSteinberg, ColorMode.bwry);
+  static const bwryFalseFloydSteinbergDither =
+      ImageProcessingMethod(DitherMethod.falseFloydSteinberg, ColorMode.bwry);
   static const bwryStuckiDither =
-      ImageProcessingMethod(DitherMethod.stucki, true, is4Color: true);
-  static const bwryAtkinsonDither =
-      ImageProcessingMethod(DitherMethod.atkinson, true, is4Color: true);
+      ImageProcessingMethod(DitherMethod.stucki, ColorMode.bwry);
+  static const bwryTriColorAtkinsonDither =
+      ImageProcessingMethod(DitherMethod.atkinson, ColorMode.bwry);
   static const bwryThreshold =
-      ImageProcessingMethod(DitherMethod.threshold, true, is4Color: true);
+      ImageProcessingMethod(DitherMethod.threshold, ColorMode.bwry);
+  static const bwryBayerDither =
+      ImageProcessingMethod(DitherMethod.bayer, ColorMode.bwry);
+  static const bwrySierra2Dither =
+      ImageProcessingMethod(DitherMethod.sierra2, ColorMode.bwry);
+  static const bwryBurkesDither =
+      ImageProcessingMethod(DitherMethod.burkes, ColorMode.bwry);
+  static const bwryHalftone = ImageProcessingMethod(
+      DitherMethod.halftone, ColorMode.bwry,
+      useDartHalftone: true);
 
   static img.Image extract(Color toBeExtract, img.Image orgImg) {
     var image = img.Image.from(orgImg);

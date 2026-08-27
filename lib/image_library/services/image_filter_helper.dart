@@ -14,6 +14,7 @@ class ImageFilterHelper {
         ImageProcessing.bwThreshold: appLocalizations.threshold,
         ImageProcessing.bwBayerDither: appLocalizations.bayer,
         ImageProcessing.bwSierra2Dither: appLocalizations.sierra2,
+        ImageProcessing.bwBurkesDither: appLocalizations.burkes,
         ImageProcessing.bwHalftoneDither: appLocalizations.halftone,
         ImageProcessing.bwrHalftone: appLocalizations.colorHalftone,
         ImageProcessing.bwrFloydSteinbergDither:
@@ -25,13 +26,18 @@ class ImageFilterHelper {
         ImageProcessing.bwrThreshold: appLocalizations.threshold,
         ImageProcessing.bwrBayerDither: appLocalizations.bayer,
         ImageProcessing.bwrSierra2Dither: appLocalizations.sierra2,
+        ImageProcessing.bwrBurkesDither: appLocalizations.burkes,
         ImageProcessing.bwryFloydSteinbergDither:
             appLocalizations.floydSteinberg,
         ImageProcessing.bwryFalseFloydSteinbergDither:
             appLocalizations.falseFloydSteinberg,
         ImageProcessing.bwryStuckiDither: appLocalizations.stucki,
-        ImageProcessing.bwryAtkinsonDither: appLocalizations.atkinson,
+        ImageProcessing.bwryTriColorAtkinsonDither: appLocalizations.atkinson,
         ImageProcessing.bwryThreshold: appLocalizations.threshold,
+        ImageProcessing.bwryBayerDither: appLocalizations.bayer,
+        ImageProcessing.bwrySierra2Dither: appLocalizations.sierra2,
+        ImageProcessing.bwryBurkesDither: appLocalizations.burkes,
+        ImageProcessing.bwryHalftone: appLocalizations.colorHalftone,
       };
   static String getFilterNameByIndex(
       int index, List<ImageProcessingMethod> processingMethods) {

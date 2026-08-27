@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:currency_picker/currency_picker.dart';
 import 'package:magicepaperapp/card_templates/util/image_picker_util.dart';
-import 'package:barcode_widget/barcode_widget.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
@@ -13,8 +12,10 @@ import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:magicepaperapp/card_templates/price_tag_card_widget.dart';
 import 'package:magicepaperapp/card_templates/price_tag_model.dart';
 import 'package:magicepaperapp/util/page_route_util.dart';
-import 'package:magicepaperapp/util/template_util.dart';
-import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
+import 'package:magicepaperapp/card_templates/template_layer_builders.dart';
+import 'package:magicepaperapp/card_templates/bulk/bulk_csv_import_screen.dart';
+import 'package:magicepaperapp/card_templates/bulk/bulk_template.dart';
+import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/card_templates/util/barcode_scanner_util.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
@@ -24,7 +25,10 @@ class PriceTagForm extends StatefulWidget {
   final int width;
   final int height;
 
-  const PriceTagForm({super.key, required this.width, required this.height});
+  final DisplayDevice? device;
+
+  const PriceTagForm(
+      {super.key, required this.width, required this.height, this.device});
 
   @override
   State<PriceTagForm> createState() => _PriceTagFormState();
@@ -158,101 +162,12 @@ class _PriceTagFormState extends State<PriceTagForm> {
     });
 
     try {
-      final List<LayerSpec> layers = [];
-
-      final layoutParams =
-          ResponsiveLayoutUtil.getPriceTagLayout(widget.width, widget.height);
-
-      if (_productImage != null) {
-        layers.add(LayerSpec.widget(
-          widget: ClipRRect(
-            borderRadius: BorderRadius.circular(Dimens.radiusM),
-            child: Image.file(_productImage!,
-                width: 200, height: 160, fit: BoxFit.cover),
-          ),
-          offset: layoutParams.productImageOffset,
-          scale: layoutParams.productImageScale,
-          kind: LayerKind.image,
-          elementId: 'productImage',
-        ));
-      }
-
-      if (_data.productName.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          text: _data.productName,
-          textStyle: TextStyle(
-              fontSize: layoutParams.productNameFontSize,
-              fontWeight: FontWeight.bold),
-          backgroundColor: colorWhite,
-          textColor: colorBlack,
-          textAlign: TextAlign.center,
-          offset: layoutParams.productNameOffset,
-          scale: layoutParams.productNameScale,
-          elementId: 'productName',
-        ));
-        if (_data.productDescription.isNotEmpty) {
-          layers.add(LayerSpec.text(
-            text: _data.productDescription,
-            textStyle: TextStyle(
-              fontSize: layoutParams.productDescriptionFontSize,
-              fontWeight: FontWeight.normal,
-            ),
-            backgroundColor: colorWhite,
-            textColor: colorBlack,
-            textAlign: TextAlign.center,
-            offset: layoutParams.productDescriptionOffset,
-            scale: layoutParams.productDescriptionScale,
-            elementId: 'productDescription',
-          ));
-        }
-      }
-
-      if (_data.price.isNotEmpty || _data.currency.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          text: '${_data.currency} ${_data.price}',
-          textStyle: TextStyle(
-              fontSize: layoutParams.priceFontSize,
-              fontWeight: FontWeight.bold),
-          backgroundColor: colorWhite,
-          textColor: Colors.red,
-          textAlign: TextAlign.center,
-          offset: layoutParams.priceOffset,
-          scale: layoutParams.priceScale,
-          followCanvasTheme: false,
-          elementId: 'price',
-        ));
-      }
-
-      if (_data.quantity.isNotEmpty) {
-        layers.add(LayerSpec.text(
-          text: _data.quantity,
-          textStyle: TextStyle(fontSize: layoutParams.quantityFontSize),
-          backgroundColor: colorWhite,
-          textColor: colorBlack,
-          textAlign: TextAlign.center,
-          offset: layoutParams.quantityOffset,
-          scale: layoutParams.quantityScale,
-          elementId: 'quantity',
-        ));
-      }
-
-      if (_data.barcodeData.isNotEmpty) {
-        layers.add(LayerSpec.widget(
-          widget: BarcodeWidget(
-            style: const TextStyle(color: colorBlack),
-            padding: const EdgeInsets.all(Dimens.spacingXxs),
-            backgroundColor: colorWhite,
-            barcode: Barcode.code128(),
-            data: _data.barcodeData,
-            width: layoutParams.barcodeSize.width,
-            height: layoutParams.barcodeSize.height,
-          ),
-          offset: layoutParams.barcodeOffset,
-          scale: layoutParams.barcodeScale,
-          kind: LayerKind.barcode,
-          elementId: 'barcode',
-        ));
-      }
+      final layers = buildPriceTagLayers(
+        data: _data,
+        width: widget.width,
+        height: widget.height,
+        photo: _productImage,
+      );
 
       final Object? result = await Navigator.of(context).push<Object>(
         buildOpaqueSlideRoute(
@@ -477,8 +392,43 @@ class _PriceTagFormState extends State<PriceTagForm> {
                         ),
                 ),
               ),
+              const SizedBox(height: Dimens.spacingM),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: OutlinedButton.icon(
+                  onPressed: _openBulkImport,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: colorPrimary,
+                    side: const BorderSide(color: colorPrimary),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(Dimens.radiusM),
+                    ),
+                  ),
+                  icon: const Icon(Icons.table_view, size: 18),
+                  label: Text(
+                    appLocalizations.bulkImportCsv,
+                    style: const TextStyle(
+                        fontSize: Dimens.fontSizeL,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  void _openBulkImport() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => BulkCsvImportScreen(
+          template: priceTagBulkTemplate(),
+          width: widget.width,
+          height: widget.height,
+          device: widget.device,
         ),
       ),
     );

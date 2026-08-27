@@ -58,6 +58,36 @@ class SavedImage {
 
   bool get hasCanvasDocument => metadata?['canvasDocument'] != null;
 
+  bool get isQrTag => metadata?['qrTag'] is Map;
+
+  Map<String, dynamic>? get qrTagData {
+    final raw = metadata?['qrTag'];
+    return raw is Map ? Map<String, dynamic>.from(raw) : null;
+  }
+
+  Map<String, dynamic>? get weatherTemplateData {
+    final raw = metadata?['templateData'];
+    if (raw is Map && raw['type'] == 'weather') {
+      return Map<String, dynamic>.from(raw);
+    }
+    return null;
+  }
+
+  Map<String, dynamic>? get menuTemplateData {
+    final raw = metadata?['templateData'];
+    if (raw is Map && raw['type'] == 'menu') {
+      return Map<String, dynamic>.from(raw);
+    }
+    return null;
+  }
+
+  bool get isContactCard => metadata?['contactCard'] is Map;
+
+  Map<String, dynamic>? get contactCardData {
+    final raw = metadata?['contactCard'];
+    return raw is Map ? Map<String, dynamic>.from(raw) : null;
+  }
+
   String get imageCacheKey =>
       '$filePath#${metadata?['updatedAt'] ?? createdAt.millisecondsSinceEpoch}';
 

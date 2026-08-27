@@ -37,5 +37,6 @@ class GDEQ031T10 extends Epd {
         ImageProcessing.bwThreshold,
         ImageProcessing.bwBayerDither,
         ImageProcessing.bwSierra2Dither,
+        ImageProcessing.bwBurkesDither,
       ];
 }
