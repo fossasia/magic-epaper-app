@@ -122,7 +122,7 @@ class Waveshare2in13g extends DisplayDevice {
         ImageProcessing.bwryFloydSteinbergDither,
         ImageProcessing.bwryFalseFloydSteinbergDither,
         ImageProcessing.bwryStuckiDither,
-        ImageProcessing.bwryAtkinsonDither,
+        ImageProcessing.bwryTriColorAtkinsonDither,
         ImageProcessing.bwryThreshold,
       ];
 
