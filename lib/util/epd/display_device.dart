@@ -16,6 +16,7 @@ abstract class DisplayDevice {
   int get height;
   List<Color> get colors;
   List<String>? get displayChips;
+  bool get isBeta => false;
 
   List<ImageProcessingMethod> get processingMethods;
 

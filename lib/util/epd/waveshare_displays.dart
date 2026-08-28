@@ -118,6 +118,9 @@ class Waveshare2in13g extends DisplayDevice {
   List<String>? get displayChips => null;
 
   @override
+  bool get isBeta => true;
+
+  @override
   List<ImageProcessingMethod> get processingMethods => [
         ImageProcessing.bwryFloydSteinbergDither,
         ImageProcessing.bwryFalseFloydSteinbergDither,
