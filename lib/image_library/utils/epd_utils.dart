@@ -11,7 +11,6 @@ class EpdUtils {
     () => Gdey037z03(),
     () => Gdey037z03BW(),
     () => GDEQ031T10(),
-    () => Waveshare1in54(),
     () => Waveshare2in9(),
     () => Waveshare2in9b(),
     () => Waveshare2in13(),
@@ -44,9 +43,6 @@ class EpdUtils {
       case '13339':
       case 'waveshare-2.9b':
         return Waveshare2in9b();
-      case '17760':
-      case 'waveshare-1.54':
-        return Waveshare1in54();
       case '17745':
       case 'waveshare-2.13':
         return Waveshare2in13();
