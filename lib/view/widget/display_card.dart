@@ -123,7 +123,8 @@ class DisplayCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: Dimens.spacingS * scale),
-                  if ((chips != null && chips.isNotEmpty) || display.isBeta) ...[
+                  if ((chips != null && chips.isNotEmpty) ||
+                      display.isBeta) ...[
                     Wrap(
                       spacing: Dimens.spacingXs * scale,
                       runSpacing: Dimens.spacingXs * scale,
