@@ -74,13 +74,6 @@ fn dither_gamma_lut() -> &'static [f32; 256] {
     })
 }
 
-const PALETTE_BWRY: [Colorf32; 4] = [
-    Colorf32 { r: 0.0, g: 0.0, b: 0.0 },
-    Colorf32 { r: 255.0, g: 255.0, b: 255.0 },
-    Colorf32 { r: 255.0, g: 0.0, b: 0.0 },
-    Colorf32 { r: 255.0, g: 255.0, b: 0.0 },
-];
-
 fn closest_color(pixel: Colorf32, palette: &[Colorf32]) -> Colorf32 {
     let mut min_dist = f32::MAX;
     let mut best_color = palette[0];
