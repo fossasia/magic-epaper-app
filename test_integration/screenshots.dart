@@ -70,29 +70,10 @@ void main() {
       await tester.pump(const Duration(seconds: 2));
 
       final templatesButton = find.text('Templates');
-      if (templatesButton.evaluate().isEmpty) {
-        final scrollableFinder = find.byType(Scrollable);
-        if (scrollableFinder.evaluate().isNotEmpty) {
-          try {
-            await tester.scrollUntilVisible(
-              templatesButton,
-              50.0,
-              scrollable: scrollableFinder.first,
-            );
-            await tester.pumpAndSettle();
-          } catch (_) {}
-        }
-      }
-
-      if (templatesButton.evaluate().isNotEmpty) {
-        await tester.tap(templatesButton);
-        await tester.pumpAndSettle();
-        await tester.pump(const Duration(seconds: 2));
-        await binding.takeScreenshot('7_Templates_screen');
-
-        navigator.pop();
-        await tester.pumpAndSettle();
-      }
+      await tester.tap(templatesButton);
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 2));
+      await binding.takeScreenshot('7_Templates_screen');
 
       navigator.pop();
       await tester.pumpAndSettle();
