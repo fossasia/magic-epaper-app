@@ -28,6 +28,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
     Gdey037z03BW(),
     Gdey037z03(),
     GDEY029F51(),
+    Waveshare1in54(),
     Waveshare2in13(),
     Waveshare2in13g(),
     Waveshare2in9(),

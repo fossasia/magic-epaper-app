@@ -141,6 +141,24 @@ class Waveshare2in13g extends DisplayDevice {
   }
 }
 
+class Waveshare1in54 extends WaveshareNfcDisplay {
+  Waveshare1in54() : super(ePaperSizeEnum: 8);
+
+  @override
+  String get name => 'Waveshare 1.54" NFC';
+  @override
+  String get modelId => '17760';
+  @override
+  int get width => 200;
+  @override
+  int get height => 200;
+  @override
+  String get imgPath => ImageAssets.waveshare1_54;
+
+  @override
+  bool get isBeta => true;
+}
+
 class Waveshare2in9b extends WaveshareNfcDisplay {
   Waveshare2in9b() : super(ePaperSizeEnum: 7);
 
