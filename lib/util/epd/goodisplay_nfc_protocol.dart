@@ -32,37 +32,64 @@ class EpdModelConfig {
 
   static const Map<String, EpdModelConfig> models = {
     // 2-Color (B/W)
-    "GDEY0154D67": EpdModelConfig(model: "GDEY0154D67", width: 200, height: 200, mode: 2, ic: 2),
-    "GDEY0213B74": EpdModelConfig(model: "GDEY0213B74", width: 250, height: 128, mode: 2, ic: 2),
-    "GDEY029T94":  EpdModelConfig(model: "GDEY029T94",  width: 296, height: 128, mode: 2, ic: 2),
-    "GDEY042T81":  EpdModelConfig(model: "GDEY042T81",  width: 400, height: 300, mode: 3, ic: 2),
-    "GDEW0154T8D": EpdModelConfig(model: "GDEW0154T8D", width: 152, height: 152, mode: 2, ic: 1),
-    "GDEW0213T5D": EpdModelConfig(model: "GDEW0213T5D", width: 212, height: 104, mode: 2, ic: 1),
-    "GDEW029T5D":  EpdModelConfig(model: "GDEW029T5D",  width: 296, height: 128, mode: 2, ic: 1),
-    "GDEW042T2":   EpdModelConfig(model: "GDEW042T2",   width: 400, height: 300, mode: 2, ic: 1),
-    "GDEY037T03":  EpdModelConfig(model: "GDEY037T03",  width: 416, height: 240, mode: 2, ic: 1),
+    "GDEY0154D67": EpdModelConfig(
+        model: "GDEY0154D67", width: 200, height: 200, mode: 2, ic: 2),
+    "GDEY0213B74": EpdModelConfig(
+        model: "GDEY0213B74", width: 250, height: 128, mode: 2, ic: 2),
+    "GDEY029T94": EpdModelConfig(
+        model: "GDEY029T94", width: 296, height: 128, mode: 2, ic: 2),
+    "GDEY042T81": EpdModelConfig(
+        model: "GDEY042T81", width: 400, height: 300, mode: 3, ic: 2),
+    "GDEW0154T8D": EpdModelConfig(
+        model: "GDEW0154T8D", width: 152, height: 152, mode: 2, ic: 1),
+    "GDEW0213T5D": EpdModelConfig(
+        model: "GDEW0213T5D", width: 212, height: 104, mode: 2, ic: 1),
+    "GDEW029T5D": EpdModelConfig(
+        model: "GDEW029T5D", width: 296, height: 128, mode: 2, ic: 1),
+    "GDEW042T2": EpdModelConfig(
+        model: "GDEW042T2", width: 400, height: 300, mode: 2, ic: 1),
+    "GDEY037T03": EpdModelConfig(
+        model: "GDEY037T03", width: 416, height: 240, mode: 2, ic: 1),
 
     // 3-Color (B/W/R)
-    "GDEY0154Z90": EpdModelConfig(model: "GDEY0154Z90", width: 200, height: 200, mode: 3, ic: 2),
-    "GDEY0213Z98": EpdModelConfig(model: "GDEY0213Z98", width: 250, height: 128, mode: 3, ic: 2),
-    "GDEY029Z95":  EpdModelConfig(model: "GDEY029Z95",  width: 296, height: 128, mode: 3, ic: 2),
-    "GDEY042Z98":  EpdModelConfig(model: "GDEY042Z98",  width: 400, height: 300, mode: 3, ic: 2),
-    "GDEW0213Z16": EpdModelConfig(model: "GDEW0213Z16", width: 212, height: 104, mode: 3, ic: 1),
-    "GDEW029Z13":  EpdModelConfig(model: "GDEW029Z13",  width: 296, height: 128, mode: 3, ic: 1),
-    "GDEQ042Z21":  EpdModelConfig(model: "GDEQ042Z21",  width: 400, height: 300, mode: 3, ic: 1),
-    "GDEY037Z03":  EpdModelConfig(model: "GDEY037Z03",  width: 416, height: 240, mode: 3, ic: 1),
+    "GDEY0154Z90": EpdModelConfig(
+        model: "GDEY0154Z90", width: 200, height: 200, mode: 3, ic: 2),
+    "GDEY0213Z98": EpdModelConfig(
+        model: "GDEY0213Z98", width: 250, height: 128, mode: 3, ic: 2),
+    "GDEY029Z95": EpdModelConfig(
+        model: "GDEY029Z95", width: 296, height: 128, mode: 3, ic: 2),
+    "GDEY042Z98": EpdModelConfig(
+        model: "GDEY042Z98", width: 400, height: 300, mode: 3, ic: 2),
+    "GDEW0213Z16": EpdModelConfig(
+        model: "GDEW0213Z16", width: 212, height: 104, mode: 3, ic: 1),
+    "GDEW029Z13": EpdModelConfig(
+        model: "GDEW029Z13", width: 296, height: 128, mode: 3, ic: 1),
+    "GDEQ042Z21": EpdModelConfig(
+        model: "GDEQ042Z21", width: 400, height: 300, mode: 3, ic: 1),
+    "GDEY037Z03": EpdModelConfig(
+        model: "GDEY037Z03", width: 416, height: 240, mode: 3, ic: 1),
 
     // 4-Color (B/W/R/Y)
-    "GDEM0097F51":  EpdModelConfig(model: "GDEM0097F51",  width: 184, height: 88,  mode: 4, ic: 1),
-    "GDEM0154F51H": EpdModelConfig(model: "GDEM0154F51H", width: 200, height: 200, mode: 4, ic: 1),
-    "GDEY0213F51":  EpdModelConfig(model: "GDEY0213F51",  width: 250, height: 128, mode: 4, ic: 1),
-    "GDEY0213F52":  EpdModelConfig(model: "GDEY0213F52",  width: 250, height: 128, mode: 4, ic: 1),
-    "GDEY0266F51":  EpdModelConfig(model: "GDEY0266F51",  width: 296, height: 152, mode: 4, ic: 1),
-    "GDEY0266F51H": EpdModelConfig(model: "GDEY0266F51H", width: 360, height: 184, mode: 4, ic: 1),
-    "GDEY029F51":   EpdModelConfig(model: "GDEY029F51",   width: 296, height: 128, mode: 4, ic: 1),
-    "GDEY029F51H":  EpdModelConfig(model: "GDEY029F51H",  width: 384, height: 168, mode: 4, ic: 1),
-    "GDEM037F52":   EpdModelConfig(model: "GDEM037F52",   width: 416, height: 240, mode: 4, ic: 1),
-    "GDEM042F52":   EpdModelConfig(model: "GDEM042F52",   width: 400, height: 300, mode: 4, ic: 1),
+    "GDEM0097F51": EpdModelConfig(
+        model: "GDEM0097F51", width: 184, height: 88, mode: 4, ic: 1),
+    "GDEM0154F51H": EpdModelConfig(
+        model: "GDEM0154F51H", width: 200, height: 200, mode: 4, ic: 1),
+    "GDEY0213F51": EpdModelConfig(
+        model: "GDEY0213F51", width: 250, height: 128, mode: 4, ic: 1),
+    "GDEY0213F52": EpdModelConfig(
+        model: "GDEY0213F52", width: 250, height: 128, mode: 4, ic: 1),
+    "GDEY0266F51": EpdModelConfig(
+        model: "GDEY0266F51", width: 296, height: 152, mode: 4, ic: 1),
+    "GDEY0266F51H": EpdModelConfig(
+        model: "GDEY0266F51H", width: 360, height: 184, mode: 4, ic: 1),
+    "GDEY029F51": EpdModelConfig(
+        model: "GDEY029F51", width: 296, height: 128, mode: 4, ic: 1),
+    "GDEY029F51H": EpdModelConfig(
+        model: "GDEY029F51H", width: 384, height: 168, mode: 4, ic: 1),
+    "GDEM037F52": EpdModelConfig(
+        model: "GDEM037F52", width: 416, height: 240, mode: 4, ic: 1),
+    "GDEM042F52": EpdModelConfig(
+        model: "GDEM042F52", width: 400, height: 300, mode: 4, ic: 1),
   };
 
   static List<String> getInitCommands(String epd) {
@@ -263,7 +290,8 @@ class GoodisplayNfcProtocol {
     final int exactSize = (width * height) ~/ 8;
 
     // Per SSD: 0xFF = White, 0x00 = Black
-    final Uint8List buffer = Uint8List(exactSize)..fillRange(0, exactSize, 0xFF);
+    final Uint8List buffer = Uint8List(exactSize)
+      ..fillRange(0, exactSize, 0xFF);
     int num = 0;
 
     for (int col = width - 1; col >= 0; col--) {
@@ -370,7 +398,8 @@ class GoodisplayNfcProtocol {
       final targetHeight = display.height;
 
       img.Image panelImage = image;
-      if (panelImage.width != targetWidth || panelImage.height != targetHeight) {
+      if (panelImage.width != targetWidth ||
+          panelImage.height != targetHeight) {
         panelImage = img.copyResize(
           panelImage,
           width: targetWidth,
