@@ -36,8 +36,11 @@ class GDEY0154Z90 extends DisplayDevice {
   @override
   Future<void> transfer(BuildContext context, img.Image image,
       {Waveform? waveform}) async {
-    return GoodisplayTransferDialog.show(context, image,
-        width: width, height: height);
+    return GoodisplayTransferDialog.show(
+      context,
+      image,
+      display: this,
+    );
   }
 
   @override
@@ -64,8 +67,11 @@ class GDEY0213Z98 extends DisplayDevice {
   @override
   Future<void> transfer(BuildContext context, img.Image image,
       {Waveform? waveform}) async {
-    return GoodisplayTransferDialog.show(context, image,
-        width: width, height: height);
+    return GoodisplayTransferDialog.show(
+      context,
+      image,
+      display: this,
+    );
   }
 
   @override
@@ -92,8 +98,11 @@ class GDEY029Z95 extends DisplayDevice {
   @override
   Future<void> transfer(BuildContext context, img.Image image,
       {Waveform? waveform}) async {
-    return GoodisplayTransferDialog.show(context, image,
-        width: width, height: height);
+    return GoodisplayTransferDialog.show(
+      context,
+      image,
+      display: this,
+    );
   }
 
   @override
@@ -120,8 +129,11 @@ class GDEY042Z98 extends DisplayDevice {
   @override
   Future<void> transfer(BuildContext context, img.Image image,
       {Waveform? waveform}) async {
-    return GoodisplayTransferDialog.show(context, image,
-        width: width, height: height);
+    return GoodisplayTransferDialog.show(
+      context,
+      image,
+      display: this,
+    );
   }
 
   @override
@@ -148,8 +160,11 @@ class GDEW0213Z16 extends DisplayDevice {
   @override
   Future<void> transfer(BuildContext context, img.Image image,
       {Waveform? waveform}) async {
-    return GoodisplayTransferDialog.show(context, image,
-        width: width, height: height);
+    return GoodisplayTransferDialog.show(
+      context,
+      image,
+      display: this,
+    );
   }
 
   @override
@@ -176,8 +191,11 @@ class GDEW029Z13 extends DisplayDevice {
   @override
   Future<void> transfer(BuildContext context, img.Image image,
       {Waveform? waveform}) async {
-    return GoodisplayTransferDialog.show(context, image,
-        width: width, height: height);
+    return GoodisplayTransferDialog.show(
+      context,
+      image,
+      display: this,
+    );
   }
 
   @override
@@ -204,8 +222,11 @@ class GDEQ042Z21 extends DisplayDevice {
   @override
   Future<void> transfer(BuildContext context, img.Image image,
       {Waveform? waveform}) async {
-    return GoodisplayTransferDialog.show(context, image,
-        width: width, height: height);
+    return GoodisplayTransferDialog.show(
+      context,
+      image,
+      display: this,
+    );
   }
 
   @override
@@ -232,8 +253,11 @@ class GDEY037Z03 extends DisplayDevice {
   @override
   Future<void> transfer(BuildContext context, img.Image image,
       {Waveform? waveform}) async {
-    return GoodisplayTransferDialog.show(context, image,
-        width: width, height: height);
+    return GoodisplayTransferDialog.show(
+      context,
+      image,
+      display: this,
+    );
   }
 
   @override

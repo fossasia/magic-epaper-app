@@ -5,7 +5,6 @@ import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/util/epd/gdeq031t10.dart';
-import 'package:magicepaperapp/util/epd/gdey029f51.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
 import 'package:magicepaperapp/util/epd/waveshare_displays.dart';
