@@ -108,9 +108,9 @@ class Waveshare1in54 extends WaveshareNfcDisplay {
   String get imgPath => ImageAssets.waveshare1_54;
 
   @override
+  @override
   bool get isBeta => true;
 }
-
 
 class Waveshare2in9b extends WaveshareNfcDisplay {
   Waveshare2in9b() : super(ePaperSizeEnum: 7);
