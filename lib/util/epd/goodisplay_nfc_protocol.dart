@@ -39,7 +39,7 @@ class EpdModelConfig {
     "GDEY029T94": EpdModelConfig(
         model: "GDEY029T94", width: 296, height: 128, mode: 2, ic: 2),
     "GDEY042T81": EpdModelConfig(
-        model: "GDEY042T81", width: 400, height: 300, mode: 3, ic: 2),
+        model: "GDEY042T81", width: 400, height: 300, mode: 2, ic: 2),
     "GDEW0154T8D": EpdModelConfig(
         model: "GDEW0154T8D", width: 152, height: 152, mode: 2, ic: 1),
     "GDEW0213T5D": EpdModelConfig(
@@ -287,32 +287,34 @@ class GoodisplayNfcProtocol {
   Uint8List _getPictureDataSsd(img.Image bitmap, int mode) {
     final int width = bitmap.width;
     final int height = bitmap.height;
-    final int exactSize = (width * height) ~/ 8;
-
-    // Per SSD: 0xFF = White, 0x00 = Black
-    final Uint8List buffer = Uint8List(exactSize)
-      ..fillRange(0, exactSize, 0xFF);
+    final int bytesPerColumn = (height + 7) ~/ 8;
+    final int totalBytes = width * bytesPerColumn;
+    final Uint8List buffer = Uint8List(totalBytes)..fillRange(0, totalBytes, 0xFF);
     int num = 0;
 
     for (int col = width - 1; col >= 0; col--) {
-      for (int i = 0; i <= (height ~/ 8) - 1; i++) {
+      for (int i = 0; i < bytesPerColumn; i++) {
         int b = 0;
         for (int j = 0; j < 8; j++) {
-          b = (b * 2) & 0xFF;
-          final pixel = bitmap.getPixel(col, i * 8 + j);
-          final int r = pixel.r.toInt();
-          final int g = pixel.g.toInt();
-          final int bCol = pixel.b.toInt();
+          b = (b << 1) & 0xFF;
+          final int y = i * 8 + j;
 
-          if (mode == 0) {
-            if (r > 100 || g > 100 || bCol > 100) b = (b + 1) & 0xFF;
-          } else if (mode == 1) {
-            if (r < 100 || g > 100 || bCol > 100) b = (b + 1) & 0xFF;
+          if (y < height) {
+            final pixel = bitmap.getPixel(col, y);
+            final int r = pixel.r.toInt();
+            final int g = pixel.g.toInt();
+            final int bCol = pixel.b.toInt();
+
+            if (mode == 0) {
+              if (r > 100 || g > 100 || bCol > 100) b = (b | 1) & 0xFF;
+            } else if (mode == 1) {
+              if (r < 100 || g > 100 || bCol > 100) b = (b | 1) & 0xFF;
+            }
+          } else {
+            b = (b | 1) & 0xFF;
           }
         }
-        if (num < buffer.length) {
-          buffer[num++] = b;
-        }
+        buffer[num++] = b;
       }
     }
     return buffer;
@@ -321,30 +323,38 @@ class GoodisplayNfcProtocol {
   Uint8List _encodeGoodisplay4G(img.Image bitmap) {
     final int width = bitmap.width;
     final int height = bitmap.height;
-    final Uint8List imageBuffer = Uint8List(100000);
+    final int bytesPerColumn = (height + 3) ~/ 4;
+    final int totalBytes = width * bytesPerColumn;
+
+    final Uint8List imageBuffer = Uint8List(totalBytes)..fillRange(0, totalBytes, 0x55);
     int num = 0;
 
     for (int num2 = width - 1; num2 >= 0; num2--) {
-      for (int i = 0; i <= (height ~/ 4) - 1; i++) {
+      for (int i = 0; i < bytesPerColumn; i++) {
         int b = 0;
         for (int j = 0; j < 4; j++) {
-          b = (b * 4) & 0xFF;
-          final pixel = bitmap.getPixel(num2, i * 4 + j);
+          b = (b << 2) & 0xFF;
+          final int y = i * 4 + j;
 
-          final int r = pixel.r.toInt();
-          final int g = pixel.g.toInt();
-          final int bCol = pixel.b.toInt();
+          if (y < height) {
+            final pixel = bitmap.getPixel(num2, y);
+            final int r = pixel.r.toInt();
+            final int g = pixel.g.toInt();
+            final int bCol = pixel.b.toInt();
 
-          if (r <= 100 && g <= 100 && bCol <= 100) {
-            continue;
+            if (r <= 100 && g <= 100 && bCol <= 100) {
+              continue;
+            }
+            if (r >= 200 && g >= 200 && bCol >= 200) {
+              b = (b | 1) & 0xFF;
+              continue;
+            }
+
+            final int avg = (r + g + bCol) ~/ 3;
+            b = (b | (avg > 127 ? 2 : 3)) & 0xFF;
+          } else {
+            b = (b | 1) & 0xFF;
           }
-          if (r >= 200 && g >= 200 && bCol >= 200) {
-            b = (b + 1) & 0xFF;
-            continue;
-          }
-
-          final int avg = (r + g + bCol) ~/ 3;
-          b = (avg > 127 ? (b + 2) : (b + 3)) & 0xFF;
         }
         imageBuffer[num++] = b;
       }
@@ -413,11 +423,11 @@ class GoodisplayNfcProtocol {
       if (config.ic == 2) {
         if (config.mode == 2) {
           final buf = _getPictureDataSsd(panelImage, 0);
-          final int total = panelImage.width * panelImage.height ~/ 8;
+          final int total = buf.length;
           await _sendChunks(buf, total, screenIndexBW, 1.0, 0, onProgress);
         } else if (config.mode == 3) {
           final bufBw = _getPictureDataSsd(panelImage, 0);
-          final int total = panelImage.width * panelImage.height ~/ 8;
+          final int total = bufBw.length;
           await _sendChunks(bufBw, total, screenIndexBW, 2.0, 0, onProgress);
 
           await Future.delayed(const Duration(milliseconds: 10));
@@ -428,15 +438,14 @@ class GoodisplayNfcProtocol {
         }
       } else if (config.ic == 1) {
         if (config.mode == 2) {
-          final int total = panelImage.width * panelImage.height ~/ 8;
+          final buf = _getPictureDataSsd(panelImage, 0);
+          final int total = buf.length;
           final empty = Uint8List(total)..fillRange(0, total, 255);
           await _sendChunks(empty, total, screenIndexBW, 2.0, 0, onProgress);
-
-          final buf = _getPictureDataSsd(panelImage, 0);
           await _sendChunks(buf, total, screenIndexR, 2.0, total, onProgress);
         } else if (config.mode == 3) {
-          final int total = panelImage.width * panelImage.height ~/ 8;
           final bufBw = _getPictureDataSsd(panelImage, 0);
+          final int total = bufBw.length;
           await _sendChunks(bufBw, total, screenIndexBW, 2.0, 0, onProgress);
 
           await Future.delayed(const Duration(milliseconds: 10));
@@ -447,7 +456,7 @@ class GoodisplayNfcProtocol {
               invert: invert);
         } else if (config.mode == 4) {
           final buf4G = _encodeGoodisplay4G(panelImage);
-          final int total = panelImage.width * panelImage.height ~/ 4;
+          final int total = buf4G.length;
           await _sendChunks(buf4G, total, screenIndexBW, 1.0, 0, onProgress,
               delayMs: 50);
         }

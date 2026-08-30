@@ -286,7 +286,7 @@ class GDEY029F51 extends DisplayDevice {
   String get modelId => 'GDEY029F51';
 
   @override
-  String get imgPath => ImageAssets.gdey037z03Display;
+  String get imgPath => ImageAssets.GDEY029F51;
 
   @override
   List<Color> get colors => [
