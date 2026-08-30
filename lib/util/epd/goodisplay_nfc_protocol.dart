@@ -49,7 +49,6 @@ class EpdModelConfig {
         model: "GDEW042T2", width: 400, height: 300, mode: 2, ic: 1),
     "GDEY037T03": EpdModelConfig(
         model: "GDEY037T03", width: 416, height: 240, mode: 2, ic: 1),
-
     "GDEY0154Z90": EpdModelConfig(
         model: "GDEY0154Z90", width: 200, height: 200, mode: 3, ic: 2),
     "GDEY0213Z98": EpdModelConfig(
@@ -66,7 +65,6 @@ class EpdModelConfig {
         model: "GDEQ042Z21", width: 400, height: 300, mode: 3, ic: 1),
     "GDEY037Z03": EpdModelConfig(
         model: "GDEY037Z03", width: 416, height: 240, mode: 3, ic: 1),
-
     "GDEM0097F51": EpdModelConfig(
         model: "GDEM0097F51", width: 184, height: 88, mode: 4, ic: 1),
     "GDEM0154F51H": EpdModelConfig(
