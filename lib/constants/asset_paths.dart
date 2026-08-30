@@ -12,8 +12,7 @@ class ImageAssets {
       'assets/images/displays/epaper_3.7_bwr.webp';
   static const String gdeq031t10Display =
       'assets/images/displays/GDEQ031T10_display.png';
-  static const String GDEY029F51 =
-      'assets/images/displays/GDEY029F51.png';
+  static const String GDEY029F51 = 'assets/images/displays/GDEY029F51.png';
   static const String GDEY0154D67 = 'assets/images/displays/GDEY0154D67.png';
   static const String GDEY0213B74 = 'assets/images/displays/GDEY0213B74.png';
   static const String GDEY029T94 = 'assets/images/displays/GDEY029T94.png';

@@ -289,7 +289,8 @@ class GoodisplayNfcProtocol {
     final int height = bitmap.height;
     final int bytesPerColumn = (height + 7) ~/ 8;
     final int totalBytes = width * bytesPerColumn;
-    final Uint8List buffer = Uint8List(totalBytes)..fillRange(0, totalBytes, 0xFF);
+    final Uint8List buffer = Uint8List(totalBytes)
+      ..fillRange(0, totalBytes, 0xFF);
     int num = 0;
 
     for (int col = width - 1; col >= 0; col--) {
@@ -326,7 +327,8 @@ class GoodisplayNfcProtocol {
     final int bytesPerColumn = (height + 3) ~/ 4;
     final int totalBytes = width * bytesPerColumn;
 
-    final Uint8List imageBuffer = Uint8List(totalBytes)..fillRange(0, totalBytes, 0x55);
+    final Uint8List imageBuffer = Uint8List(totalBytes)
+      ..fillRange(0, totalBytes, 0x55);
     int num = 0;
 
     for (int num2 = width - 1; num2 >= 0; num2--) {
