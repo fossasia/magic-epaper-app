@@ -8,15 +8,6 @@ import 'package:magicepaperapp/util/image_crop_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
-img.Image? _decodeAndResize(Map<String, dynamic> args) {
-  final bytes = args['bytes'] as Uint8List;
-  final int width = args['width'] as int;
-  final int height = args['height'] as int;
-  final decoded = img.decodeImage(bytes);
-  if (decoded == null) return null;
-  return img.copyResize(decoded, width: width, height: height);
-}
-
 class ImageLoader extends ChangeNotifier {
   img.Image? image;
   final List<img.Image> processedImgs = List.empty(growable: true);
@@ -28,12 +19,7 @@ class ImageLoader extends ChangeNotifier {
     required int height,
   }) async {
     final ImagePicker picker = ImagePicker();
-    final XFile? file = await picker.pickImage(
-      source: ImageSource.gallery,
-      maxWidth: width.toDouble(),
-      maxHeight: height.toDouble(),
-      imageQuality: 50,
-    );
+    final XFile? file = await picker.pickImage(source: ImageSource.gallery);
     if (file == null) return false;
 
     final bytes = await file.readAsBytes();
@@ -47,11 +33,7 @@ class ImageLoader extends ChangeNotifier {
     if (cropped == null) return false;
 
     processedImgs.clear();
-    image = await compute(_decodeAndResize, {
-      'bytes': cropped,
-      'width': width,
-      'height': height,
-    });
+    image = await compute(img.decodeImage, cropped);
 
     notifyListeners();
     return true;
@@ -76,11 +58,11 @@ class ImageLoader extends ChangeNotifier {
 
       if (await file.exists()) {
         final bytes = await file.readAsBytes();
-        image = await compute(_decodeAndResize, {
-          'bytes': bytes,
-          'width': width,
-          'height': height,
-        });
+        final decoded = img.decodeImage(bytes);
+        if (decoded != null) {
+          final resized = img.copyResize(decoded, width: width, height: height);
+          image = resized;
+        }
       }
     } finally {
       isLoading = false;
@@ -93,11 +75,11 @@ class ImageLoader extends ChangeNotifier {
     required int width,
     required int height,
   }) async {
-    image = await compute(_decodeAndResize, {
-      'bytes': bytes,
-      'width': width,
-      'height': height,
-    });
-    notifyListeners();
+    final decoded = img.decodeImage(bytes);
+    if (decoded != null) {
+      final resized = img.copyResize(decoded, width: width, height: height);
+      image = resized;
+      notifyListeners();
+    }
   }
 }
