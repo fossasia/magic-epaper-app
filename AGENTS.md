@@ -8,7 +8,7 @@ Guidance for AI coding agents (Claude Code, Cursor, Aider, Copilot, Codex, and o
 
 ## Tech Stack
 
-- **Framework**: Flutter (stable channel, pinned to `3.41.9` in `pubspec.yaml`)
+- **Framework**: Flutter (stable channel; check the `flutter` constraint in `pubspec.yaml` for the current pinned version)
 - **Language**: Dart (`>=3.3.4 <4.0.0`)
 - **State Management**: Provider pattern (`provider` package)
 - **Dependency Injection**: GetIt (service locator pattern)
