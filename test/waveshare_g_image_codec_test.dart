@@ -16,10 +16,9 @@ void main() {
   }
 
   group('packetCount', () {
-    test('matches vendor formula for the 2.13" (G)', () {
-      // vendor write4ColorScreen: ceil((w * h / 250) / 2) == 61
-      expect(codec.packetCount(250, 122), 61);
-      expect(codec.packetCount(122, 250), 61);
+    test('matches encoded framebuffer size for the 2.13" (G)', () {
+      expect(codec.packetCount(250, 122), 32);
+      expect(codec.packetCount(122, 250), 32);
     });
   });
 

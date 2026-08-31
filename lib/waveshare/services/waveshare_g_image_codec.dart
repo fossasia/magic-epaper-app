@@ -43,8 +43,10 @@ class WaveshareGImageCodec {
   }
 
   int packetCount(int width, int height) {
-    final base = (width * height) ~/ 250;
-    return (base + 1) ~/ 2;
+    final pad = height % 8 == 0 ? 0 : 8 - (height % 8);
+    final paddedHeight = height + pad;
+    final frameBytes = (width * paddedHeight) ~/ 4;
+    return (frameBytes + 249) ~/ 250;
   }
 
   Uint8List _toColorIndices(img.Image image) {
