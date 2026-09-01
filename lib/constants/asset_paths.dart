@@ -32,6 +32,8 @@ class ImageAssets {
       'assets/images/displays/waveshare_2.13.webp';
   static const String waveshare1_54 =
       'assets/images/displays/waveshare_2.13.webp';
+  static const String waveshare1_54g =
+      'assets/images/displays/waveshare_2.13G.jpg';
   static const String tempIcon = 'assets/icons/icon.png';
   static const String appIcon = 'assets/icons/app_icon_desktop.png';
   static const String githubIcon = 'assets/icons/github.png';
