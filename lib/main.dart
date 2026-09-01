@@ -7,6 +7,7 @@ import 'package:magicepaperapp/provider/locale_provider.dart';
 import 'package:magicepaperapp/provider/developer_options_provider.dart';
 import 'package:magicepaperapp/view/about_us_screen.dart';
 import 'package:magicepaperapp/view/buy_badge_screen.dart';
+import 'package:magicepaperapp/view/faq_screen.dart';
 import 'package:magicepaperapp/view/settings_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:magicepaperapp/ndef_screen/nfc_read_screen.dart';
@@ -70,6 +71,7 @@ class MyApp extends StatelessWidget {
             '/nfcReadScreen': (context) => const NFCReadScreen(),
             '/nfcWriteScreen': (context) => const NFCWriteScreen(),
             '/commandConsole': (context) => const CommandConsoleScreen(),
+            '/faq': (context) => const FaqScreen(),
           },
           theme: AppTheme.lightTheme,
         );
