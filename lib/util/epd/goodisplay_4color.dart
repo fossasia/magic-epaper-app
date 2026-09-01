@@ -33,6 +33,8 @@ class GDEM0097F51 extends DisplayDevice {
       [Colors.white, Colors.black, Colors.red, Colors.yellow];
   @override
   List<ImageProcessingMethod> get processingMethods => _bwryProcessingMethods;
+  @override
+  bool get isBeta => true;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -65,6 +67,8 @@ class GDEM0154F51H extends DisplayDevice {
       [Colors.white, Colors.black, Colors.red, Colors.yellow];
   @override
   List<ImageProcessingMethod> get processingMethods => _bwryProcessingMethods;
+  @override
+  bool get isBeta => true;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -97,6 +101,8 @@ class GDEY0213F52 extends DisplayDevice {
       [Colors.white, Colors.black, Colors.red, Colors.yellow];
   @override
   List<ImageProcessingMethod> get processingMethods => _bwryProcessingMethods;
+  @override
+  bool get isBeta => true;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -129,6 +135,8 @@ class GDEY0266F51 extends DisplayDevice {
       [Colors.white, Colors.black, Colors.red, Colors.yellow];
   @override
   List<ImageProcessingMethod> get processingMethods => _bwryProcessingMethods;
+  @override
+  bool get isBeta => true;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -161,6 +169,8 @@ class GDEY0266F51H extends DisplayDevice {
       [Colors.white, Colors.black, Colors.red, Colors.yellow];
   @override
   List<ImageProcessingMethod> get processingMethods => _bwryProcessingMethods;
+  @override
+  bool get isBeta => true;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -193,6 +203,8 @@ class GDEY029F51H extends DisplayDevice {
       [Colors.white, Colors.black, Colors.red, Colors.yellow];
   @override
   List<ImageProcessingMethod> get processingMethods => _bwryProcessingMethods;
+  @override
+  bool get isBeta => true;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -225,6 +237,8 @@ class GDEM037F52 extends DisplayDevice {
       [Colors.white, Colors.black, Colors.red, Colors.yellow];
   @override
   List<ImageProcessingMethod> get processingMethods => _bwryProcessingMethods;
+  @override
+  bool get isBeta => true;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -257,6 +271,8 @@ class GDEM042F52 extends DisplayDevice {
       [Colors.white, Colors.black, Colors.red, Colors.yellow];
   @override
   List<ImageProcessingMethod> get processingMethods => _bwryProcessingMethods;
+  @override
+  bool get isBeta => true;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -287,6 +303,9 @@ class GDEY029F51 extends DisplayDevice {
 
   @override
   String get imgPath => ImageAssets.GDEY029F51;
+
+  @override
+  bool get isBeta => false;
 
   @override
   List<Color> get colors => [

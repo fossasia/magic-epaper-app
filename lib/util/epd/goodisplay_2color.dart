@@ -33,6 +33,8 @@ class GDEY0154D67 extends DisplayDevice {
   List<Color> get colors => [Colors.white, Colors.black];
   @override
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
+  @override
+  bool get isBeta => true;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -64,6 +66,8 @@ class GDEY0213B74 extends DisplayDevice {
   List<Color> get colors => [Colors.white, Colors.black];
   @override
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
+  @override
+  bool get isBeta => true;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -95,6 +99,8 @@ class GDEY029T94 extends DisplayDevice {
   List<Color> get colors => [Colors.white, Colors.black];
   @override
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
+  @override
+  bool get isBeta => true;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -126,6 +132,8 @@ class GDEY042T81 extends DisplayDevice {
   List<Color> get colors => [Colors.white, Colors.black];
   @override
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
+  @override
+  bool get isBeta => true;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -157,6 +165,8 @@ class GDEW0154T8D extends DisplayDevice {
   List<Color> get colors => [Colors.white, Colors.black];
   @override
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
+  @override
+  bool get isBeta => true;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -188,6 +198,8 @@ class GDEW0213T5D extends DisplayDevice {
   List<Color> get colors => [Colors.white, Colors.black];
   @override
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
+  @override
+  bool get isBeta => true;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -219,6 +231,8 @@ class GDEW029T5D extends DisplayDevice {
   List<Color> get colors => [Colors.white, Colors.black];
   @override
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
+  @override
+  bool get isBeta => true;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -250,6 +264,8 @@ class GDEW042T2 extends DisplayDevice {
   List<Color> get colors => [Colors.white, Colors.black];
   @override
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
+  @override
+  bool get isBeta => true;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -281,6 +297,8 @@ class GDEY037T03 extends DisplayDevice {
   List<Color> get colors => [Colors.white, Colors.black];
   @override
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
+  @override
+  bool get isBeta => true;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
