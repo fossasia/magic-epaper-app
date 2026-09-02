@@ -1,4 +1,4 @@
-<img height="200px" src="./assets/docs/app_icon.png" align="right" />
+<img height="200px" src="./assets/icons/app_icon_desktop.png" align="right" />
 
 # Magic ePaper
 
@@ -11,7 +11,7 @@
 
 **Magically Create and Transfer Content to NFC ePaper Badges**
 
-Magic ePaper is an open-source Flutter app that lets you design content on your phone and transfer it to a battery-free NFC ePaper badge over NFC — no cables and no power on the badge. You can import and dither photos for ePaper, draw and add text, generate QR codes and barcodes, or start from a ready-made card template, then tap your phone to the badge to write the image.
+Magic ePaper is an open-source Flutter app that lets you design content on your phone and transfer it to a battery-free NFC ePaper badge wirelessly. No cables or power needed on the badge. Import and dither photos for ePaper, draw and add text, generate QR codes and barcodes, or start from a ready-made card template, then tap your phone to the badge to write the image.
 
 ## Table of Contents
 
@@ -39,16 +39,16 @@ The app is currently in **beta testing** and runs on **Android**. Desktop suppor
 
 ## Get a badge
 
-The Magic ePaper badge is still a **prototype**, so it is not on general sale yet — ordering is planned to open on [fossasia.com](https://fossasia.com) in the future, and the hardware designs and prototypes are shared in the FOSSASIA repositories in the meantime. Any of the [supported NFC ePaper badges](#supported-displays) below already works with the app today.
+The Magic ePaper badge is still a **prototype** and is not on general sale yet. Ordering is planned to open on [fossasia.com](https://fossasia.com) in the future, and the hardware designs and prototypes are shared in the FOSSASIA repositories in the meantime. Any of the [supported NFC ePaper badges](#supported-displays) below already works with the app today.
 
 ## Features
 
-* **Image editor** – import a photo, rotate/flip, adjust brightness and contrast, and dither for ePaper (Floyd–Steinberg, Atkinson, Stucki, Sierra, Burkes, Halftone, Threshold).
-* **Canvas editor** – draw freehand, add text (fonts, size, colour), images and shapes, and generate QR/barcodes (QR, Data Matrix, Aztec, PDF417, Code 128/93/39, Codabar, EAN-13/8, ITF, UPC-A) with a live preview.
-* **Card templates** – Employee ID, Shop Price Tag, Entry Pass, Event Badge, Calendar, QR Tag, Weather Snapshot and Contact/Business card. Generate many at once from a CSV.
-* **NFC** – transfer designs to the badge, and read/write NDEF tags (text, URLs, vCards, app-launch records).
-* **Command console** – send raw hex/APDU commands to a tag for debugging.
-* **Image Library** – save processed designs for quick re-transfer and re-editing.
+* **Image editor**: import a photo, rotate/flip, adjust brightness and contrast, and dither for ePaper (Floyd-Steinberg, Atkinson, Stucki, Sierra, Burkes, Halftone, Threshold).
+* **Canvas editor**: draw freehand, add text (fonts, size, colour), images and shapes, and generate QR/barcodes (QR, Data Matrix, Aztec, PDF417, Code 128/93/39, Codabar, EAN-13/8, ITF, UPC-A) with a live preview.
+* **Card templates**: Employee ID, Shop Price Tag, Entry Pass, Event Badge, Calendar, QR Tag, Weather Snapshot and Contact/Business card. Generate many at once from a CSV.
+* **NFC**: transfer designs to the badge, and read/write NDEF tags (text, URLs, vCards, app-launch records).
+* **Command console**: send raw hex/APDU commands to a tag for debugging.
+* **Image Library**: save processed designs for quick re-transfer and re-editing.
 * **Arduino export** and a multi-language UI translated on Weblate.
 
 ## Supported Displays
@@ -78,7 +78,7 @@ The Magic ePaper badge is still a **prototype**, so it is not on general sale ye
 ## Usage
 
 1. Pick the display that matches your badge on the home screen.
-2. Create your design — import and dither a photo, draw and add text/barcodes on the canvas, or fill in a card template.
+2. Create your design: import and dither a photo, draw and add text/barcodes on the canvas, or fill in a card template.
 3. Tap **Transfer** and hold the back of your phone against the badge to write the image over NFC.
 
 Read and write NDEF tags (text, URLs, vCards) from the side menu, and use the Command Console to send raw hex/APDU commands to a tag.
@@ -148,6 +148,7 @@ Read and write NDEF tags (text, URLs, vCards) from the side menu, and use the Co
   </tr>
   <tr>
     <td><img src="./assets/docs/screenshots/about.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/faq.jpeg" width="250"/></td>
   </tr>
 </table>
 
@@ -159,10 +160,10 @@ The app is built with **Flutter** and a small **Rust** core that handles the ima
 
 ### Prerequisites
 
-* **Flutter SDK** – install from the [Flutter website](https://docs.flutter.dev/get-started/install).
-* **Dart SDK** – bundled with Flutter (`dart --version` to verify).
-* **Rust toolchain** – install via [rustup](https://rustup.rs/); required to build the native image-processing library.
-* **Git** – to clone the repository.
+* **Flutter SDK**: install from the [Flutter website](https://docs.flutter.dev/get-started/install).
+* **Dart SDK**: bundled with Flutter (`dart --version` to verify).
+* **Rust toolchain**: install via [rustup](https://rustup.rs/); required to build the native image-processing library.
+* **Git**: to clone the repository.
 * **Android Studio or VS Code** with the Flutter/Dart plugins.
 * An **Android device with NFC** (physical device required for NFC features) or an emulator for UI work.
 
@@ -217,11 +218,11 @@ Opening this repository in VS Code, GitHub Codespaces or another supported edito
 
 #### Connecting a device via `adb`
 
-> :warning: If `adb` is already installed and running on the host it may need to be stopped first.
+> **Note:** If `adb` is already installed and running on the host it may need to be stopped first.
 
 **USB pass-through (entirely inside the container)**
 
-> :information_source: **Windows** and **macOS** need a working **USB/IP** setup — see the [Docker Desktop documentation](https://docs.docker.com/desktop/features/usbip/) and this [blog post](https://blog.golioth.io/usb-docker-windows-macos/).
+> **Windows** and **macOS** need a working **USB/IP** setup. See the [Docker Desktop documentation](https://docs.docker.com/desktop/features/usbip/) and this [blog post](https://blog.golioth.io/usb-docker-windows-macos/).
 
 The Dev Container bind-mounts `/dev/bus/usb/` and sets the correct access controls. Enable [USB debugging](https://developer.android.com/tools/adb#Enabling) on your phone and run `adb devices`; if it shows up, run `flutter run` to push a development build to your device.
 
@@ -248,15 +249,15 @@ Please read FOSSASIA's [Best Practices](https://blog.fossasia.org/open-source-de
 
 ## Branch Policy
 
-* **main** – all development happens here; open pull requests against `main`. PRs must pass the CI build check.
-* **app** – latest app builds and releases.
-* **version** – stores version information (versionName and versionCode) used for automatic versioning.
-* **fastlane-android** – metadata used by Fastlane to automate Android deployment.
-* **pr-screenshots** – screenshots generated per open pull request, shown in PR comments.
+* **main**: all development happens here; open pull requests against `main`. PRs must pass the CI build check.
+* **app**: latest app builds and releases.
+* **version**: stores version information (versionName and versionCode) used for automatic versioning.
+* **fastlane-android**: metadata used by Fastlane to automate Android deployment.
+* **pr-screenshots**: screenshots generated per open pull request, shown in PR comments.
 
 ## Translations
 
-Help translate the app on Weblate: https://hosted.weblate.org/projects/fossasia/magic-epaper-app/
+Help translate the app on [Weblate](https://hosted.weblate.org/projects/fossasia/magic-epaper-app/).
 
 Localized strings live in `lib/l10n` as `.arb` files. After editing an `.arb`, regenerate the Dart localizations with `flutter gen-l10n`.
 
