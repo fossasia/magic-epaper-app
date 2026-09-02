@@ -176,11 +176,13 @@ const List<_StickerCategory> _categories = [
   ]),
 ];
 
-Future<Uint8List?> showStickerVault(
+typedef StickerResult = ({Uint8List bytes, String iconName});
+
+Future<StickerResult?> showStickerVault(
   BuildContext context, {
   required Color inkColor,
 }) {
-  return showModalBottomSheet<Uint8List>(
+  return showModalBottomSheet<StickerResult>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
@@ -293,7 +295,7 @@ class _StickerVaultSheetState extends State<_StickerVaultSheet> {
       final bytes = await _service.renderPng(iconName, color: widget.inkColor);
       await _recentsStore.add(iconName);
       if (!mounted) return;
-      Navigator.pop(context, bytes);
+      Navigator.pop(context, (bytes: bytes, iconName: iconName));
     } catch (e) {
       if (!mounted) return;
       setState(() => _placing = null);

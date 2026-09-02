@@ -18,6 +18,7 @@ import 'package:magicepaperapp/native_canvas/widgets/editable_element.dart';
 import 'package:magicepaperapp/native_canvas/widgets/stroke_painter.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/native_canvas/widgets/barcode_editor.dart';
+import 'package:magicepaperapp/native_canvas/sticker_vault/iconify_service.dart';
 import 'package:magicepaperapp/native_canvas/sticker_vault/sticker_vault_sheet.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
@@ -760,12 +761,12 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
 
   Future<void> _addSticker() async {
     _controller.select(null);
-    final bytes = await showStickerVault(context, inkColor: _inkColor);
-    if (bytes == null || !mounted) return;
-    _placeSticker(bytes);
+    final result = await showStickerVault(context, inkColor: _inkColor);
+    if (result == null || !mounted) return;
+    _placeSticker(result.bytes, stickerIcon: result.iconName);
   }
 
-  void _placeSticker(Uint8List bytes) {
+  void _placeSticker(Uint8List bytes, {String? stickerIcon}) {
     final decoded = img.decodeImage(bytes);
     final aspect = (decoded == null || decoded.height == 0)
         ? 1.0
@@ -786,8 +787,34 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
         position: _nextSpawnPosition(),
         baseSize: Size(w, h),
         imageBytes: bytes,
+        stickerIcon: stickerIcon,
       ),
     );
+  }
+
+  Future<void> _cycleAndRerenderStickers() async {
+    _controller.cycleCanvasColor();
+    await _rerenderThemeStickers();
+  }
+
+  Future<void> _rerenderThemeStickers() async {
+    final inkColor = _controller.contrastColor(_controller.canvasColor);
+    final service = IconifyService();
+    try {
+      for (final e in _controller.elements) {
+        if (e.kind != CanvasElementKind.image) continue;
+        if (!e.followCanvasTheme) continue;
+        final icon = e.stickerIcon;
+        if (icon == null) continue;
+        try {
+          final bytes = await service.renderPng(icon, color: inkColor);
+          if (!mounted) return;
+          _controller.updateElement(e.copyWith(imageBytes: bytes));
+        } catch (_) {}
+      }
+    } finally {
+      service.dispose();
+    }
   }
 
   Future<void> _replaceImage(CanvasElement element) async {
@@ -1100,7 +1127,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
           Expanded(
             child: _BarButton(
               label: appLocalizations.canvas,
-              onTap: _controller.cycleCanvasColor,
+              onTap: () => _cycleAndRerenderStickers(),
               iconWidget: Container(
                 width: 22,
                 height: 22,
