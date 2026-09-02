@@ -12,7 +12,10 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:magicepaperapp/util/page_route_util.dart';
+import 'package:magicepaperapp/card_templates/bulk/bulk_csv_import_screen.dart';
+import 'package:magicepaperapp/card_templates/bulk/bulk_template.dart';
 import 'package:magicepaperapp/card_templates/util/barcode_scanner_util.dart';
+import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
@@ -22,6 +25,7 @@ class ContactCardForm extends StatefulWidget {
   final int height;
   final ContactCardModel? initialModel;
   final String? existingImageId;
+  final DisplayDevice? device;
 
   const ContactCardForm({
     super.key,
@@ -29,6 +33,7 @@ class ContactCardForm extends StatefulWidget {
     required this.height,
     this.initialModel,
     this.existingImageId,
+    this.device,
   });
 
   @override
@@ -409,8 +414,43 @@ class _ContactCardFormState extends State<ContactCardForm> {
                         ),
                 ),
               ),
+              const SizedBox(height: Dimens.spacingM),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: OutlinedButton.icon(
+                  onPressed: _openBulkImport,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: colorPrimary,
+                    side: const BorderSide(color: colorPrimary),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(Dimens.radiusM),
+                    ),
+                  ),
+                  icon: const Icon(Icons.table_view, size: 18),
+                  label: Text(
+                    appLocalizations.bulkImportCsv,
+                    style: const TextStyle(
+                        fontSize: Dimens.fontSizeL,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  void _openBulkImport() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => BulkCsvImportScreen(
+          template: contactCardBulkTemplate(),
+          width: widget.width,
+          height: widget.height,
+          device: widget.device,
         ),
       ),
     );

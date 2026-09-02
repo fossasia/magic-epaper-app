@@ -422,6 +422,49 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
             'qr': 'https://asi.gov.in/9005'
           },
         ];
+      case 'contact_card':
+        return const [
+          {
+            'fullName': 'Ananya Sharma',
+            'jobTitle': 'Software Engineer',
+            'company': 'Infosys',
+            'phone': '+91 98200 11234',
+            'email': 'ananya.sharma@infosys.com',
+            'link': 'https://linkedin.com/in/ananyasharma'
+          },
+          {
+            'fullName': 'Karthik Menon',
+            'jobTitle': 'Product Manager',
+            'company': 'Zoho',
+            'phone': '+91 98400 22345',
+            'email': 'karthik.menon@zoho.com',
+            'link': 'https://linkedin.com/in/karthikmenon'
+          },
+          {
+            'fullName': 'Meera Pillai',
+            'jobTitle': 'UX Designer',
+            'company': 'Freshworks',
+            'phone': '+91 99000 33456',
+            'email': 'meera.pillai@freshworks.com',
+            'link': 'https://linkedin.com/in/meerapillai'
+          },
+          {
+            'fullName': 'Rohan Iyer',
+            'jobTitle': 'DevOps Engineer',
+            'company': 'Wipro',
+            'phone': '+91 99200 44567',
+            'email': 'rohan.iyer@wipro.com',
+            'link': 'https://linkedin.com/in/rohaniyer'
+          },
+          {
+            'fullName': 'Divya Reddy',
+            'jobTitle': 'Data Scientist',
+            'company': 'Tech Mahindra',
+            'phone': '+91 99400 55678',
+            'email': 'divya.reddy@techmahindra.com',
+            'link': 'https://linkedin.com/in/divyareddy'
+          },
+        ];
       case 'employee_id':
       default:
         return const [
