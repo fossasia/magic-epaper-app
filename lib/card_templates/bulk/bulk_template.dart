@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:magicepaperapp/card_templates/contact_card_model.dart';
 import 'package:magicepaperapp/card_templates/employee_id_model.dart';
 import 'package:magicepaperapp/card_templates/entry_pass_tag_model.dart';
 import 'package:magicepaperapp/card_templates/event_badge_model.dart';
@@ -300,6 +301,90 @@ BulkTemplate entryPassTagBulkTemplate() {
         validDate: row['validDate'] ?? '',
         passId: row['passId'] ?? '',
         qrData: row['qr'] ?? '',
+      ),
+      width: width,
+      height: height,
+      photo: photo,
+    ),
+    hasPhoto: true,
+  );
+}
+
+BulkTemplate contactCardBulkTemplate() {
+  return BulkTemplate(
+    id: 'contact_card',
+    title: _l10n.contactTagTitle,
+    fields: [
+      BulkField(
+        key: 'fullName',
+        label: _l10n.fullName,
+        aliases: const ['name', 'fullname', 'full name', 'contact'],
+        required: true,
+        namesOutput: true,
+      ),
+      BulkField(
+        key: 'jobTitle',
+        label: _l10n.jobTitle,
+        aliases: const [
+          'title',
+          'jobtitle',
+          'job title',
+          'designation',
+          'role'
+        ],
+      ),
+      BulkField(
+        key: 'company',
+        label: _l10n.companyName,
+        aliases: const [
+          'company',
+          'companyname',
+          'company name',
+          'org',
+          'organization',
+          'employer'
+        ],
+      ),
+      BulkField(
+        key: 'phone',
+        label: _l10n.phoneNumber,
+        aliases: const [
+          'phone',
+          'mobile',
+          'tel',
+          'telephone',
+          'cell',
+          'phonenumber'
+        ],
+      ),
+      BulkField(
+        key: 'email',
+        label: _l10n.emailAddress,
+        aliases: const ['email', 'emailaddress', 'email address', 'mail'],
+      ),
+      BulkField(
+        key: 'link',
+        label: _l10n.contactLinkLabel,
+        aliases: const [
+          'link',
+          'url',
+          'website',
+          'linkedin',
+          'webpage',
+          'profileurl'
+        ],
+      ),
+      _photoField(),
+    ],
+    buildLayers: (row, photo, width, height) => buildContactCardLayers(
+      data: ContactCardModel(
+        fullName: row['fullName'] ?? '',
+        jobTitle: row['jobTitle'] ?? '',
+        company: row['company'] ?? '',
+        phone: row['phone'] ?? '',
+        email: row['email'] ?? '',
+        link: row['link'] ?? '',
+        qrMode: ContactQrMode.vCard,
       ),
       width: width,
       height: height,
