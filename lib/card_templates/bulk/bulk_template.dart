@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:magicepaperapp/card_templates/contact_card_badge.dart';
 import 'package:magicepaperapp/card_templates/contact_card_model.dart';
 import 'package:magicepaperapp/card_templates/employee_id_model.dart';
 import 'package:magicepaperapp/card_templates/entry_pass_tag_model.dart';
@@ -376,8 +378,8 @@ BulkTemplate contactCardBulkTemplate() {
       ),
       _photoField(),
     ],
-    buildLayers: (row, photo, width, height) => buildContactCardLayers(
-      data: ContactCardModel(
+    buildLayers: (row, photo, width, height) {
+      final model = ContactCardModel(
         fullName: row['fullName'] ?? '',
         jobTitle: row['jobTitle'] ?? '',
         company: row['company'] ?? '',
@@ -385,11 +387,20 @@ BulkTemplate contactCardBulkTemplate() {
         email: row['email'] ?? '',
         link: row['link'] ?? '',
         qrMode: ContactQrMode.vCard,
-      ),
-      width: width,
-      height: height,
-      photo: photo,
-    ),
+        profileImage: photo,
+      );
+      return [
+        LayerSpec.widget(
+          widget: SizedBox(
+            width: width.toDouble(),
+            height: height.toDouble(),
+            child: ContactCardBadge(data: model),
+          ),
+          elementId: 'fullCanvas',
+          kind: LayerKind.generic,
+        ),
+      ];
+    },
     hasPhoto: true,
   );
 }

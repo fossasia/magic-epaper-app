@@ -19,7 +19,9 @@ List<CanvasElement> buildTemplateElements({
     height: height,
     palette: palette,
   );
-  if (layers.any((s) => s.elementId == 'qr')) {
+  if (layers.any((s) => s.elementId == 'fullCanvas')) {
+    seeder.seedFullCanvas(layers.first);
+  } else if (layers.any((s) => s.elementId == 'qr')) {
     seeder.seedCardLayout(layers);
   } else {
     seeder.seedOffsetLayers(layers);
@@ -245,6 +247,19 @@ class CardLayoutSeeder {
         elementId: spec.elementId,
       ),
     );
+  }
+
+  void seedFullCanvas(LayerSpec spec) {
+    _add(CanvasElement(
+      id: _nextId(),
+      kind: CanvasElementKind.widget,
+      position: Offset(width / 2.0, height / 2.0),
+      baseSize: Size(width.toDouble(), height.toDouble()),
+      scale: 1.0,
+      rotation: 0.0,
+      child: spec.widget,
+      elementId: spec.elementId,
+    ));
   }
 
   void seedOffsetLayers(List<LayerSpec> layers) {
