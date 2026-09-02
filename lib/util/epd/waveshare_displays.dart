@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/constants/asset_paths.dart';
+import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/util/epd/driver/waveform.dart';
 import 'package:magicepaperapp/util/epd/waveshare_nfc_display.dart';
 import 'package:magicepaperapp/util/image_processing/image_processing.dart';
+import 'package:magicepaperapp/view/widget/waveshare_transfer_dialog.dart';
+import 'package:magicepaperapp/waveshare/services/waveshare_g_nfc_services.dart';
 
 class Waveshare2in13 extends WaveshareNfcDisplay {
   Waveshare2in13() : super(ePaperSizeEnum: 1);
@@ -91,6 +96,67 @@ class Waveshare2in7 extends WaveshareNfcDisplay {
   int get height => 176;
   @override
   String get imgPath => ImageAssets.waveshare2_7;
+}
+
+class Waveshare1in54 extends WaveshareNfcDisplay {
+  Waveshare1in54() : super(ePaperSizeEnum: 8);
+
+  @override
+  String get name => 'Waveshare 1.54" NFC';
+  @override
+  String get modelId => '17760';
+  @override
+  int get width => 200;
+  @override
+  int get height => 200;
+  @override
+  String get imgPath => ImageAssets.waveshare1_54;
+
+  @override
+  bool get isBeta => true;
+}
+
+class Waveshare1in54g extends DisplayDevice {
+  @override
+  String get name => 'Waveshare 1.54" G NFC';
+  @override
+  String get modelId => '31888';
+  @override
+  int get width => 200;
+  @override
+  int get height => 200;
+  @override
+  String get imgPath => ImageAssets.waveshare1_54g;
+
+  @override
+  List<Color> get colors =>
+      [Colors.white, Colors.black, Colors.red, Colors.yellow];
+
+  @override
+  List<String>? get displayChips => null;
+
+  @override
+  bool get isBeta => true;
+
+  @override
+  List<ImageProcessingMethod> get processingMethods => [
+        ImageProcessing.bwryFloydSteinbergDither,
+        ImageProcessing.bwryFalseFloydSteinbergDither,
+        ImageProcessing.bwryStuckiDither,
+        ImageProcessing.bwryTriColorAtkinsonDither,
+        ImageProcessing.bwryThreshold,
+      ];
+
+  @override
+  Future<void> transfer(BuildContext context, img.Image image,
+      {Waveform? waveform}) async {
+    return WaveshareTransferDialog.showWithFlasher(
+      context,
+      image,
+      (img.Image processed, onProgress) =>
+          WaveshareGNfcServices().flashImage(processed, onProgress: onProgress),
+    );
+  }
 }
 
 class Waveshare2in9b extends WaveshareNfcDisplay {
