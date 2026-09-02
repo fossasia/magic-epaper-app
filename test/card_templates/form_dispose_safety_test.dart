@@ -20,6 +20,10 @@ Future<void> _expectNoCrashWhenDisposedDuringEdit(
   required Widget form,
   required String generateLabel,
 }) async {
+  tester.view.physicalSize = const Size(1080, 3200);
+  tester.view.devicePixelRatio = 1.0;
+  addTearDown(tester.view.reset);
+
   final recorder = _RouteRecorder();
 
   await tester.pumpWidget(
@@ -48,7 +52,8 @@ Future<void> _expectNoCrashWhenDisposedDuringEdit(
   final formRoute = recorder.pushed.last;
 
   final generateButton = find.text(generateLabel);
-  await tester.scrollUntilVisible(generateButton, 200);
+  await tester.ensureVisible(generateButton);
+  await tester.pumpAndSettle();
   await tester.tap(generateButton);
   await tester.pumpAndSettle();
 
