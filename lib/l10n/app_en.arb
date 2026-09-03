@@ -1278,5 +1278,8 @@
   "menuLinkLabel": "Menu URL",
   "menuLinkHintField": "https://your-menu-link.com",
   "menuAddLinkFirst": "Add a menu link first",
-  "menuFontSection": "Font"
+  "menuFontSection": "Font",
+  "noResultsFound": "No results found",
+  "apply": "Apply",
+  "clear": "Clear"
 }

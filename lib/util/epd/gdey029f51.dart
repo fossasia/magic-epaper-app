@@ -6,6 +6,8 @@ import 'package:magicepaperapp/util/epd/driver/waveform.dart';
 import 'package:magicepaperapp/util/image_processing/image_processing.dart';
 import 'package:magicepaperapp/view/widget/goodisplay_transfer_dialog.dart';
 
+import 'brand.dart';
+
 class GDEY029F51 extends DisplayDevice {
   @override
   int get width => 296;
@@ -21,6 +23,9 @@ class GDEY029F51 extends DisplayDevice {
 
   @override
   String get imgPath => ImageAssets.gdey037z03Display;
+
+  @override
+  Brand get brand => Brand.goodisplay;
 
   @override
   List<Color> get colors => [
