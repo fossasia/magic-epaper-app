@@ -88,9 +88,9 @@ class DisplayCard extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      highlightColor: Colors.redAccent,
+      highlightColor: Colors.black.withAlpha(15),
       borderRadius: BorderRadius.circular(Dimens.radiusXl * scale),
-      splashColor: Colors.redAccent.withAlpha(51),
+      splashColor: Colors.black.withAlpha(20),
       child: Card(
         color: colorWhite,
         elevation: isSelected ? 4 : 1,
