@@ -26,7 +26,7 @@ extension ColorFilterLabel on ColorFilter {
       case ColorFilter.bwr:
         return 'B/N/R';
       case ColorFilter.bwry:
-        return 'B/N/R/Giallo';
+        return 'B/N/R/Y';
     }
   }
 
