@@ -78,9 +78,15 @@ class _GoodisplayTransferDialogState extends State<GoodisplayTransferDialog> {
       }
     } catch (e) {
       if (mounted) {
+        final errorMsg = e.toString().replaceAll('Exception: ', '');
+
         setState(() {
           _isError = true;
-          _status = e.toString().replaceAll('Exception: ', '');
+          if (errorMsg.startsWith('MissingPluginException')) {
+            _status = appLocalizations.noNFCfound;
+          } else {
+            _status = appLocalizations.badgeDisconnected;
+          }
         });
       }
     }
@@ -102,13 +108,14 @@ class _GoodisplayTransferDialogState extends State<GoodisplayTransferDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          LinearProgressIndicator(
-            value: _progress > 0 ? _progress : null,
-            backgroundColor: grey200,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              _isError ? Colors.red : colorAccent,
+          if (!_isError)
+            LinearProgressIndicator(
+              value: _progress > 0 ? _progress : null,
+              backgroundColor: grey200,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                _isError ? Colors.red : colorAccent,
+              ),
             ),
-          ),
           const SizedBox(height: Dimens.spacingL),
           Text(
             _status,
