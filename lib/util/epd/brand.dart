@@ -10,11 +10,11 @@ extension BrandLabel on Brand {
   String label(AppLocalizations l) {
     switch (this) {
       case Brand.fossasia:
-        return 'FOSSASIA';
+        return l.brandFossasia;
       case Brand.goodisplay:
-        return 'GoodDisplay';
+        return l.brandGoodisplay;
       case Brand.waveshare:
-        return 'Waveshare';
+        return l.brandWaveshare;
     }
   }
 }

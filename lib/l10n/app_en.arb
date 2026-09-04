@@ -1303,5 +1303,25 @@
   "faqQ9": "Does the app work on iPhone?",
   "faqA9": "Not yet. iPhone does not support the type of NFC writing needed for ePaper badges, so the transfer feature only works on Android for now. Desktop support is also being worked on.",
   "faqQ10": "My badge is not responding when I tap my phone. What should I try?",
-  "faqA10": "Make sure NFC is turned on in your phone settings. Hold the back of your phone flat against the badge and keep it still. Metal phone cases can block NFC so try removing the case. If it keeps failing, turn off battery saver mode as it can sometimes stop NFC from working."
+  "faqA10": "Make sure NFC is turned on in your phone settings. Hold the back of your phone flat against the badge and keep it still. Metal phone cases can block NFC so try removing the case. If it keeps failing, turn off battery saver mode as it can sometimes stop NFC from working.",
+  "colorBw": "B/W",
+  "colorBwr": "B/W/R",
+  "colorBwry": "B/W/R/Y",
+  "selectedCount": "{count, plural, one {1 selected} other {# selected}}",
+  "@selectedCount": {
+    "description": "Label for selected items count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "allBrands": "All brands",
+  "brand": "Brand",
+  "allColors": "All colors",
+  "colors": "Colors",
+  "allSizes": "All sizes",
+  "brandFossasia": "FOSSASIA",
+  "brandGoodisplay": "GoodDisplay",
+  "brandWaveshare": "Waveshare"
 }

@@ -22,11 +22,11 @@ extension ColorFilterLabel on ColorFilter {
   String label(AppLocalizations l) {
     switch (this) {
       case ColorFilter.bw:
-        return 'B/N';
+        return l.colorBw;
       case ColorFilter.bwr:
-        return 'B/N/R';
+        return l.colorBwr;
       case ColorFilter.bwry:
-        return 'B/N/R/Y';
+        return l.colorBwry;
     }
   }
 
@@ -246,7 +246,10 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
             children: [
               Flexible(
                 child: Text(
-                  hasSelection ? '$selectedCount selected' : allLabel,
+                  hasSelection
+                      ? AppLocalizations.of(context)!
+                          .selectedCount(selectedCount)
+                      : allLabel,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -272,11 +275,11 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
       child: Row(
         children: [
           _buildFilterBox(
-            allLabel: 'All brands',
+            allLabel: l.allBrands,
             selectedCount: _selectedBrands.length,
             onTap: () => _showFilterSheet<Brand>(
               context: context,
-              title: 'Brand',
+              title: l.brand,
               items: Brand.values,
               labelOf: (b) => b.label(l),
               selected: _selectedBrands,
@@ -285,11 +288,11 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
           ),
           const SizedBox(width: Dimens.spacingS),
           _buildFilterBox(
-            allLabel: 'All colors',
+            allLabel: l.allColors,
             selectedCount: _selectedColorFilters.length,
             onTap: () => _showFilterSheet<ColorFilter>(
               context: context,
-              title: 'Colors',
+              title: l.colors,
               items: ColorFilter.values,
               labelOf: (c) => c.label(l),
               selected: _selectedColorFilters,
@@ -299,11 +302,11 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
           ),
           const SizedBox(width: Dimens.spacingS),
           _buildFilterBox(
-            allLabel: 'All sizes',
+            allLabel: l.allSizes,
             selectedCount: _selectedSizes.length,
             onTap: () => _showFilterSheet<String>(
               context: context,
-              title: 'Size',
+              title: l.size,
               items: _availableSizes,
               labelOf: (s) => s,
               selected: _selectedSizes,
