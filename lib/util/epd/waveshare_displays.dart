@@ -3,6 +3,8 @@ import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/util/epd/waveshare_nfc_display.dart';
 import 'package:magicepaperapp/util/image_processing/image_processing.dart';
 
+import 'brand.dart';
+
 class Waveshare2in13 extends WaveshareNfcDisplay {
   Waveshare2in13() : super(ePaperSizeEnum: 1);
 
@@ -16,6 +18,8 @@ class Waveshare2in13 extends WaveshareNfcDisplay {
   int get height => 122;
   @override
   String get imgPath => ImageAssets.waveshare2_13;
+  @override
+  Brand get brand => Brand.waveshare;
 }
 
 class Waveshare2in9 extends WaveshareNfcDisplay {
@@ -31,6 +35,8 @@ class Waveshare2in9 extends WaveshareNfcDisplay {
   int get height => 128;
   @override
   String get imgPath => ImageAssets.waveshare2_9;
+  @override
+  Brand get brand => Brand.waveshare;
 }
 
 class Waveshare4in2 extends WaveshareNfcDisplay {
@@ -46,6 +52,8 @@ class Waveshare4in2 extends WaveshareNfcDisplay {
   int get height => 300;
   @override
   String get imgPath => ImageAssets.waveshare4_2;
+  @override
+  Brand get brand => Brand.waveshare;
 }
 
 class Waveshare7in5 extends WaveshareNfcDisplay {
@@ -61,6 +69,8 @@ class Waveshare7in5 extends WaveshareNfcDisplay {
   int get height => 480;
   @override
   String get imgPath => ImageAssets.waveshare7_5;
+  @override
+  Brand get brand => Brand.waveshare;
 }
 
 class Waveshare7in5HD extends WaveshareNfcDisplay {
@@ -76,6 +86,8 @@ class Waveshare7in5HD extends WaveshareNfcDisplay {
   int get height => 528;
   @override
   String get imgPath => ImageAssets.waveshare7_5hd;
+  @override
+  Brand get brand => Brand.waveshare;
 }
 
 class Waveshare2in7 extends WaveshareNfcDisplay {
@@ -91,6 +103,8 @@ class Waveshare2in7 extends WaveshareNfcDisplay {
   int get height => 176;
   @override
   String get imgPath => ImageAssets.waveshare2_7;
+  @override
+  Brand get brand => Brand.waveshare;
 }
 
 class Waveshare2in9b extends WaveshareNfcDisplay {
@@ -106,6 +120,8 @@ class Waveshare2in9b extends WaveshareNfcDisplay {
   int get height => 128;
   @override
   String get imgPath => ImageAssets.waveshare2_9b;
+  @override
+  Brand get brand => Brand.waveshare;
 
   @override
   List<Color> get colors => [Colors.white, Colors.black, Colors.red];

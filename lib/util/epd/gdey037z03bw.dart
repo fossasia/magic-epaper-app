@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/util/epd/driver/uc8253.dart';
 import 'package:magicepaperapp/util/image_processing/image_processing.dart';
+import 'brand.dart';
 import 'driver/driver.dart';
 import 'epd.dart';
 
@@ -26,6 +27,9 @@ class Gdey037z03BW extends Epd {
 
   @override
   Driver get controller => Uc8253();
+
+  @override
+  Brand get brand => Brand.fossasia;
 
   @override
   List<ImageProcessingMethod> get processingMethods => [
