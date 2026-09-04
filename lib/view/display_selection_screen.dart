@@ -5,7 +5,6 @@ import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/util/epd/gdeq031t10.dart';
-import 'package:magicepaperapp/util/epd/gdey029f51.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03.dart';
 import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
 import 'package:magicepaperapp/util/epd/waveshare_displays.dart';
@@ -14,6 +13,10 @@ import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 import 'package:magicepaperapp/view/widget/display_card.dart';
 import 'package:provider/provider.dart';
 import 'package:magicepaperapp/theme/colors.dart';
+
+import '../util/epd/goodisplay_2color.dart';
+import '../util/epd/goodisplay_3color.dart';
+import '../util/epd/goodisplay_4color.dart';
 
 class DisplaySelectionScreen extends StatefulWidget {
   const DisplaySelectionScreen({super.key});
@@ -24,10 +27,35 @@ class DisplaySelectionScreen extends StatefulWidget {
 
 class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   final List<DisplayDevice> displays = [
+    GDEY0154D67(),
+    GDEY0213B74(),
+    GDEY029T94(),
+    GDEY042T81(),
+    GDEW0154T8D(),
+    GDEW0213T5D(),
+    GDEW029T5D(),
+    GDEW042T2(),
+    GDEY037T03(),
+    GDEY0154Z90(),
+    GDEY0213Z98(),
+    GDEY029Z95(),
+    GDEY042Z98(),
+    GDEW0213Z16(),
+    GDEW029Z13(),
+    GDEQ042Z21(),
+    GDEY037Z03(),
+    GDEY029F51(),
+    GDEY029F51H(),
+    GDEY0213F52(),
+    GDEY0266F51(),
+    GDEY0266F51H(),
+    GDEM0097F51(),
+    GDEM0154F51H(),
+    GDEM037F52(),
+    GDEM042F52(),
     GDEQ031T10(),
     Gdey037z03BW(),
     Gdey037z03(),
-    GDEY029F51(),
     Waveshare2in13(),
     Waveshare2in9(),
     Waveshare2in9b(),

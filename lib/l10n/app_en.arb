@@ -1279,7 +1279,8 @@
   "menuLinkHintField": "https://your-menu-link.com",
   "menuAddLinkFirst": "Add a menu link first",
   "menuFontSection": "Font",
-
+  "noNFCfound": "NFC hardware not found or not supported on this device",
+  "badgeDisconnected": "Badge disconnected during transfer",
   "faqDrawerLabel": "FAQ",
   "faqTitle": "FAQs",
   "faqQ1": "What is an ePaper badge and how does this app work with it?",

@@ -44,8 +44,13 @@ class DisplayCard extends StatelessWidget {
 
     if (currentDisplay is Epd) {
       driverText = currentDisplay.driverName;
-    } else {
+    } else if (currentDisplay is WaveshareNfcDisplay) {
       driverText = 'Waveshare SDK';
+    } else if (currentDisplay.modelId.toUpperCase().startsWith('GD') ||
+        currentDisplay.name.toLowerCase().contains('goodisplay')) {
+      driverText = 'Goodisplay SDK';
+    } else {
+      driverText = 'Custom SDK';
     }
 
     final chips = display.displayChips;
@@ -123,12 +128,16 @@ class DisplayCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: Dimens.spacingS * scale),
-                  if (chips != null && chips.isNotEmpty) ...[
+                  if ((chips != null && chips.isNotEmpty) ||
+                      display.isBeta) ...[
                     Wrap(
                       spacing: Dimens.spacingXs * scale,
                       runSpacing: Dimens.spacingXs * scale,
-                      children:
-                          chips.map((chip) => _buildChip(chip, scale)).toList(),
+                      children: [
+                        if (chips != null)
+                          ...chips.map((chip) => _buildChip(chip, scale)),
+                        if (display.isBeta) _buildBetaChip(scale),
+                      ],
                     ),
                     SizedBox(height: Dimens.spacingS * scale),
                   ],
@@ -193,6 +202,29 @@ class DisplayCard extends StatelessWidget {
           fontSize: 7 * scale,
           fontWeight: FontWeight.w600,
           color: colorPrimary,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBetaChip(double scale) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+          horizontal: Dimens.spacingS * scale, vertical: 3 * scale),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF3CD),
+        borderRadius: BorderRadius.circular(Dimens.radiusXl * scale),
+        border: Border.all(
+          color: const Color(0xFFE6A817),
+          width: 0.8,
+        ),
+      ),
+      child: Text(
+        'Beta / Untested',
+        style: TextStyle(
+          fontSize: 7 * scale,
+          fontWeight: FontWeight.w600,
+          color: const Color(0xFF8A6200),
         ),
       ),
     );
