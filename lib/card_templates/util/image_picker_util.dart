@@ -21,6 +21,7 @@ Future<File?> pickAndEditImage(BuildContext context) async {
   if (cropped == null) return null;
 
   final dir = await getTemporaryDirectory();
+  await dir.create(recursive: true);
   final outFile = File(
     '${dir.path}/mep_crop_${DateTime.now().microsecondsSinceEpoch}.png',
   );
