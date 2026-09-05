@@ -9,8 +9,6 @@
 [![Contributors](https://img.shields.io/github/contributors/fossasia/magic-epaper-app)](https://github.com/fossasia/magic-epaper-app/graphs/contributors)
 [![Translation status](https://hosted.weblate.org/widget/fossasia/magic-epaper-app/svg-badge.svg)](https://hosted.weblate.org/projects/fossasia/magic-epaper-app/)
 
-**Magically Create and Transfer Content to NFC ePaper Badges**
-
 Magic ePaper is an open-source Flutter app that lets you design content on your phone and transfer it to a battery-free NFC ePaper badge wirelessly. No cables or power needed on the badge. Import and dither photos for ePaper, draw and add text, generate QR codes and barcodes, or start from a ready-made card template, then tap your phone to the badge to write the image.
 
 ## Table of Contents
@@ -55,14 +53,14 @@ The Magic ePaper badge is still a **prototype** and is not on general sale yet. 
 
 | Display | Colors | Model |
 | --- | --- | --- |
-| Magic ePaper 3.1" | Black / White | GDEQ031T10 |
-| Magic ePaper 3.7" | Black / White | GDEY037T03 |
-| Magic ePaper 3.7" | Black / White / Red | GDEY037Z03 |
-| Goodisplay 2.9" 4-Color | Black / White / Red / Yellow | GDEY029F51 |
 | Waveshare 2.13" NFC | tri-color | 17745 |
 | Waveshare 2.7" NFC | tri-color | 18136 |
 | Waveshare 2.9" NFC | tri-color | 17746 |
 | Waveshare 2.9" B NFC | tri-color | 13339 |
+| Goodisplay 2.9" 4-Color | Black / White / Red / Yellow | GDEY029F51 |
+| Magic ePaper 3.1" | Black / White | GDEQ031T10 |
+| Magic ePaper 3.7" | Black / White | GDEY037T03 |
+| Magic ePaper 3.7" | Black / White / Red | GDEY037Z03 |
 | Waveshare 4.2" NFC | tri-color | 17341 |
 | Waveshare 7.5" NFC | tri-color | 17675 |
 | Waveshare 7.5" HD NFC | tri-color | 18082 |
@@ -97,12 +95,11 @@ Read and write NDEF tags (text, URLs, vCards) from the side menu, and use the Co
 
 <table>
   <tr>
-    <td><img src="./assets/docs/screenshots/displays.jpeg" width="250"/></td>
     <td><img src="./assets/docs/screenshots/adjust.jpeg" width="250"/></td>
     <td><img src="./assets/docs/screenshots/image-editor.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/custom-display.jpeg" width="250"/></td>
   </tr>
   <tr>
-    <td><img src="./assets/docs/screenshots/custom-display.jpeg" width="250"/></td>
     <td><img src="./assets/docs/screenshots/transfer.jpeg" width="250"/></td>
     <td><img src="./assets/docs/screenshots/badge.jpeg" width="250"/></td>
   </tr>
@@ -137,16 +134,17 @@ Read and write NDEF tags (text, URLs, vCards) from the side menu, and use the Co
 
 <table>
   <tr>
+    <td><img src="./assets/docs/screenshots/displays.jpeg" width="250"/></td>
     <td><img src="./assets/docs/screenshots/read-nfc.jpeg" width="250"/></td>
     <td><img src="./assets/docs/screenshots/write-nfc.jpeg" width="250"/></td>
-    <td><img src="./assets/docs/screenshots/command-console.jpeg" width="250"/></td>
   </tr>
   <tr>
+    <td><img src="./assets/docs/screenshots/command-console.jpeg" width="250"/></td>
     <td><img src="./assets/docs/screenshots/library.jpeg" width="250"/></td>
     <td><img src="./assets/docs/screenshots/save-image.jpeg" width="250"/></td>
-    <td><img src="./assets/docs/screenshots/menu.jpeg" width="250"/></td>
   </tr>
   <tr>
+    <td><img src="./assets/docs/screenshots/menu.jpeg" width="250"/></td>
     <td><img src="./assets/docs/screenshots/about.jpeg" width="250"/></td>
     <td><img src="./assets/docs/screenshots/faq.jpeg" width="250"/></td>
   </tr>
