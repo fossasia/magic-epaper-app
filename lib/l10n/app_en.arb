@@ -1323,5 +1323,13 @@
   "allSizes": "All sizes",
   "brandFossasia": "FOSSASIA",
   "brandGoodisplay": "GoodDisplay",
-  "brandWaveshare": "Waveshare"
+  "brandWaveshare": "Waveshare",
+  "sortBy": "Sort by",
+  "sortDefault": "Default",
+  "sortNameAsc": "Name (A-Z)",
+  "sortNameDesc": "Name (Z-A)",
+  "sortSizeAsc": "Size (small-large)",
+  "sortSizeDesc": "Size (large-small)",
+  "sortColorCountAsc": "Colors (fewest first)",
+  "sortColorCountDesc": "Colors (most first)"
 }

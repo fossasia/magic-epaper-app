@@ -42,6 +42,37 @@ extension ColorFilterLabel on ColorFilter {
   }
 }
 
+enum SortOption {
+  defaultOrder,
+  nameAsc,
+  nameDesc,
+  sizeAsc,
+  sizeDesc,
+  colorCountAsc,
+  colorCountDesc,
+}
+
+extension SortOptionLabel on SortOption {
+  String label(AppLocalizations l) {
+    switch (this) {
+      case SortOption.defaultOrder:
+        return l.sortDefault;
+      case SortOption.nameAsc:
+        return l.sortNameAsc;
+      case SortOption.nameDesc:
+        return l.sortNameDesc;
+      case SortOption.sizeAsc:
+        return l.sortSizeAsc;
+      case SortOption.sizeDesc:
+        return l.sortSizeDesc;
+      case SortOption.colorCountAsc:
+        return l.sortColorCountAsc;
+      case SortOption.colorCountDesc:
+        return l.sortColorCountDesc;
+    }
+  }
+}
+
 class DisplaySelectionScreen extends StatefulWidget {
   const DisplaySelectionScreen({super.key});
 
@@ -69,11 +100,59 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   Set<Brand> _selectedBrands = {};
   Set<ColorFilter> _selectedColorFilters = {};
   Set<String> _selectedSizes = {};
+  SortOption _sortOption = SortOption.defaultOrder;
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  int _colorRank(DisplayDevice d) {
+    if (d.colors.length <= 2) return 0;
+    if (d.colors.length == 3) return 1;
+    return 2;
+  }
+
+  double _sizeValue(DisplayDevice d) {
+    final match = RegExp(r'(\d+(\.\d+)?)"').firstMatch(d.name);
+    if (match == null) return 0;
+    return double.tryParse(match.group(1)!) ?? 0;
+  }
+
+  int Function(DisplayDevice, DisplayDevice) _comparatorFor(SortOption option) {
+    switch (option) {
+      case SortOption.defaultOrder:
+        return (a, b) {
+          final rankCompare = _colorRank(a).compareTo(_colorRank(b));
+          if (rankCompare != 0) return rankCompare;
+          return _sizeValue(a).compareTo(_sizeValue(b));
+        };
+      case SortOption.nameAsc:
+        return (a, b) => a.name.compareTo(b.name);
+      case SortOption.nameDesc:
+        return (a, b) => b.name.compareTo(a.name);
+      case SortOption.sizeAsc:
+        return (a, b) => _sizeValue(a).compareTo(_sizeValue(b));
+      case SortOption.sizeDesc:
+        return (a, b) => _sizeValue(b).compareTo(_sizeValue(a));
+      case SortOption.colorCountAsc:
+        return (a, b) => a.colors.length.compareTo(b.colors.length);
+      case SortOption.colorCountDesc:
+        return (a, b) => b.colors.length.compareTo(a.colors.length);
+    }
+  }
+
+  Map<Brand, List<DisplayDevice>> get _groupedByBrand {
+    final map = <Brand, List<DisplayDevice>>{};
+    for (final d in _filteredDisplays) {
+      map.putIfAbsent(d.brand, () => []).add(d);
+    }
+    final comparator = _comparatorFor(_sortOption);
+    for (final list in map.values) {
+      list.sort(comparator);
+    }
+    return map;
   }
 
   String? _sizeOf(DisplayDevice d) {
@@ -103,14 +182,6 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
     }).toList();
   }
 
-  Map<Brand, List<DisplayDevice>> get _groupedByBrand {
-    final map = <Brand, List<DisplayDevice>>{};
-    for (final d in _filteredDisplays) {
-      map.putIfAbsent(d.brand, () => []).add(d);
-    }
-    return map;
-  }
-
   void _onTap(BuildContext context, DisplayDevice display) {
     context.read<ColorPaletteProvider>().updateColors(display.colors);
     Navigator.push(
@@ -125,6 +196,57 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
         },
         transitionDuration: const Duration(milliseconds: 300),
       ),
+    );
+  }
+
+  Future<void> _showSortSheet(BuildContext context) async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.spacingM, vertical: Dimens.spacingS),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.sortBy,
+                      style: const TextStyle(
+                          fontSize: Dimens.fontSizeL, fontWeight: FontWeight.bold),
+                    ),
+                    const Divider(),
+                    Flexible(
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: SortOption.values.map((option) {
+                          return RadioListTile<SortOption>(
+                            value: option,
+                            groupValue: _sortOption,
+                            title: Text(option.label(AppLocalizations.of(context)!)),
+                            onChanged: (val) {
+                              if (val == null) return;
+                              setModalState(() {});
+                              setState(() => _sortOption = val);
+                              Navigator.pop(context);
+                            },
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -274,6 +396,39 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
           horizontal: Dimens.spacingMd, vertical: Dimens.spacingS),
       child: Row(
         children: [
+          Expanded(
+            child: InkWell(
+              onTap: () => _showSortSheet(context),
+              borderRadius: BorderRadius.circular(Dimens.radiusM),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.spacingS, vertical: Dimens.spacingSm),
+                decoration: BoxDecoration(
+                  color: colorWhite,
+                  border: Border.all(color: mdGrey400),
+                  borderRadius: BorderRadius.circular(Dimens.radiusM),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Icon(Icons.sort, size: 16, color: mdGrey400),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        _sortOption.label(l),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: Dimens.fontSizeS,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: Dimens.spacingS),
           _buildFilterBox(
             allLabel: l.allBrands,
             selectedCount: _selectedBrands.length,
