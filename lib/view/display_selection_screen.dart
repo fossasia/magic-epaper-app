@@ -219,7 +219,8 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                     Text(
                       AppLocalizations.of(context)!.sortBy,
                       style: const TextStyle(
-                          fontSize: Dimens.fontSizeL, fontWeight: FontWeight.bold),
+                          fontSize: Dimens.fontSizeL,
+                          fontWeight: FontWeight.bold),
                     ),
                     const Divider(),
                     Flexible(
@@ -229,7 +230,8 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                           return RadioListTile<SortOption>(
                             value: option,
                             groupValue: _sortOption,
-                            title: Text(option.label(AppLocalizations.of(context)!)),
+                            title: Text(
+                                option.label(AppLocalizations.of(context)!)),
                             onChanged: (val) {
                               if (val == null) return;
                               setModalState(() {});
