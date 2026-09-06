@@ -84,6 +84,8 @@ class _GoodisplayTransferDialogState extends State<GoodisplayTransferDialog> {
           _isError = true;
           if (errorMsg.startsWith('MissingPluginException')) {
             _status = appLocalizations.noNFCfound;
+          } else if (errorMsg.startsWith('PlatformException')) {
+            _status = appLocalizations.platformException;
           } else {
             _status = appLocalizations.badgeDisconnected;
           }
