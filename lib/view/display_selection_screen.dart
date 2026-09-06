@@ -228,6 +228,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                         shrinkWrap: true,
                         children: SortOption.values.map((option) {
                           return RadioListTile<SortOption>(
+                            activeColor: colorPrimary,
                             value: option,
                             groupValue: _sortOption,
                             title: Text(
