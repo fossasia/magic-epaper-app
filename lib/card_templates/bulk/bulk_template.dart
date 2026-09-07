@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:magicepaperapp/card_templates/contact_card_badge.dart';
 import 'package:magicepaperapp/card_templates/contact_card_model.dart';
 import 'package:magicepaperapp/card_templates/employee_id_model.dart';
 import 'package:magicepaperapp/card_templates/entry_pass_tag_model.dart';
@@ -44,6 +42,7 @@ class BulkTemplate {
   final List<BulkField> fields;
   final LayersFromRow buildLayers;
   final bool hasPhoto;
+  final String? Function(Map<String, String> row)? qrDataBuilder;
 
   const BulkTemplate({
     required this.id,
@@ -51,6 +50,7 @@ class BulkTemplate {
     required this.fields,
     required this.buildLayers,
     this.hasPhoto = false,
+    this.qrDataBuilder,
   });
 
   BulkField get nameField {
@@ -59,6 +59,9 @@ class BulkTemplate {
     }
     return fields.first;
   }
+
+  String? qrDataFor(Map<String, String> row) =>
+      qrDataBuilder?.call(row) ?? row['qr'];
 }
 
 BulkTemplate employeeIdBulkTemplate() {
@@ -378,30 +381,26 @@ BulkTemplate contactCardBulkTemplate() {
       ),
       _photoField(),
     ],
-    buildLayers: (row, photo, width, height) {
-      final model = ContactCardModel(
-        fullName: row['fullName'] ?? '',
-        jobTitle: row['jobTitle'] ?? '',
-        company: row['company'] ?? '',
-        phone: row['phone'] ?? '',
-        email: row['email'] ?? '',
-        link: row['link'] ?? '',
-        qrMode: ContactQrMode.vCard,
-        profileImage: photo,
-      );
-      return [
-        LayerSpec.widget(
-          widget: SizedBox(
-            width: width.toDouble(),
-            height: height.toDouble(),
-            child: ContactCardBadge(data: model),
-          ),
-          elementId: 'fullCanvas',
-          kind: LayerKind.generic,
-        ),
-      ];
-    },
+    buildLayers: (row, photo, width, height) => buildContactCardLayers(
+      data: _contactModelFromRow(row),
+      width: width,
+      height: height,
+      photo: photo,
+    ),
+    qrDataBuilder: (row) => _contactModelFromRow(row).qrData,
     hasPhoto: true,
+  );
+}
+
+ContactCardModel _contactModelFromRow(Map<String, String> row) {
+  return ContactCardModel(
+    fullName: row['fullName'] ?? '',
+    jobTitle: row['jobTitle'] ?? '',
+    company: row['company'] ?? '',
+    phone: row['phone'] ?? '',
+    email: row['email'] ?? '',
+    link: row['link'] ?? '',
+    qrMode: ContactQrMode.vCard,
   );
 }
 

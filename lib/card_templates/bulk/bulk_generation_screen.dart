@@ -105,7 +105,7 @@ class _BulkGenerationScreenState extends State<BulkGenerationScreen> {
           elements: toSerializableElements(
             elements,
             photoBytes: photoBytes,
-            qrData: row['qr'],
+            qrData: widget.template.qrDataFor(row),
             barcodeData: row['barcode'],
           ),
           strokes: const [],
