@@ -381,15 +381,12 @@ class CardLayoutSeeder {
         _add(
           CanvasElement(
             id: _nextId(),
-            kind: CanvasElementKind.widget,
+            kind: CanvasElementKind.fill,
             position: Offset(leftX0 + leftW / 2, divTop + divTh / 2),
             baseSize: Size(leftW, divTh),
             scale: 1.0,
-            child: SizedBox(
-              width: leftW,
-              height: divTh,
-              child: const ColoredBox(color: colorBlack),
-            ),
+            color: colorBlack,
+            elementId: 'divider',
           ),
         );
         yCursor += divBlockH;
