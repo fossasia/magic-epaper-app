@@ -344,6 +344,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.6.2"
+  flutter_ocr_native:
+    dependency: "direct main"
+    description:
+      name: flutter_ocr_native
+      sha256: "4732bb06db626e943ae7552c9662f29dd7e9124745de3c30b40d3b6d373bc5b0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.3"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
