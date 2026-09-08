@@ -400,8 +400,7 @@ class CardLayoutSeeder {
       final fs = s.textStyle?.fontSize ?? 24;
       final fw = s.textStyle?.fontWeight ?? FontWeight.w500;
       final m = _measureText(s.text!, fs, fw);
-      final aspect =
-          math.max(1.0, m.width - 8) / math.max(1.0, m.height - 4);
+      final aspect = math.max(1.0, m.width - 8) / math.max(1.0, m.height - 4);
       final fitH = leftW / aspect;
       if (fitH < contactH) contactH = fitH;
     }
