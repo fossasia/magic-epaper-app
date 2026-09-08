@@ -1374,9 +1374,11 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     );
   }
 
-  Future<_TextResult?> _showTextSheet({CanvasElement? existing, String? initialText}) {
+  Future<_TextResult?> _showTextSheet(
+      {CanvasElement? existing, String? initialText}) {
     final appLocalizations = AppLocalizations.of(context)!;
-    final textCtrl = TextEditingController(text: existing?.text ?? initialText ?? '');
+    final textCtrl =
+        TextEditingController(text: existing?.text ?? initialText ?? '');
     double fontSize = existing?.fontSize ?? 24;
     Color color =
         existing?.color ?? _controller.contrastColor(_controller.canvasColor);
