@@ -172,9 +172,11 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         _handleEditRequest(result);
       }
     } finally {
-      setState(() {
-        _isGenerating = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isGenerating = false;
+        });
+      }
     }
   }
 
