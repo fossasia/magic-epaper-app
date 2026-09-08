@@ -23,7 +23,7 @@ runs:
       shell: bash
       run: |
         sudo apt-get update
-        sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+        sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libtesseract-dev libleptonica-dev tesseract-ocr
 
     - name: Fetch Dependencies
       shell: bash
