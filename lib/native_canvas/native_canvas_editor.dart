@@ -684,14 +684,15 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     if (result == null) return;
     var size = _measureText(
         result.text, result.fontSize, FontWeight.normal, result.fontFamily);
+    var fontSize = result.fontSize;
     final maxW = widget.width * 0.9;
     final maxH = widget.height * 0.9;
     if (size.width > maxW || size.height > maxH) {
-      final factor =
-          (maxW / size.width).clamp(0.0, 1.0) < (maxH / size.height).clamp(0.0, 1.0)
-              ? (maxW / size.width)
-              : (maxH / size.height);
+      final factor = (maxW / size.width) < (maxH / size.height)
+          ? (maxW / size.width)
+          : (maxH / size.height);
       size = Size(size.width * factor, size.height * factor);
+      fontSize = fontSize * factor;
     }
     _controller.addElement(
       CanvasElement(
@@ -701,7 +702,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
         baseSize: size,
         color: result.color,
         text: result.text,
-        fontSize: result.fontSize,
+        fontSize: fontSize,
         fontFamily: result.fontFamily,
         followCanvasTheme: !result.manualColor,
       ),

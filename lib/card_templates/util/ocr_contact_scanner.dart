@@ -265,17 +265,17 @@ Future<Map<String, String>?> _runOcrScan(
 ) async {
   final source = await chooseImageSource(context);
   if (source == null) return null;
-
-  final picked = await ImagePicker().pickImage(
-    source: source,
-    maxWidth: 2200,
-    imageQuality: 90,
-  );
-  if (picked == null) return null;
   if (!context.mounted) return null;
 
   Map<String, String> parsed;
   try {
+    final picked = await ImagePicker().pickImage(
+      source: source,
+      maxWidth: 2200,
+      imageQuality: 90,
+    );
+    if (picked == null) return null;
+    if (!context.mounted) return null;
     parsed = await _showLoaderWhile(
       context,
       () async {
@@ -553,13 +553,13 @@ Future<Map<String, String>?> scanCardForPriceTag(BuildContext context) =>
 Future<String?> scanImageForRawText(BuildContext context) async {
   final source = await chooseImageSource(context);
   if (source == null) return null;
-
-  final picked = await ImagePicker()
-      .pickImage(source: source, maxWidth: 2200, imageQuality: 90);
-  if (picked == null) return null;
   if (!context.mounted) return null;
 
   try {
+    final picked = await ImagePicker()
+        .pickImage(source: source, maxWidth: 2200, imageQuality: 90);
+    if (picked == null) return null;
+    if (!context.mounted) return null;
     final text = await _showLoaderWhile(
       context,
       () async {
