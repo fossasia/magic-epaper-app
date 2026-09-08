@@ -410,13 +410,13 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     }
 
     if (hasQr) {
-      final captionH = ch * 0.1;
+      final captionH = ch * 0.16;
       final qrSide = math.min(rightW, ch - captionH - ch * 0.04);
       final blockTop = pad + (ch - (qrSide + ch * 0.04 + captionH)) / 2;
       _seedWidgetElement(
           qr!, Offset(rightX0 + rightW / 2, blockTop + qrSide / 2), qrSide);
       if (caption != null) {
-        final capFs = captionH * 0.7;
+        final capFs = captionH * 0.9;
         final capTop = blockTop + qrSide + ch * 0.04 + (captionH - capFs) / 2;
         _seedTextElement(caption, rightX0, capTop, capFs,
             columnWidth: rightW, center: true);
