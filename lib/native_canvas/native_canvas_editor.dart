@@ -306,8 +306,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     final hasSub = subEntries.isNotEmpty;
     final contactEntries = [phone, email, link].whereType<LayerSpec>().toList();
 
-    final nameH = showName ? ch * 0.28 : 0.0;
-    final subH = hasSub ? ch * 0.16 : 0.0;
+    final nameH = showName ? ch * 0.26 : 0.0;
+    final subH = hasSub ? ch * 0.2 : 0.0;
     var identH = nameH + subH;
     if (hasPhoto && identH < ch * 0.4) identH = ch * 0.4;
     final hasIdentity = identH > 0;

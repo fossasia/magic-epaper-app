@@ -418,7 +418,7 @@ List<LayerSpec> buildContactCardLayers({
   ];
   if (subParts.isNotEmpty) {
     layers.add(LayerSpec.text(
-      text: subParts.join('  •  '),
+      text: subParts.join(' • '),
       textStyle: const TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
       followCanvasTheme: true,
       elementId: data.jobTitle.trim().isNotEmpty ? 'jobTitle' : 'company',
