@@ -246,7 +246,10 @@ class _ImageEditorState extends State<ImageEditor> {
     });
 
     await Future.delayed(Duration.zero);
-    if (!mounted || _processedSourceImage != sourceImage) return;
+    if (!mounted || _processedSourceImage != sourceImage) {
+      if (mounted) setState(() => _isProcessingImages = false);
+      return;
+    }
 
     final img.Image scaledSource = img.copyResize(
       sourceImage,
