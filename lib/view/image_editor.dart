@@ -229,7 +229,6 @@ class _ImageEditorState extends State<ImageEditor> {
     if (_processedSourceImage == sourceImage) {
       return;
     }
-    _pristineImage ??= img.Image.from(sourceImage);
     _processImagesAsync(sourceImage);
   }
 
@@ -245,6 +244,9 @@ class _ImageEditorState extends State<ImageEditor> {
       flipHorizontal = false;
       flipVertical = false;
     });
+
+    await Future.delayed(Duration.zero);
+    if (!mounted || _processedSourceImage != sourceImage) return;
 
     final img.Image scaledSource = img.copyResize(
       sourceImage,
@@ -262,7 +264,7 @@ class _ImageEditorState extends State<ImageEditor> {
         Uint8List bytesForRust = sourcePngBytes;
 
         if (filtersToRun[i].useDartHalftone) {
-          final tempImg = img.Image.from(sourceImage);
+          final tempImg = img.Image.from(scaledSource);
           if (filtersToRun[i].colorMode == rust_api.ColorMode.bw) {
             img.grayscale(tempImg);
           }
