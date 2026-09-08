@@ -51,6 +51,7 @@ class CanvasElement {
   final Widget? child;
   final bool followCanvasTheme;
   final String? elementId;
+  final String? stickerIcon;
 
   const CanvasElement({
     required this.id,
@@ -73,6 +74,7 @@ class CanvasElement {
     this.child,
     this.followCanvasTheme = true,
     this.elementId,
+    this.stickerIcon,
   });
 
   CanvasElement copyWith({
@@ -114,6 +116,7 @@ class CanvasElement {
       child: child,
       followCanvasTheme: followCanvasTheme ?? this.followCanvasTheme,
       elementId: elementId,
+      stickerIcon: stickerIcon,
     );
   }
 
@@ -138,6 +141,7 @@ class CanvasElement {
       if (barcodeData != null) 'barcodeData': barcodeData,
       'followCanvasTheme': followCanvasTheme,
       if (elementId != null) 'elementId': elementId,
+      if (stickerIcon != null) 'stickerIcon': stickerIcon,
     };
   }
 
@@ -175,6 +179,7 @@ class CanvasElement {
       barcodeData: json['barcodeData'] as String?,
       followCanvasTheme: json['followCanvasTheme'] as bool? ?? true,
       elementId: json['elementId'] as String?,
+      stickerIcon: json['stickerIcon'] as String?,
     );
   }
 }

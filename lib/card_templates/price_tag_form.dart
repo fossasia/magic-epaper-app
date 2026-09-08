@@ -188,9 +188,11 @@ class _PriceTagFormState extends State<PriceTagForm> {
         _handleEditRequest(result);
       }
     } finally {
-      setState(() {
-        _isGenerating = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isGenerating = false;
+        });
+      }
     }
   }
 

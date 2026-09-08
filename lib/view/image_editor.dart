@@ -114,6 +114,12 @@ class _ImageEditorState extends State<ImageEditor> {
     });
   }
 
+  @override
+  void dispose() {
+    _colorDebounce?.cancel();
+    super.dispose();
+  }
+
   Future<void> loadInitialImage() async {
     try {
       final imgLoader = context.read<ImageLoader>();
