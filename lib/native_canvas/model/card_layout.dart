@@ -291,8 +291,8 @@ class CardLayoutSeeder {
     }
 
     final hasQr = qr?.widget != null;
-    final rightW = hasQr ? math.min(w * 0.32, ch * 0.94) : 0.0;
-    final gapX = hasQr ? cw * 0.04 : 0.0;
+    final rightW = hasQr ? math.min(w * 0.29, ch * 0.94) : 0.0;
+    final gapX = hasQr ? cw * 0.03 : 0.0;
     final leftW = cw - rightW - gapX;
     final leftX0 = pad;
     final rightX0 = pad + leftW + gapX;
@@ -303,8 +303,8 @@ class CardLayoutSeeder {
     final hasSub = subEntries.isNotEmpty;
     final contactEntries = [phone, email, link].whereType<LayerSpec>().toList();
 
-    final nameH = showName ? ch * 0.26 : 0.0;
-    final subH = hasSub ? ch * 0.2 : 0.0;
+    final nameH = showName ? ch * 0.24 : 0.0;
+    final subH = hasSub ? ch * 0.22 : 0.0;
     var identH = nameH + subH;
     if (hasPhoto && identH < ch * 0.4) identH = ch * 0.4;
     final hasIdentity = identH > 0;
