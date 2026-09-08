@@ -692,7 +692,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
           ? (maxW / size.width)
           : (maxH / size.height);
       size = Size(size.width * factor, size.height * factor);
-      fontSize = fontSize * factor;
+      fontSize = (fontSize * factor).clamp(8.0, result.fontSize);
     }
     _controller.addElement(
       CanvasElement(
