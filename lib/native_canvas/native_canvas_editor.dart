@@ -404,9 +404,19 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
       yCursor = pad + (ch - contactEntries.length * perContactH) / 2;
     }
 
+    var contactH = contactFs;
+    for (final s in contactEntries) {
+      final fs = s.textStyle?.fontSize ?? 24;
+      final fw = s.textStyle?.fontWeight ?? FontWeight.w500;
+      final m = _measureText(s.text!, fs, fw);
+      final aspect =
+          math.max(1.0, m.width - 8) / math.max(1.0, m.height - 4);
+      final fitH = leftW / aspect;
+      if (fitH < contactH) contactH = fitH;
+    }
     for (var i = 0; i < contactEntries.length; i++) {
       final centerY = yCursor + i * perContactH + perContactH / 2;
-      addLeftText(contactEntries[i], leftX0, centerY, contactFs, leftW);
+      addLeftText(contactEntries[i], leftX0, centerY, contactH, leftW);
     }
 
     if (hasQr) {
