@@ -25,6 +25,7 @@ import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/util/template_util.dart';
 import 'package:magicepaperapp/util/image_source_picker.dart';
+import 'package:magicepaperapp/card_templates/util/ocr_contact_scanner.dart';
 
 class NativeCanvasEditor extends StatefulWidget {
   const NativeCanvasEditor({
@@ -676,6 +677,38 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     );
   }
 
+  Future<void> _addTextFromOcr() async {
+    final scanned = await scanImageForRawText(context);
+    if (!mounted || scanned == null) return;
+    final result = await _showTextSheet(initialText: scanned);
+    if (result == null) return;
+    var size = _measureText(
+        result.text, result.fontSize, FontWeight.normal, result.fontFamily);
+    var fontSize = result.fontSize;
+    final maxW = widget.width * 0.9;
+    final maxH = widget.height * 0.9;
+    if (size.width > maxW || size.height > maxH) {
+      final factor = (maxW / size.width) < (maxH / size.height)
+          ? (maxW / size.width)
+          : (maxH / size.height);
+      size = Size(size.width * factor, size.height * factor);
+      fontSize = (fontSize * factor).clamp(8.0, result.fontSize);
+    }
+    _controller.addElement(
+      CanvasElement(
+        id: _nextId(),
+        kind: CanvasElementKind.text,
+        position: _canvasCenter,
+        baseSize: size,
+        color: result.color,
+        text: result.text,
+        fontSize: fontSize,
+        fontFamily: result.fontFamily,
+        followCanvasTheme: !result.manualColor,
+      ),
+    );
+  }
+
   Future<void> _editText(CanvasElement element) async {
     final result = await _showTextSheet(existing: element);
     if (result == null) return;
@@ -1157,6 +1190,13 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                 label: appLocalizations.text,
                 onTap: _addText),
           ),
+          if (isOcrSupported)
+            Expanded(
+              child: _BarButton(
+                  icon: Icons.document_scanner_outlined,
+                  label: appLocalizations.scan,
+                  onTap: _addTextFromOcr),
+            ),
           Expanded(
             child: _BarButton(
                 icon: Icons.qr_code,
@@ -1335,9 +1375,11 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     );
   }
 
-  Future<_TextResult?> _showTextSheet({CanvasElement? existing}) {
+  Future<_TextResult?> _showTextSheet(
+      {CanvasElement? existing, String? initialText}) {
     final appLocalizations = AppLocalizations.of(context)!;
-    final textCtrl = TextEditingController(text: existing?.text ?? '');
+    final textCtrl =
+        TextEditingController(text: existing?.text ?? initialText ?? '');
     double fontSize = existing?.fontSize ?? 24;
     Color color =
         existing?.color ?? _controller.contrastColor(_controller.canvasColor);
@@ -1364,6 +1406,9 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     controller: textCtrl,
                     autofocus: true,
                     textCapitalization: TextCapitalization.sentences,
+                    keyboardType: TextInputType.multiline,
+                    minLines: 1,
+                    maxLines: 6,
                     onChanged: (_) => setSheet(() {}),
                     style: fontFamily == null
                         ? null
@@ -1371,6 +1416,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     decoration: InputDecoration(
                       labelText: appLocalizations.text,
                       border: const OutlineInputBorder(),
+                      alignLabelWithHint: true,
                     ),
                   ),
                   const SizedBox(height: 16),
