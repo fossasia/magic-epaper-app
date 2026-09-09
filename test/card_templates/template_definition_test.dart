@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:magicepaperapp/card_templates/json/template_definition.dart';
 import 'package:magicepaperapp/card_templates/json/template_repository.dart';
-import 'package:magicepaperapp/util/template_util.dart';
+import 'package:magicepaperapp/utils/template_util.dart';
 
 void main() {
   const repository = TemplateRepository();
