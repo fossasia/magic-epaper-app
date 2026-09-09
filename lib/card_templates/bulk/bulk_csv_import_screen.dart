@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:magicepaperapp/card_templates/bulk/bulk_generation_screen.dart';
 import 'package:magicepaperapp/card_templates/bulk/bulk_template.dart';
 import 'package:magicepaperapp/card_templates/bulk/csv_parser.dart';
-import 'package:magicepaperapp/card_templates/bulk/photo_source.dart';
+import 'package:magicepaperapp/card_templates/bulk/photo_resolver.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
