@@ -344,14 +344,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.6.2"
-  flutter_ocr_native:
-    dependency: "direct main"
-    description:
-      name: flutter_ocr_native
-      sha256: "4732bb06db626e943ae7552c9662f29dd7e9124745de3c30b40d3b6d373bc5b0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.3"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -415,6 +407,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.2.1"
+  google_mlkit_commons:
+    dependency: transitive
+    description:
+      name: google_mlkit_commons
+      sha256: "621e94de22fd0f1e902e593b892746d80ab7542b39c2552aa091d904eb82fc6f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.13.0"
+  google_mlkit_text_recognition:
+    dependency: "direct main"
+    description:
+      name: google_mlkit_text_recognition
+      sha256: e13685af5093c8be009a3555909b72a80e10cfe8f97752bcbdf99fa0ccbda810
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.17.1"
   hooks:
     dependency: transitive
     description:

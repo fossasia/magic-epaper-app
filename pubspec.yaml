@@ -42,7 +42,7 @@ dependencies:
   logger: ^2.7.0
   http: ^1.2.2
   ffi: ^2.2.0
-  flutter_ocr_native: ^0.3.3
+  google_mlkit_text_recognition: ^0.17.1
   rust_lib_magicepaperapp:
     path: rust_builder
   flutter_rust_bridge: 2.13.0

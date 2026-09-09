@@ -1,12 +1,16 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ocr_native/flutter_ocr_native.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:magicepaperapp/card_templates/util/ocr_recognizer.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/util/app_logger.dart' show AppLogger;
 import 'package:magicepaperapp/util/image_source_picker.dart';
+
+bool get isOcrSupported =>
+    !kIsWeb &&
+    (defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.iOS);
 
 Future<T> _showLoaderWhile<T>(
   BuildContext context,
@@ -32,6 +36,7 @@ Future<T> _showLoaderWhile<T>(
 }
 
 Future<String?> scanImageForRawText(BuildContext context) async {
+  if (!isOcrSupported) return null;
   final l10n = AppLocalizations.of(context)!;
   final source = await chooseImageSource(context);
   if (source == null) return null;
@@ -44,11 +49,7 @@ Future<String?> scanImageForRawText(BuildContext context) async {
     if (!context.mounted) return null;
     final text = await _showLoaderWhile(
       context,
-      () async {
-        final reader = OcrReader();
-        final result = await reader.readFromFile(File(picked.path));
-        return result.text.trim();
-      },
+      () => recognizeTextFromPath(picked.path),
     );
     return text.isEmpty ? null : text;
   } catch (e) {

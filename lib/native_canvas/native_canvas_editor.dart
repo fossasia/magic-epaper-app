@@ -1190,12 +1190,13 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                 label: appLocalizations.text,
                 onTap: _addText),
           ),
-          Expanded(
-            child: _BarButton(
-                icon: Icons.document_scanner_outlined,
-                label: appLocalizations.scan,
-                onTap: _addTextFromOcr),
-          ),
+          if (isOcrSupported)
+            Expanded(
+              child: _BarButton(
+                  icon: Icons.document_scanner_outlined,
+                  label: appLocalizations.scan,
+                  onTap: _addTextFromOcr),
+            ),
           Expanded(
             child: _BarButton(
                 icon: Icons.qr_code,
