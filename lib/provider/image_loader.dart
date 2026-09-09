@@ -19,7 +19,11 @@ class ImageLoader extends ChangeNotifier {
     required int height,
   }) async {
     final ImagePicker picker = ImagePicker();
-    final XFile? file = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? file = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 3500,
+      maxHeight: 3500,
+    );
     if (file == null) return false;
 
     final bytes = await file.readAsBytes();

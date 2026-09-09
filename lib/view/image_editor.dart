@@ -229,7 +229,6 @@ class _ImageEditorState extends State<ImageEditor> {
     if (_processedSourceImage == sourceImage) {
       return;
     }
-    _pristineImage ??= img.Image.from(sourceImage);
     _processImagesAsync(sourceImage);
   }
 
@@ -246,8 +245,19 @@ class _ImageEditorState extends State<ImageEditor> {
       flipVertical = false;
     });
 
+    await Future.delayed(Duration.zero);
+    if (!mounted || _processedSourceImage != sourceImage) {
+      if (mounted) setState(() => _isProcessingImages = false);
+      return;
+    }
+
+    final img.Image scaledSource = img.copyResize(
+      sourceImage,
+      width: widget.device.width,
+      height: widget.device.height,
+    );
     final Uint8List sourcePngBytes =
-        Uint8List.fromList(img.encodePng(sourceImage));
+        Uint8List.fromList(img.encodePng(scaledSource));
     final filtersToRun = widget.device.processingMethods;
 
     try {
@@ -257,7 +267,7 @@ class _ImageEditorState extends State<ImageEditor> {
         Uint8List bytesForRust = sourcePngBytes;
 
         if (filtersToRun[i].useDartHalftone) {
-          final tempImg = img.Image.from(sourceImage);
+          final tempImg = img.Image.from(scaledSource);
           if (filtersToRun[i].colorMode == rust_api.ColorMode.bw) {
             img.grayscale(tempImg);
           }
