@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
-import 'package:magicepaperapp/native_canvas/model/canvas_element.dart';
-import 'package:magicepaperapp/util/template_util.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_element.dart';
+import 'package:magicepaperapp/utils/template_util.dart';
 
 List<CanvasElement> buildTemplateElements({
   required int width,

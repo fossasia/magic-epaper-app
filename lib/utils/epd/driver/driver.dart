@@ -1,5 +1,5 @@
 import 'waveform.dart';
-import 'package:magicepaperapp/util/protocol.dart';
+import 'package:magicepaperapp/utils/protocol.dart';
 
 abstract class Driver {
   String get driverName;

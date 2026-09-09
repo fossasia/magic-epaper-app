@@ -1,14 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
-import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
+import 'package:magicepaperapp/image_library/models/saved_image_model.dart';
 import 'package:magicepaperapp/image_library/utils/date_utils.dart' as dt;
 import 'package:magicepaperapp/image_library/utils/filter_utils.dart';
 import 'package:magicepaperapp/image_library/utils/source_utils.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_properties_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_rename_dialog.dart';
 import 'package:magicepaperapp/image_library/widgets/image_error_placeholder.dart';
-import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/utils/epd/display_device.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';

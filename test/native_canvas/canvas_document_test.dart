@@ -3,9 +3,9 @@ import 'dart:typed_data';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
-import 'package:magicepaperapp/native_canvas/model/canvas_element.dart';
-import 'package:magicepaperapp/native_canvas/model/stroke.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_document.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_element.dart';
+import 'package:magicepaperapp/native_canvas/models/stroke.dart';
 
 void main() {
   test('CanvasDocument round-trips text, image, barcode and strokes', () {

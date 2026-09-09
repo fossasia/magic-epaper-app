@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
-import 'package:magicepaperapp/util/epd/driver/uc8253.dart';
-import 'package:magicepaperapp/util/image_processing/image_processing.dart';
+import 'package:magicepaperapp/utils/epd/driver/uc8253.dart';
+import 'package:magicepaperapp/utils/image_processing/image_processing.dart';
 import 'driver/driver.dart';
 import 'epd.dart';
 
-class Gdey037z03BW extends Epd {
+class GDEQ031T10 extends Epd {
   @override
-  int get width => 416;
+  int get width => 320;
 
   @override
   int get height => 240;
 
   @override
-  String get name => 'Magic ePaper 3.7" (WB)';
+  String get name => 'Magic ePaper 3.1" (WB)';
 
   @override
-  String get modelId => 'GDEY037T03';
+  String get modelId => 'GDEQ031T10';
 
   @override
-  String get imgPath => ImageAssets.epaper37Bw;
+  String get imgPath => ImageAssets.gdeq031t10Display;
 
   @override
   List<Color> get colors => [Colors.white, Colors.black];

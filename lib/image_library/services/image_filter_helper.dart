@@ -1,4 +1,4 @@
-import 'package:magicepaperapp/util/image_processing/image_processing.dart';
+import 'package:magicepaperapp/utils/image_processing/image_processing.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 

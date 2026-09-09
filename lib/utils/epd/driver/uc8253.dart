@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:magicepaperapp/util/epd/driver/waveform.dart';
-import 'package:magicepaperapp/util/protocol.dart';
+import 'package:magicepaperapp/utils/epd/driver/waveform.dart';
+import 'package:magicepaperapp/utils/protocol.dart';
 import 'driver.dart';
 
 class QuickLut extends Waveform {
