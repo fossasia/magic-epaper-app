@@ -9,7 +9,7 @@ import 'package:magicepaperapp/image_library/utils/filter_utils.dart';
 import 'package:magicepaperapp/image_library/utils/source_utils.dart';
 import 'package:magicepaperapp/image_library/widgets/image_error_placeholder.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
-import '../../../util/app_logger.dart';
+import '../../../utils/app_logger.dart';
 
 class ImagePropertiesDialog extends StatefulWidget {
   final SavedImage image;

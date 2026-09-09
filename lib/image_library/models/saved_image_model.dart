@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:magicepaperapp/native_canvas/models/canvas_document.dart';
-import '../../util/app_logger.dart';
+import '../../utils/app_logger.dart';
 
 class SavedImage {
   final String id;

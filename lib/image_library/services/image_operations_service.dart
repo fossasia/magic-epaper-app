@@ -14,8 +14,8 @@ import 'package:image/image.dart' as img;
 import 'dart:typed_data';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
-import '../../util/app_logger.dart';
-import '../../util/image_processing/image_processing.dart';
+import '../../utils/app_logger.dart';
+import '../../utils/image_processing/image_processing.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 

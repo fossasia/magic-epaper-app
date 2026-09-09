@@ -29,7 +29,7 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import '../src/rust/api/simple.dart' as rust_api;
-import '../util/app_logger.dart';
+import '../utils/app_logger.dart';
 
 class ImageEditor extends StatefulWidget {
   final DisplayDevice device;
