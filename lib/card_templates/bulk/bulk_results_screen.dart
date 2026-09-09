@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
-import 'package:magicepaperapp/card_templates/bulk/bulk_result.dart';
+import 'package:magicepaperapp/card_templates/bulk/generated_badge.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
