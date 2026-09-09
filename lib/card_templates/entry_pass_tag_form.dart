@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
+import 'package:magicepaperapp/util/app_logger.dart';
 import 'package:magicepaperapp/card_templates/template_layer_builders.dart';
 import 'package:magicepaperapp/card_templates/bulk/bulk_csv_import_screen.dart';
 import 'package:magicepaperapp/card_templates/bulk/bulk_template.dart';
@@ -48,6 +50,8 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
   };
 
   File? _profileImage;
+  File? _ownedProfileImage;
+  int _imageSelectionGeneration = 0;
   bool _isGenerating = false;
 
   late EntryPassTagModel _passData;
@@ -75,6 +79,10 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
   @override
   void dispose() {
     _venueNameController.removeListener(_updatePreview);
+    _imageSelectionGeneration++;
+    final ownedProfileImage = _ownedProfileImage;
+    _ownedProfileImage = null;
+    unawaited(_deleteTemporaryImage(ownedProfileImage));
     _visitorNameController.removeListener(_updatePreview);
     _passTypeController.removeListener(_updatePreview);
     _validDateController.removeListener(_updatePreview);
@@ -108,12 +116,31 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
     });
   }
 
-  Future<void> _pickImage() async {
-    final picked = await pickAndEditImage(context);
-    if (picked != null && mounted) {
-      _profileImage = picked;
-      _updatePreview();
+  Future<void> _deleteTemporaryImage(File? image) async {
+    if (image == null) return;
+
+    try {
+      await image.delete();
+    } catch (e) {
+      AppLogger.error('Failed to delete temporary image: $e');
     }
+  }
+
+  Future<void> _pickImage() async {
+    final selectionGeneration = ++_imageSelectionGeneration;
+    final picked = await pickAndEditImage(context);
+    if (picked == null) return;
+
+    if (!mounted || selectionGeneration != _imageSelectionGeneration) {
+      unawaited(_deleteTemporaryImage(picked));
+      return;
+    }
+
+    final previousOwnedImage = _ownedProfileImage;
+    _profileImage = picked;
+    _ownedProfileImage = picked;
+    unawaited(_deleteTemporaryImage(previousOwnedImage));
+    _updatePreview();
   }
 
   Future<void> _scanQrData() async {
