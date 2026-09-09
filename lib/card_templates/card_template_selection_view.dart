@@ -13,8 +13,8 @@ import 'package:magicepaperapp/card_templates/calendar_form.dart';
 import 'package:magicepaperapp/card_templates/weather_form.dart';
 import 'package:magicepaperapp/card_templates/contact_card_form.dart';
 import 'package:magicepaperapp/card_templates/restaurant_menu_form.dart';
-import 'package:magicepaperapp/util/epd/display_device.dart';
-import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/utils/epd/display_device.dart';
+import 'package:magicepaperapp/view/widgets/common_scaffold_widget.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 

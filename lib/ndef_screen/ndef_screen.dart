@@ -11,7 +11,7 @@ import 'package:magicepaperapp/ndef_screen/widgets/nfc_status_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_write_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_read_card.dart';
 import 'package:magicepaperapp/ndef_screen/app_launcher_card.dart';
-import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/view/widgets/common_scaffold_widget.dart';
 import 'dart:async';
 import '../util/app_logger.dart';
 

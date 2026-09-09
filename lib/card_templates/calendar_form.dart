@@ -14,8 +14,8 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/theme/colors.dart';
-import 'package:magicepaperapp/util/epd/display_device.dart';
-import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/utils/epd/display_device.dart';
+import 'package:magicepaperapp/view/widgets/common_scaffold_widget.dart';
 import 'package:provider/provider.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();

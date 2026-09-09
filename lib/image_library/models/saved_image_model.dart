@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_document.dart';
 import '../../util/app_logger.dart';
 
 class SavedImage {

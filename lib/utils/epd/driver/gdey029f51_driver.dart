@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
-import 'package:magicepaperapp/util/epd/driver/driver.dart';
-import 'package:magicepaperapp/util/epd/driver/waveform.dart';
-import 'package:magicepaperapp/util/protocol.dart';
+import 'package:magicepaperapp/utils/epd/driver/driver.dart';
+import 'package:magicepaperapp/utils/epd/driver/waveform.dart';
+import 'package:magicepaperapp/utils/protocol.dart';
 
 class Gdey029f51Driver extends Driver {
   @override

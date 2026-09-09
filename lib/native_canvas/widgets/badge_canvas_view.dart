@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:magicepaperapp/native_canvas/model/canvas_element.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_element.dart';
 import 'package:magicepaperapp/native_canvas/widgets/editable_element.dart';
 
 class BadgeCanvasView extends StatelessWidget {

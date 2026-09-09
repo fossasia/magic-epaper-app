@@ -1,6 +1,6 @@
 import 'dart:typed_data';
-import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
-import 'package:magicepaperapp/util/template_util.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_document.dart';
+import 'package:magicepaperapp/utils/template_util.dart';
 
 class GeneratedBadge {
   final String name;

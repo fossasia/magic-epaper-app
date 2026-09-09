@@ -7,11 +7,11 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_document.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
-import 'package:magicepaperapp/util/epd/display_device.dart';
-import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/utils/epd/display_device.dart';
+import 'package:magicepaperapp/view/widgets/common_scaffold_widget.dart';
 import 'package:provider/provider.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
