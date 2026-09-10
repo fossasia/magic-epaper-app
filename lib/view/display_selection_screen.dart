@@ -5,7 +5,6 @@ import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/utils/epd/display_device.dart';
 import 'package:magicepaperapp/utils/epd/gdeq031t10.dart';
-import 'package:magicepaperapp/utils/epd/gdey029f51.dart';
 import 'package:magicepaperapp/utils/epd/gdey037z03.dart';
 import 'package:magicepaperapp/utils/epd/gdey037z03bw.dart';
 import 'package:magicepaperapp/utils/epd/goodisplay_2color.dart';
@@ -17,10 +16,6 @@ import 'package:magicepaperapp/view/widgets/common_scaffold_widget.dart';
 import 'package:magicepaperapp/view/widgets/display_card.dart';
 import 'package:provider/provider.dart';
 import 'package:magicepaperapp/theme/colors.dart';
-
-import '../util/epd/goodisplay_2color.dart';
-import '../util/epd/goodisplay_3color.dart';
-import '../util/epd/goodisplay_4color.dart';
 
 class DisplaySelectionScreen extends StatefulWidget {
   const DisplaySelectionScreen({super.key});

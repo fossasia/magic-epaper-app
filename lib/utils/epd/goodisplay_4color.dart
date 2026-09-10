@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/constants/asset_paths.dart';
-import 'package:magicepaperapp/util/epd/display_device.dart';
-import 'package:magicepaperapp/util/epd/driver/waveform.dart';
-import 'package:magicepaperapp/util/image_processing/image_processing.dart';
-import 'package:magicepaperapp/view/widget/goodisplay_transfer_dialog.dart';
+
+import '../../view/widgets/goodisplay_transfer_dialog.dart';
+import '../image_processing/image_processing.dart';
+import 'display_device.dart';
+import 'driver/waveform.dart';
 
 const List<ImageProcessingMethod> _bwryProcessingMethods = [
   ImageProcessing.bwryFloydSteinbergDither,
