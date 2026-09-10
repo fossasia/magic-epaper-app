@@ -5,6 +5,7 @@ import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/utils/epd/driver/driver.dart';
 import 'package:magicepaperapp/utils/epd/driver/uc8253.dart';
 import 'package:magicepaperapp/utils/image_processing/image_processing.dart';
+import 'brand.dart';
 import 'epd.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
