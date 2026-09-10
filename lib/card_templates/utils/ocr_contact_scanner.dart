@@ -365,94 +365,92 @@ class _OcrReviewSheetState extends State<_OcrReviewSheet> {
   @override
   Widget build(BuildContext context) {
     final keys = widget.controllers.keys.toList();
-    return DraggableScrollableSheet(
-      expand: false,
-      initialChildSize: 0.6,
-      minChildSize: 0.4,
-      maxChildSize: 0.92,
-      builder: (_, scrollCtrl) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: Column(
-          children: [
-            const SizedBox(height: 12),
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: grey300,
-                borderRadius: BorderRadius.circular(2),
-              ),
+    final screenHeight = MediaQuery.of(context).size.height;
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: screenHeight * 0.85 - keyboardHeight,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 12),
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: grey300,
+              borderRadius: BorderRadius.circular(2),
             ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  const Icon(Icons.document_scanner_outlined,
-                      color: colorAccent, size: 20),
-                  const SizedBox(width: 8),
-                  Text(
-                    widget.l10n.ocrScannedDetails,
-                    style: const TextStyle(
-                      fontSize: Dimens.fontSizeXl,
-                      fontWeight: FontWeight.bold,
-                      color: colorBlack,
-                    ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                const Icon(Icons.document_scanner_outlined,
+                    color: colorAccent, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  widget.l10n.ocrScannedDetails,
+                  style: const TextStyle(
+                    fontSize: Dimens.fontSizeXl,
+                    fontWeight: FontWeight.bold,
+                    color: colorBlack,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const SizedBox(height: 4),
-            Padding(
+          ),
+          const SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              widget.l10n.ocrReviewHint,
+              style: TextStyle(fontSize: Dimens.fontSizeS, color: grey600),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Flexible(
+            child: ListView.separated(
+              shrinkWrap: true,
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                widget.l10n.ocrReviewHint,
-                style: TextStyle(fontSize: Dimens.fontSizeS, color: grey600),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Expanded(
-              child: ListView.separated(
-                controller: scrollCtrl,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: keys.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 12),
-                itemBuilder: (_, i) {
-                  final key = keys[i];
-                  final label = widget.labels[key] ?? key;
-                  final selected = _selected[key] ?? true;
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Checkbox(
-                        value: selected,
-                        activeColor: colorAccent,
-                        onChanged: (v) =>
-                            setState(() => _selected[key] = v ?? false),
-                      ),
-                      Expanded(
-                        child: TextField(
-                          controller: widget.controllers[key],
-                          enabled: selected,
-                          decoration: InputDecoration(
-                            labelText: label,
-                            labelStyle: TextStyle(
-                              color: selected ? colorAccent : grey400,
-                              fontSize: Dimens.fontSizeM,
-                            ),
-                            isDense: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(color: grey300),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(color: colorAccent),
+              itemCount: keys.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              itemBuilder: (_, i) {
+                final key = keys[i];
+                final label = widget.labels[key] ?? key;
+                final selected = _selected[key] ?? true;
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Checkbox(
+                      value: selected,
+                      activeColor: colorAccent,
+                      onChanged: (v) =>
+                          setState(() => _selected[key] = v ?? false),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: widget.controllers[key],
+                        enabled: selected,
+                        decoration: InputDecoration(
+                          labelText: label,
+                          labelStyle: TextStyle(
+                            color: selected ? colorAccent : grey400,
+                            fontSize: Dimens.fontSizeM,
+                          ),
+                          isDense: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: grey300),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(color: colorAccent),
                             ),
                           ),
                         ),
@@ -497,7 +495,6 @@ class _OcrReviewSheetState extends State<_OcrReviewSheet> {
             ),
           ],
         ),
-      ),
     );
   }
 }
