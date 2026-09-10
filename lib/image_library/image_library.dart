@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
+import 'package:magicepaperapp/image_library/models/saved_image_model.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/image_library/services/image_operations_service.dart';
 import 'package:magicepaperapp/image_library/widgets/app_bar_widget.dart';
@@ -17,8 +17,8 @@ import 'package:magicepaperapp/card_templates/contact_card_form.dart';
 import 'package:magicepaperapp/card_templates/contact_card_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
-import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
-import 'package:magicepaperapp/native_canvas/model/canvas_element.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_document.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_element.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/provider/image_loader.dart';
@@ -26,7 +26,7 @@ import 'package:magicepaperapp/card_templates/weather_form.dart';
 import 'package:magicepaperapp/card_templates/weather_template_result.dart';
 import 'package:magicepaperapp/card_templates/restaurant_menu_form.dart';
 import 'package:magicepaperapp/card_templates/menu_template_result.dart';
-import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/utils/epd/display_device.dart';
 import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:provider/provider.dart';
 

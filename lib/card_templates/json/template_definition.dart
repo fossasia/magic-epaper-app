@@ -1,4 +1,4 @@
-import 'package:magicepaperapp/util/template_util.dart';
+import 'package:magicepaperapp/utils/template_util.dart';
 
 /// The type of a template element. Mirrors [LayerKind] but is the
 /// serialisable, JSON-facing representation of a card-template field.

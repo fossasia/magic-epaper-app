@@ -6,12 +6,12 @@ import 'package:magicepaperapp/card_templates/employee_id_model.dart';
 import 'package:magicepaperapp/card_templates/entry_pass_tag_model.dart';
 import 'package:magicepaperapp/card_templates/event_badge_model.dart';
 import 'package:magicepaperapp/card_templates/price_tag_model.dart';
-import 'package:magicepaperapp/card_templates/util/responsive_layout_util.dart';
+import 'package:magicepaperapp/card_templates/utils/responsive_layout_util.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
-import 'package:magicepaperapp/util/template_util.dart';
+import 'package:magicepaperapp/utils/template_util.dart';
 
 AppLocalizations get _l10n => getIt.get<AppLocalizations>();
 

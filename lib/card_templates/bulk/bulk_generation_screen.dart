@@ -5,20 +5,20 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image/image.dart' as img;
-import 'package:magicepaperapp/card_templates/bulk/bulk_result.dart';
+import 'package:magicepaperapp/card_templates/bulk/generated_badge.dart';
 import 'package:magicepaperapp/card_templates/bulk/bulk_results_screen.dart';
 import 'package:magicepaperapp/card_templates/bulk/bulk_template.dart';
-import 'package:magicepaperapp/card_templates/bulk/photo_source.dart';
+import 'package:magicepaperapp/card_templates/bulk/photo_resolver.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
-import 'package:magicepaperapp/native_canvas/model/canvas_element.dart';
-import 'package:magicepaperapp/native_canvas/model/card_layout.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_document.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_element.dart';
+import 'package:magicepaperapp/native_canvas/models/card_layout.dart';
 import 'package:magicepaperapp/native_canvas/widgets/badge_canvas_view.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
-import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/utils/epd/display_device.dart';
 
 class BulkGenerationScreen extends StatefulWidget {
   const BulkGenerationScreen({

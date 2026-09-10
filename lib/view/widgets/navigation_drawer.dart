@@ -4,11 +4,11 @@ import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/developer_options_provider.dart';
-import 'package:magicepaperapp/util/app_logger.dart';
-import 'package:magicepaperapp/util/epd/configurable_editor.dart';
-import 'package:magicepaperapp/util/url_util.dart';
+import 'package:magicepaperapp/utils/app_logger.dart';
+import 'package:magicepaperapp/utils/epd/configurable_editor.dart';
+import 'package:magicepaperapp/utils/url_util.dart';
 import 'package:magicepaperapp/view/image_editor.dart';
-import 'package:magicepaperapp/view/widget/configurable_epd_dialog.dart';
+import 'package:magicepaperapp/view/widgets/configurable_epd_dialog.dart';
 import 'package:provider/provider.dart';
 
 class AppDrawer extends StatefulWidget {

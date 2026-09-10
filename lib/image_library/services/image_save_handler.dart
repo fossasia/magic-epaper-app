@@ -5,7 +5,7 @@ import 'package:magicepaperapp/image_library/image_library.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/image_library/services/image_operations_service.dart';
 import 'package:magicepaperapp/image_library/widgets/dialogs/image_save_dialog.dart';
-import '../../util/image_processing/image_processing.dart';
+import '../../utils/image_processing/image_processing.dart';
 
 class ImageSaveHandler {
   final BuildContext context;

@@ -1,10 +1,10 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
+import 'package:magicepaperapp/image_library/models/saved_image_model.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import '../../util/app_logger.dart';
+import '../../utils/app_logger.dart';
 
 class ImageLibraryProvider extends ChangeNotifier {
   List<SavedImage> _savedImages = [];

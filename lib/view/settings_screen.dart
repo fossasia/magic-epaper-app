@@ -5,8 +5,8 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/locale_provider.dart';
 import 'package:magicepaperapp/provider/developer_options_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:magicepaperapp/util/orientation_util.dart';
-import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/utils/orientation_util.dart';
+import 'package:magicepaperapp/view/widgets/common_scaffold_widget.dart';
 
 import '../card_templates/card_template_selection_view.dart';
 

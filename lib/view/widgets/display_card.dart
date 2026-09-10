@@ -3,11 +3,11 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
-import 'package:magicepaperapp/util/color_util.dart';
-import 'package:magicepaperapp/util/epd/display_device.dart';
-import 'package:magicepaperapp/util/epd/epd.dart';
-import 'package:magicepaperapp/util/epd/waveshare_nfc_display.dart';
-import 'package:magicepaperapp/view/widget/color_dot.dart';
+import 'package:magicepaperapp/utils/color_util.dart';
+import 'package:magicepaperapp/utils/epd/display_device.dart';
+import 'package:magicepaperapp/utils/epd/epd.dart';
+import 'package:magicepaperapp/utils/epd/waveshare_nfc_display.dart';
+import 'package:magicepaperapp/view/widgets/color_dot.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 

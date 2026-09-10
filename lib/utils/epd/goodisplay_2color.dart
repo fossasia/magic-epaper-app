@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/constants/asset_paths.dart';
-import 'package:magicepaperapp/util/epd/display_device.dart';
-import 'package:magicepaperapp/util/epd/driver/waveform.dart';
-import 'package:magicepaperapp/util/image_processing/image_processing.dart';
-import 'package:magicepaperapp/view/widget/goodisplay_transfer_dialog.dart';
+import 'package:magicepaperapp/utils/epd/display_device.dart';
+import 'package:magicepaperapp/utils/epd/driver/waveform.dart';
+import 'package:magicepaperapp/utils/image_processing/image_processing.dart';
+import 'package:magicepaperapp/view/widgets/goodisplay_transfer_dialog.dart';
 
 /// Metodi di dithering comuni per display a 2 Colori (Black & White)
 const List<ImageProcessingMethod> _bwProcessingMethods = [
