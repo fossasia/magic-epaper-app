@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/card_templates/entry_pass_tag_model.dart';
-import 'package:magicepaperapp/card_templates/utils/template_card_preview.dart';
+import 'package:magicepaperapp/card_templates/template_card_preview.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
