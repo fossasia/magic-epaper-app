@@ -118,7 +118,7 @@ class ContactCardBadge extends StatelessWidget {
     final subFs = subH * 0.82;
     final contactFs = perContactH * 0.8;
 
-    final photoD = hasPhoto ? identH * 0.9 : 0.0;
+    final photoD = hasPhoto ? identH * 0.62 : 0.0;
     final photoGap = hasPhoto ? cw * 0.03 : 0.0;
     final identTextW = leftW - photoD - photoGap;
 
@@ -154,45 +154,77 @@ class ContactCardBadge extends StatelessWidget {
         SizedBox(
           width: identTextW,
           height: subH,
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  for (var i = 0; i < subEntries.length; i++) ...[
-                    if (i > 0)
-                      Text(
-                        '  •  ',
-                        style: TextStyle(
-                          color: colorBlack,
-                          fontSize: subFs,
-                          height: 1.0,
-                          fontWeight: FontWeight.w500,
+          child: hasPhoto
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (final entry in subEntries)
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: _field(
+                              context,
+                              entry.key,
+                              Text(
+                                entry.value,
+                                maxLines: 1,
+                                softWrap: false,
+                                style: TextStyle(
+                                  color: colorBlack,
+                                  fontSize: subFs,
+                                  height: 1.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    _field(
-                      context,
-                      subEntries[i].key,
-                      Text(
-                        subEntries[i].value,
-                        maxLines: 1,
-                        softWrap: false,
-                        style: TextStyle(
-                          color: colorBlack,
-                          fontSize: subFs,
-                          height: 1.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
                   ],
-                ],
-              ),
-            ),
-          ),
+                )
+              : Align(
+                  alignment: Alignment.centerLeft,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (var i = 0; i < subEntries.length; i++) ...[
+                          if (i > 0)
+                            Text(
+                              '  •  ',
+                              style: TextStyle(
+                                color: colorBlack,
+                                fontSize: subFs,
+                                height: 1.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          _field(
+                            context,
+                            subEntries[i].key,
+                            Text(
+                              subEntries[i].value,
+                              maxLines: 1,
+                              softWrap: false,
+                              style: TextStyle(
+                                color: colorBlack,
+                                fontSize: subFs,
+                                height: 1.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
         ),
     ];
 
