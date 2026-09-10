@@ -17,6 +17,8 @@ import 'package:magicepaperapp/card_templates/bulk/bulk_csv_import_screen.dart';
 import 'package:magicepaperapp/card_templates/bulk/bulk_template.dart';
 import 'package:magicepaperapp/util/epd/display_device.dart';
 import 'package:magicepaperapp/card_templates/util/barcode_scanner_util.dart';
+import 'package:magicepaperapp/card_templates/util/ocr_contact_scanner.dart';
+import 'package:magicepaperapp/card_templates/util/ocr_scan_button.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
@@ -146,6 +148,19 @@ class _PriceTagFormState extends State<PriceTagForm> {
     });
   }
 
+  Future<void> _scanToFill() async {
+    final data = await scanCardForPriceTag(context);
+    if (data == null || !mounted) return;
+    void fill(TextEditingController c, String? v) {
+      if (v != null && v.isNotEmpty) c.text = v;
+    }
+
+    fill(_productNameController, data['productName']);
+    fill(_productDescriptionController, data['productDescription']);
+    fill(_priceController, data['price']);
+    fill(_barcodeController, data['barcode']);
+  }
+
   Future<void> _scanBarcode() async {
     final code = await scanCode(context);
     if (!mounted) return;
@@ -270,6 +285,12 @@ class _PriceTagFormState extends State<PriceTagForm> {
                           style: TextStyle(fontSize: 13, color: grey600),
                         ),
                         const SizedBox(height: Dimens.spacingXl),
+                        if (isOcrSupported) ...[
+                          OcrScanButton(
+                            onPressed: _isGenerating ? null : _scanToFill,
+                          ),
+                          const SizedBox(height: Dimens.spacingL),
+                        ],
                         _buildProductImageSection(),
                         const SizedBox(height: Dimens.spacingXl),
                         _buildTextFormField(

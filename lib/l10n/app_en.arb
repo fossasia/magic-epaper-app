@@ -1303,5 +1303,11 @@
   "faqQ10": "My badge is not responding when I tap my phone. What should I try?",
   "faqA10": "Make sure NFC is turned on in your phone settings. Hold the back of your phone flat against the badge and keep it still. Metal phone cases can block NFC so try removing the case. If it keeps failing, turn off battery saver mode as it can sometimes stop NFC from working.",
   "scan": "Scan",
-  "ocrCouldNotReadImage": "Could not read text from image."
+  "ocrCouldNotReadImage": "Could not read text from image.",
+  "ocrScanToFill": "Scan to fill fields",
+  "ocrScannedDetails": "Scanned Details",
+  "ocrReviewHint": "Review and deselect any fields you don't want to fill.",
+  "ocrFillFields": "Fill Fields",
+  "ocrNoDetails": "No details detected.",
+  "ocrQrLink": "QR / Link"
 }

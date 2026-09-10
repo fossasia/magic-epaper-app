@@ -13,6 +13,8 @@ import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:magicepaperapp/util/page_route_util.dart';
 import 'package:magicepaperapp/card_templates/util/barcode_scanner_util.dart';
+import 'package:magicepaperapp/card_templates/util/ocr_contact_scanner.dart';
+import 'package:magicepaperapp/card_templates/util/ocr_scan_button.dart';
 import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
@@ -142,6 +144,21 @@ class _ContactCardFormState extends State<ContactCardForm> {
       }
       _fieldFocusNodes[elementId]?.requestFocus();
     });
+  }
+
+  Future<void> _scanToFill() async {
+    final data = await scanCardForContact(context);
+    if (data == null || !mounted) return;
+    void fill(TextEditingController c, String? v) {
+      if (v != null && v.isNotEmpty) c.text = v;
+    }
+
+    fill(_fullNameController, data['fullName']);
+    fill(_jobTitleController, data['jobTitle']);
+    fill(_companyController, data['company']);
+    fill(_phoneController, data['phone']);
+    fill(_emailController, data['email']);
+    fill(_linkController, data['link']);
   }
 
   Future<void> _scanLink() async {
@@ -287,6 +304,12 @@ class _ContactCardFormState extends State<ContactCardForm> {
                           style: TextStyle(fontSize: 13, color: grey600),
                         ),
                         const SizedBox(height: Dimens.spacingXl),
+                        if (isOcrSupported) ...[
+                          OcrScanButton(
+                            onPressed: _isGenerating ? null : _scanToFill,
+                          ),
+                          const SizedBox(height: Dimens.spacingL),
+                        ],
                         _buildPhotoSection(),
                         const SizedBox(height: Dimens.spacingXl),
                         _buildTextFormField(
