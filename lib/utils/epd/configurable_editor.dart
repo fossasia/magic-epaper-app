@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
-import 'package:magicepaperapp/util/epd/driver/driver.dart';
-import 'package:magicepaperapp/util/epd/driver/uc8253.dart';
-import 'package:magicepaperapp/util/image_processing/image_processing.dart';
+import 'package:magicepaperapp/utils/epd/driver/driver.dart';
+import 'package:magicepaperapp/utils/epd/driver/uc8253.dart';
+import 'package:magicepaperapp/utils/image_processing/image_processing.dart';
+import 'brand.dart';
 import 'epd.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
@@ -159,4 +160,8 @@ class ConfigurableEpd extends Epd {
           ImageProcessing.bwryBurkesDither, appLocalizations.burkes));
     }
   }
+
+  @override
+  // TODO: implement brand
+  Brand get brand => throw UnimplementedError();
 }

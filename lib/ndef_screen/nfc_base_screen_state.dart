@@ -6,7 +6,7 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/ndef_screen/controller/nfc_controller.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 
-import '../../util/app_logger.dart';
+import '../../utils/app_logger.dart';
 
 abstract class NFCBaseScreenState<T extends StatefulWidget> extends State<T>
     with WidgetsBindingObserver {

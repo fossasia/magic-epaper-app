@@ -1,4 +1,4 @@
-import 'package:magicepaperapp/view/widget/navigation_drawer.dart';
+import 'package:magicepaperapp/view/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 

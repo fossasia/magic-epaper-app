@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
-import 'package:magicepaperapp/util/image_crop_screen.dart';
+import 'package:magicepaperapp/view/image_crop_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
@@ -19,7 +19,11 @@ class ImageLoader extends ChangeNotifier {
     required int height,
   }) async {
     final ImagePicker picker = ImagePicker();
-    final XFile? file = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? file = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 3500,
+      maxHeight: 3500,
+    );
     if (file == null) return false;
 
     final bytes = await file.readAsBytes();

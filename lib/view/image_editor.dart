@@ -7,29 +7,29 @@ import 'package:flutter/services.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/image_library/services/image_save_handler.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
-import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_document.dart';
 import 'package:magicepaperapp/card_templates/card_template_selection_view.dart';
 import 'package:magicepaperapp/card_templates/weather_template_result.dart';
 import 'package:magicepaperapp/card_templates/menu_template_result.dart';
 import 'package:magicepaperapp/card_templates/card_template_result.dart';
-import 'package:magicepaperapp/util/color_util.dart';
-import 'package:magicepaperapp/util/epd/driver/waveform.dart';
-import 'package:magicepaperapp/util/xbm_encoder.dart';
+import 'package:magicepaperapp/utils/color_util.dart';
+import 'package:magicepaperapp/utils/epd/driver/waveform.dart';
+import 'package:magicepaperapp/utils/xbm_encoder.dart';
 import 'package:magicepaperapp/view/text_fit_editor.dart';
-import 'package:magicepaperapp/view/widget/image_list.dart';
-import 'package:magicepaperapp/util/orientation_util.dart';
-import 'package:magicepaperapp/util/page_route_util.dart';
+import 'package:magicepaperapp/view/widgets/image_list.dart';
+import 'package:magicepaperapp/utils/orientation_util.dart';
+import 'package:magicepaperapp/utils/page_route_util.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
-import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/utils/epd/display_device.dart';
 import 'package:magicepaperapp/provider/image_loader.dart';
-import 'package:magicepaperapp/util/epd/epd.dart';
+import 'package:magicepaperapp/utils/epd/epd.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import '../src/rust/api/simple.dart' as rust_api;
-import '../util/app_logger.dart';
+import '../utils/app_logger.dart';
 
 class ImageEditor extends StatefulWidget {
   final DisplayDevice device;
@@ -229,7 +229,6 @@ class _ImageEditorState extends State<ImageEditor> {
     if (_processedSourceImage == sourceImage) {
       return;
     }
-    _pristineImage ??= img.Image.from(sourceImage);
     _processImagesAsync(sourceImage);
   }
 
@@ -246,8 +245,19 @@ class _ImageEditorState extends State<ImageEditor> {
       flipVertical = false;
     });
 
+    await Future.delayed(Duration.zero);
+    if (!mounted || _processedSourceImage != sourceImage) {
+      if (mounted) setState(() => _isProcessingImages = false);
+      return;
+    }
+
+    final img.Image scaledSource = img.copyResize(
+      sourceImage,
+      width: widget.device.width,
+      height: widget.device.height,
+    );
     final Uint8List sourcePngBytes =
-        Uint8List.fromList(img.encodePng(sourceImage));
+        Uint8List.fromList(img.encodePng(scaledSource));
     final filtersToRun = widget.device.processingMethods;
 
     try {
@@ -257,7 +267,7 @@ class _ImageEditorState extends State<ImageEditor> {
         Uint8List bytesForRust = sourcePngBytes;
 
         if (filtersToRun[i].useDartHalftone) {
-          final tempImg = img.Image.from(sourceImage);
+          final tempImg = img.Image.from(scaledSource);
           if (filtersToRun[i].colorMode == rust_api.ColorMode.bw) {
             img.grayscale(tempImg);
           }

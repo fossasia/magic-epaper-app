@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/theme/colors.dart';
-import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/view/widgets/common_scaffold_widget.dart';
 
 class _FaqItem {
   final String question;

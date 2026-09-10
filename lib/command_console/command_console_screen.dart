@@ -10,7 +10,7 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_status_card.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/theme/colors.dart';
-import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/view/widgets/common_scaffold_widget.dart';
 
 class CommandConsoleScreen extends StatefulWidget {
   const CommandConsoleScreen({super.key});

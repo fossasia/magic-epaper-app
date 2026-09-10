@@ -6,7 +6,7 @@ import 'package:magicepaperapp/ndef_screen/nfc_base_screen_state.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_disabled_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_status_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_read_card.dart';
-import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/view/widgets/common_scaffold_widget.dart';
 
 class NFCReadScreen extends StatefulWidget {
   const NFCReadScreen({super.key});

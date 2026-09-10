@@ -2,8 +2,8 @@ import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../model/canvas_controller.dart';
-import '../model/canvas_element.dart';
+import '../models/canvas_controller.dart';
+import '../models/canvas_element.dart';
 import 'package:magicepaperapp/theme/colors.dart';
 
 class EditableElement extends StatefulWidget {

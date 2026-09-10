@@ -11,9 +11,9 @@ import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/native_canvas/native_canvas_editor.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/theme/colors.dart';
-import 'package:magicepaperapp/util/page_route_util.dart';
-import 'package:magicepaperapp/util/template_util.dart';
-import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/utils/page_route_util.dart';
+import 'package:magicepaperapp/utils/template_util.dart';
+import 'package:magicepaperapp/view/widgets/common_scaffold_widget.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
