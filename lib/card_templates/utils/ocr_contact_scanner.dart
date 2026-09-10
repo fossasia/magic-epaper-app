@@ -325,10 +325,13 @@ Future<Map<String, String>?> _showReviewSheet(
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
-    builder: (ctx) => _OcrReviewSheet(
-      controllers: controllers,
-      labels: labels,
-      l10n: l10n,
+    builder: (ctx) => Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(ctx).bottom),
+      child: _OcrReviewSheet(
+        controllers: controllers,
+        labels: labels,
+        l10n: l10n,
+      ),
     ),
   );
 
@@ -367,11 +370,9 @@ class _OcrReviewSheetState extends State<_OcrReviewSheet> {
   @override
   Widget build(BuildContext context) {
     final keys = widget.controllers.keys.toList();
-    final screenHeight = MediaQuery.of(context).size.height;
-    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     return ConstrainedBox(
       constraints: BoxConstraints(
-        maxHeight: screenHeight * 0.85 - keyboardHeight,
+        maxHeight: MediaQuery.of(context).size.height * 0.75,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
