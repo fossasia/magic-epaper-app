@@ -332,9 +332,11 @@ Future<Map<String, String>?> _showReviewSheet(
     ),
   );
 
-  for (final c in controllers.values) {
-    c.dispose();
-  }
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    for (final c in controllers.values) {
+      c.dispose();
+    }
+  });
   return result;
 }
 
