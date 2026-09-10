@@ -8,11 +8,11 @@ import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
-import 'package:magicepaperapp/util/image_crop_screen.dart';
-import 'package:magicepaperapp/native_canvas/model/canvas_controller.dart';
-import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
-import 'package:magicepaperapp/native_canvas/model/canvas_element.dart';
-import 'package:magicepaperapp/native_canvas/model/stroke.dart';
+import 'package:magicepaperapp/utils/image_crop_screen.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_controller.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_document.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_element.dart';
+import 'package:magicepaperapp/native_canvas/models/stroke.dart';
 import 'package:magicepaperapp/native_canvas/widgets/badge_color_picker.dart';
 import 'package:magicepaperapp/native_canvas/widgets/editable_element.dart';
 import 'package:magicepaperapp/native_canvas/widgets/stroke_painter.dart';
@@ -23,9 +23,9 @@ import 'package:magicepaperapp/native_canvas/sticker_vault/sticker_vault_sheet.d
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/util/template_util.dart';
-import 'package:magicepaperapp/util/image_source_picker.dart';
-import 'package:magicepaperapp/card_templates/util/ocr_contact_scanner.dart';
+import 'package:magicepaperapp/utils/template_util.dart';
+import 'package:magicepaperapp/utils/image_source_picker.dart';
+import 'package:magicepaperapp/card_templates/utils/ocr_contact_scanner.dart';
 
 class NativeCanvasEditor extends StatefulWidget {
   const NativeCanvasEditor({

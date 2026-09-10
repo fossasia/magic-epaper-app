@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:magicepaperapp/card_templates/util/ocr_recognizer.dart';
+import 'package:magicepaperapp/card_templates/utils/ocr_recognizer.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/util/app_logger.dart' show AppLogger;
-import 'package:magicepaperapp/util/image_source_picker.dart';
+import 'package:magicepaperapp/utils/app_logger.dart' show AppLogger;
+import 'package:magicepaperapp/utils/image_source_picker.dart';
 
 bool get isOcrSupported =>
     !kIsWeb &&

@@ -6,7 +6,7 @@ import 'package:magicepaperapp/card_templates/price_tag_model.dart';
 import 'package:magicepaperapp/card_templates/template_layer_builders.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
-import 'package:magicepaperapp/util/template_util.dart';
+import 'package:magicepaperapp/utils/template_util.dart';
 
 AppLocalizations get _l10n => getIt.get<AppLocalizations>();
 

@@ -4,18 +4,18 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/services/image_filter_helper.dart';
-import 'package:magicepaperapp/image_library/model/image_properties.dart';
-import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
+import 'package:magicepaperapp/image_library/models/image_properties.dart';
+import 'package:magicepaperapp/image_library/models/saved_image_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/image_library/utils/epd_utils.dart';
-import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/utils/epd/display_device.dart';
 import 'package:image/image.dart' as img;
 import 'dart:typed_data';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
-import '../../util/app_logger.dart';
-import '../../util/image_processing/image_processing.dart';
+import '../../utils/app_logger.dart';
+import '../../utils/image_processing/image_processing.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 

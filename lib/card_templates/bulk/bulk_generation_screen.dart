@@ -12,13 +12,13 @@ import 'package:magicepaperapp/card_templates/bulk/photo_source.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/native_canvas/model/canvas_document.dart';
-import 'package:magicepaperapp/native_canvas/model/canvas_element.dart';
-import 'package:magicepaperapp/native_canvas/model/card_layout.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_document.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_element.dart';
+import 'package:magicepaperapp/native_canvas/models/card_layout.dart';
 import 'package:magicepaperapp/native_canvas/widgets/badge_canvas_view.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
-import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/utils/epd/display_device.dart';
 
 class BulkGenerationScreen extends StatefulWidget {
   const BulkGenerationScreen({
