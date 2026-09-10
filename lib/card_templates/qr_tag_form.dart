@@ -5,7 +5,7 @@ import 'package:magicepaperapp/card_templates/card_template_result.dart';
 import 'package:magicepaperapp/card_templates/qr_tag_badge.dart';
 import 'package:magicepaperapp/card_templates/qr_tag_card_widget.dart';
 import 'package:magicepaperapp/card_templates/qr_tag_model.dart';
-import 'package:magicepaperapp/card_templates/utils/barcode_scanner_util.dart';
+import 'package:magicepaperapp/card_templates/barcode_scanner_util.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';

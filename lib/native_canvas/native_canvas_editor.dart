@@ -8,7 +8,7 @@ import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
-import 'package:magicepaperapp/utils/image_crop_screen.dart';
+import 'package:magicepaperapp/view/image_crop_screen.dart';
 import 'package:magicepaperapp/native_canvas/models/canvas_controller.dart';
 import 'package:magicepaperapp/native_canvas/models/canvas_document.dart';
 import 'package:magicepaperapp/native_canvas/models/canvas_element.dart';
