@@ -14,6 +14,7 @@ class EpdUtils {
     () => Waveshare2in9(),
     () => Waveshare2in9b(),
     () => Waveshare2in13(),
+    () => Waveshare2in13g(),
     () => Waveshare2in7(),
     () => Waveshare4in2(),
     () => Waveshare7in5(),
@@ -46,6 +47,9 @@ class EpdUtils {
       case '17745':
       case 'waveshare-2.13':
         return Waveshare2in13();
+      case '28107':
+      case 'waveshare-2.13g':
+        return Waveshare2in13g();
       case '18136':
       case 'waveshare-2.7':
         return Waveshare2in7();
