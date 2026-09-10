@@ -31,6 +31,30 @@ class ContactCardBadge extends StatelessWidget {
     );
   }
 
+  static double _fitFs(
+      String text, double availW, double maxFs, FontWeight fw) {
+    if (text.isEmpty || availW <= 0) return maxFs;
+    var lo = 2.0;
+    var hi = maxFs;
+    for (var i = 0; i < 12; i++) {
+      final mid = (lo + hi) / 2;
+      final tp = TextPainter(
+        text: TextSpan(
+          text: text,
+          style: TextStyle(fontSize: mid, fontWeight: fw, height: 1.0),
+        ),
+        maxLines: 1,
+        textDirection: TextDirection.ltr,
+      )..layout(maxWidth: double.infinity);
+      if (tp.width <= availW) {
+        lo = mid;
+      } else {
+        hi = mid;
+      }
+    }
+    return lo;
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -99,30 +123,148 @@ class ContactCardBadge extends StatelessWidget {
         MapEntry('link', _prettyLink(data.link.trim())),
     ];
 
-    final nameH = showName ? ch * 0.25 : 0.0;
-    final subH = hasSub ? ch * 0.28 : 0.0;
-    var identH = nameH + subH;
-    if (hasPhoto && identH < ch * 0.4) identH = ch * 0.4;
-    final hasIdentity = identH > 0;
+    final photoGap = hasPhoto ? cw * 0.02 : 0.0;
 
+    double nameFs = 0, nameH = 0, subH = 0, subFs = 0;
+    bool subInline = true;
+
+    const subIndentFrac = 0.04;
+
+    void computeSizes(double textW) {
+      nameFs = 0; nameH = 0; subH = 0; subFs = 0;
+      if (showName) {
+        nameFs = _fitFs(nameText, textW, ch * 0.33, FontWeight.w800);
+        nameH = nameFs * 1.22;
+      }
+      if (hasSub) {
+        final subTextW = math.max(1.0, textW * (1 - subIndentFrac));
+        if (subEntries.length == 1) {
+          subFs = _fitFs(subEntries.first.value, subTextW, ch * 0.45, FontWeight.w600);
+          subH = subFs * 1.32;
+          subInline = true;
+        } else {
+          final inlineText = subEntries.map((e) => e.value).join('  •  ');
+          final inlineFs = _fitFs(inlineText, subTextW, ch * 0.45, FontWeight.w600);
+          if (inlineFs >= ch * 0.065) {
+            subFs = inlineFs;
+            subH = subFs * 1.32;
+            subInline = true;
+          } else {
+            final widest = subEntries.map((e) => e.value)
+                .reduce((a, b) => a.length > b.length ? a : b);
+            subFs = _fitFs(widest, subTextW, ch * 0.40, FontWeight.w600);
+            subH = subFs * 1.28 * subEntries.length;
+            subInline = false;
+          }
+        }
+      }
+    }
+
+    computeSizes(hasPhoto ? leftW * 0.63 : leftW);
+    double identH = math.max(nameH + subH, hasPhoto ? ch * 0.40 : 0.0);
+
+    if (hasPhoto) {
+      final photoD1 = identH * 0.72;
+      final textW2 = math.max(1.0, leftW - photoD1 - photoGap);
+      computeSizes(textW2);
+      identH = math.max(nameH + subH, ch * 0.40);
+    }
+
+    final hasIdentity = identH > 0;
     final divTh = math.max(1.0, ch * 0.012);
     final showDivider = hasIdentity && contactEntries.isNotEmpty;
-    final divBlockH = showDivider ? ch * 0.07 : 0.0;
+    final divBlockH = showDivider ? ch * 0.05 : 0.0;
 
     final contactsH = ch - identH - divBlockH;
     final perContactH = contactEntries.isEmpty
         ? 0.0
         : math.min(contactsH / contactEntries.length, ch * 0.32);
 
-    final nameFs = nameH * 1.0;
-    final subFs = subH * 1.0;
-    final perSubH = subEntries.isEmpty ? 0.0 : subH / subEntries.length;
-    final perSubFs = perSubH * 0.92;
-    final contactFs = perContactH * 1.0;
+    double contactFs = perContactH;
+    if (contactEntries.isNotEmpty) {
+      final widest = contactEntries
+          .map((e) => e.value)
+          .reduce((a, b) => a.length > b.length ? a : b);
+      contactFs = _fitFs(widest, leftW, perContactH * 1.08, FontWeight.w500);
+    }
 
-    final photoD = hasPhoto ? identH * 0.80 : 0.0;
-    final photoGap = hasPhoto ? cw * 0.03 : 0.0;
+    final photoD = hasPhoto ? identH * 0.72 : 0.0;
     final identTextW = leftW - photoD - photoGap;
+    final subIndent = identTextW * subIndentFrac;
+    final textTopPad = ((identH - nameH - subH) / 2).clamp(0.0, double.infinity);
+
+    Widget buildSubtitle() {
+      if (subInline) {
+        return Padding(
+          padding: EdgeInsets.only(left: subIndent),
+          child: SizedBox(
+          width: identTextW - subIndent,
+          height: subH,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (var i = 0; i < subEntries.length; i++) ...[
+                  if (i > 0)
+                    Text('  •  ',
+                        style: TextStyle(
+                            fontSize: subFs,
+                            fontWeight: FontWeight.w600,
+                            height: 1.0,
+                            color: colorBlack)),
+                  _field(
+                    context,
+                    subEntries[i].key,
+                    Text(subEntries[i].value,
+                        maxLines: 1,
+                        softWrap: false,
+                        overflow: TextOverflow.clip,
+                        style: TextStyle(
+                            fontSize: subFs,
+                            fontWeight: FontWeight.w600,
+                            height: 1.0,
+                            color: colorBlack)),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          ),
+        );
+      } else {
+        return Padding(
+          padding: EdgeInsets.only(left: subIndent),
+          child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final e in subEntries)
+              SizedBox(
+                width: identTextW - subIndent,
+                height: subFs * 1.28,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: _field(
+                    context,
+                    e.key,
+                    Text(e.value,
+                        maxLines: 1,
+                        softWrap: false,
+                        overflow: TextOverflow.clip,
+                        style: TextStyle(
+                            fontSize: subFs,
+                            fontWeight: FontWeight.w600,
+                            height: 1.0,
+                            color: colorBlack)),
+                  ),
+                ),
+              ),
+          ],
+          ),
+        );
+      }
+    }
 
     final identityLines = <Widget>[
       if (showName)
@@ -132,13 +274,13 @@ class ContactCardBadge extends StatelessWidget {
           child: _field(
             context,
             'fullName',
-            FittedBox(
-              fit: BoxFit.scaleDown,
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 nameText,
                 maxLines: 1,
                 softWrap: false,
+                overflow: TextOverflow.clip,
                 style: TextStyle(
                   color: nameFilled
                       ? colorBlack
@@ -152,82 +294,7 @@ class ContactCardBadge extends StatelessWidget {
             ),
           ),
         ),
-      if (hasSub)
-        SizedBox(
-          width: identTextW,
-          height: subH,
-          child: hasPhoto
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (final entry in subEntries)
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
-                            child: _field(
-                              context,
-                              entry.key,
-                              Text(
-                                entry.value,
-                                maxLines: 1,
-                                softWrap: false,
-                                style: TextStyle(
-                                  color: colorBlack,
-                                  fontSize: perSubFs,
-                                  height: 1.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                )
-              : Align(
-                  alignment: Alignment.centerLeft,
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        for (var i = 0; i < subEntries.length; i++) ...[
-                          if (i > 0)
-                            Text(
-                              '  •  ',
-                              style: TextStyle(
-                                color: colorBlack,
-                                fontSize: subFs,
-                                height: 1.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          _field(
-                            context,
-                            subEntries[i].key,
-                            Text(
-                              subEntries[i].value,
-                              maxLines: 1,
-                              softWrap: false,
-                              style: TextStyle(
-                                color: colorBlack,
-                                fontSize: subFs,
-                                height: 1.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                ),
-        ),
+      if (hasSub) buildSubtitle(),
     ];
 
     return Column(
@@ -261,10 +328,13 @@ class ContactCardBadge extends StatelessWidget {
                   SizedBox(width: photoGap),
                 ],
                 Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: identityLines,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: textTopPad),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: identityLines,
+                    ),
                   ),
                 ),
               ],
@@ -273,7 +343,7 @@ class ContactCardBadge extends StatelessWidget {
         if (showDivider) ...[
           SizedBox(height: divBlockH * 0.35),
           Container(width: leftW, height: divTh, color: colorBlack),
-          SizedBox(height: divBlockH * 0.4),
+          SizedBox(height: divBlockH * 0.40),
         ],
         for (final entry in contactEntries)
           SizedBox(
@@ -284,19 +354,16 @@ class ContactCardBadge extends StatelessWidget {
               entry.key,
               Align(
                 alignment: Alignment.centerLeft,
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    entry.value,
-                    maxLines: 1,
-                    softWrap: false,
-                    style: TextStyle(
-                      color: colorBlack,
-                      fontSize: contactFs,
-                      height: 1.0,
-                      fontWeight: FontWeight.w500,
-                    ),
+                child: Text(
+                  entry.value,
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: colorBlack,
+                    fontSize: contactFs,
+                    height: 1.0,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
@@ -307,7 +374,7 @@ class ContactCardBadge extends StatelessWidget {
   }
 
   Widget _buildRight(String qrData, double rightW, double ch) {
-    final captionH = ch * 0.1;
+    final captionH = ch * 0.12;
     final qrSide = math.min(rightW, ch - captionH - ch * 0.04);
 
     return Column(
@@ -332,14 +399,14 @@ class ContactCardBadge extends StatelessWidget {
           width: rightW,
           height: captionH,
           child: FittedBox(
-            fit: BoxFit.scaleDown,
+            fit: BoxFit.contain,
             child: Text(
               data.isLinkQr
                   ? appLocalizations.contactScanMe
                   : appLocalizations.contactScanToSave,
               style: TextStyle(
                 color: colorBlack,
-                fontSize: captionH * 0.95,
+                fontSize: captionH,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 1.2,
               ),
