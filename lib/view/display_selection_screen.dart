@@ -108,6 +108,19 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
     super.dispose();
   }
 
+  bool get _hasActiveFilters =>
+      _selectedBrands.isNotEmpty ||
+      _selectedColorFilters.isNotEmpty ||
+      _selectedSizes.isNotEmpty;
+
+  void _clearAllFilters() {
+    setState(() {
+      _selectedBrands = {};
+      _selectedColorFilters = {};
+      _selectedSizes = {};
+    });
+  }
+
   int _colorRank(DisplayDevice d) {
     if (d.colors.length <= 2) return 0;
     if (d.colors.length == 3) return 1;
@@ -491,6 +504,28 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
     );
   }
 
+  Widget _buildClearFiltersBar(AppLocalizations l) {
+    return Padding(
+      padding: const EdgeInsets.only(
+          left: Dimens.spacingMd,
+          right: Dimens.spacingMd,
+          bottom: Dimens.spacingS),
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: TextButton.icon(
+          onPressed: _clearAllFilters,
+          icon: const Icon(Icons.filter_alt_off_outlined, size: 16),
+          label: Text(l.clearAll),
+          style: TextButton.styleFrom(
+            foregroundColor: colorAccent,
+            padding: const EdgeInsets.symmetric(
+                horizontal: Dimens.spacingS, vertical: 0),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context)!;
@@ -549,6 +584,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
             child: Column(
               children: [
                 _buildFilterBar(appLocalizations),
+                if (_hasActiveFilters) _buildClearFiltersBar(appLocalizations),
                 const Divider(height: 1),
                 Expanded(
                   child: grouped.isEmpty
