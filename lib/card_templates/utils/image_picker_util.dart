@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:magicepaperapp/util/image_crop_screen.dart';
-import 'package:magicepaperapp/util/image_source_picker.dart';
+import 'package:magicepaperapp/utils/image_crop_screen.dart';
+import 'package:magicepaperapp/utils/image_source_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 final ImagePicker _picker = ImagePicker();

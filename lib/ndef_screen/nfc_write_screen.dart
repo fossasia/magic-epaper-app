@@ -9,7 +9,7 @@ import 'package:magicepaperapp/ndef_screen/models/v_card_data.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_disabled_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_status_card.dart';
 import 'package:magicepaperapp/ndef_screen/widgets/nfc_write_card.dart';
-import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/view/widgets/common_scaffold_widget.dart';
 
 class NFCWriteScreen extends StatefulWidget {
   const NFCWriteScreen({super.key});

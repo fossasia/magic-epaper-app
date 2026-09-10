@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
-import 'package:magicepaperapp/util/epd/driver/uc8253.dart';
-import 'package:magicepaperapp/util/image_processing/image_processing.dart';
-import 'brand.dart';
+import 'package:magicepaperapp/utils/epd/driver/uc8253.dart';
+import 'package:magicepaperapp/utils/image_processing/image_processing.dart';
 import 'driver/driver.dart';
 import 'epd.dart';
 

@@ -6,8 +6,8 @@ import 'package:image/image.dart' as img;
 import 'package:app_settings/app_settings.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
-import 'package:magicepaperapp/util/app_logger.dart';
-import 'package:magicepaperapp/util/nfc_settings_launcher.dart';
+import 'package:magicepaperapp/utils/app_logger.dart';
+import 'package:magicepaperapp/utils/nfc_settings_launcher.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:magicepaperapp/util/epd/configurable_editor.dart';
-import 'package:magicepaperapp/util/epd/display_device.dart';
-import 'package:magicepaperapp/util/epd/gdey037z03.dart';
-import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
-import 'package:magicepaperapp/util/epd/waveshare_displays.dart';
-import 'package:magicepaperapp/util/epd/gdeq031t10.dart';
+import 'package:magicepaperapp/utils/epd/configurable_editor.dart';
+import 'package:magicepaperapp/utils/epd/display_device.dart';
+import 'package:magicepaperapp/utils/epd/gdey037z03.dart';
+import 'package:magicepaperapp/utils/epd/gdey037z03bw.dart';
+import 'package:magicepaperapp/utils/epd/waveshare_displays.dart';
+import 'package:magicepaperapp/utils/epd/gdeq031t10.dart';
 
 class EpdUtils {
   static final List<DisplayDevice Function()> _deviceFactories = [
