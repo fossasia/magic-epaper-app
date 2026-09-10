@@ -79,7 +79,9 @@ class ImageList extends StatelessWidget {
                   ),
                 child: Image.memory(
                   processedPngs[selectedIndex],
+                  key: ValueKey(Object.hashAll([selectedIndex, processedPngs[selectedIndex].length])),
                   fit: BoxFit.contain,
+                  gaplessPlayback: true,
                 ),
               ),
             ),

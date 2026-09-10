@@ -37,7 +37,7 @@ class ContactCardBadge extends StatelessWidget {
       builder: (context, constraints) {
         final w = constraints.maxWidth;
         final h = constraints.maxHeight;
-        final pad = h * 0.06;
+        final pad = h * 0.04;
         final cw = w - pad * 2;
         final ch = h - pad * 2;
 
@@ -99,26 +99,28 @@ class ContactCardBadge extends StatelessWidget {
         MapEntry('link', _prettyLink(data.link.trim())),
     ];
 
-    final nameH = showName ? ch * 0.28 : 0.0;
-    final subH = hasSub ? ch * 0.16 : 0.0;
+    final nameH = showName ? ch * 0.25 : 0.0;
+    final subH = hasSub ? ch * 0.28 : 0.0;
     var identH = nameH + subH;
     if (hasPhoto && identH < ch * 0.4) identH = ch * 0.4;
     final hasIdentity = identH > 0;
 
     final divTh = math.max(1.0, ch * 0.012);
     final showDivider = hasIdentity && contactEntries.isNotEmpty;
-    final divBlockH = showDivider ? ch * 0.1 : 0.0;
+    final divBlockH = showDivider ? ch * 0.07 : 0.0;
 
     final contactsH = ch - identH - divBlockH;
     final perContactH = contactEntries.isEmpty
         ? 0.0
         : math.min(contactsH / contactEntries.length, ch * 0.32);
 
-    final nameFs = nameH * 0.9;
-    final subFs = subH * 0.82;
-    final contactFs = perContactH * 0.8;
+    final nameFs = nameH * 1.0;
+    final subFs = subH * 1.0;
+    final perSubH = subEntries.isEmpty ? 0.0 : subH / subEntries.length;
+    final perSubFs = perSubH * 0.92;
+    final contactFs = perContactH * 1.0;
 
-    final photoD = hasPhoto ? identH * 0.62 : 0.0;
+    final photoD = hasPhoto ? identH * 0.80 : 0.0;
     final photoGap = hasPhoto ? cw * 0.03 : 0.0;
     final identTextW = leftW - photoD - photoGap;
 
@@ -175,9 +177,9 @@ class ContactCardBadge extends StatelessWidget {
                                 softWrap: false,
                                 style: TextStyle(
                                   color: colorBlack,
-                                  fontSize: subFs,
+                                  fontSize: perSubFs,
                                   height: 1.0,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ),
@@ -335,8 +337,9 @@ class ContactCardBadge extends StatelessWidget {
               data.isLinkQr
                   ? appLocalizations.contactScanMe
                   : appLocalizations.contactScanToSave,
-              style: const TextStyle(
+              style: TextStyle(
                 color: colorBlack,
+                fontSize: captionH * 0.95,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 1.2,
               ),

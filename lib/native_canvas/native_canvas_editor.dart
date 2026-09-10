@@ -258,7 +258,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   void _seedContactCardLayout(List<LayerSpec> layers) {
     final w = widget.width.toDouble();
     final h = widget.height.toDouble();
-    final pad = h * 0.06;
+    final pad = h * 0.04;
     final cw = w - pad * 2;
     final ch = h - pad * 2;
 
@@ -308,15 +308,15 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     final hasSub = subEntries.isNotEmpty;
     final contactEntries = [phone, email, link].whereType<LayerSpec>().toList();
 
-    final nameH = showName ? ch * 0.28 : 0.0;
-    final subH = hasSub ? ch * 0.16 : 0.0;
+    final nameH = showName ? ch * 0.25 : 0.0;
+    final subH = hasSub ? ch * 0.28 : 0.0;
     var identH = nameH + subH;
     if (hasPhoto && identH < ch * 0.4) identH = ch * 0.4;
     final hasIdentity = identH > 0;
 
     final divTh = math.max(1.0, ch * 0.012);
     final showDivider = hasIdentity && contactEntries.isNotEmpty;
-    final divBlockH = showDivider ? ch * 0.1 : 0.0;
+    final divBlockH = showDivider ? ch * 0.07 : 0.0;
 
     final contactsH = ch - identH - divBlockH;
     final perContactH = contactEntries.isEmpty
@@ -324,10 +324,9 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
         : math.min(contactsH / contactEntries.length, ch * 0.32);
 
     final nameFs = nameH * 0.92;
-    final subFs = subH * 0.9;
     final contactFs = perContactH * 0.92;
 
-    final photoD = hasPhoto ? identH * 0.9 : 0.0;
+    final photoD = hasPhoto ? identH * 0.80 : 0.0;
     final photoGap = hasPhoto ? cw * 0.03 : 0.0;
     final textColLeft = leftX0 + (hasPhoto ? photoD + photoGap : 0.0);
     final identTextW = leftW - (hasPhoto ? photoD + photoGap : 0.0);
@@ -382,8 +381,12 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
       }
       if (hasSub) {
         final subTop = blockTop + nameH;
-        addLeftText(subEntries.first, textColLeft, subTop + subH / 2, subFs,
-            identTextW);
+        final perSubH = subH / subEntries.length;
+        final perSubFs = perSubH * 0.90;
+        for (var i = 0; i < subEntries.length; i++) {
+          addLeftText(subEntries[i], textColLeft,
+              subTop + i * perSubH + perSubH / 2, perSubFs, identTextW);
+        }
       }
       yCursor = pad + identH;
       if (showDivider) {

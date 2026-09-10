@@ -412,16 +412,20 @@ List<LayerSpec> buildContactCardLayers({
     ));
   }
 
-  final subParts = [
-    if (data.jobTitle.trim().isNotEmpty) data.jobTitle.trim(),
-    if (data.company.trim().isNotEmpty) data.company.trim(),
-  ];
-  if (subParts.isNotEmpty) {
+  if (data.jobTitle.trim().isNotEmpty) {
     layers.add(LayerSpec.text(
-      text: subParts.join('  •  '),
+      text: data.jobTitle.trim(),
       textStyle: const TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
       followCanvasTheme: true,
-      elementId: data.jobTitle.trim().isNotEmpty ? 'jobTitle' : 'company',
+      elementId: 'jobTitle',
+    ));
+  }
+  if (data.company.trim().isNotEmpty) {
+    layers.add(LayerSpec.text(
+      text: data.company.trim(),
+      textStyle: const TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
+      followCanvasTheme: true,
+      elementId: 'company',
     ));
   }
 
