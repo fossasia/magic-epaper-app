@@ -295,8 +295,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     }
 
     final hasQr = qr?.widget != null;
-    final rightW = hasQr ? math.min(w * 0.32, ch * 0.94) : 0.0;
-    final gapX = hasQr ? cw * 0.04 : 0.0;
+    final rightW = hasQr ? math.min(w * 0.29, ch * 0.94) : 0.0;
+    final gapX = hasQr ? cw * 0.03 : 0.0;
     final leftW = cw - rightW - gapX;
     final leftX0 = pad;
     final rightX0 = pad + leftW + gapX;
@@ -307,8 +307,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     final hasSub = subEntries.isNotEmpty;
     final contactEntries = [phone, email, link].whereType<LayerSpec>().toList();
 
-    final nameH = showName ? ch * 0.28 : 0.0;
-    final subH = hasSub ? ch * 0.16 : 0.0;
+    final nameH = showName ? ch * 0.24 : 0.0;
+    final subH = hasSub ? ch * 0.22 : 0.0;
     var identH = nameH + subH;
     if (hasPhoto && identH < ch * 0.4) identH = ch * 0.4;
     final hasIdentity = identH > 0;
@@ -390,15 +390,12 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
         _controller.addElement(
           CanvasElement(
             id: _nextId(),
-            kind: CanvasElementKind.widget,
+            kind: CanvasElementKind.fill,
             position: Offset(leftX0 + leftW / 2, divTop + divTh / 2),
             baseSize: Size(leftW, divTh),
             scale: 1.0,
-            child: SizedBox(
-              width: leftW,
-              height: divTh,
-              child: const ColoredBox(color: colorBlack),
-            ),
+            color: colorBlack,
+            elementId: 'divider',
           ),
           record: false,
         );
@@ -408,19 +405,28 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
       yCursor = pad + (ch - contactEntries.length * perContactH) / 2;
     }
 
+    var contactH = contactFs;
+    for (final s in contactEntries) {
+      final fs = s.textStyle?.fontSize ?? 24;
+      final fw = s.textStyle?.fontWeight ?? FontWeight.w500;
+      final m = _measureText(s.text!, fs, fw);
+      final aspect = math.max(1.0, m.width - 8) / math.max(1.0, m.height - 4);
+      final fitH = leftW / aspect;
+      if (fitH < contactH) contactH = fitH;
+    }
     for (var i = 0; i < contactEntries.length; i++) {
       final centerY = yCursor + i * perContactH + perContactH / 2;
-      addLeftText(contactEntries[i], leftX0, centerY, contactFs, leftW);
+      addLeftText(contactEntries[i], leftX0, centerY, contactH, leftW);
     }
 
     if (hasQr) {
-      final captionH = ch * 0.1;
+      final captionH = ch * 0.16;
       final qrSide = math.min(rightW, ch - captionH - ch * 0.04);
       final blockTop = pad + (ch - (qrSide + ch * 0.04 + captionH)) / 2;
       _seedWidgetElement(
           qr!, Offset(rightX0 + rightW / 2, blockTop + qrSide / 2), qrSide);
       if (caption != null) {
-        final capFs = captionH * 0.7;
+        final capFs = captionH * 0.9;
         final capTop = blockTop + qrSide + ch * 0.04 + (captionH - capFs) / 2;
         _seedTextElement(caption, rightX0, capTop, capFs,
             columnWidth: rightW, center: true);
@@ -1070,6 +1076,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                                 CanvasElementKind.barcode => () =>
                                     _editBarcode(element),
                                 CanvasElementKind.widget => null,
+                                CanvasElementKind.fill => null,
                               },
                         onCrop: element.kind == CanvasElementKind.image
                             ? () => _cropImage(element)

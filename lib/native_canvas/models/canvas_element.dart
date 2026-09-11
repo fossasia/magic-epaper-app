@@ -12,6 +12,8 @@ enum CanvasElementKind {
   barcode,
 
   widget,
+
+  fill,
 }
 
 const Object _noChange = Object();
