@@ -14,6 +14,7 @@ class EpdUtils {
     () => Waveshare2in9(),
     () => Waveshare2in9b(),
     () => Waveshare2in13(),
+    () => Waveshare2in13g(),
     () => Waveshare2in7(),
     () => Waveshare4in2(),
     () => Waveshare7in5(),
@@ -29,9 +30,6 @@ class EpdUtils {
       }
     }
 
-    final custom = _reconstructCustomDevice(metadata, epdModel);
-    if (custom != null) return custom;
-
     switch (epdModel) {
       case 'GDEY037Z03':
         return Gdey037z03();
@@ -46,6 +44,9 @@ class EpdUtils {
       case '17745':
       case 'waveshare-2.13':
         return Waveshare2in13();
+      case '28107':
+      case 'waveshare-2.13g':
+        return Waveshare2in13g();
       case '18136':
       case 'waveshare-2.7':
         return Waveshare2in7();
@@ -60,9 +61,12 @@ class EpdUtils {
         return Waveshare7in5HD();
       case 'GDEQ031T10':
         return GDEQ031T10();
-      default:
-        return Gdey037z03();
     }
+
+    final custom = _reconstructCustomDevice(metadata, epdModel);
+    if (custom != null) return custom;
+
+    return Gdey037z03();
   }
 
   static DisplayDevice? _reconstructCustomDevice(

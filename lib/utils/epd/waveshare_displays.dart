@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/constants/asset_paths.dart';
+import 'package:magicepaperapp/utils/epd/display_device.dart';
+import 'package:magicepaperapp/utils/epd/driver/waveform.dart';
 import 'package:magicepaperapp/utils/epd/waveshare_nfc_display.dart';
 import 'package:magicepaperapp/utils/image_processing/image_processing.dart';
+import 'package:magicepaperapp/view/widgets/waveshare_transfer_dialog.dart';
+import 'package:magicepaperapp/waveshare/services/waveshare_g_nfc_services.dart';
 
 import 'brand.dart';
 
@@ -105,6 +110,52 @@ class Waveshare2in7 extends WaveshareNfcDisplay {
   String get imgPath => ImageAssets.waveshare2_7;
   @override
   Brand get brand => Brand.waveshare;
+}
+
+class Waveshare2in13g extends DisplayDevice {
+  @override
+  String get name => 'Waveshare 2.13" G NFC';
+  @override
+  String get modelId => '28107';
+  @override
+  int get width => 250;
+  @override
+  int get height => 122;
+  @override
+  String get imgPath => ImageAssets.waveshare2_13g;
+
+  @override
+  List<Color> get colors =>
+      [Colors.white, Colors.black, Colors.red, Colors.yellow];
+
+  @override
+  List<String>? get displayChips => null;
+
+  @override
+  Brand get brand => Brand.waveshare;
+
+  @override
+  bool get isBeta => true;
+
+  @override
+  List<ImageProcessingMethod> get processingMethods => [
+        ImageProcessing.bwryFloydSteinbergDither,
+        ImageProcessing.bwryFalseFloydSteinbergDither,
+        ImageProcessing.bwryStuckiDither,
+        ImageProcessing.bwryTriColorAtkinsonDither,
+        ImageProcessing.bwryThreshold,
+      ];
+
+  @override
+  Future<void> transfer(BuildContext context, img.Image image,
+      {Waveform? waveform}) async {
+    return WaveshareTransferDialog.showWithFlasher(
+      context,
+      image,
+      (img.Image processed, onProgress) =>
+          WaveshareGNfcServices().flashImage(processed, onProgress: onProgress),
+    );
+  }
 }
 
 class Waveshare2in9b extends WaveshareNfcDisplay {
