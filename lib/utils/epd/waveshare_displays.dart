@@ -158,6 +158,73 @@ class Waveshare2in13g extends DisplayDevice {
   }
 }
 
+class Waveshare1in54 extends WaveshareNfcDisplay {
+  Waveshare1in54() : super(ePaperSizeEnum: 8);
+
+  @override
+  String get name => 'Waveshare 1.54" NFC';
+  @override
+  String get modelId => '17953';
+  @override
+  int get width => 200;
+  @override
+  int get height => 200;
+  @override
+  String get imgPath => ImageAssets.waveshare1_54;
+
+  @override
+  bool get isBeta => true;
+
+  @override
+  Brand get brand => Brand.waveshare;
+}
+
+class Waveshare1in54g extends DisplayDevice {
+  @override
+  String get name => 'Waveshare 1.54" G NFC';
+  @override
+  String get modelId => '31888';
+  @override
+  int get width => 200;
+  @override
+  int get height => 200;
+  @override
+  String get imgPath => ImageAssets.waveshare1_54g;
+
+  @override
+  List<Color> get colors =>
+      [Colors.white, Colors.black, Colors.red, Colors.yellow];
+
+  @override
+  List<String>? get displayChips => null;
+
+  @override
+  Brand get brand => Brand.waveshare;
+
+  @override
+  bool get isBeta => true;
+
+  @override
+  List<ImageProcessingMethod> get processingMethods => [
+        ImageProcessing.bwryFloydSteinbergDither,
+        ImageProcessing.bwryFalseFloydSteinbergDither,
+        ImageProcessing.bwryStuckiDither,
+        ImageProcessing.bwryTriColorAtkinsonDither,
+        ImageProcessing.bwryThreshold,
+      ];
+
+  @override
+  Future<void> transfer(BuildContext context, img.Image image,
+      {Waveform? waveform}) async {
+    return WaveshareTransferDialog.showWithFlasher(
+      context,
+      image,
+      (img.Image processed, onProgress) =>
+          WaveshareGNfcServices().flashImage(processed, onProgress: onProgress),
+    );
+  }
+}
+
 class Waveshare2in9b extends WaveshareNfcDisplay {
   Waveshare2in9b() : super(ePaperSizeEnum: 7);
 

@@ -69,7 +69,13 @@ class WaveshareGNfcProtocol {
       onProgress?.call((packet + 1) * 95 ~/ packetCount);
     }
 
-    await _send(_refresh);
+    final refresh = await _send(_refresh);
+    if (!_isSw9000(refresh)) {
+      throw WaveshareNfcException(
+        'REFRESH_FAILED',
+        'Refresh command rejected: ${_toHex(refresh)}',
+      );
+    }
 
     for (var attempt = 0; attempt < _maxBusyPolls; attempt++) {
       final status = _toHex(await _send(_pollResult));
