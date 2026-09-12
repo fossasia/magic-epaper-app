@@ -30,9 +30,6 @@ class EpdUtils {
       }
     }
 
-    final custom = _reconstructCustomDevice(metadata, epdModel);
-    if (custom != null) return custom;
-
     switch (epdModel) {
       case 'GDEY037Z03':
         return Gdey037z03();
@@ -64,9 +61,12 @@ class EpdUtils {
         return Waveshare7in5HD();
       case 'GDEQ031T10':
         return GDEQ031T10();
-      default:
-        return Gdey037z03();
     }
+
+    final custom = _reconstructCustomDevice(metadata, epdModel);
+    if (custom != null) return custom;
+
+    return Gdey037z03();
   }
 
   static DisplayDevice? _reconstructCustomDevice(
