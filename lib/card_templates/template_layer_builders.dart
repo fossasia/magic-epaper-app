@@ -418,8 +418,8 @@ List<LayerSpec> buildContactCardLayers({
   ];
   if (subParts.isNotEmpty) {
     layers.add(LayerSpec.text(
-      text: subParts.join('  •  '),
-      textStyle: const TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
+      text: subParts.join(' • '),
+      textStyle: const TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
       followCanvasTheme: true,
       elementId: data.jobTitle.trim().isNotEmpty ? 'jobTitle' : 'company',
     ));
@@ -428,7 +428,7 @@ List<LayerSpec> buildContactCardLayers({
   if (data.phone.trim().isNotEmpty) {
     layers.add(LayerSpec.text(
       text: data.phone.trim(),
-      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
       followCanvasTheme: true,
       elementId: 'phone',
     ));
@@ -437,7 +437,7 @@ List<LayerSpec> buildContactCardLayers({
   if (data.email.trim().isNotEmpty) {
     layers.add(LayerSpec.text(
       text: data.email.trim(),
-      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
       followCanvasTheme: true,
       elementId: 'email',
     ));
@@ -447,7 +447,7 @@ List<LayerSpec> buildContactCardLayers({
   if (prettyLink.isNotEmpty) {
     layers.add(LayerSpec.text(
       text: prettyLink,
-      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
       followCanvasTheme: true,
       elementId: 'link',
     ));

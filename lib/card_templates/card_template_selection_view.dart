@@ -198,7 +198,7 @@ class CardTemplateSelectionView extends StatelessWidget {
           await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) =>
-                  ContactCardForm(width: width, height: height),
+                  ContactCardForm(width: width, height: height, device: device),
             ),
           );
         },

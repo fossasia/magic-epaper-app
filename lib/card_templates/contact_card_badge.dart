@@ -165,7 +165,7 @@ class ContactCardBadge extends StatelessWidget {
                   for (var i = 0; i < subEntries.length; i++) ...[
                     if (i > 0)
                       Text(
-                        '  •  ',
+                        ' • ',
                         style: TextStyle(
                           color: colorBlack,
                           fontSize: subFs,
