@@ -336,7 +336,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     // still hugs the left edge instead of getting centered/indented. Left
     // anchoring also keeps the position stable when the text is later edited.
     void addLeftText(LayerSpec s, double leftX, double centerY, double targetH,
-        double availW, {double? maxFs}) {
+        double availW,
+        {double? maxFs}) {
       final fw = s.textStyle?.fontWeight ?? FontWeight.w500;
       final text = s.text ?? '';
       if (text.isEmpty) return;
@@ -403,7 +404,10 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
           for (var i = 0; i < 12; i++) {
             final mid = (lo + hi) / 2;
             final m = _measureText(combinedText, mid, FontWeight.w600);
-            if (m.width <= subAvailW) lo = mid; else hi = mid;
+            if (m.width <= subAvailW)
+              lo = mid;
+            else
+              hi = mid;
           }
           inlineFs = lo;
           useInline = inlineFs >= ch * 0.065;
@@ -419,15 +423,17 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
             followCanvasTheme: subEntries.first.followCanvasTheme ?? false,
             elementId: 'subtitle',
           );
-          addLeftText(combinedSpec, textColLeft + subIndent,
-              subTop + subH / 2, subH, subAvailW, maxFs: subMaxFs);
+          addLeftText(combinedSpec, textColLeft + subIndent, subTop + subH / 2,
+              subH, subAvailW,
+              maxFs: subMaxFs);
         } else {
           final perLineH = subH / subEntries.length;
           for (var i = 0; i < subEntries.length; i++) {
             final s = subEntries[i];
             final lineCenterY = subTop + perLineH * i + perLineH / 2;
-            addLeftText(s, textColLeft + subIndent, lineCenterY,
-                perLineH, subAvailW, maxFs: ch * 0.40);
+            addLeftText(
+                s, textColLeft + subIndent, lineCenterY, perLineH, subAvailW,
+                maxFs: ch * 0.40);
           }
         }
       }
@@ -490,8 +496,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
             position: Offset(rightX0 + rightW / 2, capTop + captionH / 2),
             baseSize: Size(boxW, boxH),
             scale: 1.0,
-            color: _sanitizeColor(
-                caption.textColor ?? caption.textStyle?.color),
+            color:
+                _sanitizeColor(caption.textColor ?? caption.textStyle?.color),
             text: caption.text,
             fontSize: lo,
             fontWeight: fw,
@@ -1101,7 +1107,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
               context: context,
               builder: (ctx) => AlertDialog(
                 title: const Text('Discard changes?'),
-                content: const Text('You have unsaved edits. Leave without saving?'),
+                content:
+                    const Text('You have unsaved edits. Leave without saving?'),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.of(ctx).pop(false),

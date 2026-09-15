@@ -131,7 +131,10 @@ class ContactCardBadge extends StatelessWidget {
     const subIndentFrac = 0.04;
 
     void computeSizes(double textW) {
-      nameFs = 0; nameH = 0; subH = 0; subFs = 0;
+      nameFs = 0;
+      nameH = 0;
+      subH = 0;
+      subFs = 0;
       if (showName) {
         nameFs = _fitFs(nameText, textW, ch * 0.33, FontWeight.w800);
         nameH = nameFs * 1.22;
@@ -139,18 +142,21 @@ class ContactCardBadge extends StatelessWidget {
       if (hasSub) {
         final subTextW = math.max(1.0, textW * (1 - subIndentFrac));
         if (subEntries.length == 1) {
-          subFs = _fitFs(subEntries.first.value, subTextW, ch * 0.45, FontWeight.w600);
+          subFs = _fitFs(
+              subEntries.first.value, subTextW, ch * 0.45, FontWeight.w600);
           subH = subFs * 1.32;
           subInline = true;
         } else {
           final inlineText = subEntries.map((e) => e.value).join('  •  ');
-          final inlineFs = _fitFs(inlineText, subTextW, ch * 0.45, FontWeight.w600);
+          final inlineFs =
+              _fitFs(inlineText, subTextW, ch * 0.45, FontWeight.w600);
           if (inlineFs >= ch * 0.065) {
             subFs = inlineFs;
             subH = subFs * 1.32;
             subInline = true;
           } else {
-            final widest = subEntries.map((e) => e.value)
+            final widest = subEntries
+                .map((e) => e.value)
                 .reduce((a, b) => a.length > b.length ? a : b);
             subFs = _fitFs(widest, subTextW, ch * 0.40, FontWeight.w600);
             subH = subFs * 1.28 * subEntries.length;
@@ -191,76 +197,77 @@ class ContactCardBadge extends StatelessWidget {
     final photoD = hasPhoto ? identH * 0.72 : 0.0;
     final identTextW = leftW - photoD - photoGap;
     final subIndent = identTextW * subIndentFrac;
-    final textTopPad = ((identH - nameH - subH) / 2).clamp(0.0, double.infinity);
+    final textTopPad =
+        ((identH - nameH - subH) / 2).clamp(0.0, double.infinity);
 
     Widget buildSubtitle() {
       if (subInline) {
         return Padding(
           padding: EdgeInsets.only(left: subIndent),
           child: SizedBox(
-          width: identTextW - subIndent,
-          height: subH,
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (var i = 0; i < subEntries.length; i++) ...[
-                  if (i > 0)
-                    Text('  •  ',
-                        style: TextStyle(
-                            fontSize: subFs,
-                            fontWeight: FontWeight.w600,
-                            height: 1.0,
-                            color: colorBlack)),
-                  _field(
-                    context,
-                    subEntries[i].key,
-                    Text(subEntries[i].value,
-                        maxLines: 1,
-                        softWrap: false,
-                        overflow: TextOverflow.clip,
-                        style: TextStyle(
-                            fontSize: subFs,
-                            fontWeight: FontWeight.w600,
-                            height: 1.0,
-                            color: colorBlack)),
-                  ),
+            width: identTextW - subIndent,
+            height: subH,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var i = 0; i < subEntries.length; i++) ...[
+                    if (i > 0)
+                      Text('  •  ',
+                          style: TextStyle(
+                              fontSize: subFs,
+                              fontWeight: FontWeight.w600,
+                              height: 1.0,
+                              color: colorBlack)),
+                    _field(
+                      context,
+                      subEntries[i].key,
+                      Text(subEntries[i].value,
+                          maxLines: 1,
+                          softWrap: false,
+                          overflow: TextOverflow.clip,
+                          style: TextStyle(
+                              fontSize: subFs,
+                              fontWeight: FontWeight.w600,
+                              height: 1.0,
+                              color: colorBlack)),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
           ),
         );
       } else {
         return Padding(
           padding: EdgeInsets.only(left: subIndent),
           child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (final e in subEntries)
-              SizedBox(
-                width: identTextW - subIndent,
-                height: subFs * 1.28,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: _field(
-                    context,
-                    e.key,
-                    Text(e.value,
-                        maxLines: 1,
-                        softWrap: false,
-                        overflow: TextOverflow.clip,
-                        style: TextStyle(
-                            fontSize: subFs,
-                            fontWeight: FontWeight.w600,
-                            height: 1.0,
-                            color: colorBlack)),
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              for (final e in subEntries)
+                SizedBox(
+                  width: identTextW - subIndent,
+                  height: subFs * 1.28,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: _field(
+                      context,
+                      e.key,
+                      Text(e.value,
+                          maxLines: 1,
+                          softWrap: false,
+                          overflow: TextOverflow.clip,
+                          style: TextStyle(
+                              fontSize: subFs,
+                              fontWeight: FontWeight.w600,
+                              height: 1.0,
+                              color: colorBlack)),
+                    ),
                   ),
                 ),
-              ),
-          ],
+            ],
           ),
         );
       }

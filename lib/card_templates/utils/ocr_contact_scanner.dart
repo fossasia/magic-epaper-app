@@ -454,50 +454,50 @@ class _OcrReviewSheetState extends State<_OcrReviewSheet> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: const BorderSide(color: colorAccent),
-                            ),
                           ),
                         ),
                       ),
-                    ],
-                  );
-                },
-              ),
+                    ),
+                  ],
+                );
+              },
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    final result = <String, String>{};
-                    for (final key in keys) {
-                      if (_selected[key] == true) {
-                        final val = widget.controllers[key]!.text.trim();
-                        if (val.isNotEmpty) result[key] = val;
-                      }
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  final result = <String, String>{};
+                  for (final key in keys) {
+                    if (_selected[key] == true) {
+                      final val = widget.controllers[key]!.text.trim();
+                      if (val.isNotEmpty) result[key] = val;
                     }
-                    Navigator.of(context).pop(result);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colorPrimary,
-                    foregroundColor: colorWhite,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                  }
+                  Navigator.of(context).pop(result);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorPrimary,
+                  foregroundColor: colorWhite,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Text(
-                    widget.l10n.ocrFillFields,
-                    style: const TextStyle(
-                      fontSize: Dimens.fontSizeL,
-                      fontWeight: FontWeight.w600,
-                    ),
+                ),
+                child: Text(
+                  widget.l10n.ocrFillFields,
+                  style: const TextStyle(
+                    fontSize: Dimens.fontSizeL,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
     );
   }
 }
