@@ -132,6 +132,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   Set<ColorFilter> _selectedColorFilters = {};
   Set<String> _selectedSizes = {};
   SortOption _sortOption = SortOption.defaultOrder;
+  bool _showBeta = false;
 
   @override
   void dispose() {
@@ -222,7 +223,8 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
           _selectedColorFilters.any((c) => c.matches(d));
       final sizeOk =
           _selectedSizes.isEmpty || _selectedSizes.contains(_sizeOf(d));
-      return brandOk && colorOk && sizeOk;
+      final betaOk = _showBeta || !d.isBeta;
+      return brandOk && colorOk && sizeOk && betaOk;
     }).toList();
   }
 
@@ -523,7 +525,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   Widget _buildBrandHeader(Brand brand, AppLocalizations l) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(
-          Dimens.spacingMd, Dimens.spacingM, Dimens.spacingMd, Dimens.spacingS),
+          Dimens.spacingL, Dimens.spacingM, Dimens.spacingMd, Dimens.spacingS),
       child: Text(
         brand.label(l),
         style: const TextStyle(
@@ -553,6 +555,38 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                 horizontal: Dimens.spacingS, vertical: 0),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildBetaToggle(AppLocalizations l) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          horizontal: Dimens.spacingMd, vertical: Dimens.spacingXs),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Text(
+                l.showBetaDisplays,
+                style: const TextStyle(
+                    fontSize: Dimens.fontSizeS, fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(width: 4),
+              Tooltip(
+                message: l.showBetaDisplaysTooltip,
+                child: const Icon(Icons.info_outline,
+                    size: 14, color: mdGrey400),
+              ),
+            ],
+          ),
+          Switch(
+            value: _showBeta,
+            activeThumbColor: colorAccent,
+            onChanged: (val) => setState(() => _showBeta = val),
+          ),
+        ],
       ),
     );
   }
@@ -615,6 +649,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
             child: Column(
               children: [
                 _buildFilterBar(appLocalizations),
+                _buildBetaToggle(appLocalizations),
                 if (_hasActiveFilters) _buildClearFiltersBar(appLocalizations),
                 const Divider(height: 1),
                 Expanded(

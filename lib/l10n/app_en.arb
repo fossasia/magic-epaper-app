@@ -1334,5 +1334,7 @@
   "sortSizeAsc": "Size (small-large)",
   "sortSizeDesc": "Size (large-small)",
   "sortColorCountAsc": "Colors (fewest first)",
-  "sortColorCountDesc": "Colors (most first)"
+  "sortColorCountDesc": "Colors (most first)",
+  "showBetaDisplays": "show beta displays",
+  "showBetaDisplaysTooltip": "show untested displays"
 }
