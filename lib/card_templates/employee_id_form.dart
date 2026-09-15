@@ -14,7 +14,7 @@ import 'package:magicepaperapp/card_templates/bulk/bulk_csv_import_screen.dart';
 import 'package:magicepaperapp/card_templates/bulk/bulk_template.dart';
 import 'package:magicepaperapp/utils/epd/display_device.dart';
 import 'package:magicepaperapp/utils/page_route_util.dart';
-import 'package:magicepaperapp/card_templates/utils/barcode_scanner_util.dart';
+import 'package:magicepaperapp/card_templates/barcode_scanner_util.dart';
 import 'package:magicepaperapp/view/widgets/common_scaffold_widget.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();

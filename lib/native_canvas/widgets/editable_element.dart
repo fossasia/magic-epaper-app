@@ -279,6 +279,8 @@ class CanvasElementContent extends StatelessWidget {
         return FittedBox(
             fit: BoxFit.contain,
             child: element.child ?? const SizedBox.shrink());
+      case CanvasElementKind.fill:
+        return ColoredBox(color: element.color);
     }
   }
 }

@@ -184,6 +184,29 @@ class DisplayCard extends StatelessWidget {
     );
   }
 
+  Widget _buildBetaChip(double scale) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+          horizontal: Dimens.spacingS * scale, vertical: 3 * scale),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF3CD),
+        borderRadius: BorderRadius.circular(Dimens.radiusXl * scale),
+        border: Border.all(
+          color: const Color(0xFFE6A817),
+          width: 0.8,
+        ),
+      ),
+      child: Text(
+        'Beta / Untested',
+        style: TextStyle(
+          fontSize: 7 * scale,
+          fontWeight: FontWeight.w600,
+          color: const Color(0xFF8A6200),
+        ),
+      ),
+    );
+  }
+
   Widget _buildChip(String label, double scale) {
     return Container(
       padding: EdgeInsets.symmetric(

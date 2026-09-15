@@ -105,7 +105,7 @@ class _BulkGenerationScreenState extends State<BulkGenerationScreen> {
           elements: toSerializableElements(
             elements,
             photoBytes: photoBytes,
-            qrData: row['qr'],
+            qrData: widget.template.qrDataFor(row),
             barcodeData: row['barcode'],
           ),
           strokes: const [],
@@ -148,7 +148,11 @@ class _BulkGenerationScreenState extends State<BulkGenerationScreen> {
       final boundary = _boundaryKey.currentContext?.findRenderObject()
           as RenderRepaintBoundary?;
       if (boundary == null) return null;
-      final image = await boundary.toImage(pixelRatio: 1);
+      final longSide =
+          (widget.width > widget.height ? widget.width : widget.height)
+              .toDouble();
+      final supersample = (2048 / longSide).clamp(2.0, 4.0);
+      final image = await boundary.toImage(pixelRatio: supersample);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       image.dispose();
       return byteData?.buffer.asUint8List();

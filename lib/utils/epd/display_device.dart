@@ -5,6 +5,8 @@ import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/utils/epd/driver/waveform.dart';
 import 'package:magicepaperapp/utils/image_processing/image_processing.dart';
 
+import 'brand.dart';
+
 typedef TransferProgressCallback = void Function(
     double progress, String status);
 
@@ -17,6 +19,7 @@ abstract class DisplayDevice {
   List<Color> get colors;
   List<String>? get displayChips;
   bool get isBeta => false;
+  Brand get brand;
 
   List<ImageProcessingMethod> get processingMethods;
 
