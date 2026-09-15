@@ -44,8 +44,13 @@ class DisplayCard extends StatelessWidget {
 
     if (currentDisplay is Epd) {
       driverText = currentDisplay.driverName;
-    } else {
+    } else if (currentDisplay is WaveshareNfcDisplay) {
       driverText = 'Waveshare SDK';
+    } else if (currentDisplay.modelId.toUpperCase().startsWith('GD') ||
+        currentDisplay.name.toLowerCase().contains('goodisplay')) {
+      driverText = 'Goodisplay SDK';
+    } else {
+      driverText = 'Custom SDK';
     }
 
     final chips = display.displayChips;
