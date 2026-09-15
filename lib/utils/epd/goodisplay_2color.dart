@@ -6,6 +6,8 @@ import 'package:magicepaperapp/utils/epd/driver/waveform.dart';
 import 'package:magicepaperapp/utils/image_processing/image_processing.dart';
 import 'package:magicepaperapp/view/widgets/goodisplay_transfer_dialog.dart';
 
+import 'brand.dart';
+
 /// Metodi di dithering comuni per display a 2 Colori (Black & White)
 const List<ImageProcessingMethod> _bwProcessingMethods = [
   ImageProcessing.bwFloydSteinbergDither,
@@ -35,6 +37,8 @@ class GDEY0154D67 extends DisplayDevice {
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
   @override
   bool get isBeta => true;
+  @override
+  Brand get brand => Brand.goodisplay;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -68,6 +72,8 @@ class GDEY0213B74 extends DisplayDevice {
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
   @override
   bool get isBeta => true;
+  @override
+  Brand get brand => Brand.goodisplay;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -101,6 +107,8 @@ class GDEY029T94 extends DisplayDevice {
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
   @override
   bool get isBeta => true;
+  @override
+  Brand get brand => Brand.goodisplay;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -134,6 +142,8 @@ class GDEY042T81 extends DisplayDevice {
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
   @override
   bool get isBeta => true;
+  @override
+  Brand get brand => Brand.goodisplay;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -167,6 +177,8 @@ class GDEW0154T8D extends DisplayDevice {
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
   @override
   bool get isBeta => true;
+  @override
+  Brand get brand => Brand.goodisplay;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -200,6 +212,8 @@ class GDEW0213T5D extends DisplayDevice {
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
   @override
   bool get isBeta => true;
+  @override
+  Brand get brand => Brand.goodisplay;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -233,6 +247,8 @@ class GDEW029T5D extends DisplayDevice {
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
   @override
   bool get isBeta => true;
+  @override
+  Brand get brand => Brand.goodisplay;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -266,6 +282,8 @@ class GDEW042T2 extends DisplayDevice {
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
   @override
   bool get isBeta => true;
+  @override
+  Brand get brand => Brand.goodisplay;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
@@ -299,6 +317,8 @@ class GDEY037T03 extends DisplayDevice {
   List<ImageProcessingMethod> get processingMethods => _bwProcessingMethods;
   @override
   bool get isBeta => true;
+  @override
+  Brand get brand => Brand.goodisplay;
 
   @override
   Future<void> transfer(BuildContext context, img.Image image,
