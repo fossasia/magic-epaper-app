@@ -8,7 +8,7 @@ import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
-import 'package:magicepaperapp/utils/image_crop_screen.dart';
+import 'package:magicepaperapp/view/image_crop_screen.dart';
 import 'package:magicepaperapp/native_canvas/models/canvas_controller.dart';
 import 'package:magicepaperapp/native_canvas/models/canvas_document.dart';
 import 'package:magicepaperapp/native_canvas/models/canvas_element.dart';
@@ -404,10 +404,11 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
           for (var i = 0; i < 12; i++) {
             final mid = (lo + hi) / 2;
             final m = _measureText(combinedText, mid, FontWeight.w600);
-            if (m.width <= subAvailW)
+            if (m.width <= subAvailW) {
               lo = mid;
-            else
+            } else {
               hi = mid;
+            }
           }
           inlineFs = lo;
           useInline = inlineFs >= ch * 0.065;
@@ -420,7 +421,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
           final combinedSpec = LayerSpec.text(
             text: combinedText,
             textStyle: subEntries.first.textStyle,
-            followCanvasTheme: subEntries.first.followCanvasTheme ?? false,
+            followCanvasTheme: subEntries.first.followCanvasTheme,
             elementId: 'subtitle',
           );
           addLeftText(combinedSpec, textColLeft + subIndent, subTop + subH / 2,
@@ -1214,6 +1215,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                                 CanvasElementKind.barcode => () =>
                                     _editBarcode(element),
                                 CanvasElementKind.widget => null,
+                                CanvasElementKind.fill => null,
                               },
                         onCrop: element.kind == CanvasElementKind.image
                             ? () => _cropImage(element)
