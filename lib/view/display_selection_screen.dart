@@ -576,8 +576,8 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
               const SizedBox(width: 4),
               Tooltip(
                 message: l.showBetaDisplaysTooltip,
-                child: const Icon(Icons.info_outline,
-                    size: 14, color: mdGrey400),
+                child:
+                    const Icon(Icons.info_outline, size: 14, color: mdGrey400),
               ),
             ],
           ),
