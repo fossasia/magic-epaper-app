@@ -6,9 +6,11 @@ import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/utils/epd/brand.dart';
 import 'package:magicepaperapp/utils/epd/display_device.dart';
 import 'package:magicepaperapp/utils/epd/gdeq031t10.dart';
-import 'package:magicepaperapp/utils/epd/gdey029f51.dart';
 import 'package:magicepaperapp/utils/epd/gdey037z03.dart';
 import 'package:magicepaperapp/utils/epd/gdey037z03bw.dart';
+import 'package:magicepaperapp/utils/epd/goodisplay_2color.dart';
+import 'package:magicepaperapp/utils/epd/goodisplay_3color.dart';
+import 'package:magicepaperapp/utils/epd/goodisplay_4color.dart';
 import 'package:magicepaperapp/utils/epd/waveshare_displays.dart';
 import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:magicepaperapp/view/widgets/common_scaffold_widget.dart';
@@ -82,6 +84,32 @@ class DisplaySelectionScreen extends StatefulWidget {
 
 class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   final List<DisplayDevice> displays = [
+    GDEY0154D67(),
+    GDEY0213B74(),
+    GDEY029T94(),
+    GDEY042T81(),
+    GDEW0154T8D(),
+    GDEW0213T5D(),
+    GDEW029T5D(),
+    GDEW042T2(),
+    GDEY037T03(),
+    GDEY0154Z90(),
+    GDEY0213Z98(),
+    GDEY029Z95(),
+    GDEY042Z98(),
+    GDEW0213Z16(),
+    GDEW029Z13(),
+    GDEQ042Z21(),
+    GDEY037Z03(),
+    GDEY029F51(),
+    GDEY029F51H(),
+    GDEY0213F52(),
+    GDEY0266F51(),
+    GDEY0266F51H(),
+    GDEM0097F51(),
+    GDEM0154F51H(),
+    GDEM037F52(),
+    GDEM042F52(),
     GDEQ031T10(),
     Gdey037z03BW(),
     Gdey037z03(),
@@ -104,6 +132,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   Set<ColorFilter> _selectedColorFilters = {};
   Set<String> _selectedSizes = {};
   SortOption _sortOption = SortOption.defaultOrder;
+  bool _showBeta = false;
 
   @override
   void dispose() {
@@ -194,7 +223,8 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
           _selectedColorFilters.any((c) => c.matches(d));
       final sizeOk =
           _selectedSizes.isEmpty || _selectedSizes.contains(_sizeOf(d));
-      return brandOk && colorOk && sizeOk;
+      final betaOk = _showBeta || !d.isBeta;
+      return brandOk && colorOk && sizeOk && betaOk;
     }).toList();
   }
 
@@ -495,7 +525,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   Widget _buildBrandHeader(Brand brand, AppLocalizations l) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(
-          Dimens.spacingMd, Dimens.spacingM, Dimens.spacingMd, Dimens.spacingS),
+          Dimens.spacingL, Dimens.spacingM, Dimens.spacingMd, Dimens.spacingS),
       child: Text(
         brand.label(l),
         style: const TextStyle(
@@ -525,6 +555,38 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                 horizontal: Dimens.spacingS, vertical: 0),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildBetaToggle(AppLocalizations l) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          horizontal: Dimens.spacingMd, vertical: Dimens.spacingXs),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Text(
+                l.showBetaDisplays,
+                style: const TextStyle(
+                    fontSize: Dimens.fontSizeS, fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(width: 4),
+              Tooltip(
+                message: l.showBetaDisplaysTooltip,
+                child:
+                    const Icon(Icons.info_outline, size: 14, color: mdGrey400),
+              ),
+            ],
+          ),
+          Switch(
+            value: _showBeta,
+            activeThumbColor: colorAccent,
+            onChanged: (val) => setState(() => _showBeta = val),
+          ),
+        ],
       ),
     );
   }
@@ -587,6 +649,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
             child: Column(
               children: [
                 _buildFilterBar(appLocalizations),
+                _buildBetaToggle(appLocalizations),
                 if (_hasActiveFilters) _buildClearFiltersBar(appLocalizations),
                 const Divider(height: 1),
                 Expanded(
