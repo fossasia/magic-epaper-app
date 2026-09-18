@@ -412,23 +412,27 @@ List<LayerSpec> buildContactCardLayers({
     ));
   }
 
-  final subParts = [
-    if (data.jobTitle.trim().isNotEmpty) data.jobTitle.trim(),
-    if (data.company.trim().isNotEmpty) data.company.trim(),
-  ];
-  if (subParts.isNotEmpty) {
+  if (data.jobTitle.trim().isNotEmpty) {
     layers.add(LayerSpec.text(
-      text: subParts.join(' • '),
-      textStyle: const TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
+      text: data.jobTitle.trim(),
+      textStyle: const TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
       followCanvasTheme: true,
-      elementId: data.jobTitle.trim().isNotEmpty ? 'jobTitle' : 'company',
+      elementId: 'jobTitle',
+    ));
+  }
+  if (data.company.trim().isNotEmpty) {
+    layers.add(LayerSpec.text(
+      text: data.company.trim(),
+      textStyle: const TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
+      followCanvasTheme: true,
+      elementId: 'company',
     ));
   }
 
   if (data.phone.trim().isNotEmpty) {
     layers.add(LayerSpec.text(
       text: data.phone.trim(),
-      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
       followCanvasTheme: true,
       elementId: 'phone',
     ));
@@ -437,7 +441,7 @@ List<LayerSpec> buildContactCardLayers({
   if (data.email.trim().isNotEmpty) {
     layers.add(LayerSpec.text(
       text: data.email.trim(),
-      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
       followCanvasTheme: true,
       elementId: 'email',
     ));
@@ -447,7 +451,7 @@ List<LayerSpec> buildContactCardLayers({
   if (prettyLink.isNotEmpty) {
     layers.add(LayerSpec.text(
       text: prettyLink,
-      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
       followCanvasTheme: true,
       elementId: 'link',
     ));

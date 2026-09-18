@@ -25,6 +25,7 @@ import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/utils/template_util.dart';
 import 'package:magicepaperapp/utils/image_source_picker.dart';
+import 'package:magicepaperapp/card_templates/utils/ocr_contact_scanner.dart';
 
 class NativeCanvasEditor extends StatefulWidget {
   const NativeCanvasEditor({
@@ -257,7 +258,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   void _seedContactCardLayout(List<LayerSpec> layers) {
     final w = widget.width.toDouble();
     final h = widget.height.toDouble();
-    final pad = h * 0.06;
+    final pad = h * 0.04;
     final cw = w - pad * 2;
     final ch = h - pad * 2;
 
@@ -295,8 +296,8 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     }
 
     final hasQr = qr?.widget != null;
-    final rightW = hasQr ? math.min(w * 0.29, ch * 0.94) : 0.0;
-    final gapX = hasQr ? cw * 0.03 : 0.0;
+    final rightW = hasQr ? math.min(w * 0.32, ch * 0.94) : 0.0;
+    final gapX = hasQr ? cw * 0.04 : 0.0;
     final leftW = cw - rightW - gapX;
     final leftX0 = pad;
     final rightX0 = pad + leftW + gapX;
@@ -307,27 +308,26 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     final hasSub = subEntries.isNotEmpty;
     final contactEntries = [phone, email, link].whereType<LayerSpec>().toList();
 
-    final nameH = showName ? ch * 0.24 : 0.0;
-    final subH = hasSub ? ch * 0.22 : 0.0;
+    final nameH = showName ? ch * 0.30 : 0.0;
+    final subH = hasSub ? ch * 0.25 : 0.0;
     var identH = nameH + subH;
-    if (hasPhoto && identH < ch * 0.4) identH = ch * 0.4;
+    if (hasPhoto && identH < ch * 0.38) identH = ch * 0.38;
     final hasIdentity = identH > 0;
 
     final divTh = math.max(1.0, ch * 0.012);
     final showDivider = hasIdentity && contactEntries.isNotEmpty;
-    final divBlockH = showDivider ? ch * 0.1 : 0.0;
+    final divBlockH = showDivider ? ch * 0.05 : 0.0;
 
     final contactsH = ch - identH - divBlockH;
     final perContactH = contactEntries.isEmpty
         ? 0.0
         : math.min(contactsH / contactEntries.length, ch * 0.32);
 
-    final nameFs = nameH * 0.92;
-    final subFs = subH * 0.9;
-    final contactFs = perContactH * 0.92;
+    final nameFs = nameH * 1.0;
+    final contactFs = perContactH * 1.05;
 
-    final photoD = hasPhoto ? identH * 0.9 : 0.0;
-    final photoGap = hasPhoto ? cw * 0.03 : 0.0;
+    final photoD = hasPhoto ? identH * 0.72 : 0.0;
+    final photoGap = hasPhoto ? cw * 0.02 : 0.0;
     final textColLeft = leftX0 + (hasPhoto ? photoD + photoGap : 0.0);
     final identTextW = leftW - (hasPhoto ? photoD + photoGap : 0.0);
 
@@ -336,19 +336,25 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     // still hugs the left edge instead of getting centered/indented. Left
     // anchoring also keeps the position stable when the text is later edited.
     void addLeftText(LayerSpec s, double leftX, double centerY, double targetH,
-        double availW) {
-      final fs = s.textStyle?.fontSize ?? 24;
+        double availW,
+        {double? maxFs}) {
       final fw = s.textStyle?.fontWeight ?? FontWeight.w500;
-      final m = _measureText(s.text!, fs, fw);
-      final rawW = math.max(1.0, m.width - 8);
-      final rawH = math.max(1.0, m.height - 4);
-      final aspect = rawW / rawH;
-      var boxH = targetH;
-      var boxW = boxH * aspect;
-      if (boxW > availW) {
-        boxW = availW;
-        boxH = boxW / aspect;
+      final text = s.text ?? '';
+      if (text.isEmpty) return;
+      var lo = 2.0;
+      var hi = maxFs ?? targetH;
+      for (var i = 0; i < 12; i++) {
+        final mid = (lo + hi) / 2;
+        final m = _measureText(text, mid, fw);
+        if (m.width <= availW && m.height <= targetH * 1.25) {
+          lo = mid;
+        } else {
+          hi = mid;
+        }
       }
+      final m = _measureText(text, lo, fw);
+      final boxW = math.min(m.width, availW);
+      final boxH = math.min(m.height, targetH);
       _controller.addElement(
         CanvasElement(
           id: _nextId(),
@@ -358,7 +364,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
           scale: 1.0,
           color: _sanitizeColor(s.textColor ?? s.textStyle?.color),
           text: s.text,
-          fontSize: fs,
+          fontSize: lo,
           fontWeight: fw,
           textAlign: TextAlign.left,
           followCanvasTheme: s.followCanvasTheme,
@@ -381,8 +387,56 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
       }
       if (hasSub) {
         final subTop = blockTop + nameH;
-        addLeftText(subEntries.first, textColLeft, subTop + subH / 2, subFs,
-            identTextW);
+        final subIndent = identTextW * 0.04;
+        final subAvailW = identTextW - subIndent;
+        final subMaxFs = ch * 0.45;
+
+        bool useInline = false;
+        double inlineFs = 2.0;
+        if (subEntries.length == 1) {
+          useInline = true;
+          inlineFs = subMaxFs;
+        } else {
+          final combinedText =
+              subEntries.map((s) => s.text ?? '').join('  •  ');
+          var lo = 2.0;
+          var hi = subMaxFs;
+          for (var i = 0; i < 12; i++) {
+            final mid = (lo + hi) / 2;
+            final m = _measureText(combinedText, mid, FontWeight.w600);
+            if (m.width <= subAvailW) {
+              lo = mid;
+            } else {
+              hi = mid;
+            }
+          }
+          inlineFs = lo;
+          useInline = inlineFs >= ch * 0.065;
+        }
+
+        if (useInline) {
+          final combinedText = subEntries.length == 1
+              ? (subEntries.first.text ?? '')
+              : subEntries.map((s) => s.text ?? '').join('  •  ');
+          final combinedSpec = LayerSpec.text(
+            text: combinedText,
+            textStyle: subEntries.first.textStyle,
+            followCanvasTheme: subEntries.first.followCanvasTheme,
+            elementId: 'subtitle',
+          );
+          addLeftText(combinedSpec, textColLeft + subIndent, subTop + subH / 2,
+              subH, subAvailW,
+              maxFs: subMaxFs);
+        } else {
+          final perLineH = subH / subEntries.length;
+          for (var i = 0; i < subEntries.length; i++) {
+            final s = subEntries[i];
+            final lineCenterY = subTop + perLineH * i + perLineH / 2;
+            addLeftText(
+                s, textColLeft + subIndent, lineCenterY, perLineH, subAvailW,
+                maxFs: ch * 0.40);
+          }
+        }
       }
       yCursor = pad + identH;
       if (showDivider) {
@@ -390,12 +444,15 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
         _controller.addElement(
           CanvasElement(
             id: _nextId(),
-            kind: CanvasElementKind.fill,
+            kind: CanvasElementKind.widget,
             position: Offset(leftX0 + leftW / 2, divTop + divTh / 2),
             baseSize: Size(leftW, divTh),
             scale: 1.0,
-            color: colorBlack,
-            elementId: 'divider',
+            child: SizedBox(
+              width: leftW,
+              height: divTh,
+              child: const ColoredBox(color: colorBlack),
+            ),
           ),
           record: false,
         );
@@ -405,31 +462,52 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
       yCursor = pad + (ch - contactEntries.length * perContactH) / 2;
     }
 
-    var contactH = contactFs;
-    for (final s in contactEntries) {
-      final fs = s.textStyle?.fontSize ?? 24;
-      final fw = s.textStyle?.fontWeight ?? FontWeight.w500;
-      final m = _measureText(s.text!, fs, fw);
-      final aspect = math.max(1.0, m.width - 8) / math.max(1.0, m.height - 4);
-      final fitH = leftW / aspect;
-      if (fitH < contactH) contactH = fitH;
-    }
     for (var i = 0; i < contactEntries.length; i++) {
       final centerY = yCursor + i * perContactH + perContactH / 2;
-      addLeftText(contactEntries[i], leftX0, centerY, contactH, leftW);
+      addLeftText(contactEntries[i], leftX0, centerY, contactFs, leftW);
     }
 
     if (hasQr) {
-      final captionH = ch * 0.16;
+      final captionH = ch * 0.12;
       final qrSide = math.min(rightW, ch - captionH - ch * 0.04);
       final blockTop = pad + (ch - (qrSide + ch * 0.04 + captionH)) / 2;
       _seedWidgetElement(
           qr!, Offset(rightX0 + rightW / 2, blockTop + qrSide / 2), qrSide);
       if (caption != null) {
-        final capFs = captionH * 0.9;
-        final capTop = blockTop + qrSide + ch * 0.04 + (captionH - capFs) / 2;
-        _seedTextElement(caption, rightX0, capTop, capFs,
-            columnWidth: rightW, center: true);
+        final fw = caption.textStyle?.fontWeight ?? FontWeight.w700;
+        var lo = 2.0;
+        var hi = captionH;
+        for (var i = 0; i < 12; i++) {
+          final mid = (lo + hi) / 2;
+          final m = _measureText(caption.text!, mid, fw);
+          if (m.width <= rightW && m.height <= captionH * 1.25) {
+            lo = mid;
+          } else {
+            hi = mid;
+          }
+        }
+        final m = _measureText(caption.text!, lo, fw);
+        final boxW = math.min(m.width, rightW);
+        final boxH = math.min(m.height, captionH);
+        final capTop = blockTop + qrSide + ch * 0.04;
+        _controller.addElement(
+          CanvasElement(
+            id: _nextId(),
+            kind: CanvasElementKind.text,
+            position: Offset(rightX0 + rightW / 2, capTop + captionH / 2),
+            baseSize: Size(boxW, boxH),
+            scale: 1.0,
+            color:
+                _sanitizeColor(caption.textColor ?? caption.textStyle?.color),
+            text: caption.text,
+            fontSize: lo,
+            fontWeight: fw,
+            textAlign: TextAlign.center,
+            followCanvasTheme: caption.followCanvasTheme,
+            elementId: caption.elementId,
+          ),
+          record: false,
+        );
       }
     }
   }
@@ -676,6 +754,38 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
         color: result.color,
         text: result.text,
         fontSize: result.fontSize,
+        fontFamily: result.fontFamily,
+        followCanvasTheme: !result.manualColor,
+      ),
+    );
+  }
+
+  Future<void> _addTextFromOcr() async {
+    final scanned = await scanImageForRawText(context);
+    if (!mounted || scanned == null) return;
+    final result = await _showTextSheet(initialText: scanned);
+    if (result == null) return;
+    var size = _measureText(
+        result.text, result.fontSize, FontWeight.normal, result.fontFamily);
+    var fontSize = result.fontSize;
+    final maxW = widget.width * 0.9;
+    final maxH = widget.height * 0.9;
+    if (size.width > maxW || size.height > maxH) {
+      final factor = (maxW / size.width) < (maxH / size.height)
+          ? (maxW / size.width)
+          : (maxH / size.height);
+      size = Size(size.width * factor, size.height * factor);
+      fontSize = (fontSize * factor).clamp(8.0, result.fontSize);
+    }
+    _controller.addElement(
+      CanvasElement(
+        id: _nextId(),
+        kind: CanvasElementKind.text,
+        position: _canvasCenter,
+        baseSize: size,
+        color: result.color,
+        text: result.text,
+        fontSize: fontSize,
         fontFamily: result.fontFamily,
         followCanvasTheme: !result.manualColor,
       ),
@@ -986,26 +1096,55 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, _) {
-        return Scaffold(
-          backgroundColor: const Color(0xFFEDEDED),
-          appBar: AppBar(
-            backgroundColor: colorAccent,
-            foregroundColor: colorWhite,
-            title: Text(appLocalizations.editor),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.undo),
-                onPressed: _controller.canUndo ? _controller.undo : null,
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, _) async {
+            if (didPop) return;
+            if (!_controller.canUndo) {
+              if (mounted) Navigator.of(context).pop();
+              return;
+            }
+            final discard = await showDialog<bool>(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text('Discard changes?'),
+                content:
+                    const Text('You have unsaved edits. Leave without saving?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(ctx).pop(false),
+                    child: const Text('Keep editing'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(ctx).pop(true),
+                    child: const Text('Discard'),
+                  ),
+                ],
               ),
-              IconButton(
-                icon: const Icon(Icons.redo),
-                onPressed: _controller.canRedo ? _controller.redo : null,
-              ),
-              IconButton(icon: const Icon(Icons.check), onPressed: _onDone),
-            ],
+            );
+            if ((discard ?? false) && mounted) Navigator.of(context).pop();
+          },
+          child: Scaffold(
+            backgroundColor: const Color(0xFFEDEDED),
+            appBar: AppBar(
+              backgroundColor: colorAccent,
+              foregroundColor: colorWhite,
+              title: Text(appLocalizations.editor),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.undo),
+                  onPressed: _controller.canUndo ? _controller.undo : null,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.redo),
+                  onPressed: _controller.canRedo ? _controller.redo : null,
+                ),
+                IconButton(icon: const Icon(Icons.check), onPressed: _onDone),
+              ],
+            ),
+            body: _buildCanvasArea(),
+            bottomNavigationBar: _buildBottomBar(),
           ),
-          body: _buildCanvasArea(),
-          bottomNavigationBar: _buildBottomBar(),
         );
       },
     );
@@ -1014,7 +1153,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   Widget _buildCanvasArea() {
     return LayoutBuilder(
       builder: (context, constraints) {
-        const padding = 20.0;
+        const padding = 6.0;
         final availW = constraints.maxWidth - padding * 2;
         final availH = constraints.maxHeight - padding * 2;
         _displayScale = (availW / widget.width) < (availH / widget.height)
@@ -1164,6 +1303,13 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                 label: appLocalizations.text,
                 onTap: _addText),
           ),
+          if (isOcrSupported)
+            Expanded(
+              child: _BarButton(
+                  icon: Icons.document_scanner_outlined,
+                  label: appLocalizations.scan,
+                  onTap: _addTextFromOcr),
+            ),
           Expanded(
             child: _BarButton(
                 icon: Icons.qr_code,
@@ -1342,9 +1488,11 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     );
   }
 
-  Future<_TextResult?> _showTextSheet({CanvasElement? existing}) {
+  Future<_TextResult?> _showTextSheet(
+      {CanvasElement? existing, String? initialText}) {
     final appLocalizations = AppLocalizations.of(context)!;
-    final textCtrl = TextEditingController(text: existing?.text ?? '');
+    final textCtrl =
+        TextEditingController(text: existing?.text ?? initialText ?? '');
     double fontSize = existing?.fontSize ?? 24;
     Color color =
         existing?.color ?? _controller.contrastColor(_controller.canvasColor);
@@ -1371,6 +1519,9 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     controller: textCtrl,
                     autofocus: true,
                     textCapitalization: TextCapitalization.sentences,
+                    keyboardType: TextInputType.multiline,
+                    minLines: 1,
+                    maxLines: 6,
                     onChanged: (_) => setSheet(() {}),
                     style: fontFamily == null
                         ? null
@@ -1378,6 +1529,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     decoration: InputDecoration(
                       labelText: appLocalizations.text,
                       border: const OutlineInputBorder(),
+                      alignLabelWithHint: true,
                     ),
                   ),
                   const SizedBox(height: 16),
