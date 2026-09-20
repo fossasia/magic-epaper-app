@@ -3,6 +3,7 @@ import 'package:magicepaperapp/utils/epd/configurable_editor.dart';
 import 'package:magicepaperapp/utils/epd/display_device.dart';
 import 'package:magicepaperapp/utils/epd/gdey037z03.dart';
 import 'package:magicepaperapp/utils/epd/gdey037z03bw.dart';
+import 'package:magicepaperapp/utils/epd/santek_displays.dart';
 import 'package:magicepaperapp/utils/epd/waveshare_displays.dart';
 import 'package:magicepaperapp/utils/epd/gdeq031t10.dart';
 
@@ -11,6 +12,7 @@ class EpdUtils {
     () => Gdey037z03(),
     () => Gdey037z03BW(),
     () => GDEQ031T10(),
+    () => SantekEzSign2in13(),
     () => Waveshare1in54(),
     () => Waveshare1in54g(),
     () => Waveshare2in9(),
@@ -69,6 +71,8 @@ class EpdUtils {
         return Waveshare7in5HD();
       case 'GDEQ031T10':
         return GDEQ031T10();
+      case 'santek-ez-2.13':
+        return SantekEzSign2in13();
     }
 
     final custom = _reconstructCustomDevice(metadata, epdModel);

@@ -36,6 +36,8 @@ class ImageAssets {
       'assets/images/displays/waveshare_1.54.jpg';
   static const String waveshare1_54g =
       'assets/images/displays/waveshare_1.54G.jpg';
+  static const String santekEzSign2_13 =
+      'assets/images/displays/santek_ez_2.13.jpg';
   static const String tempIcon = 'assets/icons/icon.png';
   static const String appIcon = 'assets/icons/app_icon_desktop.png';
   static const String githubIcon = 'assets/icons/github.png';
