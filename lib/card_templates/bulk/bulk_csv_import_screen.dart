@@ -111,7 +111,7 @@ class _BulkCsvImportScreenState extends State<BulkCsvImportScreen> {
     );
     if (file == null) return;
     String content;
-    if (await file.length() > 0) {
+    if ((await file.length())! > 0) {
       content = utf8.decode(await file.readAsBytes(), allowMalformed: true);
     } else if (file.path != null) {
       content = await File(file.path!).readAsString();
