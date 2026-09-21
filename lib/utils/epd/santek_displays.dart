@@ -36,10 +36,10 @@ class SantekEzSign2in13 extends DisplayDevice {
 
   @override
   List<ImageProcessingMethod> get processingMethods => [
+        ImageProcessing.bwryTriColorAtkinsonDither,
         ImageProcessing.bwryFloydSteinbergDither,
         ImageProcessing.bwryFalseFloydSteinbergDither,
         ImageProcessing.bwryStuckiDither,
-        ImageProcessing.bwryTriColorAtkinsonDither,
         ImageProcessing.bwryThreshold,
       ];
 

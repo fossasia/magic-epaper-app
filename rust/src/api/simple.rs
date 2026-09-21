@@ -75,6 +75,16 @@ fn dither_gamma_lut() -> &'static [f32; 256] {
     })
 }
 
+#[inline(always)]
+fn boost_saturation(px: Colorf32, factor: f32) -> Colorf32 {
+    let gray = px.r * 0.299 + px.g * 0.587 + px.b * 0.114;
+    Colorf32 {
+        r: (gray + (px.r - gray) * factor).clamp(0.0, 255.0),
+        g: (gray + (px.g - gray) * factor).clamp(0.0, 255.0),
+        b: (gray + (px.b - gray) * factor).clamp(0.0, 255.0),
+    }
+}
+
 fn bayer_offset_lut() -> &'static [[f32; 8]; 8] {
     static LUT: OnceLock<[[f32; 8]; 8]> = OnceLock::new();
     LUT.get_or_init(|| {
@@ -95,6 +105,23 @@ fn closest_color(pixel: Colorf32, palette: &[Colorf32]) -> Colorf32 {
     for c in palette {
         let dr = pixel.r - c.r;
         let dg = pixel.g - c.g;
+        let db = pixel.b - c.b;
+        let dist = dr * dr + dg * dg + db * db;
+        if dist < min_dist {
+            min_dist = dist;
+            best_color = *c;
+        }
+    }
+    best_color
+}
+
+#[inline(always)]
+fn closest_color_bwry(pixel: Colorf32, palette: &[Colorf32]) -> Colorf32 {
+    let mut min_dist = f32::MAX;
+    let mut best_color = palette[0];
+    for c in palette {
+        let dr = pixel.r - c.r;
+        let dg = (pixel.g - c.g) * 1.5;
         let db = pixel.b - c.b;
         let dist = dr * dr + dg * dg + db * db;
         if dist < min_dist {
@@ -130,13 +157,24 @@ pub fn process_image_rust(
         .map(|p| Colorf32 { r: p[0] as f32, g: p[1] as f32, b: p[2] as f32 })
         .collect();
 
-    if !matches!(method, DitherMethod::Threshold) {
-        let gamma_lut = dither_gamma_lut();
-        buffer.par_iter_mut().for_each(|px| {
-            px.r = gamma_lut[px.r.clamp(0.0, 255.0) as usize];
-            px.g = gamma_lut[px.g.clamp(0.0, 255.0) as usize];
-            px.b = gamma_lut[px.b.clamp(0.0, 255.0) as usize];
-        });
+    match color_mode {
+        ColorMode::Bwry => {
+            buffer.par_iter_mut().for_each(|px| {
+                px.r = (px.r * 1.3).clamp(0.0, 255.0);
+                px.g = (px.g * 1.3).clamp(0.0, 255.0);
+                px.b = (px.b * 0.7).clamp(0.0, 255.0);
+            });
+        }
+        _ => {
+            if !matches!(method, DitherMethod::Threshold) {
+                let gamma_lut = dither_gamma_lut();
+                buffer.par_iter_mut().for_each(|px| {
+                    px.r = gamma_lut[px.r.clamp(0.0, 255.0) as usize];
+                    px.g = gamma_lut[px.g.clamp(0.0, 255.0) as usize];
+                    px.b = gamma_lut[px.b.clamp(0.0, 255.0) as usize];
+                });
+            }
+        }
     }
 
     let palette: &[Colorf32] = match color_mode {
@@ -145,10 +183,12 @@ pub fn process_image_rust(
         ColorMode::Bwry => &PALETTE_BWRY[..],
     };
 
+    let quant: fn(Colorf32, &[Colorf32]) -> Colorf32 = closest_color;
+
     match method {
         DitherMethod::Threshold => {
             buffer.par_iter_mut().for_each(|px| {
-                *px = closest_color(*px, palette);
+                *px = quant(*px, palette);
             });
         }
         DitherMethod::Bayer => {
@@ -158,7 +198,7 @@ pub fn process_image_rust(
                     let brow = &offsets[y & 7];
                     for (x, px) in row.iter_mut().enumerate() {
                         let off = brow[x & 7];
-                        *px = closest_color(Colorf32 { r: px.r + off, g: px.g + off, b: px.b + off }, palette);
+                        *px = quant(Colorf32 { r: px.r + off, g: px.g + off, b: px.b + off }, palette);
                     }
                 });
             }
@@ -169,7 +209,7 @@ pub fn process_image_rust(
                 for x in 0..w {
                     let idx = y * w + x;
                     let old_pixel = unsafe { *ptr.add(idx) };
-                    let new_pixel = closest_color(old_pixel, palette);
+                    let new_pixel = quant(old_pixel, palette);
                     unsafe { ptr.add(idx).write(new_pixel) };
                     let er = old_pixel.r - new_pixel.r;
                     let eg = old_pixel.g - new_pixel.g;

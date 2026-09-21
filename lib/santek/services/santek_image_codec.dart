@@ -12,7 +12,6 @@ class SantekImageCodec {
   static const int width = 250;
   static const int height = 128;
 
-  // Palette used by the Rust dithering pipeline (ColorMode.bwry).
   static const List<List<int>> _palette = [
     [0, 0, 0],
     [255, 255, 255],
@@ -45,8 +44,6 @@ class SantekImageCodec {
     return SantekImageCodec().encode(image);
   }
 
-  // The image arriving here is already 4-color dithered by the Rust pipeline.
-  // Only nearest-neighbour resize + direct index mapping is needed.
   Uint8List encode(img.Image image) {
     final resized = img.copyResize(
       image,
