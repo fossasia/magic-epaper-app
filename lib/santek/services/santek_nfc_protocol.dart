@@ -8,7 +8,6 @@ typedef SantekProgressCallback = void Function(int progress);
 class SantekNfcProtocol {
   static const _chunkSize = 250;
   static const _totalChunks = 32;
-  static const _interApduDelay = Duration(milliseconds: 10);
   static const _writeTimeout = Duration(milliseconds: 5000);
   static const _refreshTimeout = Duration(milliseconds: 30000);
 
@@ -34,7 +33,7 @@ class SantekNfcProtocol {
       await Future<void>.delayed(const Duration(milliseconds: 300));
       authResp = await _send(_auth, _writeTimeout);
       if (!_isSw9000(authResp)) {
-        throw SantekNfcException('AUTH_FAILED', 'Auth rejected: ${_hex2(authResp)}');
+        throw SantekNfcException('AUTH_FAILED', 'Auth rejected: ${authResp.map((b) => b.toRadixString(16).padLeft(2, '0')).join()}');
       }
     }
 
@@ -52,7 +51,6 @@ class SantekNfcProtocol {
       apdu[4] = _chunkSize;
       apdu.setRange(5, 5 + _chunkSize, data, seq * _chunkSize);
 
-      await Future<void>.delayed(_interApduDelay);
       await _send(apdu, _writeTimeout);
       onProgress?.call(seq * 85 ~/ _totalChunks);
     }
@@ -61,18 +59,18 @@ class SantekNfcProtocol {
 
     final refreshResp = await _send(_refresh, _refreshTimeout);
     if (!_isSw9000(refreshResp)) {
-      throw SantekNfcException('REFRESH_FAILED', 'Refresh rejected: ${_hex2(refreshResp)}');
+      throw SantekNfcException('REFRESH_FAILED', 'Refresh rejected: ${refreshResp.map((b) => b.toRadixString(16).padLeft(2, '0')).join()}');
     }
 
     onProgress?.call(90);
 
-    await Future<void>.delayed(const Duration(seconds: 5));
+    await Future<void>.delayed(const Duration(milliseconds: 1500));
 
-    for (var attempt = 0; attempt < 60; attempt++) {
+    for (var attempt = 0; attempt < 80; attempt++) {
       final pollResp = await _send(_poll, _writeTimeout);
       final status = pollResp.isNotEmpty ? pollResp[0] : 0x00;
       if (status == 0x00) break;
-      await Future<void>.delayed(const Duration(milliseconds: 400));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
     }
 
     onProgress?.call(100);

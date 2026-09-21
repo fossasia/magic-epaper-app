@@ -17,7 +17,7 @@ class SantekEzSign2in13 extends DisplayDevice {
   @override
   int get width => 250;
   @override
-  int get height => 122;
+  int get height => 128;
   @override
   String get imgPath => ImageAssets.santekEzSign2_13;
 
