@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/santek/models/santek_nfc_exception.dart';
+import 'package:magicepaperapp/santek/services/santek_image_codec.dart';
 import 'package:magicepaperapp/santek/services/santek_nfc_protocol.dart';
 
 typedef SantekProgressCallback = void Function(int progress);
@@ -14,10 +15,16 @@ class SantekNfcServices {
     img.Image image, {
     SantekProgressCallback? onProgress,
   }) async {
+    final landscape = image.width < image.height
+        ? img.copyRotate(image, angle: 90)
+        : image;
+    final data = SantekImageCodec().encode(landscape);
+
     var sessionStarted = false;
 
     try {
       await _ensureNfcAvailable();
+      await _pauseSilentReaderMode();
       onProgress?.call(0);
 
       final tag = await FlutterNfcKit.poll(
@@ -42,23 +49,16 @@ class SantekNfcServices {
             FlutterNfcKit.transceive<Uint8List>(cmd, timeout: timeout),
       );
 
-      final success = await protocol.writeDisplay(image, onProgress: onProgress);
-      if (!success) {
-        throw SantekNfcException('FLASH_FAILED', 'Display did not confirm completion.');
-      }
-
-      await _finishSession();
+      await protocol.writeAndRefresh(data, onProgress: onProgress);
     } on SantekNfcException catch (e) {
-      if (sessionStarted) await _finishSession();
       throw PlatformException(code: e.code, message: e.message);
     } on PlatformException {
-      if (sessionStarted) await _finishSession();
       rethrow;
     } catch (e) {
-      if (sessionStarted) await _finishSession();
-      throw PlatformException(code: 'NFC_ERROR', details: e.toString());
+      throw PlatformException(code: 'NFC_ERROR', message: e.toString());
     } finally {
-      await _restoreSilentReaderMode();
+      if (sessionStarted) await _finishSession();
+      await _resumeSilentReaderMode();
     }
   }
 
@@ -73,19 +73,29 @@ class SantekNfcServices {
     }
   }
 
-  Future<void> _finishSession() async {
+  Future<void> _pauseSilentReaderMode() async {
     try {
-      await FlutterNfcKit.finish();
-    } catch (_) {}
-  }
-
-  Future<void> _restoreSilentReaderMode() async {
-    try {
-      await _platform.invokeMethod('disableNfcReaderMode');
+      await _platform.invokeMethod('pauseNfcReaderMode');
     } on MissingPluginException {
       // no-op
     } on PlatformException {
       // no-op
     }
+  }
+
+  Future<void> _resumeSilentReaderMode() async {
+    try {
+      await _platform.invokeMethod('resumeNfcReaderMode');
+    } on MissingPluginException {
+      // no-op
+    } on PlatformException {
+      // no-op
+    }
+  }
+
+  Future<void> _finishSession() async {
+    try {
+      await FlutterNfcKit.finish();
+    } catch (_) {}
   }
 }
