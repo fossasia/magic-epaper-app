@@ -12,7 +12,11 @@ runs:
     - name: Fetch Flutter Dependencies
       shell: bash
       run: flutter pub get
-      
+
+    - name: Generate localization files
+      shell: bash
+      run: flutter gen-l10n
+
     - name: Format l10n files
       shell: bash
       run: dart format lib/l10n/

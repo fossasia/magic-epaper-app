@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../model/stroke.dart';
+import '../models/stroke.dart';
 
 class StrokePainter extends CustomPainter {
   final List<Stroke> strokes;

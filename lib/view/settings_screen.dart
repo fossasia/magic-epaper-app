@@ -3,9 +3,12 @@ import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/locale_provider.dart';
+import 'package:magicepaperapp/provider/developer_options_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:magicepaperapp/util/orientation_util.dart';
-import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/utils/orientation_util.dart';
+import 'package:magicepaperapp/view/widgets/common_scaffold_widget.dart';
+
+import '../card_templates/card_template_selection_view.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -24,16 +27,18 @@ class SettingsScreenState extends State<SettingsScreen> {
   String _getLanguageName(Locale locale) {
     switch (locale.languageCode) {
       case 'hi':
-        return 'हिंदी';
+        return appLocalizations.hindi;
       case 'en':
       default:
-        return 'English';
+        return appLocalizations.english;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final localeProvider = Provider.of<LocaleProvider>(context);
+    final developerOptionsProvider =
+        Provider.of<DeveloperOptionsProvider>(context);
     final appLocalizations = AppLocalizations.of(context)!;
 
     return CommonScaffold(
@@ -82,6 +87,34 @@ class SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                   ],
+                ),
+              ),
+            ),
+            const SizedBox(height: Dimens.spacingXl),
+            Text(
+              appLocalizations.developerOptions,
+              style: const TextStyle(
+                  fontSize: Dimens.fontSizeL, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: Dimens.spacingS),
+            Container(
+              decoration: BoxDecoration(
+                color: colorWhite,
+                borderRadius: BorderRadius.circular(Dimens.radiusM),
+              ),
+              child: SwitchListTile(
+                value: developerOptionsProvider.enabled,
+                onChanged: developerOptionsProvider.setEnabled,
+                activeThumbColor: colorAccent,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: Dimens.spacingM),
+                title: Text(
+                  appLocalizations.developerOptions,
+                  style: const TextStyle(color: colorBlack),
+                ),
+                subtitle: Text(
+                  appLocalizations.developerOptionsSubtitle,
+                  style: const TextStyle(color: grey600),
                 ),
               ),
             ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
-import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
+import 'package:magicepaperapp/image_library/models/saved_image_model.dart';
 import 'package:magicepaperapp/image_library/widgets/image_card_widget.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
@@ -35,8 +35,8 @@ class ImageGridWidget extends StatelessWidget {
 
     return GridView.builder(
       padding: const EdgeInsets.all(Dimens.spacingL),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 200.0,
         childAspectRatio: 1.2,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,

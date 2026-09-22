@@ -1,0 +1,151 @@
+import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
+import 'package:magicepaperapp/constants/color_constants.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/utils/epd/display_device.dart';
+import 'package:magicepaperapp/utils/epd/goodisplay_nfc_protocol.dart';
+
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
+
+class GoodisplayTransferDialog extends StatefulWidget {
+  final img.Image image;
+  final DisplayDevice display;
+
+  const GoodisplayTransferDialog({
+    super.key,
+    required this.image,
+    required this.display,
+  });
+
+  static Future<void> show(
+    BuildContext context,
+    img.Image image, {
+    required DisplayDevice display,
+  }) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => GoodisplayTransferDialog(
+        image: image,
+        display: display,
+      ),
+    );
+  }
+
+  @override
+  State<GoodisplayTransferDialog> createState() =>
+      _GoodisplayTransferDialogState();
+}
+
+class _GoodisplayTransferDialogState extends State<GoodisplayTransferDialog> {
+  double _progress = 0.0;
+  String _status = '';
+  bool _isError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTransmission();
+  }
+
+  Future<void> _startTransmission() async {
+    setState(() {
+      _progress = 0.0;
+      _status = appLocalizations.waitingForNfcTag;
+      _isError = false;
+    });
+
+    try {
+      final protocol = GoodisplayNfcProtocol();
+      await protocol.sendImage(
+        image: widget.image,
+        display: widget.display,
+        onProgress: (progress, status) {
+          if (mounted) {
+            setState(() {
+              _progress = progress;
+              _status = status;
+            });
+          }
+        },
+      );
+
+      if (mounted) {
+        await Future.delayed(const Duration(milliseconds: 600));
+
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        final errorMsg = e.toString().replaceAll('Exception: ', '');
+
+        setState(() {
+          _isError = true;
+          if (errorMsg.startsWith('MissingPluginException')) {
+            _status = appLocalizations.noNFCfound;
+          } else if (errorMsg.startsWith('PlatformException')) {
+            _status = appLocalizations.platformException;
+          } else {
+            _status = appLocalizations.badgeDisconnected;
+          }
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(Dimens.radiusL),
+      ),
+      title: Text(
+        'Goodisplay NFC Transfer',
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: Dimens.fontSizeL,
+        ),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (!_isError)
+            LinearProgressIndicator(
+              value: _progress > 0 ? _progress : null,
+              backgroundColor: grey200,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                _isError ? Colors.red : colorAccent,
+              ),
+            ),
+          const SizedBox(height: Dimens.spacingL),
+          Text(
+            _status,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: Dimens.fontSizeM,
+              color: _isError ? Colors.red : colorBlack,
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        if (_isError)
+          TextButton(
+            onPressed: _startTransmission,
+            child: Text(
+              appLocalizations.retry,
+              style: const TextStyle(color: colorAccent),
+            ),
+          ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(appLocalizations.cancel),
+        ),
+      ],
+    );
+  }
+}

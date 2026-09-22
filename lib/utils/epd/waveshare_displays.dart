@@ -1,0 +1,258 @@
+import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
+import 'package:magicepaperapp/constants/asset_paths.dart';
+import 'package:magicepaperapp/utils/epd/display_device.dart';
+import 'package:magicepaperapp/utils/epd/driver/waveform.dart';
+import 'package:magicepaperapp/utils/epd/waveshare_nfc_display.dart';
+import 'package:magicepaperapp/utils/image_processing/image_processing.dart';
+import 'package:magicepaperapp/view/widgets/waveshare_transfer_dialog.dart';
+import 'package:magicepaperapp/waveshare/services/waveshare_g_nfc_services.dart';
+
+import 'brand.dart';
+
+class Waveshare2in13 extends WaveshareNfcDisplay {
+  Waveshare2in13() : super(ePaperSizeEnum: 1);
+
+  @override
+  String get name => 'Waveshare 2.13" NFC';
+  @override
+  String get modelId => '17745';
+  @override
+  int get width => 250;
+  @override
+  int get height => 122;
+  @override
+  String get imgPath => ImageAssets.waveshare2_13;
+  @override
+  Brand get brand => Brand.waveshare;
+}
+
+class Waveshare2in9 extends WaveshareNfcDisplay {
+  Waveshare2in9() : super(ePaperSizeEnum: 2);
+
+  @override
+  String get name => 'Waveshare 2.9" NFC';
+  @override
+  String get modelId => '17746';
+  @override
+  int get width => 296;
+  @override
+  int get height => 128;
+  @override
+  String get imgPath => ImageAssets.waveshare2_9;
+  @override
+  Brand get brand => Brand.waveshare;
+}
+
+class Waveshare4in2 extends WaveshareNfcDisplay {
+  Waveshare4in2() : super(ePaperSizeEnum: 3);
+
+  @override
+  String get name => 'Waveshare 4.2" NFC';
+  @override
+  String get modelId => '17341';
+  @override
+  int get width => 400;
+  @override
+  int get height => 300;
+  @override
+  String get imgPath => ImageAssets.waveshare4_2;
+  @override
+  Brand get brand => Brand.waveshare;
+}
+
+class Waveshare7in5 extends WaveshareNfcDisplay {
+  Waveshare7in5() : super(ePaperSizeEnum: 4);
+
+  @override
+  String get name => 'Waveshare 7.5" NFC';
+  @override
+  String get modelId => '17675';
+  @override
+  int get width => 800;
+  @override
+  int get height => 480;
+  @override
+  String get imgPath => ImageAssets.waveshare7_5;
+  @override
+  Brand get brand => Brand.waveshare;
+}
+
+class Waveshare7in5HD extends WaveshareNfcDisplay {
+  Waveshare7in5HD() : super(ePaperSizeEnum: 5);
+
+  @override
+  String get name => 'Waveshare 7.5" HD NFC';
+  @override
+  String get modelId => '18082';
+  @override
+  int get width => 880;
+  @override
+  int get height => 528;
+  @override
+  String get imgPath => ImageAssets.waveshare7_5hd;
+  @override
+  Brand get brand => Brand.waveshare;
+}
+
+class Waveshare2in7 extends WaveshareNfcDisplay {
+  Waveshare2in7() : super(ePaperSizeEnum: 6);
+
+  @override
+  String get name => 'Waveshare 2.7" NFC';
+  @override
+  String get modelId => '18136';
+  @override
+  int get width => 264;
+  @override
+  int get height => 176;
+  @override
+  String get imgPath => ImageAssets.waveshare2_7;
+  @override
+  Brand get brand => Brand.waveshare;
+}
+
+class Waveshare2in13g extends DisplayDevice {
+  @override
+  String get name => 'Waveshare 2.13" G NFC';
+  @override
+  String get modelId => '28107';
+  @override
+  int get width => 250;
+  @override
+  int get height => 122;
+  @override
+  String get imgPath => ImageAssets.waveshare2_13g;
+
+  @override
+  List<Color> get colors =>
+      [Colors.white, Colors.black, Colors.red, Colors.yellow];
+
+  @override
+  List<String>? get displayChips => null;
+
+  @override
+  Brand get brand => Brand.waveshare;
+
+  @override
+  bool get isBeta => true;
+
+  @override
+  List<ImageProcessingMethod> get processingMethods => [
+        ImageProcessing.bwryFloydSteinbergDither,
+        ImageProcessing.bwryFalseFloydSteinbergDither,
+        ImageProcessing.bwryStuckiDither,
+        ImageProcessing.bwryTriColorAtkinsonDither,
+        ImageProcessing.bwryThreshold,
+      ];
+
+  @override
+  Future<void> transfer(BuildContext context, img.Image image,
+      {Waveform? waveform}) async {
+    return WaveshareTransferDialog.showWithFlasher(
+      context,
+      image,
+      (img.Image processed, onProgress) =>
+          WaveshareGNfcServices().flashImage(processed, onProgress: onProgress),
+    );
+  }
+}
+
+class Waveshare1in54 extends WaveshareNfcDisplay {
+  Waveshare1in54() : super(ePaperSizeEnum: 8);
+
+  @override
+  String get name => 'Waveshare 1.54" NFC';
+  @override
+  String get modelId => '17953';
+  @override
+  int get width => 200;
+  @override
+  int get height => 200;
+  @override
+  String get imgPath => ImageAssets.waveshare1_54;
+
+  @override
+  bool get isBeta => true;
+
+  @override
+  Brand get brand => Brand.waveshare;
+}
+
+class Waveshare1in54g extends DisplayDevice {
+  @override
+  String get name => 'Waveshare 1.54" G NFC';
+  @override
+  String get modelId => '31888';
+  @override
+  int get width => 200;
+  @override
+  int get height => 200;
+  @override
+  String get imgPath => ImageAssets.waveshare1_54g;
+
+  @override
+  List<Color> get colors =>
+      [Colors.white, Colors.black, Colors.red, Colors.yellow];
+
+  @override
+  List<String>? get displayChips => null;
+
+  @override
+  Brand get brand => Brand.waveshare;
+
+  @override
+  bool get isBeta => true;
+
+  @override
+  List<ImageProcessingMethod> get processingMethods => [
+        ImageProcessing.bwryFloydSteinbergDither,
+        ImageProcessing.bwryFalseFloydSteinbergDither,
+        ImageProcessing.bwryStuckiDither,
+        ImageProcessing.bwryTriColorAtkinsonDither,
+        ImageProcessing.bwryThreshold,
+      ];
+
+  @override
+  Future<void> transfer(BuildContext context, img.Image image,
+      {Waveform? waveform}) async {
+    return WaveshareTransferDialog.showWithFlasher(
+      context,
+      image,
+      (img.Image processed, onProgress) =>
+          WaveshareGNfcServices().flashImage(processed, onProgress: onProgress),
+    );
+  }
+}
+
+class Waveshare2in9b extends WaveshareNfcDisplay {
+  Waveshare2in9b() : super(ePaperSizeEnum: 7);
+
+  @override
+  String get name => 'Waveshare 2.9" B NFC';
+  @override
+  String get modelId => '13339';
+  @override
+  int get width => 296;
+  @override
+  int get height => 128;
+  @override
+  String get imgPath => ImageAssets.waveshare2_9b;
+  @override
+  Brand get brand => Brand.waveshare;
+
+  @override
+  List<Color> get colors => [Colors.white, Colors.black, Colors.red];
+  @override
+  List<ImageProcessingMethod> get processingMethods => [
+        ImageProcessing.bwrFloydSteinbergDither,
+        ImageProcessing.bwrFalseFloydSteinbergDither,
+        ImageProcessing.bwrStuckiDither,
+        ImageProcessing.bwrTriColorAtkinsonDither,
+        ImageProcessing.bwrHalftone,
+        ImageProcessing.bwrThreshold,
+        ImageProcessing.bwrBayerDither,
+        ImageProcessing.bwrSierra2Dither,
+        ImageProcessing.bwrBurkesDither,
+      ];
+}

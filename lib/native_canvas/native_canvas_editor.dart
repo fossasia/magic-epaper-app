@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -7,21 +7,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image/image.dart' as img;
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:magicepaperapp/native_canvas/model/canvas_controller.dart';
-import 'package:magicepaperapp/native_canvas/model/canvas_element.dart';
-import 'package:magicepaperapp/native_canvas/model/stroke.dart';
+import 'package:magicepaperapp/view/image_crop_screen.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_controller.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_document.dart';
+import 'package:magicepaperapp/native_canvas/models/canvas_element.dart';
+import 'package:magicepaperapp/native_canvas/models/stroke.dart';
 import 'package:magicepaperapp/native_canvas/widgets/badge_color_picker.dart';
 import 'package:magicepaperapp/native_canvas/widgets/editable_element.dart';
 import 'package:magicepaperapp/native_canvas/widgets/stroke_painter.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/native_canvas/widgets/barcode_editor.dart';
+import 'package:magicepaperapp/native_canvas/sticker_vault/iconify_service.dart';
+import 'package:magicepaperapp/native_canvas/sticker_vault/sticker_vault_sheet.dart';
 import 'package:magicepaperapp/provider/color_palette_provider.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
-import 'package:magicepaperapp/util/template_util.dart';
-import 'package:magicepaperapp/util/image_source_picker.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/utils/template_util.dart';
+import 'package:magicepaperapp/utils/image_source_picker.dart';
+import 'package:magicepaperapp/card_templates/utils/ocr_contact_scanner.dart';
 
 class NativeCanvasEditor extends StatefulWidget {
   const NativeCanvasEditor({
@@ -29,11 +33,17 @@ class NativeCanvasEditor extends StatefulWidget {
     required this.width,
     required this.height,
     this.initialLayers,
+    this.initialDocument,
+    this.returnDocument = false,
   });
 
   final int width;
   final int height;
   final List<LayerSpec>? initialLayers;
+
+  final CanvasDocument? initialDocument;
+
+  final bool returnDocument;
 
   @override
   State<NativeCanvasEditor> createState() => _NativeCanvasEditorState();
@@ -51,6 +61,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   double _displayH = 1;
   int _idCounter = 0;
 
+  bool _scanning = false;
   bool _drawMode = false;
   bool _eraser = false;
   late Color _brushColor;
@@ -98,7 +109,9 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
 
   Color get _inkColor {
     for (final c in _controller.palette) {
-      if (c.computeLuminance() <= 0.85) return c;
+      if (c.computeLuminance() <= 0.85) {
+        return c;
+      }
     }
     return colorBlack;
   }
@@ -121,14 +134,401 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   static const double _templateStickerUnit = 20;
 
   void _seedInitialLayers() {
+    final document = widget.initialDocument;
+    if (document != null) {
+      _controller.loadDocument(document);
+      _resumeIdCounter();
+      return;
+    }
     final layers = widget.initialLayers;
-    if (layers == null) return;
-    if (layers.any((s) => s.elementId == 'qr')) {
+    if (layers == null) {
+      return;
+    }
+    if (layers.any((s) => s.elementId == 'qrCode')) {
+      _seedQrLayout(layers);
+    } else if (layers.length == 1 &&
+        (layers.first.elementId == 'weatherSnapshot' ||
+            layers.first.elementId == 'restaurantMenu') &&
+        layers.first.widget != null) {
+      _seedFullCanvasElement(layers.first);
+    } else if (layers.any((s) => s.elementId == 'qrCaption')) {
+      _seedContactCardLayout(layers);
+    } else if (layers.any((s) => s.elementId == 'qr')) {
       _seedCardLayout(layers);
     } else {
       _seedOffsetLayers(layers);
     }
     _controller.select(null);
+  }
+
+  void _seedQrLayout(List<LayerSpec> layers) {
+    final w = widget.width.toDouble();
+    final h = widget.height.toDouble();
+    final pad = math.min(w, h) * 0.08;
+    final cw = w - 2 * pad;
+    final ch = h - 2 * pad;
+    final landscape = w >= h * 1.15;
+
+    LayerSpec? qr;
+    LayerSpec? icon;
+    LayerSpec? caption;
+    for (final s in layers) {
+      switch (s.elementId) {
+        case 'qrCode':
+          qr = s;
+        case 'qrIcon':
+          icon = s;
+        case 'qrCaption':
+          caption = s;
+      }
+    }
+
+    final hasExtras = icon != null || caption != null;
+    if (!hasExtras) {
+      if (qr?.widget != null) {
+        _seedWidgetElement(qr!, _canvasCenter, math.min(cw, ch));
+      }
+      return;
+    }
+
+    if (landscape) {
+      final qrSide = ch;
+      final gap = cw * 0.05;
+      final rightW = math.max(0.0, cw - qrSide - gap);
+      if (qr?.widget != null) {
+        _seedWidgetElement(qr!, Offset(pad + qrSide / 2, h / 2), qrSide);
+      }
+      final rightLeftX = pad + qrSide + gap;
+      final rightCenterX = rightLeftX + rightW / 2;
+      final iconSide = icon != null ? ch * 0.3 : 0.0;
+      final captionH = caption != null ? ch * 0.18 : 0.0;
+      final gapV = (icon != null && caption != null) ? ch * 0.06 : 0.0;
+      var y = h / 2 - (iconSide + gapV + captionH) / 2;
+      if (icon?.widget != null) {
+        _seedWidgetElement(
+            icon!, Offset(rightCenterX, y + iconSide / 2), iconSide);
+        y += iconSide + gapV;
+      }
+      if (caption != null) {
+        _seedTextElement(caption, rightLeftX, y, captionH,
+            columnWidth: rightW, center: true);
+      }
+    } else {
+      final iconSide = icon != null ? ch * 0.16 : 0.0;
+      final captionH = caption != null ? ch * 0.16 : 0.0;
+      final gapV = ch * 0.05;
+      var qrSide = ch -
+          iconSide -
+          captionH -
+          (icon != null ? gapV : 0) -
+          (caption != null ? gapV : 0);
+      if (qrSide > cw) qrSide = cw;
+      final totalH = iconSide +
+          (icon != null ? gapV : 0) +
+          qrSide +
+          (caption != null ? gapV : 0) +
+          captionH;
+      final centerX = w / 2;
+      var y = h / 2 - totalH / 2;
+      if (icon?.widget != null) {
+        _seedWidgetElement(icon!, Offset(centerX, y + iconSide / 2), iconSide);
+        y += iconSide + gapV;
+      }
+      if (qr?.widget != null) {
+        _seedWidgetElement(qr!, Offset(centerX, y + qrSide / 2), qrSide);
+        y += qrSide + (caption != null ? gapV : 0);
+      }
+      if (caption != null) {
+        _seedTextElement(caption, pad, y, captionH,
+            columnWidth: cw, center: true);
+      }
+    }
+  }
+
+  void _seedFullCanvasElement(LayerSpec spec) {
+    _controller.addElement(
+      CanvasElement(
+        id: _nextId(),
+        kind: CanvasElementKind.widget,
+        position: _canvasCenter,
+        baseSize: Size(widget.width.toDouble(), widget.height.toDouble()),
+        scale: 1.0,
+        child: spec.widget,
+        elementId: spec.elementId,
+      ),
+      record: false,
+    );
+  }
+
+  void _seedContactCardLayout(List<LayerSpec> layers) {
+    final w = widget.width.toDouble();
+    final h = widget.height.toDouble();
+    final pad = h * 0.04;
+    final cw = w - pad * 2;
+    final ch = h - pad * 2;
+
+    LayerSpec? name, jobTitle, company, phone, email, link, photo, qr, caption;
+    for (final s in layers) {
+      switch (s.elementId) {
+        case 'fullName':
+          name = s;
+          break;
+        case 'jobTitle':
+          jobTitle = s;
+          break;
+        case 'company':
+          company = s;
+          break;
+        case 'phone':
+          phone = s;
+          break;
+        case 'email':
+          email = s;
+          break;
+        case 'link':
+          link = s;
+          break;
+        case 'profileImage':
+          photo = s;
+          break;
+        case 'qr':
+          qr = s;
+          break;
+        case 'qrCaption':
+          caption = s;
+          break;
+      }
+    }
+
+    final hasQr = qr?.widget != null;
+    final rightW = hasQr ? math.min(w * 0.32, ch * 0.94) : 0.0;
+    final gapX = hasQr ? cw * 0.04 : 0.0;
+    final leftW = cw - rightW - gapX;
+    final leftX0 = pad;
+    final rightX0 = pad + leftW + gapX;
+
+    final hasPhoto = photo?.widget != null;
+    final showName = name != null;
+    final subEntries = [jobTitle, company].whereType<LayerSpec>().toList();
+    final hasSub = subEntries.isNotEmpty;
+    final contactEntries = [phone, email, link].whereType<LayerSpec>().toList();
+
+    final nameH = showName ? ch * 0.30 : 0.0;
+    final subH = hasSub ? ch * 0.25 : 0.0;
+    var identH = nameH + subH;
+    if (hasPhoto && identH < ch * 0.38) identH = ch * 0.38;
+    final hasIdentity = identH > 0;
+
+    final divTh = math.max(1.0, ch * 0.012);
+    final showDivider = hasIdentity && contactEntries.isNotEmpty;
+    final divBlockH = showDivider ? ch * 0.05 : 0.0;
+
+    final contactsH = ch - identH - divBlockH;
+    final perContactH = contactEntries.isEmpty
+        ? 0.0
+        : math.min(contactsH / contactEntries.length, ch * 0.32);
+
+    final nameFs = nameH * 1.0;
+    final contactFs = perContactH * 1.05;
+
+    final photoD = hasPhoto ? identH * 0.72 : 0.0;
+    final photoGap = hasPhoto ? cw * 0.02 : 0.0;
+    final textColLeft = leftX0 + (hasPhoto ? photoD + photoGap : 0.0);
+    final identTextW = leftW - (hasPhoto ? photoD + photoGap : 0.0);
+
+    // Places a left-anchored text element whose box aspect matches the glyph
+    // aspect exactly (using the unpadded measurement), so a width-capped line
+    // still hugs the left edge instead of getting centered/indented. Left
+    // anchoring also keeps the position stable when the text is later edited.
+    void addLeftText(LayerSpec s, double leftX, double centerY, double targetH,
+        double availW,
+        {double? maxFs}) {
+      final fw = s.textStyle?.fontWeight ?? FontWeight.w500;
+      final text = s.text ?? '';
+      if (text.isEmpty) {
+        return;
+      }
+      var lo = 2.0;
+      var hi = maxFs ?? targetH;
+      for (var i = 0; i < 12; i++) {
+        final mid = (lo + hi) / 2;
+        final m = _measureText(text, mid, fw);
+        if (m.width <= availW && m.height <= targetH * 1.25) {
+          lo = mid;
+        } else {
+          hi = mid;
+        }
+      }
+      final m = _measureText(text, lo, fw);
+      final boxW = math.min(m.width, availW);
+      final boxH = math.min(m.height, targetH);
+      _controller.addElement(
+        CanvasElement(
+          id: _nextId(),
+          kind: CanvasElementKind.text,
+          position: Offset(leftX + boxW / 2, centerY),
+          baseSize: Size(boxW, boxH),
+          scale: 1.0,
+          color: _sanitizeColor(s.textColor ?? s.textStyle?.color),
+          text: s.text,
+          fontSize: lo,
+          fontWeight: fw,
+          textAlign: TextAlign.left,
+          followCanvasTheme: s.followCanvasTheme,
+          elementId: s.elementId,
+        ),
+        record: false,
+      );
+    }
+
+    double yCursor;
+    if (hasIdentity) {
+      if (hasPhoto) {
+        _seedWidgetElement(
+            photo!, Offset(leftX0 + photoD / 2, pad + identH / 2), photoD);
+      }
+      final blockTop = pad + (identH - (nameH + subH)) / 2;
+      if (showName) {
+        addLeftText(
+            name, textColLeft, blockTop + nameH / 2, nameFs, identTextW);
+      }
+      if (hasSub) {
+        final subTop = blockTop + nameH;
+        final subIndent = identTextW * 0.04;
+        final subAvailW = identTextW - subIndent;
+        final subMaxFs = ch * 0.45;
+
+        bool useInline = false;
+        double inlineFs = 2.0;
+        if (subEntries.length == 1) {
+          useInline = true;
+          inlineFs = subMaxFs;
+        } else {
+          final combinedText =
+              subEntries.map((s) => s.text ?? '').join('  •  ');
+          var lo = 2.0;
+          var hi = subMaxFs;
+          for (var i = 0; i < 12; i++) {
+            final mid = (lo + hi) / 2;
+            final m = _measureText(combinedText, mid, FontWeight.w600);
+            if (m.width <= subAvailW) {
+              lo = mid;
+            } else {
+              hi = mid;
+            }
+          }
+          inlineFs = lo;
+          useInline = inlineFs >= ch * 0.065;
+        }
+
+        if (useInline) {
+          final combinedText = subEntries.length == 1
+              ? (subEntries.first.text ?? '')
+              : subEntries.map((s) => s.text ?? '').join('  •  ');
+          final combinedSpec = LayerSpec.text(
+            text: combinedText,
+            textStyle: subEntries.first.textStyle,
+            followCanvasTheme: subEntries.first.followCanvasTheme,
+            elementId: 'subtitle',
+          );
+          addLeftText(combinedSpec, textColLeft + subIndent, subTop + subH / 2,
+              subH, subAvailW,
+              maxFs: subMaxFs);
+        } else {
+          final perLineH = subH / subEntries.length;
+          for (var i = 0; i < subEntries.length; i++) {
+            final s = subEntries[i];
+            final lineCenterY = subTop + perLineH * i + perLineH / 2;
+            addLeftText(
+                s, textColLeft + subIndent, lineCenterY, perLineH, subAvailW,
+                maxFs: ch * 0.40);
+          }
+        }
+      }
+      yCursor = pad + identH;
+      if (showDivider) {
+        final divTop = yCursor + divBlockH * 0.35;
+        _controller.addElement(
+          CanvasElement(
+            id: _nextId(),
+            kind: CanvasElementKind.widget,
+            position: Offset(leftX0 + leftW / 2, divTop + divTh / 2),
+            baseSize: Size(leftW, divTh),
+            scale: 1.0,
+            child: SizedBox(
+              width: leftW,
+              height: divTh,
+              child: const ColoredBox(color: colorBlack),
+            ),
+          ),
+          record: false,
+        );
+        yCursor += divBlockH;
+      }
+    } else {
+      yCursor = pad + (ch - contactEntries.length * perContactH) / 2;
+    }
+
+    for (var i = 0; i < contactEntries.length; i++) {
+      final centerY = yCursor + i * perContactH + perContactH / 2;
+      addLeftText(contactEntries[i], leftX0, centerY, contactFs, leftW);
+    }
+
+    if (hasQr) {
+      final captionH = ch * 0.12;
+      final qrSide = math.min(rightW, ch - captionH - ch * 0.04);
+      final blockTop = pad + (ch - (qrSide + ch * 0.04 + captionH)) / 2;
+      _seedWidgetElement(
+          qr!, Offset(rightX0 + rightW / 2, blockTop + qrSide / 2), qrSide);
+      if (caption != null) {
+        final fw = caption.textStyle?.fontWeight ?? FontWeight.w700;
+        var lo = 2.0;
+        var hi = captionH;
+        for (var i = 0; i < 12; i++) {
+          final mid = (lo + hi) / 2;
+          final m = _measureText(caption.text!, mid, fw);
+          if (m.width <= rightW && m.height <= captionH * 1.25) {
+            lo = mid;
+          } else {
+            hi = mid;
+          }
+        }
+        final m = _measureText(caption.text!, lo, fw);
+        final boxW = math.min(m.width, rightW);
+        final boxH = math.min(m.height, captionH);
+        final capTop = blockTop + qrSide + ch * 0.04;
+        _controller.addElement(
+          CanvasElement(
+            id: _nextId(),
+            kind: CanvasElementKind.text,
+            position: Offset(rightX0 + rightW / 2, capTop + captionH / 2),
+            baseSize: Size(boxW, boxH),
+            scale: 1.0,
+            color:
+                _sanitizeColor(caption.textColor ?? caption.textStyle?.color),
+            text: caption.text,
+            fontSize: lo,
+            fontWeight: fw,
+            textAlign: TextAlign.center,
+            followCanvasTheme: caption.followCanvasTheme,
+            elementId: caption.elementId,
+          ),
+          record: false,
+        );
+      }
+    }
+  }
+
+  void _resumeIdCounter() {
+    var maxId = -1;
+    for (final e in _controller.elements) {
+      final match = RegExp(r'^el_(\d+)$').firstMatch(e.id);
+      if (match != null) {
+        final n = int.parse(match.group(1)!);
+        if (n > maxId) maxId = n;
+      }
+    }
+    _idCounter = maxId + 1;
   }
 
   void _seedCardLayout(List<LayerSpec> layers) {
@@ -318,7 +718,9 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   }
 
   Color _sanitizeColor(Color? color) {
-    if (color == null) return _inkColor;
+    if (color == null) {
+      return _inkColor;
+    }
     final palette = _controller.palette;
     Color best = palette.isNotEmpty ? palette.first : colorBlack;
     double bestDist = double.infinity;
@@ -350,7 +752,9 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
 
   Future<void> _addText() async {
     final result = await _showTextSheet();
-    if (result == null) return;
+    if (result == null) {
+      return;
+    }
     _controller.addElement(
       CanvasElement(
         id: _nextId(),
@@ -367,9 +771,72 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     );
   }
 
+  Future<void> _addTextFromOcr() async {
+    if (_scanning) {
+      return;
+    }
+    setState(() => _scanning = true);
+    try {
+      final scanned = await scanImageForRawText(context);
+      if (!mounted || scanned == null) {
+        return;
+      }
+      final result = await _showTextSheet(initialText: scanned);
+      if (result == null) {
+        return;
+      }
+      var size = _measureText(
+          result.text, result.fontSize, FontWeight.normal, result.fontFamily);
+      var fontSize = result.fontSize;
+      final maxW = widget.width * 0.9;
+      final maxH = widget.height * 0.9;
+      if (size.width > maxW || size.height > maxH) {
+        final factor = (maxW / size.width) < (maxH / size.height)
+            ? (maxW / size.width)
+            : (maxH / size.height);
+        size = Size(size.width * factor, size.height * factor);
+        fontSize = (fontSize * factor).clamp(8.0, result.fontSize);
+      }
+      _controller.addElement(
+        CanvasElement(
+          id: _nextId(),
+          kind: CanvasElementKind.text,
+          position: _canvasCenter,
+          baseSize: size,
+          color: result.color,
+          text: result.text,
+          fontSize: fontSize,
+          fontFamily: result.fontFamily,
+          followCanvasTheme: !result.manualColor,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _scanning = false);
+    }
+  }
+
   Future<void> _editText(CanvasElement element) async {
     final result = await _showTextSheet(existing: element);
-    if (result == null) return;
+    if (result == null) {
+      return;
+    }
+    final measured = _measureText(
+        result.text, result.fontSize, FontWeight.normal, result.fontFamily);
+    final aspect =
+        measured.height == 0 ? 6.0 : measured.width / measured.height;
+    final oldFont = element.fontSize;
+    final targetH = oldFont > 0
+        ? element.baseSize.height * (result.fontSize / oldFont)
+        : measured.height;
+    final newWidth = targetH * aspect;
+    final dw = newWidth - element.baseSize.width;
+    final align = element.textAlign;
+    double dx = 0;
+    if (align == TextAlign.left || align == TextAlign.start) {
+      dx = dw * element.scale / 2;
+    } else if (align == TextAlign.right || align == TextAlign.end) {
+      dx = -dw * element.scale / 2;
+    }
     _controller.beginChange();
     _controller.updateElement(
       element.copyWith(
@@ -378,24 +845,39 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
         color: result.color,
         fontFamily: result.fontFamily,
         followCanvasTheme: !result.manualColor,
-        baseSize: _measureText(
-            result.text, result.fontSize, FontWeight.normal, result.fontFamily),
+        baseSize: Size(newWidth, targetH),
+        position: Offset(element.position.dx + dx, element.position.dy),
       ),
     );
   }
 
+  static const double _maxImportDimension = 2048;
+
   Future<void> _addImage() async {
     final source = await chooseImageSource(context);
-    if (source == null) return;
+    if (source == null) {
+      return;
+    }
     if (source == ImageSource.gallery) {
-      final picked = await _picker.pickMultiImage();
-      if (picked.isEmpty) return;
+      final picked = await _picker.pickMultiImage(
+        maxWidth: _maxImportDimension,
+        maxHeight: _maxImportDimension,
+      );
+      if (picked.isEmpty) {
+        return;
+      }
       for (final file in picked) {
         _placeImage(await file.readAsBytes());
       }
     } else {
-      final picked = await _picker.pickImage(source: source);
-      if (picked == null) return;
+      final picked = await _picker.pickImage(
+        source: source,
+        maxWidth: _maxImportDimension,
+        maxHeight: _maxImportDimension,
+      );
+      if (picked == null) {
+        return;
+      }
       _placeImage(await picked.readAsBytes());
     }
   }
@@ -424,12 +906,89 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     );
   }
 
+  Future<void> _addSticker() async {
+    _controller.select(null);
+    final result = await showStickerVault(context, inkColor: _inkColor);
+    if (result == null || !mounted) {
+      return;
+    }
+    _placeSticker(result.bytes, stickerIcon: result.iconName);
+  }
+
+  void _placeSticker(Uint8List bytes, {String? stickerIcon}) {
+    final decoded = img.decodeImage(bytes);
+    final aspect = (decoded == null || decoded.height == 0)
+        ? 1.0
+        : decoded.width / decoded.height;
+    final minSide =
+        (widget.width < widget.height ? widget.width : widget.height)
+            .toDouble();
+    var w = minSide * 0.35;
+    var h = w / aspect;
+    if (h > minSide * 0.35) {
+      h = minSide * 0.35;
+      w = h * aspect;
+    }
+    _controller.addElement(
+      CanvasElement(
+        id: _nextId(),
+        kind: CanvasElementKind.image,
+        position: _nextSpawnPosition(),
+        baseSize: Size(w, h),
+        imageBytes: bytes,
+        stickerIcon: stickerIcon,
+      ),
+    );
+  }
+
+  Future<void> _cycleAndRerenderStickers() async {
+    _controller.cycleCanvasColor();
+    await _rerenderThemeStickers();
+  }
+
+  Future<void> _rerenderThemeStickers() async {
+    final inkColor = _controller.contrastColor(_controller.canvasColor);
+    final service = IconifyService();
+    try {
+      for (final e in _controller.elements) {
+        if (e.kind != CanvasElementKind.image) {
+          continue;
+        }
+        if (!e.followCanvasTheme) {
+          continue;
+        }
+        final icon = e.stickerIcon;
+        if (icon == null) {
+          continue;
+        }
+        try {
+          final bytes = await service.renderPng(icon, color: inkColor);
+          if (!mounted) {
+            return;
+          }
+          _controller.updateElement(e.copyWith(imageBytes: bytes));
+        } catch (_) {}
+      }
+    } finally {
+      service.dispose();
+    }
+  }
+
   Future<void> _replaceImage(CanvasElement element) async {
     final source = await chooseImageSource(context);
-    if (source == null) return;
-    final picked = await _picker.pickImage(source: source);
-    if (picked == null) return;
+    if (source == null) {
+      return;
+    }
+    final picked = await _picker.pickImage(
+      source: source,
+      maxWidth: _maxImportDimension,
+      maxHeight: _maxImportDimension,
+    );
+    if (picked == null) {
+      return;
+    }
     final bytes = await picked.readAsBytes();
+    final keepFrame = element.clipOval || element.cornerRadius > 0;
     final decoded = img.decodeImage(bytes);
     final aspect = (decoded == null || decoded.height == 0)
         ? 1.0
@@ -437,50 +996,34 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     final w = element.baseSize.width;
     _controller.beginChange();
     _controller.updateElement(
-      element.copyWith(imageBytes: bytes, baseSize: Size(w, w / aspect)),
+      element.copyWith(
+        imageBytes: bytes,
+        baseSize: keepFrame ? element.baseSize : Size(w, w / aspect),
+      ),
     );
   }
 
   Future<void> _cropImage(CanvasElement element) async {
     final bytes = element.imageBytes;
-    if (bytes == null) return;
-    final dir = await getTemporaryDirectory();
-    final file = File(
-      '${dir.path}/mep_crop_${DateTime.now().microsecondsSinceEpoch}.png',
-    );
-    await file.writeAsBytes(bytes);
-    final cropped = await ImageCropper().cropImage(
-      sourcePath: file.path,
-      compressFormat: ImageCompressFormat.png,
-      compressQuality: 100,
-      uiSettings: [
-        AndroidUiSettings(
-          toolbarTitle: 'Crop',
-          toolbarColor: colorAccent,
-          toolbarWidgetColor: colorWhite,
-          activeControlsWidgetColor: colorAccent,
-          backgroundColor: colorBlack,
-          initAspectRatio: CropAspectRatioPreset.original,
-          lockAspectRatio: false,
-          hideBottomControls: false,
-        ),
-        IOSUiSettings(
-          title: 'Crop',
-          aspectRatioLockEnabled: false,
-          resetAspectRatioEnabled: true,
-        ),
-      ],
-    );
-    if (cropped == null) return;
-    final newBytes = await File(cropped.path).readAsBytes();
-    final decoded = img.decodeImage(newBytes);
+    if (bytes == null) {
+      return;
+    }
+    final cropped = await showImageCropScreen(context, bytes);
+    if (cropped == null || !mounted) {
+      return;
+    }
+    final keepFrame = element.clipOval || element.cornerRadius > 0;
+    final decoded = img.decodeImage(cropped);
     final aspect = (decoded == null || decoded.height == 0)
         ? 1.0
         : decoded.width / decoded.height;
     final w = element.baseSize.width;
     _controller.beginChange();
     _controller.updateElement(
-      element.copyWith(imageBytes: newBytes, baseSize: Size(w, w / aspect)),
+      element.copyWith(
+        imageBytes: cropped,
+        baseSize: keepFrame ? element.baseSize : Size(w, w / aspect),
+      ),
     );
   }
 
@@ -557,18 +1100,42 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     }
     _controller.select(null);
     await WidgetsBinding.instance.endOfFrame;
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
     try {
       final boundary = _boundaryKey.currentContext!.findRenderObject()
           as RenderRepaintBoundary;
-      final image = await boundary.toImage(pixelRatio: 1 / _displayScale);
+      final longSide =
+          (widget.width > widget.height ? widget.width : widget.height)
+              .toDouble();
+      final supersample = (2048 / longSide).clamp(2.0, 4.0);
+      final image =
+          await boundary.toImage(pixelRatio: supersample / _displayScale);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       image.dispose();
-      if (!mounted || byteData == null) return;
-      Navigator.pop(context, byteData.buffer.asUint8List());
+      if (!mounted || byteData == null) {
+        return;
+      }
+      final png = byteData.buffer.asUint8List();
+      if (widget.returnDocument) {
+        Navigator.pop(context, CanvasEditorResult(png, _buildDocument()));
+      } else {
+        Navigator.pop(context, png);
+      }
     } catch (e) {
       if (mounted) _snack('Could not export the canvas: $e');
     }
+  }
+
+  CanvasDocument _buildDocument() {
+    return CanvasDocument(
+      width: widget.width,
+      height: widget.height,
+      canvasColor: _controller.canvasColor,
+      elements: _controller.elements,
+      strokes: _controller.strokes,
+    );
   }
 
   void _snack(String message) {
@@ -578,29 +1145,61 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, _) {
-        return Scaffold(
-          backgroundColor: const Color(0xFFEDEDED),
-          appBar: AppBar(
-            backgroundColor: colorAccent,
-            foregroundColor: colorWhite,
-            title: const Text('Editor'),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.undo),
-                onPressed: _controller.canUndo ? _controller.undo : null,
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, _) async {
+            if (didPop) {
+              return;
+            }
+            if (!_controller.canUndo) {
+              if (mounted) Navigator.of(context).pop();
+              return;
+            }
+            final discard = await showDialog<bool>(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text('Discard changes?'),
+                content:
+                    const Text('You have unsaved edits. Leave without saving?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(ctx).pop(false),
+                    child: const Text('Keep editing'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(ctx).pop(true),
+                    child: const Text('Discard'),
+                  ),
+                ],
               ),
-              IconButton(
-                icon: const Icon(Icons.redo),
-                onPressed: _controller.canRedo ? _controller.redo : null,
-              ),
-              IconButton(icon: const Icon(Icons.check), onPressed: _onDone),
-            ],
+            );
+            if ((discard ?? false) && mounted) Navigator.of(context).pop();
+          },
+          child: Scaffold(
+            backgroundColor: const Color(0xFFEDEDED),
+            appBar: AppBar(
+              backgroundColor: colorAccent,
+              foregroundColor: colorWhite,
+              title: Text(appLocalizations.editor),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.undo),
+                  onPressed: _controller.canUndo ? _controller.undo : null,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.redo),
+                  onPressed: _controller.canRedo ? _controller.redo : null,
+                ),
+                IconButton(icon: const Icon(Icons.check), onPressed: _onDone),
+              ],
+            ),
+            body: _buildCanvasArea(),
+            bottomNavigationBar: _buildBottomBar(),
           ),
-          body: _buildCanvasArea(),
-          bottomNavigationBar: _buildBottomBar(),
         );
       },
     );
@@ -609,7 +1208,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   Widget _buildCanvasArea() {
     return LayoutBuilder(
       builder: (context, constraints) {
-        const padding = 20.0;
+        const padding = 6.0;
         final availW = constraints.maxWidth - padding * 2;
         final availH = constraints.maxHeight - padding * 2;
         _displayScale = (availW / widget.width) < (availH / widget.height)
@@ -660,19 +1259,26 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                         selected: _controller.selectedId == element.id,
                         controller: _controller,
                         canvasKey: _canvasKey,
-                        onRequestEdit: element.elementId != null
+                        onRequestEdit: element.elementId != null &&
+                                !widget.returnDocument
                             ? () => Navigator.pop(context, element.elementId)
                             : switch (element.kind) {
-                                CanvasElementKind.text => () =>
-                                    _editText(element),
-                                CanvasElementKind.image => () =>
-                                    _replaceImage(element),
-                                CanvasElementKind.barcode => () =>
-                                    _editBarcode(element),
+                                CanvasElementKind.text => () {
+                                    _editText(element);
+                                  },
+                                CanvasElementKind.image => () {
+                                    _replaceImage(element);
+                                  },
+                                CanvasElementKind.barcode => () {
+                                    _editBarcode(element);
+                                  },
                                 CanvasElementKind.widget => null,
+                                CanvasElementKind.fill => null,
                               },
                         onCrop: element.kind == CanvasElementKind.image
-                            ? () => _cropImage(element)
+                            ? () {
+                                _cropImage(element);
+                              }
                             : null,
                       ),
                     if (_drawMode)
@@ -715,39 +1321,84 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   }
 
   Widget _buildBottomBar() {
-    if (_drawMode) return _buildDrawBar();
+    final appLocalizations = AppLocalizations.of(context)!;
+    if (_drawMode) {
+      return _buildDrawBar();
+    }
     return BottomAppBar(
       color: colorWhite,
       elevation: 8,
       padding: EdgeInsets.zero,
       height: 72,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _BarButton(
-            label: 'Canvas',
-            onTap: _controller.cycleCanvasColor,
-            iconWidget: Container(
-              width: 22,
-              height: 22,
-              decoration: BoxDecoration(
-                color: _controller.canvasColor,
-                border: Border.all(color: colorBlack38, width: 2),
-                borderRadius: BorderRadius.circular(4),
+          Expanded(
+            child: _BarButton(
+              label: appLocalizations.canvas,
+              onTap: () => _cycleAndRerenderStickers(),
+              iconWidget: Container(
+                width: 22,
+                height: 22,
+                decoration: BoxDecoration(
+                  color: _controller.canvasColor,
+                  border: Border.all(color: colorBlack38, width: 2),
+                  borderRadius: BorderRadius.circular(4),
+                ),
               ),
             ),
           ),
-          _BarButton(
-              icon: Icons.image_outlined, label: 'Image', onTap: _addImage),
-          _BarButton(icon: Icons.text_fields, label: 'Text', onTap: _addText),
-          _BarButton(icon: Icons.qr_code, label: 'Barcode', onTap: _addBarcode),
-          _BarButton(
-            icon: Icons.brush_outlined,
-            label: 'Draw',
-            onTap: () => setState(() {
-              _controller.select(null);
-              _drawMode = true;
-            }),
+          Expanded(
+            child: _BarButton(
+                icon: Icons.image_outlined,
+                label: appLocalizations.image,
+                onTap: () {
+                  _addImage();
+                }),
+          ),
+          Expanded(
+            child: _BarButton(
+                icon: Icons.auto_awesome,
+                label: appLocalizations.stickers,
+                onTap: () {
+                  _addSticker();
+                }),
+          ),
+          Expanded(
+            child: _BarButton(
+                icon: Icons.text_fields,
+                label: appLocalizations.text,
+                onTap: () {
+                  _addText();
+                }),
+          ),
+          if (isOcrSupported)
+            Expanded(
+              child: _BarButton(
+                  icon: Icons.document_scanner_outlined,
+                  label: appLocalizations.scan,
+                  onTap: _scanning
+                      ? null
+                      : () {
+                          _addTextFromOcr();
+                        }),
+            ),
+          Expanded(
+            child: _BarButton(
+                icon: Icons.qr_code,
+                label: appLocalizations.barcode,
+                onTap: () {
+                  _addBarcode();
+                }),
+          ),
+          Expanded(
+            child: _BarButton(
+              icon: Icons.brush_outlined,
+              label: appLocalizations.draw,
+              onTap: () => setState(() {
+                _controller.select(null);
+                _drawMode = true;
+              }),
+            ),
           ),
         ],
       ),
@@ -755,6 +1406,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
   }
 
   Widget _buildDrawBar() {
+    final appLocalizations = AppLocalizations.of(context)!;
     return Material(
       color: colorWhite,
       elevation: 8,
@@ -770,7 +1422,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                   _modeButton(
                     icon: Icon(Icons.brush,
                         size: 18, color: !_eraser ? colorWhite : colorBlack54),
-                    label: 'Brush',
+                    label: appLocalizations.brush,
                     active: !_eraser,
                     onTap: () => setState(() => _eraser = false),
                   ),
@@ -784,7 +1436,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                             _EraserPainter(_eraser ? colorWhite : colorBlack54),
                       ),
                     ),
-                    label: 'Eraser',
+                    label: appLocalizations.eraser,
                     active: _eraser,
                     onTap: () => setState(() => _eraser = true),
                   ),
@@ -792,7 +1444,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                   TextButton.icon(
                     onPressed: () => setState(() => _drawMode = false),
                     icon: const Icon(Icons.check),
-                    label: const Text('Done'),
+                    label: Text(appLocalizations.done),
                     style: TextButton.styleFrom(foregroundColor: colorAccent),
                   ),
                 ],
@@ -803,7 +1455,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                   SizedBox(
                     width: 56,
                     child: Text(
-                      'Size',
+                      appLocalizations.size,
                       style: TextStyle(color: grey600, fontSize: 13),
                     ),
                   ),
@@ -843,7 +1495,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     SizedBox(
                       width: 56,
                       child: Text(
-                        'Colour',
+                        appLocalizations.colour,
                         style: TextStyle(color: grey600, fontSize: 13),
                       ),
                     ),
@@ -910,8 +1562,11 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
     );
   }
 
-  Future<_TextResult?> _showTextSheet({CanvasElement? existing}) {
-    final textCtrl = TextEditingController(text: existing?.text ?? '');
+  Future<_TextResult?> _showTextSheet(
+      {CanvasElement? existing, String? initialText}) {
+    final appLocalizations = AppLocalizations.of(context)!;
+    final textCtrl =
+        TextEditingController(text: existing?.text ?? initialText ?? '');
     double fontSize = existing?.fontSize ?? 24;
     Color color =
         existing?.color ?? _controller.contrastColor(_controller.canvasColor);
@@ -938,13 +1593,17 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     controller: textCtrl,
                     autofocus: true,
                     textCapitalization: TextCapitalization.sentences,
+                    keyboardType: TextInputType.multiline,
+                    minLines: 1,
+                    maxLines: 6,
                     onChanged: (_) => setSheet(() {}),
                     style: fontFamily == null
                         ? null
                         : GoogleFonts.getFont(fontFamily!),
-                    decoration: const InputDecoration(
-                      labelText: 'Text',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: appLocalizations.text,
+                      border: const OutlineInputBorder(),
+                      alignLabelWithHint: true,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -963,7 +1622,9 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          textCtrl.text.isEmpty ? 'Preview' : textCtrl.text,
+                          textCtrl.text.isEmpty
+                              ? appLocalizations.preview
+                              : textCtrl.text,
                           style: fontFamily == null
                               ? TextStyle(fontSize: fontSize, color: color)
                               : GoogleFonts.getFont(
@@ -976,7 +1637,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Text('Size: ${fontSize.round()}'),
+                  Text(appLocalizations.sizeWithValue(fontSize.round())),
                   Slider(
                     min: 8,
                     max: 120,
@@ -984,7 +1645,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     onChanged: (v) => setSheet(() => fontSize = v),
                   ),
                   const SizedBox(height: 4),
-                  const Text('Font'),
+                  Text(appLocalizations.font),
                   const SizedBox(height: 8),
                   SizedBox(
                     height: 44,
@@ -997,7 +1658,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                             child: ChoiceChip(
                               selected: f == fontFamily,
                               label: Text(
-                                f ?? 'Default',
+                                f ?? appLocalizations.defaultFont,
                                 style:
                                     f == null ? null : GoogleFonts.getFont(f),
                               ),
@@ -1008,7 +1669,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  const Text('Colour'),
+                  Text(appLocalizations.colour),
                   const SizedBox(height: 8),
                   BadgeColorPicker(
                     colors: _controller.palette,
@@ -1034,7 +1695,7 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
                               text, fontSize, color, manualColor, fontFamily),
                         );
                       },
-                      child: const Text('Done'),
+                      child: Text(appLocalizations.done),
                     ),
                   ),
                 ],
@@ -1068,16 +1729,15 @@ class _BarButton extends StatelessWidget {
   final IconData? icon;
   final Widget? iconWidget;
   final String label;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(8),
       onTap: onTap,
-      child: Container(
-        constraints: const BoxConstraints(minWidth: 64),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -1086,6 +1746,8 @@ class _BarButton extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 11, color: colorBlack87),
             ),
           ],

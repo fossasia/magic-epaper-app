@@ -1,16 +1,36 @@
-import 'package:magicepaperapp/util/epd/display_device.dart';
-import 'package:magicepaperapp/util/epd/gdey037z03.dart';
-import 'package:magicepaperapp/util/epd/gdey037z03bw.dart';
-import 'package:magicepaperapp/util/epd/waveshare_displays.dart';
-import 'package:magicepaperapp/util/epd/gdeq031t10.dart';
+import 'package:flutter/material.dart';
+import 'package:magicepaperapp/utils/epd/configurable_editor.dart';
+import 'package:magicepaperapp/utils/epd/display_device.dart';
+import 'package:magicepaperapp/utils/epd/gdey037z03.dart';
+import 'package:magicepaperapp/utils/epd/gdey037z03bw.dart';
+import 'package:magicepaperapp/utils/epd/waveshare_displays.dart';
+import 'package:magicepaperapp/utils/epd/gdeq031t10.dart';
 
 class EpdUtils {
-  static DisplayDevice getEpdFromMetadata(Map<String, dynamic>? metadata) {
-    if (metadata == null || !metadata.containsKey('epdModel')) {
-      return Gdey037z03();
-    }
+  static final List<DisplayDevice Function()> _deviceFactories = [
+    () => Gdey037z03(),
+    () => Gdey037z03BW(),
+    () => GDEQ031T10(),
+    () => Waveshare1in54(),
+    () => Waveshare1in54g(),
+    () => Waveshare2in9(),
+    () => Waveshare2in9b(),
+    () => Waveshare2in13(),
+    () => Waveshare2in13g(),
+    () => Waveshare2in7(),
+    () => Waveshare4in2(),
+    () => Waveshare7in5(),
+    () => Waveshare7in5HD(),
+  ];
 
-    final String epdModel = metadata['epdModel']?.toString() ?? '';
+  static DisplayDevice getEpdFromMetadata(Map<String, dynamic>? metadata) {
+    final String? epdModel = metadata?['epdModel']?.toString();
+    if (epdModel != null && epdModel.isNotEmpty) {
+      for (final make in _deviceFactories) {
+        final device = make();
+        if (device.modelId == epdModel) return device;
+      }
+    }
 
     switch (epdModel) {
       case 'GDEY037Z03':
@@ -23,9 +43,18 @@ class EpdUtils {
       case '13339':
       case 'waveshare-2.9b':
         return Waveshare2in9b();
+      case '17953':
+      case 'waveshare-1.54':
+        return Waveshare1in54();
+      case '31888':
+      case 'waveshare-1.54g':
+        return Waveshare1in54g();
       case '17745':
       case 'waveshare-2.13':
         return Waveshare2in13();
+      case '28107':
+      case 'waveshare-2.13g':
+        return Waveshare2in13g();
       case '18136':
       case 'waveshare-2.7':
         return Waveshare2in7();
@@ -40,8 +69,25 @@ class EpdUtils {
         return Waveshare7in5HD();
       case 'GDEQ031T10':
         return GDEQ031T10();
-      default:
-        return Gdey037z03();
     }
+
+    final custom = _reconstructCustomDevice(metadata, epdModel);
+    if (custom != null) return custom;
+
+    return Gdey037z03();
+  }
+
+  static DisplayDevice? _reconstructCustomDevice(
+      Map<String, dynamic>? metadata, String? epdModel) {
+    final width = metadata?['epdWidth'];
+    final height = metadata?['epdHeight'];
+    final rawColors = metadata?['epdColors'];
+    if (width is! int || height is! int || rawColors is! List) return null;
+    return ConfigurableEpd(
+      width: width,
+      height: height,
+      colors: [for (final c in rawColors) Color(c as int)],
+      modelId: (epdModel == null || epdModel.isEmpty) ? 'NA' : epdModel,
+    );
   }
 }

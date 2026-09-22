@@ -1,20 +1,21 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/image_library/services/image_filter_helper.dart';
-import 'package:magicepaperapp/image_library/model/image_properties.dart';
-import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
+import 'package:magicepaperapp/image_library/models/image_properties.dart';
+import 'package:magicepaperapp/image_library/models/saved_image_model.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/image_library/utils/epd_utils.dart';
-import 'package:magicepaperapp/util/epd/display_device.dart';
+import 'package:magicepaperapp/utils/epd/display_device.dart';
 import 'package:image/image.dart' as img;
 import 'dart:typed_data';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
-import '../../util/app_logger.dart';
-import '../../util/image_processing/image_processing.dart';
+import '../../utils/app_logger.dart';
+import '../../utils/image_processing/image_processing.dart';
 
 AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
@@ -146,23 +147,50 @@ class ImageOperationsService {
     List<ImageProcessingMethod> processingMethods,
     bool flipHorizontal,
     bool flipVertical,
-    String epdModelId,
-  ) async {
+    String epdModelId, {
+    int? deviceWidth,
+    int? deviceHeight,
+    List<Color>? deviceColors,
+    Map<String, dynamic>? canvasDocument,
+    Map<String, dynamic>? templateData,
+    Uint8List? sourceImage,
+    String? existingImageId,
+    Map<String, dynamic>? extraMetadata,
+  }) async {
     try {
       _showSaveLoadingSnackBar();
 
-      await provider.saveImage(
-        name: imageName,
-        imageData: imageData,
-        source: currentImageSource,
-        metadata: {
-          'filter':
-              getFilterNameByIndex(selectedFilterIndex, processingMethods),
-          'flipHorizontal': flipHorizontal,
-          'flipVertical': flipVertical,
-          'epdModel': epdModelId,
-        },
-      );
+      final metadata = <String, dynamic>{
+        'filter': getFilterNameByIndex(selectedFilterIndex, processingMethods),
+        'filterIndex': selectedFilterIndex,
+        'flipHorizontal': flipHorizontal,
+        'flipVertical': flipVertical,
+        'epdModel': epdModelId,
+        if (deviceWidth != null) 'epdWidth': deviceWidth,
+        if (deviceHeight != null) 'epdHeight': deviceHeight,
+        if (deviceColors != null)
+          'epdColors': [for (final c in deviceColors) c.toARGB32()],
+        if (canvasDocument != null) 'canvasDocument': canvasDocument,
+        if (templateData != null) 'templateData': templateData,
+        if (sourceImage != null) 'sourceImage': base64Encode(sourceImage),
+        ...?extraMetadata,
+      };
+
+      if (existingImageId != null) {
+        metadata['updatedAt'] = DateTime.now().millisecondsSinceEpoch;
+        await provider.updateSavedImage(
+          existingImageId,
+          imageData: imageData,
+          metadata: metadata,
+        );
+      } else {
+        await provider.saveImage(
+          name: imageName,
+          imageData: imageData,
+          source: currentImageSource,
+          metadata: metadata,
+        );
+      }
 
       _showSaveSuccessSnackBar();
     } catch (e) {
@@ -433,8 +461,7 @@ class ImageOperationsService {
               size: Dimens.iconSizeM,
             ),
             const SizedBox(width: Dimens.spacingM),
-            Expanded(
-                child: Text('${appLocalizations.failedToSaveImage}$error')),
+            Expanded(child: Text(appLocalizations.failedToSaveImage(error))),
           ],
         ),
         backgroundColor: Colors.red,

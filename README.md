@@ -1,207 +1,264 @@
-<img height="200px" src="./assets/docs/app_icon.png" align="right" />
+<img height="200px" src="./assets/icons/app_icon_desktop.png" align="right" />
 
 # Magic ePaper
-![Github](https://img.shields.io/github/license/fossasia/magic-epaper-app?logo=github)
 
-**Magically Create and Transfer Content to NFC ePaper Badges**
+[![Build](https://img.shields.io/github/actions/workflow/status/fossasia/magic-epaper-app/push.yml?branch=main&label=build&logo=github)](https://github.com/fossasia/magic-epaper-app/actions/workflows/push.yml)
+[![License](https://img.shields.io/github/license/fossasia/magic-epaper-app)](LICENSE.md)
+[![Issues](https://img.shields.io/github/issues/fossasia/magic-epaper-app)](https://github.com/fossasia/magic-epaper-app/issues)
+[![Last commit](https://img.shields.io/github/last-commit/fossasia/magic-epaper-app)](https://github.com/fossasia/magic-epaper-app/commits/main)
+[![Contributors](https://img.shields.io/github/contributors/fossasia/magic-epaper-app)](https://github.com/fossasia/magic-epaper-app/graphs/contributors)
+[![Translation status](https://hosted.weblate.org/widget/fossasia/magic-epaper-app/svg-badge.svg)](https://hosted.weblate.org/projects/fossasia/magic-epaper-app/)
 
-The Magic ePaper app is an open-source Flutter application that lets users design and transfer content to a tri-color, battery-free NFC ePaper badge. The app features an intuitive UI with drawing tools, text input, emoji support, font customization, and image editing (rotation, brightness, contrast, filters optimized for ePaper such as Floyd–Steinberg and Atkinson dithers). It supports NFC-based reading/writing of images and advanced NDEF data (text, URLs, vCards, app launch). A built-in Image Library stores processed images for quick transfers. Additional tools include QR/barcode generation, employee ID, and price tag creation.
+Magic ePaper is an open-source Flutter app that lets you design content on your phone and transfer it to a battery-free NFC ePaper badge wirelessly. No cables or power needed on the badge. Import and dither photos for ePaper, draw and add text, generate QR codes and barcodes, or start from a ready-made card template, then tap your phone to the badge to write the image.
+
+## Table of Contents
+
+- [Download](#download)
+- [Get a badge](#get-a-badge)
+- [Features](#features)
+- [Supported Displays](#supported-displays)
+- [Roadmap](#roadmap)
+- [Usage](#usage)
+- [Permissions](#permissions)
+- [Screenshots](#screenshots)
+- [Development](#development)
+- [Contributing](#contributing)
+- [Branch Policy](#branch-policy)
+- [Translations](#translations)
+- [License](#license)
 
 ## Download
 
-* [Latest Release Build](https://github.com/fossasia/magic-epaper-app/tree/app) in the app branch
+The app is currently in **beta testing** and runs on **Android**. Desktop support (Windows, macOS and Linux) is under active development.
+
+* Download the latest build from the [app branch](https://github.com/fossasia/magic-epaper-app/tree/app), or build it yourself (see [Development](#development)).
+* You need an **Android device with NFC** and a supported **NFC ePaper badge** (see [Supported Displays](#supported-displays)). Most design tools work without a badge; a badge is only needed to transfer an image.
+* Found a bug? Please open an issue on the [issue tracker](https://github.com/fossasia/magic-epaper-app/issues) and include your phone model and badge.
+
+## Get a badge
+
+The Magic ePaper badge is still a **prototype** and is not on general sale yet. Ordering is planned to open on [fossasia.com](https://fossasia.com) in the future, and the hardware designs and prototypes are shared in the FOSSASIA repositories in the meantime. Any of the [supported NFC ePaper badges](#supported-displays) below already works with the app today.
+
+## Features
+
+* **Image editor**: import a photo, rotate/flip, adjust brightness and contrast, and dither for ePaper (Floyd-Steinberg, Atkinson, Stucki, Sierra, Burkes, Halftone, Threshold).
+* **Canvas editor**: draw freehand, add text (fonts, size, colour), images and shapes, and generate QR/barcodes (QR, Data Matrix, Aztec, PDF417, Code 128/93/39, Codabar, EAN-13/8, ITF, UPC-A) with a live preview.
+* **Card templates**: Employee ID, Shop Price Tag, Entry Pass, Event Badge, Calendar, QR Tag, Weather Snapshot and Contact/Business card. Generate many at once from a CSV.
+* **NFC**: transfer designs to the badge, and read/write NDEF tags (text, URLs, vCards, app-launch records).
+* **Command console**: send raw hex/APDU commands to a tag for debugging.
+* **Image Library**: save processed designs for quick re-transfer and re-editing.
+* **Arduino export** and a multi-language UI translated on Weblate.
+
+## Supported Displays
+
+| Display | Colors | Model |
+| --- | --- | --- |
+| Waveshare 2.13" NFC | tri-color | 17745 |
+| Waveshare 2.7" NFC | tri-color | 18136 |
+| Waveshare 2.9" NFC | tri-color | 17746 |
+| Waveshare 2.9" B NFC | tri-color | 13339 |
+| Goodisplay 2.9" 4-Color | Black / White / Red / Yellow | GDEY029F51 |
+| Magic ePaper 3.1" | Black / White | GDEQ031T10 |
+| Magic ePaper 3.7" | Black / White | GDEY037T03 |
+| Magic ePaper 3.7" | Black / White / Red | GDEY037Z03 |
+| Waveshare 4.2" NFC | tri-color | 17341 |
+| Waveshare 7.5" NFC | tri-color | 17675 |
+| Waveshare 7.5" HD NFC | tri-color | 18082 |
+
+## Roadmap
+
+- [x] Image editor with ePaper dithering, canvas editor and card templates
+- [x] NFC transfer to badges and NDEF read/write
+- [x] Bulk card generation from CSV and a reusable Image Library
+- [ ] Desktop support (Windows, macOS and Linux)
+- [ ] Support for more NFC ePaper badges
+
+## Usage
+
+1. Pick the display that matches your badge on the home screen.
+2. Create your design: import and dither a photo, draw and add text/barcodes on the canvas, or fill in a card template.
+3. Tap **Transfer** and hold the back of your phone against the badge to write the image over NFC.
+
+Read and write NDEF tags (text, URLs, vCards) from the side menu, and use the Command Console to send raw hex/APDU commands to a tag.
 
 ## Permissions
-* **NFC**: For reading and writing data to the ePaper badge via NFC.
-* **Internet**: For network operations and updates.
 
-## Translations
-
-Translators can support the project on Weblate here: https://hosted.weblate.org/projects/fossasia/magic-epaper-app/
+| Permission | Purpose |
+| --- | --- |
+| NFC | Read from and write images and NDEF data to the ePaper badge. |
+| Internet | Weather Snapshot lookups and other network operations. |
+| Photos and media | Import pictures from the device to design and dither for the badge. |
 
 ## Screenshots
 
+### Create, dither and transfer
+
 <table>
   <tr>
-    <td><img src="./assets/docs/484006651-982ad8f9-10b9-4b00-8557-668a13bec7a1.jpeg" width="300"/></td>
-    <td><img src="./assets/docs/484006713-520c2f50-58d6-4ca0-8de5-d390b17cc1fd.jpeg" width="300"/></td>
-    <td><img src="./assets/docs/484006714-2b84df7e-676d-461e-952c-5b693b8746dd.jpeg" width="300"/></td>
+    <td><img src="./assets/docs/screenshots/adjust.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/image-editor.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/custom-display.jpeg" width="250"/></td>
   </tr>
   <tr>
-    <td><img src="./assets/docs/484006717-69c02fe1-d4eb-4785-9489-4557f5cef113.jpeg" width="300"/></td>
-    <td><img src="./assets/docs/484006720-d136d1c2-925b-4a7c-9e2e-921a6427adab.jpeg" width="300"/></td>
-    <td><img src="./assets/docs/484006722-b02cc29c-a77c-4003-bbdf-19f316b49644.jpeg" width="300"/></td>
-  </tr>
-  <tr>
-    <td><img src="./assets/docs/484006727-2cd1238c-4519-4a95-a08e-2236f471f201.jpeg" width="300"/></td>
-    <td><img src="./assets/docs/484006731-ed7e198a-6a2f-41d7-a8fe-ea527afcbd5a.jpeg" width="300"/></td>
-    <td><img src="./assets/docs/484006733-95f2eac1-3eed-43b1-8686-5700342ef9d5.jpeg" width="300"/></td>
-  </tr>
-  <tr>
-    <td><img src="./assets/docs/484006735-b8fb398d-7bc3-4f58-b009-e6db94606d35.jpeg" width="300"/></td>
-    <td><img src="./assets/docs/484006736-6dafe90a-2dad-4fcb-83df-045dc535a961.jpeg" width="300"/></td>
-    <td><img src="./assets/docs/484006741-a7f98a75-817b-4167-85ec-5a71e721c7a5.jpeg" width="300"/></td>
-  </tr>
-  <tr>
-    <td><img src="./assets/docs/484006747-e2e46459-8317-4f34-b1ff-882f3daf51b5.jpeg" width="300"/></td>
-    <td><img src="./assets/docs/484006751-8180f909-8168-4974-b56c-49904a4d2262.jpeg" width="300"/></td>
-    <td><img src="./assets/docs/484006754-cf181974-eb51-4e86-b04f-8ea6674b46e5.jpeg" width="300"/></td>
-  </tr>
-  <tr>
-    <td><img src="./assets/docs/484006757-2473ebfc-6528-4d86-bfeb-ba7c659febca.jpeg" width="300"/></td>
-    <td><img src="./assets/docs/484006761-707b29c2-4ff5-4571-8f3c-7be85f2b242e.jpeg" width="300"/></td>
-    <td><img src="./assets/docs/484006766-f1bbf0a6-f79a-4f77-8e12-719901b1081b.jpeg" width="300"/></td>
-  </tr>
-  <tr>
-    <td colspan="3">
-      <img src="./assets/docs/final.png" width="900"/>
-    </td>
+    <td><img src="./assets/docs/screenshots/transfer.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/badge.jpeg" width="250"/></td>
   </tr>
 </table>
 
-## Branch Policy
+### Canvas editor
 
-We have the following branches
+<table>
+  <tr>
+    <td><img src="./assets/docs/screenshots/canvas.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/text-editor.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/barcode.jpeg" width="250"/></td>
+  </tr>
+</table>
 
- * **main**: All development goes on in this branch. If you're making a contribution, you are supposed to make a pull request to _main_. PRs to main branch must pass a build check on CI/CD.
- * **app**: This branch contains the latest app builds and releases.
- * **version**: This branch stores the version information for the app builds (versionName and versionCode). This is used in our workflows for automatic versioning wherein the next version information is automatically fetched from this branch and used for building the app.
- * **fastlane-android**: This branch contains information and metadata used by fastlane to automate Android deployment.
- * **pr-screenshots**: This branch stores screenshots for every open pull request, which are shown in comments in every pull request.
+### Card templates
 
-## Contributions Best Practices
+<table>
+  <tr>
+    <td><img src="./assets/docs/screenshots/templates.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/employee-id.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/restaurant-menu.jpeg" width="250"/></td>
+  </tr>
+  <tr>
+    <td><img src="./assets/docs/screenshots/weather.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/calendar.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/bulk-import.jpeg" width="250"/></td>
+  </tr>
+</table>
 
-Please read FOSSASIA's [Best Practices](https://blog.fossasia.org/open-source-developer-guide-and-best-practices-at-fossasia/) before contributing. Please help us follow the best practice to make it easy for the reviewer as well as the contributor. We want to focus on the code quality more than on managing pull request ethics. Here are some basics:
+### NFC, library and more
 
-* Single commit per pull request
-* For writing commit messages please read the [CommitStyle.md](docs/commitStyle.md).
-* Follow uniform design practices. The design language must be consistent throughout the app.
-* The pull request will not get merged until and unless the commits are squashed. In case there are multiple commits on the PR, the commit author needs to squash them and not the maintainers cherrypicking and merging squashes.
-* If the PR is related to any front end change, please attach relevant screenshots in the pull request description.
-* Before you join development, please set up the project on your local machine, run it and go through the application completely. Press on any button you can find and see where it leads to. Explore.
-* If you would like to work on an issue, drop in a comment at the issue. If it is already assigned to someone, but there is no sign of any work being done, please free to drop in a comment and start working on it.
+<table>
+  <tr>
+    <td><img src="./assets/docs/screenshots/displays.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/read-nfc.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/write-nfc.jpeg" width="250"/></td>
+  </tr>
+  <tr>
+    <td><img src="./assets/docs/screenshots/command-console.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/library.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/save-image.jpeg" width="250"/></td>
+  </tr>
+  <tr>
+    <td><img src="./assets/docs/screenshots/menu.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/about.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/faq.jpeg" width="250"/></td>
+  </tr>
+</table>
 
-## Dev Container usage
+## Development
 
-Opening this repository in VSCode, GitHub Codespaces or another supported editor/IDE will allow the repository to be opened in a [Dev Container](https://containers.dev/).
+Magic ePaper currently runs on **Android**. Desktop support (Windows, macOS and Linux) is under active development.
 
-The Dev Container contains all necessary dependencies and tools required to build, run and debug flutter applications.
-
-### How to connect via `adb`
-
-:warning: In case `adb` is already installed and running on the host it may need to be stopped before continuing.
-
-This Dev Container allows several different methods of connecting to a device via `adb`:
-
-#### Entirely from inside the container (USB pass-through)
-
-:information_source: **Windows** and **MacOS** need a working **USB/IP** setup. Read more in the official [Docker Desktop documentation](https://docs.docker.com/desktop/features/usbip/) and in this [blog post](https://blog.golioth.io/usb-docker-windows-macos/).
-
-The Dev Container bind-mounts `/dev/bus/usb/` and sets the correct access controls for a seamless integration.  \
-Enable [USB debugging](https://developer.android.com/tools/adb#Enabling) on your phone and try to find it via:
-
-```bash
-adb devices
-```
-If it shows up, everything is ready and you can run `flutter run` to push a development version of the app onto your device.
-
-#### Using the host's `adb` server
-
-If `adb` is already installed on the host, the tools in the Dev Container can be configured to use the host's `adb` server:
-
-1. Ensure the `adb` server is listening on **all interfaces**
-    1. If that is not the case, kill and restart it: `adb kill-server && adb -a server` (the `-a` instructs it to listen on all interfaces).
-1. Set or export the following environment variable before executing `adb` or `flutter run`: `ADB_SERVER_SOCKET=tcp:host.docker.internal:5037`
-1. You should now be able to list the devices connected via USB to the host
-
-#### Wireless connection
-
-Android 11 and higher support wireless debugging. Check out the [documentation](https://developer.android.com/tools/adb#wireless-android11-command-line) for more information.  \
-For this mode it is required that both the workstation and the device are on the **same network**.
-
-:information_source: This also works when developing inside **GitHub Codespaces**. In that case you can bring your device and the Codespace onto the same network by installing WireGuard, Tailscale or another overlay/mesh network on both the Codespace and your device.
-
-Enable Wireless debugging as per the [documentation](https://developer.android.com/tools/adb#wireless-android11-command-line), then **pair** `adb pair <IP>:<PORT>` and **connect** `adb connect <IP>:<PORT>` and you should be able to find your device via `adb devices`.
-
-## Table of Contents
-- [Getting Started](#getting-started)
-- [Assets](#assets)
-- [Localization](#localization)
-- [Installation Steps](#installation-steps)
-  - [Prerequisites](#prerequisites)
-  - [Clone the Repository](#clone-the-repository)
-  - [Install Dependencies](#install-dependencies)
-- [Running the Project](#running-the-project)
-
-## Getting Started
-
-This project is a starting point for a Flutter application that follows the
-[simple app state management
-tutorial](https://flutter.dev/to/state-management-sample).
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-## Assets
-
-The `assets` directory houses images, fonts, and any other files you want to
-include with your application.
-
-The `assets/images` directory contains [resolution-aware
-images](https://flutter.dev/to/resolution-aware-images).
-
-## Localization
-
-This project generates localized messages based on arb files found in
-the `lib/src/localization` directory.
-
-To support additional languages, please visit the tutorial on
-[Internationalizing Flutter apps](https://flutter.dev/to/internationalization).
-
-## Installation Steps
+The app is built with **Flutter** and a small **Rust** core that handles the image dithering. The Rust code lives in `rust/` and is bridged to Dart with [`flutter_rust_bridge`](https://cjycode.com/flutter_rust_bridge/); the native library is compiled automatically as part of the normal Flutter build.
 
 ### Prerequisites
 
-##### Before setting up the project, ensure you have the following installed:
+* **Flutter SDK**: install from the [Flutter website](https://docs.flutter.dev/get-started/install).
+* **Dart SDK**: bundled with Flutter (`dart --version` to verify).
+* **Rust toolchain**: install via [rustup](https://rustup.rs/); required to build the native image-processing library.
+* **Git**: to clone the repository.
+* **Android Studio or VS Code** with the Flutter/Dart plugins.
+* An **Android device with NFC** (physical device required for NFC features) or an emulator for UI work.
 
-Flutter SDK: Install from Flutter's official website.
+### Running the project locally
 
-Dart SDK: Included with Flutter, but verify installation using `dart --version`
+1. **Clone the repository**
 
-Git: Required for cloning the repository. Install from Git's official site.
+   ```bash
+   git clone https://github.com/fossasia/magic-epaper-app
+   cd magic-epaper-app
+   ```
 
-Android Studio or VS Code: Recommended IDEs for Flutter development.
+2. **Install dependencies**
 
-Android Emulator or Physical Device: For running the application.
+   ```bash
+   flutter pub get
+   ```
 
-1. Clone the Repository
+3. **Run the app** on a connected device or emulator (`flutter devices` to check what's connected):
+
+   ```bash
+   flutter run
+   ```
+
+   Use a physical Android device to test the NFC read/write and transfer features; an emulator is fine for the UI and design tools.
+
+4. **Build release binaries** (optional, for production/testing):
+
+   ```bash
+   flutter build apk   # Android
+   flutter build ios   # iOS (macOS + Xcode required)
+   ```
+
+### Testing
+
+Run the unit and widget tests:
+
+```bash
+flutter test
 ```
-git clone https://github.com/fossasia/magic-epaper-app
-cd magic-epaper-app
+
+Before opening a pull request, format the code and run the analyzer to match CI:
+
+```bash
+dart format .
+flutter analyze
 ```
 
-2. Install Dependencies
-```
-flutter pub get
-```
+### Dev Container
 
-## Running the Project
+Opening this repository in VS Code, GitHub Codespaces or another supported editor will let you reopen it inside a [Dev Container](https://containers.dev/) that bundles all tools needed to build, run and debug the app.
 
-1. Run on an Emulator or Physical Device
+#### Connecting a device via `adb`
 
-Ensure an emulator is running or a device is connected.
+> **Note:** If `adb` is already installed and running on the host it may need to be stopped first.
 
-Execute:
-```
-flutter run
-```
-2. Build the App (For production/testing)
-```
-flutter build apk  # For Android
-flutter build ios  # For iOS (macOS required)
-```
+**USB pass-through (entirely inside the container)**
 
-## LICENSE
+> **Windows** and **macOS** need a working **USB/IP** setup. See the [Docker Desktop documentation](https://docs.docker.com/desktop/features/usbip/) and this [blog post](https://blog.golioth.io/usb-docker-windows-macos/).
 
-The application is licensed under the [Apache License 2.0](/LICENSE). Copyright is owned by FOSSASIA and its contributors.
+The Dev Container bind-mounts `/dev/bus/usb/` and sets the correct access controls. Enable [USB debugging](https://developer.android.com/tools/adb#Enabling) on your phone and run `adb devices`; if it shows up, run `flutter run` to push a development build to your device.
+
+**Using the host's `adb` server**
+
+1. Ensure the host `adb` server listens on all interfaces: `adb kill-server && adb -a server`.
+2. Export `ADB_SERVER_SOCKET=tcp:host.docker.internal:5037` before running `adb` or `flutter run`.
+3. You should now see host-connected USB devices from inside the container.
+
+**Wireless connection**
+
+Android 11+ supports [wireless debugging](https://developer.android.com/tools/adb#wireless-android11-command-line). With both the workstation and device on the same network, `adb pair <IP>:<PORT>` then `adb connect <IP>:<PORT>`. This also works inside Codespaces if you bring both onto the same network with WireGuard, Tailscale or another overlay network.
+
+## Contributing
+
+Please read FOSSASIA's [Best Practices](https://blog.fossasia.org/open-source-developer-guide-and-best-practices-at-fossasia/) before contributing. Some basics:
+
+* Single commit per pull request; squash before it can be merged.
+* For commit messages, see [CommitStyle.md](docs/commitStyle.md).
+* Follow the app's existing design language and keep the UI consistent.
+* Attach relevant screenshots to any PR that changes the UI.
+* Set up and explore the app locally before starting.
+* Comment on an issue before working on it. If it's assigned but inactive, feel free to ask.
+
+## Branch Policy
+
+* **main**: all development happens here; open pull requests against `main`. PRs must pass the CI build check.
+* **app**: latest app builds and releases.
+* **version**: stores version information (versionName and versionCode) used for automatic versioning.
+* **fastlane-android**: metadata used by Fastlane to automate Android deployment.
+* **pr-screenshots**: screenshots generated per open pull request, shown in PR comments.
+
+## Translations
+
+Help translate the app on [Weblate](https://hosted.weblate.org/projects/fossasia/magic-epaper-app/).
+
+Localized strings live in `lib/l10n` as `.arb` files. After editing an `.arb`, regenerate the Dart localizations with `flutter gen-l10n`.
+
+## License
+
+Licensed under the [Apache License 2.0](/LICENSE.md). Copyright © FOSSASIA and contributors.

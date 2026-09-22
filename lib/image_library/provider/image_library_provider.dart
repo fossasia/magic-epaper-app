@@ -1,10 +1,10 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:magicepaperapp/image_library/model/saved_image_model.dart';
+import 'package:magicepaperapp/image_library/models/saved_image_model.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import '../../util/app_logger.dart';
+import '../../utils/app_logger.dart';
 
 class ImageLibraryProvider extends ChangeNotifier {
   List<SavedImage> _savedImages = [];
@@ -12,6 +12,12 @@ class ImageLibraryProvider extends ChangeNotifier {
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
+  bool _hasError = false;
+  bool get hasError => _hasError;
+
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
 
   String _searchQuery = '';
   String get searchQuery => _searchQuery;
@@ -98,6 +104,8 @@ class ImageLibraryProvider extends ChangeNotifier {
 
   Future<void> loadSavedImages() async {
     _isLoading = true;
+    _hasError = false;
+    _errorMessage = null;
     notifyListeners();
     try {
       await _initializeDirectories();
@@ -137,6 +145,8 @@ class ImageLibraryProvider extends ChangeNotifier {
       _isInitialized = true;
     } catch (e) {
       AppLogger.error('Error loading saved images: $e');
+      _hasError = true;
+      _errorMessage = e.toString();
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -173,6 +183,37 @@ class ImageLibraryProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       AppLogger.error('Error saving image: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> updateSavedImage(
+    String id, {
+    Uint8List? imageData,
+    Map<String, dynamic>? metadata,
+  }) async {
+    try {
+      await _ensureInitialized();
+      await _initializeDirectories();
+      final index = _savedImages.indexWhere((image) => image.id == id);
+      if (index == -1) return;
+      final old = _savedImages[index];
+      if (imageData != null) {
+        await File(old.filePath).writeAsBytes(imageData);
+        await FileImage(File(old.filePath)).evict();
+      }
+      _savedImages[index] = SavedImage(
+        id: old.id,
+        name: old.name,
+        filePath: old.filePath,
+        createdAt: old.createdAt,
+        source: old.source,
+        metadata: metadata ?? old.metadata,
+      );
+      await _persistMetadata();
+      notifyListeners();
+    } catch (e) {
+      AppLogger.error('Error updating saved image: $e');
       rethrow;
     }
   }

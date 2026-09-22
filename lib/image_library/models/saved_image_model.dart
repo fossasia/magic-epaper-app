@@ -1,0 +1,115 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:magicepaperapp/native_canvas/models/canvas_document.dart';
+import '../../utils/app_logger.dart';
+
+class SavedImage {
+  final String id;
+  final String name;
+  final String filePath;
+  final DateTime createdAt;
+  final String source;
+  final Map<String, dynamic>? metadata;
+
+  SavedImage({
+    required this.id,
+    required this.name,
+    required this.filePath,
+    required this.createdAt,
+    required this.source,
+    this.metadata,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'filePath': filePath,
+      'createdAt': createdAt.toIso8601String(),
+      'source': source,
+      'metadata': metadata,
+    };
+  }
+
+  factory SavedImage.fromJson(Map<String, dynamic> json) {
+    return SavedImage(
+      id: json['id'],
+      name: json['name'],
+      filePath: json['filePath'],
+      createdAt: DateTime.parse(json['createdAt']),
+      source: json['source'],
+      metadata: json['metadata'],
+    );
+  }
+
+  Future<Uint8List?> getImageData() async {
+    try {
+      final file = File(filePath);
+      if (await file.exists()) {
+        return await file.readAsBytes();
+      }
+      return null;
+    } catch (e) {
+      AppLogger.error('Error reading image file: $e');
+      return null;
+    }
+  }
+
+  bool get hasCanvasDocument => metadata?['canvasDocument'] != null;
+
+  bool get isQrTag => metadata?['qrTag'] is Map;
+
+  Map<String, dynamic>? get qrTagData {
+    final raw = metadata?['qrTag'];
+    return raw is Map ? Map<String, dynamic>.from(raw) : null;
+  }
+
+  Map<String, dynamic>? get weatherTemplateData {
+    final raw = metadata?['templateData'];
+    if (raw is Map && raw['type'] == 'weather') {
+      return Map<String, dynamic>.from(raw);
+    }
+    return null;
+  }
+
+  Map<String, dynamic>? get menuTemplateData {
+    final raw = metadata?['templateData'];
+    if (raw is Map && raw['type'] == 'menu') {
+      return Map<String, dynamic>.from(raw);
+    }
+    return null;
+  }
+
+  bool get isContactCard => metadata?['contactCard'] is Map;
+
+  Map<String, dynamic>? get contactCardData {
+    final raw = metadata?['contactCard'];
+    return raw is Map ? Map<String, dynamic>.from(raw) : null;
+  }
+
+  String get imageCacheKey =>
+      '$filePath#${metadata?['updatedAt'] ?? createdAt.millisecondsSinceEpoch}';
+
+  Uint8List? get sourceImageBytes {
+    final raw = metadata?['sourceImage'];
+    return raw is String ? base64Decode(raw) : null;
+  }
+
+  CanvasDocument? get canvasDocument {
+    final raw = metadata?['canvasDocument'];
+    if (raw is Map) {
+      return CanvasDocument.fromJson(Map<String, dynamic>.from(raw));
+    }
+    return null;
+  }
+
+  Future<bool> fileExists() async {
+    try {
+      final file = File(filePath);
+      return await file.exists();
+    } catch (e) {
+      return false;
+    }
+  }
+}

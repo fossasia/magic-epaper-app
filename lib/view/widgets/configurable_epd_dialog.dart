@@ -1,0 +1,459 @@
+import 'package:flutter/material.dart';
+import 'package:magicepaperapp/constants/dimens.dart';
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+import 'package:magicepaperapp/utils/color_util.dart';
+import 'package:magicepaperapp/theme/colors.dart';
+
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
+
+class CustomEpdConfig {
+  final int width;
+  final int height;
+  final List<Color> colors;
+  final String presetName;
+  CustomEpdConfig({
+    required this.width,
+    required this.height,
+    required this.colors,
+    required this.presetName,
+  });
+}
+
+class DisplayPreset {
+  final String name;
+  final int width;
+  final int height;
+  final List<Color> colors;
+
+  DisplayPreset({
+    required this.name,
+    required this.width,
+    required this.height,
+    required this.colors,
+  });
+
+  static final DisplayPreset custom = DisplayPreset(
+    name: 'Custom',
+    width: 0,
+    height: 0,
+    colors: [],
+  );
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DisplayPreset &&
+          runtimeType == other.runtimeType &&
+          name == other.name;
+
+  @override
+  int get hashCode => name.hashCode;
+}
+
+class ConfigurableEpdDialog extends StatefulWidget {
+  final int initialWidth;
+  final int initialHeight;
+  final List<Color> initialColors;
+
+  const ConfigurableEpdDialog({
+    required this.initialWidth,
+    required this.initialHeight,
+    required this.initialColors,
+    super.key,
+  });
+
+  @override
+  State<ConfigurableEpdDialog> createState() => _ConfigurableEpdDialogState();
+}
+
+class _ConfigurableEpdDialogState extends State<ConfigurableEpdDialog> {
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController _widthController;
+  late TextEditingController _heightController;
+  late List<Color> _currentColors;
+  DisplayPreset? _selectedPreset;
+  bool _isCustom = false;
+
+  static final List<DisplayPreset> _presets = [
+    DisplayPreset(
+        name: 'Waveshare 1.54" B/W/R',
+        width: 200,
+        height: 200,
+        colors: [colorWhite, colorBlack, Colors.red]),
+    DisplayPreset(
+        name: 'Waveshare 2.13" B/W',
+        width: 122,
+        height: 250,
+        colors: [colorWhite, colorBlack]),
+    DisplayPreset(
+        name: 'Waveshare 2.13" B/W/R',
+        width: 104,
+        height: 212,
+        colors: [colorWhite, colorBlack, Colors.red]),
+    DisplayPreset(
+        name: 'Waveshare 2.7" B/W/R',
+        width: 176,
+        height: 264,
+        colors: [colorWhite, colorBlack, Colors.red]),
+    DisplayPreset(
+        name: 'Waveshare 2.9" B/W/Y',
+        width: 128,
+        height: 296,
+        colors: [colorWhite, colorBlack, Colors.yellow]),
+    DisplayPreset(
+        name: 'Waveshare 4.2" B/W/R',
+        width: 300,
+        height: 400,
+        colors: [colorWhite, colorBlack, Colors.red]),
+    DisplayPreset(
+        name: 'Waveshare 5.83" B/W/R',
+        width: 480,
+        height: 648,
+        colors: [colorWhite, colorBlack, Colors.red]),
+    DisplayPreset(
+        name: 'Waveshare 7.5" B/W/R',
+        width: 480,
+        height: 800,
+        colors: [colorWhite, colorBlack, Colors.red]),
+    DisplayPreset(
+        name: 'Good Display 0.97" B/W/R',
+        width: 88,
+        height: 184,
+        colors: [colorWhite, colorBlack, Colors.red]),
+    DisplayPreset(
+        name: 'Good Display 1.54" B/W/R/Y',
+        width: 152,
+        height: 152,
+        colors: [colorWhite, colorBlack, Colors.red, Colors.yellow]),
+    DisplayPreset(
+        name: 'Good Display 2.13" B/W/R',
+        width: 122,
+        height: 250,
+        colors: [colorWhite, colorBlack, Colors.red]),
+    DisplayPreset(
+        name: 'Good Display 2.66" B/W/R',
+        width: 152,
+        height: 296,
+        colors: [colorWhite, colorBlack, Colors.red]),
+    DisplayPreset(
+        name: 'Good Display 2.7" B/W/R',
+        width: 176,
+        height: 264,
+        colors: [colorWhite, colorBlack, Colors.red]),
+    DisplayPreset(
+        name: 'Good Display 2.9" B/W/R',
+        width: 128,
+        height: 296,
+        colors: [colorWhite, colorBlack, Colors.red]),
+    DisplayPreset(
+        name: 'Good Display 4.2" B/W/R',
+        width: 300,
+        height: 400,
+        colors: [colorWhite, colorBlack, Colors.red]),
+    DisplayPreset(
+        name: 'Good Display 5.83" B/W/Y',
+        width: 448,
+        height: 600,
+        colors: [colorWhite, colorBlack, Colors.yellow]),
+    DisplayPreset(
+        name: 'Good Display 7.5" B/W/R',
+        width: 480,
+        height: 800,
+        colors: [colorWhite, colorBlack, Colors.red]),
+    DisplayPreset(
+        name: 'Good Display 10.2" B/W/R',
+        width: 640,
+        height: 960,
+        colors: [colorWhite, colorBlack, Colors.red]),
+    DisplayPreset(
+        name: 'Good Display 12.48" B/W/R',
+        width: 984,
+        height: 1304,
+        colors: [colorWhite, colorBlack, Colors.red]),
+    DisplayPreset(
+        name: 'Good Display 13.3" B/W/R',
+        width: 680,
+        height: 960,
+        colors: [colorWhite, colorBlack, Colors.red]),
+    DisplayPreset(
+        name: 'Good Display 4" Multicolor',
+        width: 400,
+        height: 600,
+        colors: [
+          colorWhite,
+          colorBlack,
+          Colors.red,
+          Colors.green,
+          Colors.blue,
+          Colors.yellow
+        ]),
+    DisplayPreset(
+        name: 'Good Display 7.3" Spectra',
+        width: 480,
+        height: 800,
+        colors: [
+          colorWhite,
+          colorBlack,
+          Colors.red,
+          Colors.green,
+          Colors.blue,
+          Colors.yellow
+        ]),
+    DisplayPreset(
+        name: 'Good Display 13.3" Spectra',
+        width: 1200,
+        height: 1600,
+        colors: [
+          colorWhite,
+          colorBlack,
+          Colors.red,
+          Colors.green,
+          Colors.blue,
+          Colors.yellow
+        ]),
+    DisplayPreset(
+        name: 'Good Display 31.5" E6',
+        width: 1440,
+        height: 2560,
+        colors: [
+          colorWhite,
+          colorBlack,
+          Colors.red,
+          Colors.green,
+          Colors.blue,
+          Colors.yellow
+        ]),
+    DisplayPreset.custom,
+  ];
+
+  static const List<Color> _availableColors = [
+    Colors.red,
+    Colors.yellow,
+    Colors.orange,
+    Colors.green,
+    Colors.blue,
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _widthController =
+        TextEditingController(text: widget.initialWidth.toString());
+    _heightController =
+        TextEditingController(text: widget.initialHeight.toString());
+    _currentColors = List.from(widget.initialColors);
+
+    _selectedPreset = _presets.firstWhere(
+      (p) =>
+          p.width == widget.initialWidth &&
+          p.height == widget.initialHeight &&
+          ColorUtils.colorListsEqual(p.colors, widget.initialColors),
+      orElse: () {
+        _isCustom = true;
+        return DisplayPreset.custom;
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _widthController.dispose();
+    _heightController.dispose();
+    super.dispose();
+  }
+
+  void _onPresetChanged(DisplayPreset? preset) {
+    if (preset == null) return;
+    setState(() {
+      _selectedPreset = preset;
+      if (preset == DisplayPreset.custom) {
+        _isCustom = true;
+      } else {
+        _isCustom = false;
+        _widthController.text = preset.width.toString();
+        _heightController.text = preset.height.toString();
+        _currentColors = List.from(preset.colors);
+      }
+    });
+  }
+
+  void _addColor() async {
+    final available = _availableColors
+        .where(
+            (c) => !_currentColors.any((ec) => ec.toARGB32() == c.toARGB32()))
+        .toList();
+    if (available.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(appLocalizations.noMoreColorsToAdd)));
+      return;
+    }
+    final pickedColor = await showDialog<Color>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(appLocalizations.selectAColor),
+        content: SizedBox(
+          width: 350,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: available.length,
+            itemBuilder: (context, index) {
+              final color = available[index];
+              return ListTile(
+                leading: CircleAvatar(backgroundColor: color),
+                title: Text(ColorUtils.getColorDisplayName(color)),
+                onTap: () => Navigator.of(context).pop(color),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+
+    if (pickedColor != null) {
+      if (!mounted) return;
+      setState(() {
+        _currentColors.add(pickedColor);
+      });
+    }
+  }
+
+  void _removeColor(Color color) {
+    if (color == colorBlack || color == colorWhite) return;
+    setState(() {
+      _currentColors.removeWhere((c) => c.toARGB32() == color.toARGB32());
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(appLocalizations.chooseYourDisplay),
+      content: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              DropdownButtonFormField<DisplayPreset>(
+                initialValue: _selectedPreset,
+                items: _presets
+                    .map((preset) => DropdownMenuItem(
+                        value: preset,
+                        child: Text(
+                          preset == DisplayPreset.custom
+                              ? appLocalizations.customPreset
+                              : preset.name,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        )))
+                    .toList(),
+                onChanged: _onPresetChanged,
+                decoration:
+                    InputDecoration(labelText: appLocalizations.displayPreset),
+                isExpanded: true,
+              ),
+              const SizedBox(height: Dimens.spacingL),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _widthController,
+                      readOnly: !_isCustom,
+                      decoration: InputDecoration(
+                          labelText: appLocalizations.widthLabel),
+                      keyboardType: TextInputType.number,
+                      validator: (v) => (v == null ||
+                              int.tryParse(v) == null ||
+                              int.parse(v) <= 0)
+                          ? appLocalizations.invalidValue
+                          : null,
+                    ),
+                  ),
+                  const SizedBox(width: Dimens.spacingM),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _heightController,
+                      readOnly: !_isCustom,
+                      decoration: InputDecoration(
+                          labelText: appLocalizations.heightLabel),
+                      keyboardType: TextInputType.number,
+                      validator: (v) => (v == null ||
+                              int.tryParse(v) == null ||
+                              int.parse(v) <= 0)
+                          ? appLocalizations.invalidValue
+                          : null,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: Dimens.spacingL),
+              Text(appLocalizations.colorsLabel,
+                  style: Theme.of(context).textTheme.titleSmall),
+              const SizedBox(height: Dimens.spacingS),
+              Wrap(
+                spacing: Dimens.spacingS,
+                runSpacing: Dimens.spacingXs,
+                children: _currentColors.map((color) {
+                  return Chip(
+                    avatar: CircleAvatar(backgroundColor: color, radius: 12),
+                    label: Text(
+                      ColorUtils.getColorDisplayName(color),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    backgroundColor: color.withAlpha(30),
+                    onDeleted: (_isCustom &&
+                            color != colorWhite &&
+                            color != colorBlack)
+                        ? () => _removeColor(color)
+                        : null,
+                    deleteIcon: const Icon(Icons.close, size: Dimens.iconSizeS),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: Dimens.spacingXxs),
+          child: Wrap(
+            spacing: Dimens.spacingS,
+            runSpacing: Dimens.spacingXs,
+            alignment: WrapAlignment.spaceBetween,
+            children: [
+              if (_isCustom)
+                ElevatedButton.icon(
+                  onPressed: _addColor,
+                  icon: const Icon(Icons.add, size: Dimens.iconSizeS),
+                  label: Text(appLocalizations.addColor),
+                ),
+              OutlinedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(appLocalizations.cancel),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    Navigator.of(context).pop(
+                      CustomEpdConfig(
+                        width: int.parse(_widthController.text),
+                        height: int.parse(_heightController.text),
+                        colors: _currentColors,
+                        presetName: _selectedPreset?.name ?? 'Custom',
+                      ),
+                    );
+                  }
+                },
+                child: Text(appLocalizations.ok),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}

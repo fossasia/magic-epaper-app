@@ -4,9 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
-import 'package:magicepaperapp/util/orientation_util.dart';
-import 'package:magicepaperapp/util/url_util.dart';
-import 'package:magicepaperapp/view/widget/common_scaffold_widget.dart';
+import 'package:magicepaperapp/utils/orientation_util.dart';
+import 'package:magicepaperapp/utils/url_util.dart';
+import 'package:magicepaperapp/view/widgets/common_scaffold_widget.dart';
 
 class AboutUsScreen extends StatefulWidget {
   const AboutUsScreen({super.key});
