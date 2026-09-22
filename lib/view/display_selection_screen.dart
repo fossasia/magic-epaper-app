@@ -11,6 +11,7 @@ import 'package:magicepaperapp/utils/epd/gdey037z03bw.dart';
 import 'package:magicepaperapp/utils/epd/goodisplay_2color.dart';
 import 'package:magicepaperapp/utils/epd/goodisplay_3color.dart';
 import 'package:magicepaperapp/utils/epd/goodisplay_4color.dart';
+import 'package:magicepaperapp/utils/epd/santek_displays.dart';
 import 'package:magicepaperapp/utils/epd/waveshare_displays.dart';
 import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:magicepaperapp/view/widgets/common_scaffold_widget.dart';
@@ -124,6 +125,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
     Waveshare4in2(),
     Waveshare7in5(),
     Waveshare7in5HD(),
+    SantekEzSign2in13(),
   ];
 
   final ScrollController _scrollController = ScrollController();
