@@ -8,7 +8,7 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=3.3.4 <4.0.0"
-  flutter: '3.47.4'
+  flutter: '3.47.5'
 
 dependencies:
   flutter:
@@ -22,7 +22,7 @@ dependencies:
   flutter_nfc_kit: ^3.6.2
   convert: ^3.1.2
   flutter_svg: ^2.0.16
-  image: ^4.9.2
+  image: ^4.10.1
   image_picker: ^1.2.3
   crop_your_image: ^2.0.0
   app_settings: ^9.0.0
@@ -30,8 +30,8 @@ dependencies:
   file_saver: ^0.4.0
   url_launcher: ^6.3.1
   google_fonts: ^8.2.1
-  file_picker: ^12.2.0
-  mobile_scanner: ^7.4.0
+  file_picker: ^13.1.0
+  mobile_scanner: ^7.4.2
   barcode_widget: ^2.0.4
   currency_picker: ^2.0.21
   intl: ^0.20.3
@@ -42,7 +42,6 @@ dependencies:
   logger: ^2.8.0
   http: ^1.2.2
   ffi: ^2.2.0
-  google_mlkit_text_recognition: ^0.17.1
   rust_lib_magicepaperapp:
     path: rust_builder
   flutter_rust_bridge: 2.13.0
