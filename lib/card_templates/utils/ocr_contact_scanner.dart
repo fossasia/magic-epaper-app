@@ -55,20 +55,14 @@ Future<T> _showLoaderWhile<T>(
 
 Future<String?> _pickAndRecognize(BuildContext context) async {
   final l10n = AppLocalizations.of(context)!;
-  final source = await chooseImageSource(context);
-  if (source == null) {
-    return null;
-  }
-  if (!context.mounted) {
-    return null;
-  }
   try {
-    final picked = await ImagePicker()
-        .pickImage(source: source, maxWidth: 2200, imageQuality: 90);
-    if (picked == null) {
+    final source = await chooseImageSource(context);
+    if (source == null || !context.mounted) {
       return null;
     }
-    if (!context.mounted) {
+    final picked = await ImagePicker()
+        .pickImage(source: source, maxWidth: 2200, imageQuality: 90);
+    if (picked == null || !context.mounted) {
       return null;
     }
     final text = await _showLoaderWhile(
