@@ -90,7 +90,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
     scanner.BarcodeFormat.pdf417,
     scanner.BarcodeFormat.aztec,
     scanner.BarcodeFormat.codabar,
-    scanner.BarcodeFormat.itf,
+    scanner.BarcodeFormat.itf14,
   ];
 
   final Map<String, String> barcodeFormatToSupportedChars = {
@@ -406,7 +406,7 @@ class _BarcodeEditorState extends State<BarcodeEditor> {
         return Barcode.aztec();
       case scanner.BarcodeFormat.codabar:
         return Barcode.codabar();
-      case scanner.BarcodeFormat.itf:
+      case scanner.BarcodeFormat.itf14:
         return Barcode.itf();
       default:
         return null;

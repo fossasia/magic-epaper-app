@@ -74,7 +74,10 @@ class _GoodisplayTransferDialogState extends State<GoodisplayTransferDialog> {
 
       if (mounted) {
         await Future.delayed(const Duration(milliseconds: 600));
-        Navigator.of(context).pop();
+
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
       }
     } catch (e) {
       if (mounted) {

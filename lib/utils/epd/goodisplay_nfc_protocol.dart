@@ -230,18 +230,26 @@ class EpdModelConfig {
   }
 
   static int getRefreshDuration(String epd) {
-    if (["GDEY0154D67", "GDEY0213B74", "GDEY029T94"].contains(epd)) return 2;
+    if (["GDEY0154D67", "GDEY0213B74", "GDEY029T94"].contains(epd)) {
+      return 2;
+    }
     if ([
       "GDEY042T81",
       "GDEW0154T8D",
       "GDEW0213T5D",
       "GDEW029T5D",
       "GDEW042T2",
-      "GDEY037T03"
-    ].contains(epd)) return 3;
-    if (["GDEY0213F52"].contains(epd)) return 16;
+      "GDEY037T03",
+    ].contains(epd)) {
+      return 3;
+    }
+    if (["GDEY0213F52"].contains(epd)) {
+      return 16;
+    }
     if (["GDEY0266F51", "GDEY029F51", "GDEY0266F51H", "GDEY029F51H"]
-        .contains(epd)) return 24;
+        .contains(epd)) {
+      return 24;
+    }
     return 20;
   }
 }
@@ -302,9 +310,13 @@ class GoodisplayNfcProtocol {
             final int bCol = pixel.b.toInt();
 
             if (mode == 0) {
-              if (r > 100 || g > 100 || bCol > 100) b = (b | 1) & 0xFF;
+              if (r > 100 || g > 100 || bCol > 100) {
+                b = (b | 1) & 0xFF;
+              }
             } else if (mode == 1) {
-              if (r < 100 || g > 100 || bCol > 100) b = (b | 1) & 0xFF;
+              if (r < 100 || g > 100 || bCol > 100) {
+                b = (b | 1) & 0xFF;
+              }
             }
           } else {
             b = (b | 1) & 0xFF;

@@ -154,14 +154,20 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   }
 
   int _colorRank(DisplayDevice d) {
-    if (d.colors.length <= 2) return 0;
-    if (d.colors.length == 3) return 1;
+    if (d.colors.length <= 2) {
+      return 0;
+    }
+    if (d.colors.length == 3) {
+      return 1;
+    }
     return 2;
   }
 
   double _sizeValue(DisplayDevice d) {
     final match = RegExp(r'(\d+(\.\d+)?)"').firstMatch(d.name);
-    if (match == null) return 0;
+    if (match == null) {
+      return 0;
+    }
     return double.tryParse(match.group(1)!) ?? 0;
   }
 
@@ -170,7 +176,9 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
       case SortOption.defaultOrder:
         return (a, b) {
           final rankCompare = _colorRank(a).compareTo(_colorRank(b));
-          if (rankCompare != 0) return rankCompare;
+          if (rankCompare != 0) {
+            return rankCompare;
+          }
           return _sizeValue(a).compareTo(_sizeValue(b));
         };
       case SortOption.nameAsc:
@@ -270,23 +278,26 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                     ),
                     const Divider(),
                     Flexible(
-                      child: ListView(
-                        shrinkWrap: true,
-                        children: SortOption.values.map((option) {
-                          return RadioListTile<SortOption>(
-                            activeColor: colorPrimary,
-                            value: option,
-                            groupValue: _sortOption,
-                            title: Text(
-                                option.label(AppLocalizations.of(context)!)),
-                            onChanged: (val) {
-                              if (val == null) return;
-                              setModalState(() {});
-                              setState(() => _sortOption = val);
-                              Navigator.pop(context);
-                            },
-                          );
-                        }).toList(),
+                      child: RadioGroup<SortOption>(
+                        groupValue: _sortOption,
+                        onChanged: (value) {
+                          if (value == null) {
+                            return;
+                          }
+                          setState(() => _sortOption = value);
+                          Navigator.pop(context);
+                        },
+                        child: ListView(
+                          shrinkWrap: true,
+                          children: SortOption.values.map((option) {
+                            return RadioListTile<SortOption>(
+                              activeColor: colorPrimary,
+                              value: option,
+                              title: Text(
+                                  option.label(AppLocalizations.of(context)!)),
+                            );
+                          }).toList(),
+                        ),
                       ),
                     ),
                   ],
@@ -608,7 +619,9 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
               final double windowWidth = MediaQuery.of(context).size.width;
               final bool showTitle = windowWidth >= 200;
               final bool showSubtitle = windowWidth >= 340;
-              if (!showTitle) return const SizedBox.shrink();
+              if (!showTitle) {
+                return const SizedBox.shrink();
+              }
               return Padding(
                 padding: const EdgeInsets.only(left: 5, right: Dimens.spacingL),
                 child: FittedBox(
