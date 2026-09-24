@@ -88,12 +88,15 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if ! git clone --branch=pr-screenshots --depth=1 https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} pr-screenshots; then
+          REPO_URL="https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }}"
+
+          if git ls-remote --exit-code --heads "$REPO_URL" pr-screenshots; then
+            git clone --branch=pr-screenshots --depth=1 "$REPO_URL" pr-screenshots
+            cd pr-screenshots
+          else
             git init pr-screenshots
             cd pr-screenshots
-            git remote add origin https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }}
-          else
-            cd pr-screenshots
+            git remote add origin "$REPO_URL"
           fi
 
           for file in ../screenshots/*; do
