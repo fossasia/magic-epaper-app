@@ -33,7 +33,7 @@ dependencies:
   file_picker: ^13.1.0
   mobile_scanner: ^7.4.2
   barcode_widget: ^2.0.4
-  google_mlkit_text_recognition: ^0.14.0
+  google_mlkit_text_recognition: ^0.17.1
   currency_picker: ^2.0.21
   intl: ^0.20.3
   path_provider: ^2.1.6
