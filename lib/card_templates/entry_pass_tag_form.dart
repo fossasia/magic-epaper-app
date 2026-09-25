@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -48,6 +49,8 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
   };
 
   File? _profileImage;
+  File? _ownedProfileImage;
+  int _imageSelectionGeneration = 0;
   bool _isGenerating = false;
 
   late EntryPassTagModel _passData;
@@ -74,6 +77,10 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
 
   @override
   void dispose() {
+    _imageSelectionGeneration++;
+    final ownedProfileImage = _ownedProfileImage;
+    _ownedProfileImage = null;
+    unawaited(deleteTemporaryImage(ownedProfileImage));
     _venueNameController.removeListener(_updatePreview);
     _visitorNameController.removeListener(_updatePreview);
     _passTypeController.removeListener(_updatePreview);
@@ -109,11 +116,20 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
   }
 
   Future<void> _pickImage() async {
+    final generation = ++_imageSelectionGeneration;
     final picked = await pickAndEditImage(context);
-    if (picked != null && mounted) {
-      _profileImage = picked;
-      _updatePreview();
+    if (picked == null) return;
+
+    if (!mounted || generation != _imageSelectionGeneration) {
+      unawaited(deleteTemporaryImage(picked));
+      return;
     }
+
+    final previousOwnedImage = _ownedProfileImage;
+    _profileImage = picked;
+    _ownedProfileImage = picked;
+    _updatePreview();
+    unawaited(deleteTemporaryImage(previousOwnedImage));
   }
 
   Future<void> _scanQrData() async {
