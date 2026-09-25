@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -52,6 +53,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
   };
 
   File? _productImage;
+  File? _ownedProductImage;
+  int _imageSelectionGeneration = 0;
   Currency? _selectedCurrency;
   bool _isGenerating = false;
 
@@ -79,6 +82,10 @@ class _PriceTagFormState extends State<PriceTagForm> {
 
   @override
   void dispose() {
+    _imageSelectionGeneration++;
+    final ownedProductImage = _ownedProductImage;
+    _ownedProductImage = null;
+    unawaited(deleteTemporaryImage(ownedProductImage));
     _productNameController.removeListener(_updatePreview);
     _productDescriptionController.removeListener(_updatePreview);
     _priceController.removeListener(_updatePreview);
@@ -114,11 +121,20 @@ class _PriceTagFormState extends State<PriceTagForm> {
   }
 
   Future<void> _pickProductImage() async {
+    final generation = ++_imageSelectionGeneration;
     final picked = await pickAndEditImage(context);
-    if (picked != null && mounted) {
-      _productImage = picked;
-      _updatePreview();
+    if (picked == null) return;
+
+    if (!mounted || generation != _imageSelectionGeneration) {
+      unawaited(deleteTemporaryImage(picked));
+      return;
     }
+
+    final previousOwnedImage = _ownedProductImage;
+    _productImage = picked;
+    _ownedProductImage = picked;
+    _updatePreview();
+    unawaited(deleteTemporaryImage(previousOwnedImage));
   }
 
   void _openCurrencyPicker() {
