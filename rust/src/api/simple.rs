@@ -53,8 +53,8 @@ const PALETTE_BWR: [Colorf32; 3] = [
 const PALETTE_BWRY: [Colorf32; 4] = [
     Colorf32 { r: 0.0, g: 0.0, b: 0.0 },
     Colorf32 { r: 255.0, g: 255.0, b: 255.0 },
-    Colorf32 { r: 255.0, g: 0.0, b: 0.0 },
     Colorf32 { r: 255.0, g: 255.0, b: 0.0 },
+    Colorf32 { r: 255.0, g: 0.0, b: 0.0 },
 ];
 
 const DITHER_GAMMA: f32 = 1.5;
@@ -130,7 +130,7 @@ pub fn process_image_rust(
         .map(|p| Colorf32 { r: p[0] as f32, g: p[1] as f32, b: p[2] as f32 })
         .collect();
 
-    if !matches!(method, DitherMethod::Threshold) {
+    if !matches!(color_mode, ColorMode::Bwry) && !matches!(method, DitherMethod::Threshold) {
         let gamma_lut = dither_gamma_lut();
         buffer.par_iter_mut().for_each(|px| {
             px.r = gamma_lut[px.r.clamp(0.0, 255.0) as usize];
