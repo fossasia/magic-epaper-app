@@ -358,23 +358,7 @@ class ImageLibraryProvider extends ChangeNotifier {
         if (file is! File) continue;
         final name = file.uri.pathSegments.last;
         final match =
-            RegExp(r'^(\d+)_contact_profile\.png
-    try {
-      if (_imageDirectory == null) return;
-      final files = await _imageDirectory!.list().toList();
-      final validFilePaths = _savedImages.map((img) => img.filePath).toSet();
-      for (final file in files) {
-        if (file is File && !validFilePaths.contains(file.path)) {
-          AppLogger.debug('Deleting orphaned file: ${file.path}');
-          await file.delete();
-        }
-      }
-    } catch (e) {
-      AppLogger.error('Error cleaning up orphaned files: $e');
-    }
-  }
-}
-).firstMatch(name);
+            RegExp(r'^(\d+)_contact_profile\.png$').firstMatch(name);
         if (match != null && !validImageIds.contains(match.group(1))) {
           AppLogger.debug('Deleting orphaned template asset: ${file.path}');
           await file.delete();
