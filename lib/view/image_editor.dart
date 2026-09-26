@@ -28,6 +28,7 @@ import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
+import '../services/sketch_filter_service.dart';
 import '../src/rust/api/simple.dart' as rust_api;
 import '../utils/app_logger.dart';
 
@@ -80,6 +81,10 @@ class _ImageEditorState extends State<ImageEditor> {
   double _currentContrast = 1.0;
   img.Image? _pristineImage;
 
+  bool _isSketchMode = false;
+  bool _isSketchLoading = false;
+  Uint8List? _preSketchImageBytes;
+
   Map<String, dynamic>? _pendingCanvasDocument;
   Map<String, dynamic>? _pendingTemplateData;
   Map<String, dynamic>? _pendingTemplateMetadata;
@@ -118,6 +123,74 @@ class _ImageEditorState extends State<ImageEditor> {
   void dispose() {
     _colorDebounce?.cancel();
     super.dispose();
+  }
+
+  Future<void> _toggleSketchFilter() async {
+    final imgLoader = context.read<ImageLoader>();
+    if (imgLoader.image == null || _isProcessingImages || _isSketchLoading)
+      return;
+
+    setState(() => _isSketchLoading = true);
+
+    final sourceImage = _processedSourceImage;
+
+    try {
+      if (!_isSketchMode) {
+        final sourceBytes = _processedPngs.isNotEmpty
+            ? _processedPngs[_selectedFilterIndex]
+            : Uint8List.fromList(img.encodePng(imgLoader.image!));
+        _preSketchImageBytes = sourceBytes;
+
+        final sketchBytes = await SketchFilterService.generateSketch(
+          imageBytes: sourceBytes,
+          targetWidth: widget.device.width.toInt(),
+          targetHeight: widget.device.height.toInt(),
+        );
+
+        if (!mounted || _processedSourceImage != sourceImage) return;
+
+        await imgLoader.updateImage(
+          bytes: sketchBytes,
+          width: widget.device.width,
+          height: widget.device.height,
+        );
+
+        if (!mounted) return;
+        setState(() {
+          _isSketchMode = true;
+          _pristineImage = sourceImage;
+          if (_processedPngs.isNotEmpty) {
+            _processedPngs[_selectedFilterIndex] = sketchBytes;
+          }
+        });
+      } else {
+        if (_preSketchImageBytes != null) {
+          await imgLoader.updateImage(
+            bytes: _preSketchImageBytes!,
+            width: widget.device.width,
+            height: widget.device.height,
+          );
+          if (!mounted) return;
+          if (_processedPngs.isNotEmpty) {
+            _processedPngs[_selectedFilterIndex] = _preSketchImageBytes!;
+          }
+          _preSketchImageBytes = null;
+        }
+        if (!mounted) return;
+        setState(() => _isSketchMode = false);
+      }
+    } catch (e) {
+      AppLogger.error('Failed to apply sketch filter: $e');
+      _preSketchImageBytes = null;
+      if (mounted) {
+        final appLocalizations = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(appLocalizations.sketchFilterError)),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isSketchLoading = false);
+    }
   }
 
   Future<void> loadInitialImage() async {
@@ -264,9 +337,6 @@ class _ImageEditorState extends State<ImageEditor> {
       for (int i = 0; i < filtersToRun.length; i++) {
         if (!mounted || _processedSourceImage != sourceImage) break;
 
-        Uint8List processedPngBytes;
-        img.Image? decodedImage;
-
         Uint8List bytesForRust = sourcePngBytes;
 
         if (filtersToRun[i].useDartHalftone) {
@@ -278,7 +348,7 @@ class _ImageEditorState extends State<ImageEditor> {
           bytesForRust = Uint8List.fromList(img.encodePng(tempImg));
         }
 
-        processedPngBytes = await rust_api.processImageRust(
+        final Uint8List processedPngBytes = await rust_api.processImageRust(
           imageBytes: bytesForRust,
           targetWidth: widget.device.width.toInt(),
           targetHeight: widget.device.height.toInt(),
@@ -286,7 +356,8 @@ class _ImageEditorState extends State<ImageEditor> {
           colorMode: filtersToRun[i].colorMode,
         );
 
-        decodedImage = await compute(img.decodePng, processedPngBytes);
+        final img.Image? decodedImage =
+            await compute(img.decodePng, processedPngBytes);
 
         if (mounted && _processedSourceImage == sourceImage) {
           setState(() {
@@ -484,8 +555,6 @@ class _ImageEditorState extends State<ImageEditor> {
         InkWell(
           onTap: () => _showRefreshModeInfoDialog(context),
           customBorder: const CircleBorder(),
-          // Compact 32 footprint so the title keeps its horizontal space
-          // on narrow screens (a 48 box squeezed the title too much).
           child: const SizedBox(
             height: controlHeight,
             width: controlHeight,
@@ -525,8 +594,6 @@ class _ImageEditorState extends State<ImageEditor> {
         foregroundColor: colorWhite,
         padding: const EdgeInsets.symmetric(
             horizontal: Dimens.spacingM, vertical: Dimens.spacingXs),
-        // Visual height stays compact (32), but the default padded
-        // tapTargetSize keeps the touch target at the 48dp guideline.
         minimumSize: const Size(0, 32),
         textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
         shape: RoundedRectangleBorder(
@@ -787,6 +854,14 @@ class _ImageEditorState extends State<ImageEditor> {
         ),
         actions: hasActions
             ? [
+                IconButton(
+                  icon: Icon(
+                    Icons.draw,
+                    color: _isSketchMode ? Colors.amberAccent : colorWhite,
+                  ),
+                  tooltip: appLocalizations.sketchFilter,
+                  onPressed: _isProcessingImages ? null : _toggleSketchFilter,
+                ),
                 if (hasDropdown)
                   Padding(
                     padding: const EdgeInsets.only(right: Dimens.spacingSm),
@@ -822,33 +897,63 @@ class _ImageEditorState extends State<ImageEditor> {
                   ],
                 ),
               )
-            : Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: Dimens.spacingS),
-                child: _processedPngs.isNotEmpty
-                    ? ImageList(
-                        key: ValueKey(_processedSourceImage),
-                        processedPngs: _processedPngs,
-                        epd: widget.device,
-                        width: widget.device.height,
-                        height: widget.device.width,
-                        selectedIndex: _selectedFilterIndex,
-                        flipHorizontal: flipHorizontal,
-                        flipVertical: flipVertical,
-                        onFilterSelected: _onFilterSelected,
-                        onFlipHorizontal: toggleFlipHorizontal,
-                        onFlipVertical: toggleFlipVertical,
-                        onSave: _saveCurrentImage,
-                        onAdjustColors: () =>
-                            _showColorAdjustmentDialog(context, imgLoader),
-                      )
-                    : Center(
-                        child: Text(
-                          appLocalizations.importStartingImageFeedback,
-                          style: const TextStyle(
-                              color: grey500, fontSize: Dimens.fontSizeL),
+            : Stack(
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: Dimens.spacingS),
+                    child: _processedPngs.isNotEmpty
+                        ? ImageList(
+                            key: ValueKey(_processedSourceImage),
+                            processedPngs: _processedPngs,
+                            epd: widget.device,
+                            width: widget.device.height,
+                            height: widget.device.width,
+                            selectedIndex: _selectedFilterIndex,
+                            flipHorizontal: flipHorizontal,
+                            flipVertical: flipVertical,
+                            onFilterSelected: _onFilterSelected,
+                            onFlipHorizontal: toggleFlipHorizontal,
+                            onFlipVertical: toggleFlipVertical,
+                            onSave: _saveCurrentImage,
+                            onAdjustColors: () =>
+                                _showColorAdjustmentDialog(context, imgLoader),
+                          )
+                        : Center(
+                            child: Text(
+                              appLocalizations.importStartingImageFeedback,
+                              style: const TextStyle(
+                                  color: grey500, fontSize: Dimens.fontSizeL),
+                            ),
+                          ),
+                  ),
+                  if (_isSketchLoading)
+                    Container(
+                      color: Colors.black.withValues(alpha: 0.55),
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.draw, color: colorWhite, size: 48),
+                            SizedBox(height: Dimens.spacingL),
+                            CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(colorWhite),
+                            ),
+                            SizedBox(height: Dimens.spacingM),
+                            Text(
+                              appLocalizations.sketchFilterGenerating,
+                              style: TextStyle(
+                                color: colorWhite,
+                                fontSize: Dimens.fontSizeL,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+                    ),
+                ],
               ),
       ),
       bottomNavigationBar: BottomActionMenu(
@@ -867,6 +972,8 @@ class _ImageEditorState extends State<ImageEditor> {
           },
           onSourceChanged: (String source) {
             setState(() {
+              _isSketchMode = false;
+              _preSketchImageBytes = null;
               _currentBrightness = 1.0;
               _currentContrast = 1.0;
               _pristineImage = null;
@@ -930,8 +1037,6 @@ class BottomActionMenu extends StatelessWidget {
     final bool isNarrow = screenWidth < 360;
     final double iconSize = isNarrow ? 20.0 : 22.0;
     final double fontSize = isNarrow ? 9.0 : 10.0;
-    // Grow the bar height with the user's font-scale so labels don't clip
-    // vertically under accessibility settings.
     final double barHeight = 75.0 + ((textScale - 1.0).clamp(0.0, 0.6)) * 28.0;
     return SafeArea(
       top: false,
@@ -973,8 +1078,8 @@ class BottomActionMenu extends StatelessWidget {
                       img.encodePng(imgLoader.image!),
                     );
                     await imgLoader.saveFinalizedImageBytes(bytes);
+                    onSourceChanged?.call('imported');
                   }
-                  onSourceChanged?.call('imported');
                 },
               ),
               _buildActionButton(

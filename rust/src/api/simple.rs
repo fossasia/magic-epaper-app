@@ -1,7 +1,8 @@
-use image::{load_from_memory_with_format, ImageFormat, RgbaImage};
+use image::{load_from_memory, load_from_memory_with_format, ImageFormat, RgbaImage};
+use rayon::prelude::*;
 use std::io::Cursor;
 use std::sync::OnceLock;
-use rayon::prelude::*;
+use tract_onnx::prelude::*;
 
 pub enum DitherMethod {
     FloydSteinberg,
@@ -16,13 +17,13 @@ pub enum DitherMethod {
 }
 
 const BAYER_8X8: [[f32; 8]; 8] = [
-    [ 0.0, 32.0,  8.0, 40.0,  2.0, 34.0, 10.0, 42.0],
+    [0.0, 32.0, 8.0, 40.0, 2.0, 34.0, 10.0, 42.0],
     [48.0, 16.0, 56.0, 24.0, 50.0, 18.0, 58.0, 26.0],
-    [12.0, 44.0,  4.0, 36.0, 14.0, 46.0,  6.0, 38.0],
+    [12.0, 44.0, 4.0, 36.0, 14.0, 46.0, 6.0, 38.0],
     [60.0, 28.0, 52.0, 20.0, 62.0, 30.0, 54.0, 22.0],
-    [ 3.0, 35.0, 11.0, 43.0,  1.0, 33.0,  9.0, 41.0],
+    [3.0, 35.0, 11.0, 43.0, 1.0, 33.0, 9.0, 41.0],
     [51.0, 19.0, 59.0, 27.0, 49.0, 17.0, 57.0, 25.0],
-    [15.0, 47.0,  7.0, 39.0, 13.0, 45.0,  5.0, 37.0],
+    [15.0, 47.0, 7.0, 39.0, 13.0, 45.0, 5.0, 37.0],
     [63.0, 31.0, 55.0, 23.0, 61.0, 29.0, 53.0, 21.0],
 ];
 
@@ -40,21 +41,57 @@ pub enum ColorMode {
 }
 
 const PALETTE_BW: [Colorf32; 2] = [
-    Colorf32 { r: 0.0, g: 0.0, b: 0.0 },
-    Colorf32 { r: 255.0, g: 255.0, b: 255.0 },
+    Colorf32 {
+        r: 0.0,
+        g: 0.0,
+        b: 0.0,
+    },
+    Colorf32 {
+        r: 255.0,
+        g: 255.0,
+        b: 255.0,
+    },
 ];
 
 const PALETTE_BWR: [Colorf32; 3] = [
-    Colorf32 { r: 0.0, g: 0.0, b: 0.0 },
-    Colorf32 { r: 255.0, g: 255.0, b: 255.0 },
-    Colorf32 { r: 255.0, g: 0.0, b: 0.0 },
+    Colorf32 {
+        r: 0.0,
+        g: 0.0,
+        b: 0.0,
+    },
+    Colorf32 {
+        r: 255.0,
+        g: 255.0,
+        b: 255.0,
+    },
+    Colorf32 {
+        r: 255.0,
+        g: 0.0,
+        b: 0.0,
+    },
 ];
 
 const PALETTE_BWRY: [Colorf32; 4] = [
-    Colorf32 { r: 0.0, g: 0.0, b: 0.0 },
-    Colorf32 { r: 255.0, g: 255.0, b: 255.0 },
-    Colorf32 { r: 255.0, g: 0.0, b: 0.0 },
-    Colorf32 { r: 255.0, g: 255.0, b: 0.0 },
+    Colorf32 {
+        r: 0.0,
+        g: 0.0,
+        b: 0.0,
+    },
+    Colorf32 {
+        r: 255.0,
+        g: 255.0,
+        b: 255.0,
+    },
+    Colorf32 {
+        r: 255.0,
+        g: 0.0,
+        b: 0.0,
+    },
+    Colorf32 {
+        r: 255.0,
+        g: 255.0,
+        b: 0.0,
+    },
 ];
 
 const DITHER_GAMMA: f32 = 1.5;
@@ -119,15 +156,24 @@ pub fn process_image_rust(
 ) -> Vec<u8> {
     let dynamic_img = load_from_memory_with_format(&image_bytes, ImageFormat::Png)
         .expect("Failed to decode image")
-        .resize_exact(target_width, target_height, image::imageops::FilterType::Nearest);
+        .resize_exact(
+            target_width,
+            target_height,
+            image::imageops::FilterType::Nearest,
+        );
 
     let img = dynamic_img.to_rgba8();
     let (width, height) = img.dimensions();
     let w = width as usize;
     let h = height as usize;
 
-    let mut buffer: Vec<Colorf32> = img.pixels()
-        .map(|p| Colorf32 { r: p[0] as f32, g: p[1] as f32, b: p[2] as f32 })
+    let mut buffer: Vec<Colorf32> = img
+        .pixels()
+        .map(|p| Colorf32 {
+            r: p[0] as f32,
+            g: p[1] as f32,
+            b: p[2] as f32,
+        })
         .collect();
 
     if !matches!(method, DitherMethod::Threshold) {
@@ -158,7 +204,14 @@ pub fn process_image_rust(
                     let brow = &offsets[y & 7];
                     for (x, px) in row.iter_mut().enumerate() {
                         let off = brow[x & 7];
-                        *px = closest_color(Colorf32 { r: px.r + off, g: px.g + off, b: px.b + off }, palette);
+                        *px = closest_color(
+                            Colorf32 {
+                                r: px.r + off,
+                                g: px.g + off,
+                                b: px.b + off,
+                            },
+                            palette,
+                        );
                     }
                 });
             }
@@ -179,23 +232,23 @@ pub fn process_image_rust(
                         DitherMethod::FloydSteinberg | DitherMethod::Halftone => {
                             if x >= 1 && x + 1 < w && y + 1 < h {
                                 unsafe {
-                                    add_err(ptr, idx + 1,     er, eg, eb, 7.0 / 16.0);
+                                    add_err(ptr, idx + 1, er, eg, eb, 7.0 / 16.0);
                                     add_err(ptr, idx + w - 1, er, eg, eb, 3.0 / 16.0);
-                                    add_err(ptr, idx + w,     er, eg, eb, 5.0 / 16.0);
+                                    add_err(ptr, idx + w, er, eg, eb, 5.0 / 16.0);
                                     add_err(ptr, idx + w + 1, er, eg, eb, 1.0 / 16.0);
                                 }
                             } else {
-                                distribute_error(ptr, x, y, w, h,  1,  0, er, eg, eb, 7.0 / 16.0);
-                                distribute_error(ptr, x, y, w, h, -1,  1, er, eg, eb, 3.0 / 16.0);
-                                distribute_error(ptr, x, y, w, h,  0,  1, er, eg, eb, 5.0 / 16.0);
-                                distribute_error(ptr, x, y, w, h,  1,  1, er, eg, eb, 1.0 / 16.0);
+                                distribute_error(ptr, x, y, w, h, 1, 0, er, eg, eb, 7.0 / 16.0);
+                                distribute_error(ptr, x, y, w, h, -1, 1, er, eg, eb, 3.0 / 16.0);
+                                distribute_error(ptr, x, y, w, h, 0, 1, er, eg, eb, 5.0 / 16.0);
+                                distribute_error(ptr, x, y, w, h, 1, 1, er, eg, eb, 1.0 / 16.0);
                             }
                         }
                         DitherMethod::FalseFloydSteinberg => {
                             if x + 1 < w && y + 1 < h {
                                 unsafe {
-                                    add_err(ptr, idx + 1,     er, eg, eb, 3.0 / 8.0);
-                                    add_err(ptr, idx + w,     er, eg, eb, 3.0 / 8.0);
+                                    add_err(ptr, idx + 1, er, eg, eb, 3.0 / 8.0);
+                                    add_err(ptr, idx + w, er, eg, eb, 3.0 / 8.0);
                                     add_err(ptr, idx + w + 1, er, eg, eb, 2.0 / 8.0);
                                 }
                             } else {
@@ -208,96 +261,96 @@ pub fn process_image_rust(
                             let w8 = 1.0 / 8.0;
                             if x >= 1 && x + 2 < w && y + 2 < h {
                                 unsafe {
-                                    add_err(ptr, idx + 1,         er, eg, eb, w8);
-                                    add_err(ptr, idx + 2,         er, eg, eb, w8);
-                                    add_err(ptr, idx + w - 1,     er, eg, eb, w8);
-                                    add_err(ptr, idx + w,         er, eg, eb, w8);
-                                    add_err(ptr, idx + w + 1,     er, eg, eb, w8);
-                                    add_err(ptr, idx + 2 * w,     er, eg, eb, w8);
+                                    add_err(ptr, idx + 1, er, eg, eb, w8);
+                                    add_err(ptr, idx + 2, er, eg, eb, w8);
+                                    add_err(ptr, idx + w - 1, er, eg, eb, w8);
+                                    add_err(ptr, idx + w, er, eg, eb, w8);
+                                    add_err(ptr, idx + w + 1, er, eg, eb, w8);
+                                    add_err(ptr, idx + 2 * w, er, eg, eb, w8);
                                 }
                             } else {
-                                distribute_error(ptr, x, y, w, h,  1, 0, er, eg, eb, w8);
-                                distribute_error(ptr, x, y, w, h,  2, 0, er, eg, eb, w8);
+                                distribute_error(ptr, x, y, w, h, 1, 0, er, eg, eb, w8);
+                                distribute_error(ptr, x, y, w, h, 2, 0, er, eg, eb, w8);
                                 distribute_error(ptr, x, y, w, h, -1, 1, er, eg, eb, w8);
-                                distribute_error(ptr, x, y, w, h,  0, 1, er, eg, eb, w8);
-                                distribute_error(ptr, x, y, w, h,  1, 1, er, eg, eb, w8);
-                                distribute_error(ptr, x, y, w, h,  0, 2, er, eg, eb, w8);
+                                distribute_error(ptr, x, y, w, h, 0, 1, er, eg, eb, w8);
+                                distribute_error(ptr, x, y, w, h, 1, 1, er, eg, eb, w8);
+                                distribute_error(ptr, x, y, w, h, 0, 2, er, eg, eb, w8);
                             }
                         }
                         DitherMethod::Stucki => {
                             let w42 = 1.0 / 42.0;
                             if x >= 2 && x + 2 < w && y + 2 < h {
                                 unsafe {
-                                    add_err(ptr, idx + 1,         er, eg, eb, 8.0 * w42);
-                                    add_err(ptr, idx + 2,         er, eg, eb, 4.0 * w42);
-                                    add_err(ptr, idx + w - 2,     er, eg, eb, 2.0 * w42);
-                                    add_err(ptr, idx + w - 1,     er, eg, eb, 4.0 * w42);
-                                    add_err(ptr, idx + w,         er, eg, eb, 8.0 * w42);
-                                    add_err(ptr, idx + w + 1,     er, eg, eb, 4.0 * w42);
-                                    add_err(ptr, idx + w + 2,     er, eg, eb, 2.0 * w42);
+                                    add_err(ptr, idx + 1, er, eg, eb, 8.0 * w42);
+                                    add_err(ptr, idx + 2, er, eg, eb, 4.0 * w42);
+                                    add_err(ptr, idx + w - 2, er, eg, eb, 2.0 * w42);
+                                    add_err(ptr, idx + w - 1, er, eg, eb, 4.0 * w42);
+                                    add_err(ptr, idx + w, er, eg, eb, 8.0 * w42);
+                                    add_err(ptr, idx + w + 1, er, eg, eb, 4.0 * w42);
+                                    add_err(ptr, idx + w + 2, er, eg, eb, 2.0 * w42);
                                     add_err(ptr, idx + 2 * w - 2, er, eg, eb, 1.0 * w42);
                                     add_err(ptr, idx + 2 * w - 1, er, eg, eb, 2.0 * w42);
-                                    add_err(ptr, idx + 2 * w,     er, eg, eb, 4.0 * w42);
+                                    add_err(ptr, idx + 2 * w, er, eg, eb, 4.0 * w42);
                                     add_err(ptr, idx + 2 * w + 1, er, eg, eb, 2.0 * w42);
                                     add_err(ptr, idx + 2 * w + 2, er, eg, eb, 1.0 * w42);
                                 }
                             } else {
-                                distribute_error(ptr, x, y, w, h,  1, 0, er, eg, eb, 8.0 * w42);
-                                distribute_error(ptr, x, y, w, h,  2, 0, er, eg, eb, 4.0 * w42);
+                                distribute_error(ptr, x, y, w, h, 1, 0, er, eg, eb, 8.0 * w42);
+                                distribute_error(ptr, x, y, w, h, 2, 0, er, eg, eb, 4.0 * w42);
                                 distribute_error(ptr, x, y, w, h, -2, 1, er, eg, eb, 2.0 * w42);
                                 distribute_error(ptr, x, y, w, h, -1, 1, er, eg, eb, 4.0 * w42);
-                                distribute_error(ptr, x, y, w, h,  0, 1, er, eg, eb, 8.0 * w42);
-                                distribute_error(ptr, x, y, w, h,  1, 1, er, eg, eb, 4.0 * w42);
-                                distribute_error(ptr, x, y, w, h,  2, 1, er, eg, eb, 2.0 * w42);
+                                distribute_error(ptr, x, y, w, h, 0, 1, er, eg, eb, 8.0 * w42);
+                                distribute_error(ptr, x, y, w, h, 1, 1, er, eg, eb, 4.0 * w42);
+                                distribute_error(ptr, x, y, w, h, 2, 1, er, eg, eb, 2.0 * w42);
                                 distribute_error(ptr, x, y, w, h, -2, 2, er, eg, eb, 1.0 * w42);
                                 distribute_error(ptr, x, y, w, h, -1, 2, er, eg, eb, 2.0 * w42);
-                                distribute_error(ptr, x, y, w, h,  0, 2, er, eg, eb, 4.0 * w42);
-                                distribute_error(ptr, x, y, w, h,  1, 2, er, eg, eb, 2.0 * w42);
-                                distribute_error(ptr, x, y, w, h,  2, 2, er, eg, eb, 1.0 * w42);
+                                distribute_error(ptr, x, y, w, h, 0, 2, er, eg, eb, 4.0 * w42);
+                                distribute_error(ptr, x, y, w, h, 1, 2, er, eg, eb, 2.0 * w42);
+                                distribute_error(ptr, x, y, w, h, 2, 2, er, eg, eb, 1.0 * w42);
                             }
                         }
                         DitherMethod::Sierra2 => {
                             let w16 = 1.0 / 16.0;
                             if x >= 2 && x + 2 < w && y + 1 < h {
                                 unsafe {
-                                    add_err(ptr, idx + 1,     er, eg, eb, 4.0 * w16);
-                                    add_err(ptr, idx + 2,     er, eg, eb, 3.0 * w16);
+                                    add_err(ptr, idx + 1, er, eg, eb, 4.0 * w16);
+                                    add_err(ptr, idx + 2, er, eg, eb, 3.0 * w16);
                                     add_err(ptr, idx + w - 2, er, eg, eb, 1.0 * w16);
                                     add_err(ptr, idx + w - 1, er, eg, eb, 2.0 * w16);
-                                    add_err(ptr, idx + w,     er, eg, eb, 3.0 * w16);
+                                    add_err(ptr, idx + w, er, eg, eb, 3.0 * w16);
                                     add_err(ptr, idx + w + 1, er, eg, eb, 2.0 * w16);
                                     add_err(ptr, idx + w + 2, er, eg, eb, 1.0 * w16);
                                 }
                             } else {
-                                distribute_error(ptr, x, y, w, h,  1, 0, er, eg, eb, 4.0 * w16);
-                                distribute_error(ptr, x, y, w, h,  2, 0, er, eg, eb, 3.0 * w16);
+                                distribute_error(ptr, x, y, w, h, 1, 0, er, eg, eb, 4.0 * w16);
+                                distribute_error(ptr, x, y, w, h, 2, 0, er, eg, eb, 3.0 * w16);
                                 distribute_error(ptr, x, y, w, h, -2, 1, er, eg, eb, 1.0 * w16);
                                 distribute_error(ptr, x, y, w, h, -1, 1, er, eg, eb, 2.0 * w16);
-                                distribute_error(ptr, x, y, w, h,  0, 1, er, eg, eb, 3.0 * w16);
-                                distribute_error(ptr, x, y, w, h,  1, 1, er, eg, eb, 2.0 * w16);
-                                distribute_error(ptr, x, y, w, h,  2, 1, er, eg, eb, 1.0 * w16);
+                                distribute_error(ptr, x, y, w, h, 0, 1, er, eg, eb, 3.0 * w16);
+                                distribute_error(ptr, x, y, w, h, 1, 1, er, eg, eb, 2.0 * w16);
+                                distribute_error(ptr, x, y, w, h, 2, 1, er, eg, eb, 1.0 * w16);
                             }
                         }
                         DitherMethod::Burkes => {
                             let w32 = 1.0 / 32.0;
                             if x >= 2 && x + 2 < w && y + 1 < h {
                                 unsafe {
-                                    add_err(ptr, idx + 1,     er, eg, eb, 8.0 * w32);
-                                    add_err(ptr, idx + 2,     er, eg, eb, 4.0 * w32);
+                                    add_err(ptr, idx + 1, er, eg, eb, 8.0 * w32);
+                                    add_err(ptr, idx + 2, er, eg, eb, 4.0 * w32);
                                     add_err(ptr, idx + w - 2, er, eg, eb, 2.0 * w32);
                                     add_err(ptr, idx + w - 1, er, eg, eb, 4.0 * w32);
-                                    add_err(ptr, idx + w,     er, eg, eb, 8.0 * w32);
+                                    add_err(ptr, idx + w, er, eg, eb, 8.0 * w32);
                                     add_err(ptr, idx + w + 1, er, eg, eb, 4.0 * w32);
                                     add_err(ptr, idx + w + 2, er, eg, eb, 2.0 * w32);
                                 }
                             } else {
-                                distribute_error(ptr, x, y, w, h,  1, 0, er, eg, eb, 8.0 * w32);
-                                distribute_error(ptr, x, y, w, h,  2, 0, er, eg, eb, 4.0 * w32);
+                                distribute_error(ptr, x, y, w, h, 1, 0, er, eg, eb, 8.0 * w32);
+                                distribute_error(ptr, x, y, w, h, 2, 0, er, eg, eb, 4.0 * w32);
                                 distribute_error(ptr, x, y, w, h, -2, 1, er, eg, eb, 2.0 * w32);
                                 distribute_error(ptr, x, y, w, h, -1, 1, er, eg, eb, 4.0 * w32);
-                                distribute_error(ptr, x, y, w, h,  0, 1, er, eg, eb, 8.0 * w32);
-                                distribute_error(ptr, x, y, w, h,  1, 1, er, eg, eb, 4.0 * w32);
-                                distribute_error(ptr, x, y, w, h,  2, 1, er, eg, eb, 2.0 * w32);
+                                distribute_error(ptr, x, y, w, h, 0, 1, er, eg, eb, 8.0 * w32);
+                                distribute_error(ptr, x, y, w, h, 1, 1, er, eg, eb, 4.0 * w32);
+                                distribute_error(ptr, x, y, w, h, 2, 1, er, eg, eb, 2.0 * w32);
                             }
                         }
                         _ => {}
@@ -307,16 +360,23 @@ pub fn process_image_rust(
         }
     }
 
-    let raw: Vec<u8> = buffer.iter().flat_map(|c| [
-        c.r.clamp(0.0, 255.0) as u8,
-        c.g.clamp(0.0, 255.0) as u8,
-        c.b.clamp(0.0, 255.0) as u8,
-        255u8,
-    ]).collect();
+    let raw: Vec<u8> = buffer
+        .iter()
+        .flat_map(|c| {
+            [
+                c.r.clamp(0.0, 255.0) as u8,
+                c.g.clamp(0.0, 255.0) as u8,
+                c.b.clamp(0.0, 255.0) as u8,
+                255u8,
+            ]
+        })
+        .collect();
 
     let out_img = RgbaImage::from_raw(width, height, raw).expect("Buffer size mismatch");
     let mut png_bytes: Vec<u8> = Vec::new();
-    out_img.write_to(&mut Cursor::new(&mut png_bytes), ImageFormat::Png).expect("Failed to encode PNG");
+    out_img
+        .write_to(&mut Cursor::new(&mut png_bytes), ImageFormat::Png)
+        .expect("Failed to encode PNG");
     png_bytes
 }
 
@@ -329,10 +389,107 @@ unsafe fn add_err(ptr: *mut Colorf32, idx: usize, er: f32, eg: f32, eb: f32, wei
 }
 
 #[inline(always)]
-fn distribute_error(ptr: *mut Colorf32, x: usize, y: usize, w: usize, h: usize, dx: i32, dy: i32, er: f32, eg: f32, eb: f32, weight: f32) {
+fn distribute_error(
+    ptr: *mut Colorf32,
+    x: usize,
+    y: usize,
+    w: usize,
+    h: usize,
+    dx: i32,
+    dy: i32,
+    er: f32,
+    eg: f32,
+    eb: f32,
+    weight: f32,
+) {
     let nx = x as i32 + dx;
     let ny = y as i32 + dy;
     if nx >= 0 && (nx as usize) < w && ny >= 0 && (ny as usize) < h {
         unsafe { add_err(ptr, ny as usize * w + nx as usize, er, eg, eb, weight) };
     }
+}
+
+type OnnxModel = tract_onnx::prelude::SimplePlan<
+    tract_onnx::prelude::TypedFact,
+    Box<dyn tract_onnx::prelude::TypedOp>,
+    tract_onnx::prelude::Graph<tract_onnx::prelude::TypedFact, Box<dyn tract_onnx::prelude::TypedOp>>,
+>;
+
+static SKETCH_MODEL: OnceLock<OnnxModel> = OnceLock::new();
+
+fn get_sketch_model(model_path: &str) -> Result<&'static OnnxModel, String> {
+    if let Some(m) = SKETCH_MODEL.get() {
+        return Ok(m);
+    }
+    let model = tract_onnx::onnx()
+        .model_for_path(model_path)
+        .map_err(|e| format!("Failed to load ONNX: {}", e))?
+        .into_optimized()
+        .map_err(|e| format!("Failed to optimize ONNX: {}", e))?
+        .into_runnable()
+        .map_err(|e| format!("Failed to make runnable: {}", e))?;
+    Ok(SKETCH_MODEL.get_or_init(|| model))
+}
+
+#[flutter_rust_bridge::frb]
+pub fn apply_sketch_filter_rust(
+    image_bytes: Vec<u8>,
+    model_path: String,
+    target_width: u32,
+    target_height: u32,
+) -> Result<Vec<u8>, String> {
+    let dynamic_img = load_from_memory(&image_bytes)
+        .map_err(|e| format!("Failed to decode image: {}", e))?
+        .resize_exact(
+            target_width,
+            target_height,
+            image::imageops::FilterType::Triangle,
+        );
+    let img = dynamic_img.to_rgba8();
+    let (width, height) = img.dimensions();
+    let (w, h) = (width as usize, height as usize);
+    let pad_h = (8 - (h % 8)) % 8;
+    let pad_w = (8 - (w % 8)) % 8;
+    let padded_h = h + pad_h;
+    let padded_w = w + pad_w;
+    let mut input_flat = vec![0.0f32; 3 * padded_h * padded_w];
+    for y in 0..padded_h {
+        let src_y = y.min(h - 1);
+        for x in 0..padded_w {
+            let src_x = x.min(w - 1);
+            let pixel = img.get_pixel(src_x as u32, src_y as u32);
+            input_flat[y * padded_w + x] = pixel[0] as f32 / 255.0;
+            input_flat[padded_h * padded_w + y * padded_w + x] = pixel[1] as f32 / 255.0;
+            input_flat[2 * padded_h * padded_w + y * padded_w + x] = pixel[2] as f32 / 255.0;
+        }
+    }
+    let model = get_sketch_model(&model_path)?;
+    let tensor = tract_ndarray::Array4::from_shape_vec((1, 3, padded_h, padded_w), input_flat)
+        .map_err(|e| format!("Shape error: {}", e))?
+        .into_tensor();
+    let mut outputs = model
+        .run(tvec!(tensor.into()))
+        .map_err(|e| format!("Inference failed: {}", e))?;
+    let out_tensor = outputs.remove(0).into_tensor();
+    let output_data = out_tensor
+        .as_slice::<f32>()
+        .map_err(|e| format!("Failed to extract tensor data: {}", e))?;
+    let mut raw: Vec<u8> = Vec::with_capacity(w * h * 4);
+    for y in 0..h {
+        for x in 0..w {
+            let pixel = img.get_pixel(x as u32, y as u32);
+            let sketch_mask = output_data[y * padded_w + x].clamp(0.0, 1.0);
+            raw.push((pixel[0] as f32 * sketch_mask) as u8);
+            raw.push((pixel[1] as f32 * sketch_mask) as u8);
+            raw.push((pixel[2] as f32 * sketch_mask) as u8);
+            raw.push(255);
+        }
+    }
+    let out_img = RgbaImage::from_raw(width, height, raw)
+        .ok_or_else(|| "Buffer size mismatch during rebuild".to_string())?;
+    let mut png_bytes: Vec<u8> = Vec::new();
+    out_img
+        .write_to(&mut Cursor::new(&mut png_bytes), ImageFormat::Png)
+        .map_err(|e| format!("Failed to encode output to PNG: {}", e))?;
+    Ok(png_bytes)
 }

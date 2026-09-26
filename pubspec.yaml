@@ -68,6 +68,7 @@ flutter:
     - assets/canvas/
     - assets/icons/
     - assets/card_templates/
+    - assets/model/
 
   # To update changes:
   # flutter pub get

@@ -10,6 +10,7 @@ crate-type = ["cdylib", "staticlib"]
 flutter_rust_bridge = "=2.13.0"
 image = "0.24.9"
 rayon = "1.10"
+tract-onnx = "0.21.6"
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }
