@@ -96,6 +96,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_bool(bool self, SseSerializer serializer);
+
+  @protected
+  String dco_decode_String(dynamic raw);
+
+  @protected
+  String sse_decode_String(SseDeserializer deserializer);
+
+  @protected
+  void sse_encode_String(String self, SseSerializer serializer);
 }
 
 // Section: wire_class

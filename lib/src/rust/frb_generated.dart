@@ -84,6 +84,12 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 abstract class RustLibApi extends BaseApi {
   Future<void> crateApiSimpleInitApp();
 
+  Future<Uint8List> crateApiSimpleApplySketchFilterRust(
+      {required List<int> imageBytes,
+      required String modelPath,
+      required int targetWidth,
+      required int targetHeight});
+
   Future<Uint8List> crateApiSimpleProcessImageRust(
       {required List<int> imageBytes,
       required int targetWidth,
@@ -121,6 +127,38 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kCrateApiSimpleInitAppConstMeta => const TaskConstMeta(
         debugName: "init_app",
         argNames: [],
+      );
+
+  @override
+  Future<Uint8List> crateApiSimpleApplySketchFilterRust(
+      {required List<int> imageBytes,
+      required String modelPath,
+      required int targetWidth,
+      required int targetHeight}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_list_prim_u_8_loose(imageBytes, serializer);
+        sse_encode_String(modelPath, serializer);
+        sse_encode_u_32(targetWidth, serializer);
+        sse_encode_u_32(targetHeight, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 3, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_list_prim_u_8_strict,
+        decodeErrorData: sse_decode_String,
+      ),
+      constMeta: kCrateApiSimpleApplySketchFilterRustConstMeta,
+      argValues: [imageBytes, modelPath, targetWidth, targetHeight],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiSimpleApplySketchFilterRustConstMeta =>
+      const TaskConstMeta(
+        debugName: "apply_sketch_filter_rust",
+        argNames: ["imageBytes", "modelPath", "targetWidth", "targetHeight"],
       );
 
   @override
@@ -324,5 +362,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_bool(bool self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putUint8(self ? 1 : 0);
+  }
+
+  @protected
+  String dco_decode_String(dynamic raw) {
+    return raw as String;
+  }
+
+  @protected
+  String sse_decode_String(SseDeserializer deserializer) {
+    var inner = sse_decode_list_prim_u_8_strict(deserializer);
+    return utf8.decode(inner);
+  }
+
+  @protected
+  void sse_encode_String(String self, SseSerializer serializer) {
+    sse_encode_list_prim_u_8_strict(utf8.encode(self), serializer);
   }
 }
