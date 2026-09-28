@@ -169,22 +169,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.15"
-  dio:
-    dependency: transitive
-    description:
-      name: dio
-      sha256: "0df44ebba85e503958eb75d07eedd3c86275a58c1d3eda2f2ce8f0a2c3abbb3c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.11.0"
-  dio_web_adapter:
-    dependency: transitive
-    description:
-      name: dio_web_adapter
-      sha256: "0786d0b7295a373de356fc0af4f6f1d0ab2844ed31b19dfc5e7556b70e24212c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.1"
   fake_async:
     dependency: transitive
     description:
@@ -261,10 +245,10 @@ packages:
     dependency: "direct main"
     description:
       name: file_saver
-      sha256: "68c9a085d9bb4546e0a31d1e583a48d7c17a6987d538788ea064f0043b1fc02d"
+      sha256: "9d1be85cafaa728f091ccc9654e7876f915225838ce9ef184c012ab5e12a1607"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.0"
+    version: "0.6.0"
   file_selector_linux:
     dependency: transitive
     description:
