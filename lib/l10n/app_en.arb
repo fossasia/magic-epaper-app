@@ -1343,5 +1343,8 @@
   "showBetaDisplaysTooltip": "Include displays that are still in beta testing",
   "noNFCfound": "NFC is not available on this device",
   "platformException": "A platform error occurred while communicating with NFC",
-  "badgeDisconnected": "The display was disconnected"
+  "badgeDisconnected": "The display was disconnected",
+  "sketchFilter": "Sketch filter",
+  "sketchFilterGenerating": "Generating sketch...",
+  "sketchFilterError": "Failed to apply sketch filter"
 }

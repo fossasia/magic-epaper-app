@@ -28,6 +28,7 @@ import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/constants/dimens.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
+import '../services/sketch_filter_service.dart';
 import '../src/rust/api/simple.dart' as rust_api;
 import '../utils/app_logger.dart';
 
@@ -75,10 +76,26 @@ class _ImageEditorState extends State<ImageEditor> {
   ImageSaveHandler? _imageSaveHandler;
   bool _isProcessingImages = false;
   bool _isInitializing = true;
+  final ValueNotifier<double> _sketchProgressNotifier = ValueNotifier(0.0);
+  Timer? _sketchProgressTimer;
   Timer? _colorDebounce;
+  Timer? _processingMsgTimer;
+  int _processingMsgIdx = 0;
+
+  static const List<String> _processingMessages = [
+    'Converting your image...',
+    'Applying filters, please wait...',
+    'Fine-tuning the details...',
+    'Almost there...',
+    'Preparing your display...',
+  ];
   double _currentBrightness = 1.0;
   double _currentContrast = 1.0;
+  double _currentSharpness = 0.0;
   img.Image? _pristineImage;
+
+  bool _isSketchMode = false;
+  Uint8List? _preSketchImageBytes;
 
   Map<String, dynamic>? _pendingCanvasDocument;
   Map<String, dynamic>? _pendingTemplateData;
@@ -117,7 +134,153 @@ class _ImageEditorState extends State<ImageEditor> {
   @override
   void dispose() {
     _colorDebounce?.cancel();
+    _processingMsgTimer?.cancel();
+    _sketchProgressTimer?.cancel();
+    _sketchProgressNotifier.dispose();
     super.dispose();
+  }
+
+  void _startProcessingMessages() {
+    _processingMsgIdx = 0;
+    _processingMsgTimer?.cancel();
+    _processingMsgTimer = Timer.periodic(const Duration(seconds: 2), (_) {
+      if (mounted) {
+        setState(() {
+          _processingMsgIdx =
+              (_processingMsgIdx + 1) % _processingMessages.length;
+        });
+      }
+    });
+  }
+
+  void _stopProcessingMessages() {
+    _processingMsgTimer?.cancel();
+    _processingMsgTimer = null;
+  }
+
+  void _startSketchProgress() {
+    _sketchProgressNotifier.value = 0.0;
+    _sketchProgressTimer?.cancel();
+    _sketchProgressTimer =
+        Timer.periodic(const Duration(milliseconds: 200), (_) {
+      final v = _sketchProgressNotifier.value;
+      if (v < 0.9) {
+        _sketchProgressNotifier.value = v + (0.9 - v) * 0.08;
+      }
+    });
+  }
+
+  void _stopSketchProgress() {
+    _sketchProgressTimer?.cancel();
+    _sketchProgressTimer = null;
+  }
+
+  Future<void> _toggleSketchFilter() async {
+    final imgLoader = context.read<ImageLoader>();
+    if (imgLoader.image == null || _isProcessingImages) return;
+
+    setState(() {
+      _isProcessingImages = true;
+    });
+
+    _startSketchProgress();
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => Dialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.radiusL)),
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ValueListenableBuilder<double>(
+                valueListenable: _sketchProgressNotifier,
+                builder: (_, value, __) => Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 80,
+                      height: 80,
+                      child: CircularProgressIndicator(
+                        value: value,
+                        strokeWidth: 6,
+                        backgroundColor: Colors.grey[200],
+                        valueColor:
+                            const AlwaysStoppedAnimation<Color>(colorAccent),
+                      ),
+                    ),
+                    Text(
+                      '${(value * 100).toInt()}%',
+                      style: const TextStyle(
+                        fontSize: Dimens.fontSizeXl,
+                        fontWeight: FontWeight.bold,
+                        color: colorAccent,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: Dimens.spacingL),
+              const Text('Applying sketch filter...'),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    try {
+      if (!_isSketchMode) {
+        _preSketchImageBytes =
+            Uint8List.fromList(img.encodePng(imgLoader.image!));
+
+        final sketchBytes = await SketchFilterService.generateSketch(
+          imageBytes: _preSketchImageBytes!,
+          targetWidth: widget.device.width.toInt(),
+          targetHeight: widget.device.height.toInt(),
+        );
+
+        await imgLoader.updateImage(
+          bytes: sketchBytes,
+          width: widget.device.width,
+          height: widget.device.height,
+        );
+
+        setState(() {
+          _isSketchMode = true;
+        });
+      } else {
+        if (_preSketchImageBytes != null) {
+          await imgLoader.updateImage(
+            bytes: _preSketchImageBytes!,
+            width: widget.device.width,
+            height: widget.device.height,
+          );
+          _preSketchImageBytes = null;
+        }
+        setState(() {
+          _isSketchMode = false;
+        });
+      }
+    } catch (e) {
+      AppLogger.error('Failed to apply sketch filter: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(AppLocalizations.of(context)!.sketchFilterError)),
+        );
+      }
+    } finally {
+      _stopSketchProgress();
+      if (mounted) {
+        _sketchProgressNotifier.value = 1.0;
+        await Future.delayed(const Duration(milliseconds: 300));
+        if (mounted) Navigator.of(context, rootNavigator: true).pop();
+        _sketchProgressNotifier.value = 0.0;
+        setState(() => _isProcessingImages = false);
+      }
+    }
   }
 
   Future<void> loadInitialImage() async {
@@ -235,6 +398,7 @@ class _ImageEditorState extends State<ImageEditor> {
   Future<void> _processImagesAsync(img.Image sourceImage) async {
     if (_isProcessingImages) return;
 
+    _startProcessingMessages();
     setState(() {
       _isProcessingImages = true;
       _rawImages = [];
@@ -247,6 +411,7 @@ class _ImageEditorState extends State<ImageEditor> {
 
     await Future.delayed(Duration.zero);
     if (!mounted || _processedSourceImage != sourceImage) {
+      _stopProcessingMessages();
       if (mounted) setState(() => _isProcessingImages = false);
       return;
     }
@@ -257,49 +422,59 @@ class _ImageEditorState extends State<ImageEditor> {
       height: widget.device.height,
     );
     final Uint8List sourcePngBytes =
-        Uint8List.fromList(img.encodePng(scaledSource));
+        Uint8List.fromList(img.encodePng(scaledSource, level: 0));
     final filtersToRun = widget.device.processingMethods;
 
     try {
-      for (int i = 0; i < filtersToRun.length; i++) {
-        if (!mounted || _processedSourceImage != sourceImage) break;
-
-        Uint8List processedPngBytes;
-        img.Image? decodedImage;
-
-        Uint8List bytesForRust = sourcePngBytes;
-
-        if (filtersToRun[i].useDartHalftone) {
+      final List<Uint8List> filterInputs = filtersToRun.map((filter) {
+        if (filter.useDartHalftone) {
           final tempImg = img.Image.from(scaledSource);
-          if (filtersToRun[i].colorMode == rust_api.ColorMode.bw) {
+          if (filter.colorMode == rust_api.ColorMode.bw) {
             img.grayscale(tempImg);
           }
           img.colorHalftone(tempImg, size: 3);
-          bytesForRust = Uint8List.fromList(img.encodePng(tempImg));
+          return Uint8List.fromList(img.encodePng(tempImg, level: 0));
         }
+        return sourcePngBytes;
+      }).toList();
 
-        processedPngBytes = await rust_api.processImageRust(
-          imageBytes: bytesForRust,
-          targetWidth: widget.device.width.toInt(),
-          targetHeight: widget.device.height.toInt(),
-          method: filtersToRun[i].method,
-          colorMode: filtersToRun[i].colorMode,
-        );
+      final pngResults = await Future.wait(
+        List.generate(
+            filtersToRun.length,
+            (i) => rust_api.processImageRust(
+                  imageBytes: filterInputs[i],
+                  targetWidth: widget.device.width.toInt(),
+                  targetHeight: widget.device.height.toInt(),
+                  method: filtersToRun[i].method,
+                  colorMode: filtersToRun[i].colorMode,
+                )),
+      );
 
-        decodedImage = await compute(img.decodePng, processedPngBytes);
+      if (!mounted || _processedSourceImage != sourceImage) {
+        _stopProcessingMessages();
+        if (mounted) setState(() => _isProcessingImages = false);
+        return;
+      }
 
-        if (mounted && _processedSourceImage == sourceImage) {
-          setState(() {
-            _processedPngs.add(processedPngBytes);
-            _rawImages.add(decodedImage!);
-            if (i == 0) {
-              _isProcessingImages = false;
+      final decodedImages = await Future.wait(
+        pngResults.map((png) => compute(img.decodePng, png)),
+      );
+
+      if (mounted && _processedSourceImage == sourceImage) {
+        setState(() {
+          for (int i = 0; i < pngResults.length; i++) {
+            if (decodedImages[i] != null) {
+              _processedPngs.add(pngResults[i]);
+              _rawImages.add(decodedImages[i]!);
             }
-          });
-        }
+          }
+          _stopProcessingMessages();
+          _isProcessingImages = false;
+        });
       }
     } catch (e) {
       AppLogger.error('Exception in Rust processing: $e');
+      _stopProcessingMessages();
       if (mounted) setState(() => _isProcessingImages = false);
     }
     _applyPendingInitialState(sourceImage);
@@ -484,8 +659,6 @@ class _ImageEditorState extends State<ImageEditor> {
         InkWell(
           onTap: () => _showRefreshModeInfoDialog(context),
           customBorder: const CircleBorder(),
-          // Compact 32 footprint so the title keeps its horizontal space
-          // on narrow screens (a 48 box squeezed the title too much).
           child: const SizedBox(
             height: controlHeight,
             width: controlHeight,
@@ -525,8 +698,6 @@ class _ImageEditorState extends State<ImageEditor> {
         foregroundColor: colorWhite,
         padding: const EdgeInsets.symmetric(
             horizontal: Dimens.spacingM, vertical: Dimens.spacingXs),
-        // Visual height stays compact (32), but the default padded
-        // tapTargetSize keeps the touch target at the 48dp guideline.
         minimumSize: const Size(0, 32),
         textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
         shape: RoundedRectangleBorder(
@@ -618,8 +789,12 @@ class _ImageEditorState extends State<ImageEditor> {
       _colorDebounce = Timer(const Duration(milliseconds: 300), () async {
         if (_pristineImage == null) return;
 
-        final adjusted = await compute(_applyAdjustments,
-            [_pristineImage!, _currentBrightness, _currentContrast]);
+        final adjusted = await compute(_applyAdjustments, [
+          _pristineImage!,
+          _currentBrightness,
+          _currentContrast,
+          _currentSharpness
+        ]);
 
         final bytes = await compute(
             (img.Image image) => Uint8List.fromList(img.encodePng(image)),
@@ -706,6 +881,52 @@ class _ImageEditorState extends State<ImageEditor> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      const Icon(Icons.auto_fix_high_outlined),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                "Sharpness: ${_currentSharpness.toStringAsFixed(2)}"),
+                            Slider(
+                              value: _currentSharpness,
+                              min: 0.0,
+                              max: 2.0,
+                              activeColor: colorAccent,
+                              onChanged: (val) {
+                                setModalState(() => _currentSharpness = val);
+                                applyFiltersRealtime();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      const Icon(Icons.draw_outlined),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Text(appLocalizations.sketchFilter),
+                      ),
+                      Switch(
+                        value: _isSketchMode,
+                        activeThumbColor: colorAccent,
+                        onChanged: _isProcessingImages
+                            ? null
+                            : (val) {
+                                Navigator.pop(context);
+                                _toggleSketchFilter();
+                              },
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 24),
                   Row(
                     children: [
@@ -720,6 +941,7 @@ class _ImageEditorState extends State<ImageEditor> {
                             setModalState(() {
                               _currentBrightness = 1.0;
                               _currentContrast = 1.0;
+                              _currentSharpness = 0.0;
                             });
                             applyFiltersRealtime();
                           },
@@ -814,7 +1036,7 @@ class _ImageEditorState extends State<ImageEditor> {
                     const SizedBox(height: Dimens.spacingL),
                     Text(
                       _isProcessingImages
-                          ? appLocalizations.processingImages
+                          ? _processingMessages[_processingMsgIdx]
                           : appLocalizations.loading,
                       style: const TextStyle(
                           color: colorBlack, fontSize: Dimens.fontSizeM),
@@ -867,8 +1089,11 @@ class _ImageEditorState extends State<ImageEditor> {
           },
           onSourceChanged: (String source) {
             setState(() {
+              _isSketchMode = false;
+              _preSketchImageBytes = null;
               _currentBrightness = 1.0;
               _currentContrast = 1.0;
+              _currentSharpness = 0.0;
               _pristineImage = null;
               _currentImageSource = source;
               if (source != 'editor') {
@@ -893,12 +1118,35 @@ img.Image _applyAdjustments(List<dynamic> args) {
   final img.Image pristine = args[0];
   final double brightness = args[1];
   final double contrast = args[2];
+  final double sharpness = args[3] as double;
 
-  return img.adjustColor(
+  var result = img.adjustColor(
     img.Image.from(pristine),
     brightness: brightness,
     contrast: contrast,
   );
+
+  if (sharpness > 0.05) {
+    final s = sharpness * 2.0;
+    final blurred = img.gaussianBlur(img.Image.from(result), radius: 3);
+    final sharpened = img.Image.from(result);
+    for (int y = 0; y < result.height; y++) {
+      for (int x = 0; x < result.width; x++) {
+        final p = result.getPixel(x, y);
+        final bp = blurred.getPixel(x, y);
+        final nr = (p.r.toDouble() + s * (p.r.toDouble() - bp.r.toDouble()))
+            .clamp(0.0, 255.0);
+        final ng = (p.g.toDouble() + s * (p.g.toDouble() - bp.g.toDouble()))
+            .clamp(0.0, 255.0);
+        final nb = (p.b.toDouble() + s * (p.b.toDouble() - bp.b.toDouble()))
+            .clamp(0.0, 255.0);
+        sharpened.setPixelRgb(x, y, nr.toInt(), ng.toInt(), nb.toInt());
+      }
+    }
+    result = sharpened;
+  }
+
+  return result;
 }
 
 class BottomActionMenu extends StatelessWidget {
@@ -930,8 +1178,6 @@ class BottomActionMenu extends StatelessWidget {
     final bool isNarrow = screenWidth < 360;
     final double iconSize = isNarrow ? 20.0 : 22.0;
     final double fontSize = isNarrow ? 9.0 : 10.0;
-    // Grow the bar height with the user's font-scale so labels don't clip
-    // vertically under accessibility settings.
     final double barHeight = 75.0 + ((textScale - 1.0).clamp(0.0, 0.6)) * 28.0;
     return SafeArea(
       top: false,
@@ -973,8 +1219,8 @@ class BottomActionMenu extends StatelessWidget {
                       img.encodePng(imgLoader.image!),
                     );
                     await imgLoader.saveFinalizedImageBytes(bytes);
+                    onSourceChanged?.call('imported');
                   }
-                  onSourceChanged?.call('imported');
                 },
               ),
               _buildActionButton(
