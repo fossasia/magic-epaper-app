@@ -33,6 +33,9 @@ let package = Package(
             ],
             cSettings: [
                 .headerSearchPath("include/rust_lib_magicepaperapp")
+            ],
+            linkerSettings: [
+                .unsafeFlags(["-Xlinker", "-all_load"])
             ]
         ),
         .binaryTarget(
