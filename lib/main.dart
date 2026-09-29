@@ -14,13 +14,14 @@ import 'package:magicepaperapp/ndef_screen/nfc_read_screen.dart';
 import 'package:magicepaperapp/ndef_screen/nfc_write_screen.dart';
 import 'package:magicepaperapp/command_console/command_console_screen.dart';
 import 'package:magicepaperapp/view/display_selection_screen.dart';
-import 'package:magicepaperapp/src/rust/frb_generated.dart';
+import 'package:magicepaperapp/src/rust/rust_library_io.dart'
+    if (dart.library.js_interop) 'package:magicepaperapp/src/rust/rust_library_web.dart';
 import 'package:magicepaperapp/theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await RustLib.init();
+  await initRustLibrary();
 
   setupLocator();
 
