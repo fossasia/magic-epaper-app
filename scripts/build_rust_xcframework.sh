@@ -10,7 +10,7 @@
 # this script.
 #
 # Usage:
-#   ./scripts/build_rust_xcframework.sh [--debug]
+#   ./scripts/build_rust_xcframework.sh [--debug] [--ios-only | --macos-only]
 #
 set -euo pipefail
 
