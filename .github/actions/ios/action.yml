@@ -18,6 +18,10 @@ runs:
       with:
         cache: false
         flutter-version-file: pubspec.yaml
+
+    - name: Build Rust iOS xcframework
+      shell: bash
+      run: bash scripts/build_rust_xcframework.sh --ios-only
       
     - name: Update Podfile
       shell: bash
