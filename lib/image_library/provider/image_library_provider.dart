@@ -1,9 +1,13 @@
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:magicepaperapp/image_library/models/saved_image_model.dart';
+
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:path_provider/path_provider.dart';
+
 import '../../utils/app_logger.dart';
 
 class ImageLibraryProvider extends ChangeNotifier {
@@ -27,13 +31,15 @@ class ImageLibraryProvider extends ChangeNotifier {
 
   Directory? _magicEpaperDirectory;
   Directory? _imageDirectory;
+  Directory? _templateAssetDirectory;
   File? _metadataFile;
   bool _isInitialized = false;
 
   List<SavedImage> get filteredImages {
     var filtered = _savedImages.where((image) {
-      final matchesSearch =
-          image.name.toLowerCase().contains(_searchQuery.toLowerCase());
+      final matchesSearch = image.name.toLowerCase().contains(
+            _searchQuery.toLowerCase(),
+          );
       final matchesSource =
           _selectedSource == 'all' || image.source == _selectedSource;
       return matchesSearch && matchesSource;
@@ -64,8 +70,15 @@ class ImageLibraryProvider extends ChangeNotifier {
       if (!await _imageDirectory!.exists()) {
         await _imageDirectory!.create(recursive: true);
       }
-      _metadataFile =
-          File('${_magicEpaperDirectory!.path}/images_metadata.json');
+      _templateAssetDirectory = Directory(
+        '${_magicEpaperDirectory!.path}/template_assets',
+      );
+      if (!await _templateAssetDirectory!.exists()) {
+        await _templateAssetDirectory!.create(recursive: true);
+      }
+      _metadataFile = File(
+        '${_magicEpaperDirectory!.path}/images_metadata.json',
+      );
     }
   }
 
@@ -81,6 +94,15 @@ class ImageLibraryProvider extends ChangeNotifier {
       await _initializeDirectories();
       if (_imageDirectory != null && await _imageDirectory!.exists()) {
         final files = await _imageDirectory!.list().toList();
+        for (final file in files) {
+          if (file is File) {
+            await file.delete();
+          }
+        }
+      }
+      if (_templateAssetDirectory != null &&
+          await _templateAssetDirectory!.exists()) {
+        final files = await _templateAssetDirectory!.list().toList();
         for (final file in files) {
           if (file is File) {
             await file.delete();
@@ -141,6 +163,7 @@ class ImageLibraryProvider extends ChangeNotifier {
         AppLogger.debug('No saved images to print.');
       }
       await _cleanupOrphanedFiles();
+      await _cleanupOrphanedTemplateAssets();
       AppLogger.info('Loaded ${_savedImages.length} images successfully');
       _isInitialized = true;
     } catch (e) {
@@ -168,18 +191,45 @@ class ImageLibraryProvider extends ChangeNotifier {
       final filePath = '${_imageDirectory!.path}/$fileName';
       final file = File(filePath);
       await file.writeAsBytes(imageData);
-      final savedImage = SavedImage(
-        id: imageId,
-        name: name,
-        filePath: filePath,
-        createdAt: DateTime.now(),
-        source: source,
-        metadata: metadata,
-      );
-      _savedImages.add(savedImage);
-      await _persistMetadata();
+
+      SavedImage? savedImage;
+      try {
+        final storedMetadata =
+            await _prepareTemplateMetadata(imageId, metadata);
+        savedImage = SavedImage(
+          id: imageId,
+          name: name,
+          filePath: filePath,
+          createdAt: DateTime.now(),
+          source: source,
+          metadata: storedMetadata,
+        );
+        _savedImages.add(savedImage);
+        await _persistMetadata();
+      } catch (error) {
+        if (savedImage != null) {
+          _savedImages.remove(savedImage);
+        }
+
+        try {
+          if (await file.exists()) {
+            await file.delete();
+          }
+          await _deleteTemplateAssets(imageId);
+        } catch (rollbackError, rollbackStackTrace) {
+          AppLogger.error(
+            'Error rolling back saved image',
+            rollbackError,
+            rollbackStackTrace,
+          );
+        }
+
+        rethrow;
+      }
+
       AppLogger.info(
-          'Successfully saved image: $name (${imageData.length} bytes)');
+        'Successfully saved image: $name (${imageData.length} bytes)',
+      );
       notifyListeners();
     } catch (e) {
       AppLogger.error('Error saving image: $e');
@@ -197,20 +247,72 @@ class ImageLibraryProvider extends ChangeNotifier {
       await _initializeDirectories();
       final index = _savedImages.indexWhere((image) => image.id == id);
       if (index == -1) return;
+
       final old = _savedImages[index];
-      if (imageData != null) {
-        await File(old.filePath).writeAsBytes(imageData);
-        await FileImage(File(old.filePath)).evict();
+      final imageFile = File(old.filePath);
+      final previousImageBytes = imageData != null && await imageFile.exists()
+          ? await imageFile.readAsBytes()
+          : null;
+
+      final rawContactCard = metadata?['contactCard'];
+      final mayUpdateProfileAsset = rawContactCard is Map;
+      final profileAsset = mayUpdateProfileAsset
+          ? File('${_templateAssetDirectory!.path}/${id}_contact_profile.png')
+          : null;
+      final previousProfileBytes =
+          profileAsset != null && await profileAsset.exists()
+              ? await profileAsset.readAsBytes()
+              : null;
+
+      try {
+        if (imageData != null) {
+          await imageFile.writeAsBytes(imageData);
+          await FileImage(imageFile).evict();
+        }
+
+        final storedMetadata = metadata == null
+            ? old.metadata
+            : await _prepareTemplateMetadata(id, metadata);
+        _savedImages[index] = SavedImage(
+          id: old.id,
+          name: old.name,
+          filePath: old.filePath,
+          createdAt: old.createdAt,
+          source: old.source,
+          metadata: storedMetadata,
+        );
+        await _persistMetadata();
+      } catch (error) {
+        _savedImages[index] = old;
+
+        try {
+          if (imageData != null) {
+            if (previousImageBytes != null) {
+              await imageFile.writeAsBytes(previousImageBytes);
+              await FileImage(imageFile).evict();
+            } else if (await imageFile.exists()) {
+              await imageFile.delete();
+            }
+          }
+
+          if (profileAsset != null) {
+            if (previousProfileBytes != null) {
+              await profileAsset.writeAsBytes(previousProfileBytes);
+            } else if (await profileAsset.exists()) {
+              await profileAsset.delete();
+            }
+          }
+        } catch (rollbackError, rollbackStackTrace) {
+          AppLogger.error(
+            'Error rolling back saved image update',
+            rollbackError,
+            rollbackStackTrace,
+          );
+        }
+
+        rethrow;
       }
-      _savedImages[index] = SavedImage(
-        id: old.id,
-        name: old.name,
-        filePath: old.filePath,
-        createdAt: old.createdAt,
-        source: old.source,
-        metadata: metadata ?? old.metadata,
-      );
-      await _persistMetadata();
+
       notifyListeners();
     } catch (e) {
       AppLogger.error('Error updating saved image: $e');
@@ -228,6 +330,7 @@ class ImageLibraryProvider extends ChangeNotifier {
       if (await file.exists()) {
         await file.delete();
       }
+      await _deleteTemplateAssets(id);
       _savedImages.removeAt(imageIndex);
       await _persistMetadata();
       notifyListeners();
@@ -269,6 +372,50 @@ class ImageLibraryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<Map<String, dynamic>?> _prepareTemplateMetadata(
+    String imageId,
+    Map<String, dynamic>? metadata,
+  ) async {
+    if (metadata == null) return null;
+
+    final result = Map<String, dynamic>.from(metadata);
+    final rawContactCard = result['contactCard'];
+    if (rawContactCard is! Map) return result;
+
+    final contactCard = Map<String, dynamic>.from(rawContactCard);
+    final profileImageBytes = contactCard.remove('profileImageBytes');
+    final targetFile = File(
+      '${_templateAssetDirectory!.path}/${imageId}_contact_profile.png',
+    );
+
+    if (profileImageBytes is Uint8List) {
+      await targetFile.writeAsBytes(profileImageBytes);
+      contactCard['profileImagePath'] = targetFile.path;
+    } else {
+      final currentPath = contactCard['profileImagePath'];
+      if (currentPath is String && currentPath != targetFile.path) {
+        final currentFile = File(currentPath);
+        if (await currentFile.exists()) {
+          await currentFile.copy(targetFile.path);
+          contactCard['profileImagePath'] = targetFile.path;
+        }
+      }
+    }
+
+    result['contactCard'] = contactCard;
+    return result;
+  }
+
+  Future<void> _deleteTemplateAssets(String imageId) async {
+    if (_templateAssetDirectory == null) return;
+    final profileFile = File(
+      '${_templateAssetDirectory!.path}/${imageId}_contact_profile.png',
+    );
+    if (await profileFile.exists()) {
+      await profileFile.delete();
+    }
+  }
+
   Future<void> _persistMetadata() async {
     try {
       await _initializeDirectories();
@@ -282,6 +429,25 @@ class ImageLibraryProvider extends ChangeNotifier {
     } catch (e) {
       AppLogger.error('Error persisting metadata: $e');
       rethrow;
+    }
+  }
+
+  Future<void> _cleanupOrphanedTemplateAssets() async {
+    try {
+      if (_templateAssetDirectory == null) return;
+      final validImageIds = _savedImages.map((image) => image.id).toSet();
+      final files = await _templateAssetDirectory!.list().toList();
+      for (final file in files) {
+        if (file is! File) continue;
+        final name = file.uri.pathSegments.last;
+        final match = RegExp(r'^(\d+)_contact_profile\.png$').firstMatch(name);
+        if (match != null && !validImageIds.contains(match.group(1))) {
+          AppLogger.debug('Deleting orphaned template asset: ${file.path}');
+          await file.delete();
+        }
+      }
+    } catch (e) {
+      AppLogger.error('Error cleaning up orphaned template assets: $e');
     }
   }
 
