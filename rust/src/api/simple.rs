@@ -142,6 +142,37 @@ fn closest_color(pixel: Colorf32, palette: &[Colorf32]) -> Colorf32 {
     best_color
 }
 
+const BWRY_COLOR_BIAS: f32 = 0.06 * 255.0 * 255.0;
+
+#[inline(always)]
+fn closest_color_bwry(pixel: Colorf32) -> Colorf32 {
+    let r = pixel.r.clamp(0.0, 255.0);
+    let g = pixel.g.clamp(0.0, 255.0);
+    let b = pixel.b.clamp(0.0, 255.0);
+    let maxc = r.max(g).max(b);
+    let minc = r.min(g).min(b);
+    let chroma = maxc - minc;
+    let desat = (255.0 - chroma) / 255.0;
+    let penalty = BWRY_COLOR_BIAS * desat * desat;
+
+    let mut min_dist = f32::MAX;
+    let mut best_color = PALETTE_BWRY[0];
+    for (i, c) in PALETTE_BWRY.iter().enumerate() {
+        let dr = r - c.r;
+        let dg = g - c.g;
+        let db = b - c.b;
+        let mut dist = dr * dr + dg * dg + db * db;
+        if i >= 2 {
+            dist += penalty;
+        }
+        if dist < min_dist {
+            min_dist = dist;
+            best_color = *c;
+        }
+    }
+    best_color
+}
+
 #[flutter_rust_bridge::frb(init)]
 pub fn init_app() {
     flutter_rust_bridge::setup_default_user_utils();
@@ -176,15 +207,32 @@ pub fn process_image_rust(
         })
         .collect();
 
-    if !matches!(method, DitherMethod::Threshold) {
+    if !matches!(color_mode, ColorMode::Bwry) && !matches!(method, DitherMethod::Threshold) {
         let gamma_lut = dither_gamma_lut();
         buffer.par_iter_mut().for_each(|px| {
             px.r = gamma_lut[px.r.clamp(0.0, 255.0) as usize];
             px.g = gamma_lut[px.g.clamp(0.0, 255.0) as usize];
             px.b = gamma_lut[px.b.clamp(0.0, 255.0) as usize];
         });
+    } else if matches!(color_mode, ColorMode::Bwry) {
+        const BLACK_PT: f32 = 10.0;
+        const WHITE_PT: f32 = 185.0;
+        const SAT: f32 = 1.12;
+        const GAMMA: f32 = 0.62;
+        const RANGE: f32 = WHITE_PT - BLACK_PT;
+        let lv = |c: f32| {
+            let n = ((c - BLACK_PT) / RANGE).clamp(0.0, 1.0);
+            255.0 * n.powf(GAMMA)
+        };
+        buffer.par_iter_mut().for_each(|px| {
+            let lum = 0.299 * px.r + 0.587 * px.g + 0.114 * px.b;
+            px.r = lv(lum + (px.r - lum) * SAT);
+            px.g = lv(lum + (px.g - lum) * SAT);
+            px.b = lv(lum + (px.b - lum) * SAT);
+        });
     }
 
+    let bwry = matches!(color_mode, ColorMode::Bwry);
     let palette: &[Colorf32] = match color_mode {
         ColorMode::Bw => &PALETTE_BW[..],
         ColorMode::Bwr => &PALETTE_BWR[..],
@@ -194,7 +242,7 @@ pub fn process_image_rust(
     match method {
         DitherMethod::Threshold => {
             buffer.par_iter_mut().for_each(|px| {
-                *px = closest_color(*px, palette);
+                *px = if bwry { closest_color_bwry(*px) } else { closest_color(*px, palette) };
             });
         }
         DitherMethod::Bayer => {
@@ -204,14 +252,16 @@ pub fn process_image_rust(
                     let brow = &offsets[y & 7];
                     for (x, px) in row.iter_mut().enumerate() {
                         let off = brow[x & 7];
-                        *px = closest_color(
-                            Colorf32 {
-                                r: px.r + off,
-                                g: px.g + off,
-                                b: px.b + off,
-                            },
-                            palette,
-                        );
+                        let biased = Colorf32 {
+                            r: px.r + off,
+                            g: px.g + off,
+                            b: px.b + off,
+                        };
+                        *px = if bwry {
+                            closest_color_bwry(biased)
+                        } else {
+                            closest_color(biased, palette)
+                        };
                     }
                 });
             }
@@ -222,7 +272,7 @@ pub fn process_image_rust(
                 for x in 0..w {
                     let idx = y * w + x;
                     let old_pixel = unsafe { *ptr.add(idx) };
-                    let new_pixel = closest_color(old_pixel, palette);
+                    let new_pixel = if bwry { closest_color_bwry(old_pixel) } else { closest_color(old_pixel, palette) };
                     unsafe { ptr.add(idx).write(new_pixel) };
                     let er = old_pixel.r - new_pixel.r;
                     let eg = old_pixel.g - new_pixel.g;
