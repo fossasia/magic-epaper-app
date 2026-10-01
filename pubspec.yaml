@@ -24,7 +24,7 @@ dependencies:
   flutter_svg: ^2.0.16
   image: ^4.10.1
   image_picker: ^1.2.3
-  crop_your_image: ^2.0.0
+  crop_your_image: ^2.0.1
   app_settings: ^9.0.0
   fluttertoast: ^10.0.0
   file_saver: ^0.6.0
