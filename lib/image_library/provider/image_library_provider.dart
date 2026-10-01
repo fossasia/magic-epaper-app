@@ -79,6 +79,7 @@ class ImageLibraryProvider extends ChangeNotifier {
       _metadataFile = File(
         '${_magicEpaperDirectory!.path}/images_metadata.json',
       );
+      await _recoverMetadataFileIfNeeded();
     }
   }
 
@@ -129,15 +130,27 @@ class ImageLibraryProvider extends ChangeNotifier {
     _hasError = false;
     _errorMessage = null;
     notifyListeners();
+
+    var metadataLoadedSuccessfully = false;
     try {
       await _initializeDirectories();
       _savedImages = [];
+
       if (await _metadataFile!.exists()) {
         final jsonString = await _metadataFile!.readAsString();
-        if (jsonString.isNotEmpty) {
+        if (jsonString.isEmpty) {
+          AppLogger.warning(
+            'Metadata file is empty; skipping destructive orphan cleanup',
+          );
+        } else {
           try {
-            final List<dynamic> jsonList = jsonDecode(jsonString);
-            for (var json in jsonList) {
+            final decoded = jsonDecode(jsonString);
+            if (decoded is! List) {
+              throw const FormatException('Image metadata root is not a list');
+            }
+
+            metadataLoadedSuccessfully = true;
+            for (final json in decoded) {
               try {
                 final image = SavedImage.fromJson(json);
                 if (await image.fileExists()) {
@@ -146,6 +159,7 @@ class ImageLibraryProvider extends ChangeNotifier {
                   AppLogger.warning('Image file not found: ${image.filePath}');
                 }
               } catch (e) {
+                metadataLoadedSuccessfully = false;
                 AppLogger.error('Error parsing individual image metadata: $e');
               }
             }
@@ -153,7 +167,12 @@ class ImageLibraryProvider extends ChangeNotifier {
             AppLogger.error('Error parsing JSON metadata file: $e');
           }
         }
+      } else {
+        AppLogger.debug(
+          'Metadata file not found; skipping destructive orphan cleanup',
+        );
       }
+
       if (_savedImages.isNotEmpty) {
         const encoder = JsonEncoder.withIndent('  ');
         final imageJsonList = _savedImages.map((img) => img.toJson()).toList();
@@ -162,8 +181,16 @@ class ImageLibraryProvider extends ChangeNotifier {
       } else {
         AppLogger.debug('No saved images to print.');
       }
-      await _cleanupOrphanedFiles();
-      await _cleanupOrphanedTemplateAssets();
+
+      if (metadataLoadedSuccessfully) {
+        await _cleanupOrphanedFiles();
+        await _cleanupOrphanedTemplateAssets();
+      } else {
+        AppLogger.warning(
+          'Skipping orphan cleanup because metadata was not loaded completely',
+        );
+      }
+
       AppLogger.info('Loaded ${_savedImages.length} images successfully');
       _isInitialized = true;
     } catch (e) {
@@ -255,8 +282,7 @@ class ImageLibraryProvider extends ChangeNotifier {
           : null;
 
       final rawContactCard = metadata?['contactCard'];
-      final mayUpdateProfileAsset = rawContactCard is Map;
-      final profileAsset = mayUpdateProfileAsset
+      final profileAsset = metadata != null
           ? File('${_templateAssetDirectory!.path}/${id}_contact_profile.png')
           : null;
       final previousProfileBytes =
@@ -273,6 +299,14 @@ class ImageLibraryProvider extends ChangeNotifier {
         final storedMetadata = metadata == null
             ? old.metadata
             : await _prepareTemplateMetadata(id, metadata);
+
+        if (metadata != null &&
+            rawContactCard is! Map &&
+            profileAsset != null &&
+            await profileAsset.exists()) {
+          await profileAsset.delete();
+        }
+
         _savedImages[index] = SavedImage(
           id: old.id,
           name: old.name,
@@ -399,6 +433,8 @@ class ImageLibraryProvider extends ChangeNotifier {
           await currentFile.copy(targetFile.path);
           contactCard['profileImagePath'] = targetFile.path;
         }
+      } else if (currentPath is! String && await targetFile.exists()) {
+        await targetFile.delete();
       }
     }
 
@@ -416,13 +452,70 @@ class ImageLibraryProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> _recoverMetadataFileIfNeeded() async {
+    if (_metadataFile == null) return;
+
+    final tempFile = File('${_metadataFile!.path}.tmp');
+    final backupFile = File('${_metadataFile!.path}.bak');
+
+    if (!await _metadataFile!.exists()) {
+      if (await backupFile.exists()) {
+        await backupFile.rename(_metadataFile!.path);
+      } else if (await tempFile.exists()) {
+        await tempFile.rename(_metadataFile!.path);
+      }
+    }
+
+    if (await _metadataFile!.exists()) {
+      if (await backupFile.exists()) {
+        await backupFile.delete();
+      }
+      if (await tempFile.exists()) {
+        await tempFile.delete();
+      }
+    }
+  }
+
   Future<void> _persistMetadata() async {
     try {
       await _initializeDirectories();
       final imageJsonList =
           _savedImages.map((image) => image.toJson()).toList();
       final jsonString = jsonEncode(imageJsonList);
-      await _metadataFile!.writeAsString(jsonString);
+      final tempFile = File('${_metadataFile!.path}.tmp');
+      final backupFile = File('${_metadataFile!.path}.bak');
+
+      if (await tempFile.exists()) {
+        await tempFile.delete();
+      }
+      await tempFile.writeAsString(jsonString, flush: true);
+
+      if (await backupFile.exists()) {
+        await backupFile.delete();
+      }
+
+      final hadMetadata = await _metadataFile!.exists();
+      if (hadMetadata) {
+        await _metadataFile!.rename(backupFile.path);
+      }
+
+      try {
+        await tempFile.rename(_metadataFile!.path);
+      } catch (e) {
+        if (!await _metadataFile!.exists() && await backupFile.exists()) {
+          await backupFile.rename(_metadataFile!.path);
+        }
+        rethrow;
+      }
+
+      if (await backupFile.exists()) {
+        try {
+          await backupFile.delete();
+        } catch (e) {
+          AppLogger.warning('Failed to delete metadata backup: $e');
+        }
+      }
+
       final fileSize = await _metadataFile!.length();
       AppLogger.debug('Metadata file size: $fileSize bytes');
       AppLogger.debug('Metadata saved to: ${_metadataFile!.path}');
