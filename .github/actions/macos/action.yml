@@ -18,6 +18,10 @@ runs:
         cache: false # TODO set to <true> after https://github.com/actions/runner/issues/449 is fixed
         flutter-version-file: pubspec.yaml
 
+    - name: Build Rust macOS xcframework
+      shell: bash
+      run: bash scripts/build_rust_xcframework.sh --macos-only
+
     - name: Update Podfile & Dependencies
       shell: bash
       run: |
