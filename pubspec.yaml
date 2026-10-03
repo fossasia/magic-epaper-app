@@ -24,12 +24,12 @@ dependencies:
   flutter_svg: ^2.0.16
   image: ^4.10.1
   image_picker: ^1.2.3
-  crop_your_image: ^2.0.0
+  crop_your_image: ^2.0.1
   app_settings: ^9.0.0
   fluttertoast: ^10.0.0
   file_saver: ^0.6.0
   url_launcher: ^6.3.1
-  google_fonts: ^8.2.1
+  google_fonts: ^9.0.0
   file_picker: ^13.1.0
   mobile_scanner: ^7.4.2
   barcode_widget: ^2.0.4
