@@ -365,8 +365,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                             controller: _scrollController,
                             slivers: [
                               SliverPadding(
-                                padding:
-                                    const EdgeInsets.all(Dimens.spacingMd),
+                                padding: const EdgeInsets.all(Dimens.spacingMd),
                                 sliver: SliverGrid(
                                   gridDelegate:
                                       const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -382,8 +381,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                                         key: Key(display.modelId),
                                         display: display,
                                         isSelected: false,
-                                        onTap: () =>
-                                            _onTap(context, display),
+                                        onTap: () => _onTap(context, display),
                                       );
                                     },
                                     childCount: sortedDisplays.length,
@@ -695,8 +693,8 @@ class _FilterScreenState extends State<_FilterScreen> {
           padding: const EdgeInsets.symmetric(
               horizontal: Dimens.spacingM, vertical: Dimens.spacingS),
           decoration: const BoxDecoration(
-            border: Border(
-                bottom: BorderSide(color: Color(0xFFEEEEEE), width: 1)),
+            border:
+                Border(bottom: BorderSide(color: Color(0xFFEEEEEE), width: 1)),
           ),
           child: Text(
             _categoryLabel(_activeCategory, l),
