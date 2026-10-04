@@ -296,6 +296,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
       builder: (context, child) {
         return CommonScaffold(
           index: 0,
+          centerTitle: true,
           toolbarHeight: 70,
           actions: [
             Stack(
@@ -349,7 +350,9 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                     if (showSubtitle) ...[
                       const SizedBox(height: Dimens.spacingS),
                       Text(
-                        appLocalizations.selectDisplayType,
+                        _selectedBrands.length == 1
+                            ? _selectedBrands.first.label(appLocalizations)
+                            : appLocalizations.selectDisplayType,
                         style: const TextStyle(
                           fontSize: Dimens.fontSizeL,
                           color: colorWhite,
