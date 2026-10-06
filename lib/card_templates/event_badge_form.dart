@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -49,6 +50,8 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
   };
 
   File? _profileImage;
+  File? _ownedProfileImage;
+  int _imageSelectionGeneration = 0;
   bool _isGenerating = false;
 
   late EventBadgeModel _badgeData;
@@ -75,6 +78,12 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
 
   @override
   void dispose() {
+    _imageSelectionGeneration++;
+    final ownedProfileImage = _ownedProfileImage;
+    _ownedProfileImage = null;
+    if (!_isGenerating) {
+      unawaited(deleteTemporaryImage(ownedProfileImage));
+    }
     _eventNameController.removeListener(_updatePreview);
     _attendeeNameController.removeListener(_updatePreview);
     _roleController.removeListener(_updatePreview);
@@ -110,11 +119,20 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
   }
 
   Future<void> _pickImage() async {
+    final generation = ++_imageSelectionGeneration;
     final picked = await pickAndEditImage(context);
-    if (picked != null && mounted) {
-      _profileImage = picked;
-      _updatePreview();
+    if (picked == null) return;
+
+    if (!mounted || generation != _imageSelectionGeneration) {
+      await deleteTemporaryImage(picked);
+      return;
     }
+
+    final previousOwnedImage = _ownedProfileImage;
+    _profileImage = picked;
+    _ownedProfileImage = picked;
+    _updatePreview();
+    unawaited(deleteTemporaryImage(previousOwnedImage));
   }
 
   void _handleEditRequest(String elementId) {
@@ -145,9 +163,12 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
     FocusScope.of(context).unfocus();
 
     setState(() {
+      // Late crop results must not replace the image handed to the editor.
+      _imageSelectionGeneration++;
       _isGenerating = true;
     });
 
+    final editorOwnedImage = _ownedProfileImage;
     try {
       final layers = buildEventBadgeLayers(
         data: _badgeData,
@@ -175,7 +196,9 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
         _handleEditRequest(result);
       }
     } finally {
-      if (mounted) {
+      if (!mounted) {
+        unawaited(deleteTemporaryImage(editorOwnedImage));
+      } else {
         setState(() {
           _isGenerating = false;
         });

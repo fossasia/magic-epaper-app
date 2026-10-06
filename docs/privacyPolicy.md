@@ -16,6 +16,13 @@
     personally identifiable information, including but not limited to users name, address, location, pictures.
     The information that we request will be retained by us and used as described in this privacy policy.</p>
 
+<p>Card-template cropping creates temporary image files on your device. The app removes these files
+    when they are replaced or no longer needed. Profile photos for saved Contact Cards are stored
+    locally with the card so that you can edit it again. Deleting the saved card or clearing the
+    image library removes its stored profile photo. When an older temporary photo is moved into
+    saved-card storage, the temporary copy is removed after the card is saved and no other saved
+    card references it.</p>
+
 <p><strong>Log Data</strong></p>
 <p>We want to inform you that whenever you use our Service, in case of an error in the app we collect
     data and information (through third party products) on your phone called Log Data. This Log Data

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -59,6 +60,8 @@ class _ContactCardFormState extends State<ContactCardForm> {
   };
 
   File? _profileImage;
+  File? _ownedProfileImage;
+  int _imageSelectionGeneration = 0;
   bool _isGenerating = false;
   ContactQrMode _qrMode = ContactQrMode.vCard;
 
@@ -90,6 +93,12 @@ class _ContactCardFormState extends State<ContactCardForm> {
 
   @override
   void dispose() {
+    _imageSelectionGeneration++;
+    final ownedProfileImage = _ownedProfileImage;
+    _ownedProfileImage = null;
+    if (!_isGenerating) {
+      unawaited(deleteTemporaryImage(ownedProfileImage));
+    }
     _fullNameController.removeListener(_updatePreview);
     _jobTitleController.removeListener(_updatePreview);
     _companyController.removeListener(_updatePreview);
@@ -130,11 +139,20 @@ class _ContactCardFormState extends State<ContactCardForm> {
   }
 
   Future<void> _pickImage() async {
+    final generation = ++_imageSelectionGeneration;
     final picked = await pickAndEditImage(context);
-    if (picked != null && mounted) {
-      _profileImage = picked;
-      _updatePreview();
+    if (picked == null) return;
+
+    if (!mounted || generation != _imageSelectionGeneration) {
+      await deleteTemporaryImage(picked);
+      return;
     }
+
+    final previousOwnedImage = _ownedProfileImage;
+    _profileImage = picked;
+    _ownedProfileImage = picked;
+    _updatePreview();
+    unawaited(deleteTemporaryImage(previousOwnedImage));
   }
 
   void _handleEditRequest(String elementId) {
@@ -168,9 +186,12 @@ class _ContactCardFormState extends State<ContactCardForm> {
     }
 
     setState(() {
+      // Late crop results must not replace the image handed to the editor.
+      _imageSelectionGeneration++;
       _isGenerating = true;
     });
 
+    final editorOwnedImage = _ownedProfileImage;
     try {
       final layers = buildContactCardLayers(
         data: _contactData,
@@ -191,9 +212,19 @@ class _ContactCardFormState extends State<ContactCardForm> {
 
       if (!mounted) return;
       if (result is Uint8List) {
+        final contactCardMetadata =
+            Map<String, dynamic>.from(_contactData.toJson());
+        final ownedProfileImage = _ownedProfileImage;
+        if (ownedProfileImage != null && await ownedProfileImage.exists()) {
+          contactCardMetadata
+            ..remove('profileImagePath')
+            ..['profileImageBytes'] = await ownedProfileImage.readAsBytes();
+        }
+
+        if (!mounted) return;
         final templateResult = CardTemplateResult(
           result,
-          metadata: {'contactCard': _contactData.toJson()},
+          metadata: {'contactCard': contactCardMetadata},
         );
         if (widget.existingImageId != null) {
           Navigator.of(context).pop(templateResult);
@@ -206,7 +237,9 @@ class _ContactCardFormState extends State<ContactCardForm> {
         _handleEditRequest(result);
       }
     } finally {
-      if (mounted) {
+      if (!mounted) {
+        unawaited(deleteTemporaryImage(editorOwnedImage));
+      } else {
         setState(() {
           _isGenerating = false;
         });

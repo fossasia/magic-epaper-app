@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:magicepaperapp/utils/app_logger.dart';
 import 'package:magicepaperapp/view/image_crop_screen.dart';
 import 'package:magicepaperapp/utils/image_source_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -25,6 +26,31 @@ Future<File?> pickAndEditImage(BuildContext context) async {
   final outFile = File(
     '${dir.path}/mep_crop_${DateTime.now().microsecondsSinceEpoch}.png',
   );
-  await outFile.writeAsBytes(cropped);
-  return outFile;
+  return writeTemporaryImage(outFile, cropped);
+}
+
+/// Writes a new crop, removing any partial file if persistence fails.
+Future<File> writeTemporaryImage(File image, List<int> bytes) async {
+  try {
+    return await image.writeAsBytes(bytes);
+  } catch (_) {
+    await deleteTemporaryImage(image);
+    rethrow;
+  }
+}
+
+Future<void> deleteTemporaryImage(File? image) async {
+  if (image == null) return;
+
+  try {
+    if (await image.exists()) {
+      await image.delete();
+    }
+  } catch (error, stackTrace) {
+    AppLogger.warning(
+      'Failed to delete temporary image: ${image.path}',
+      error,
+      stackTrace,
+    );
+  }
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -50,6 +51,8 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
   };
 
   File? _profileImage;
+  File? _ownedProfileImage;
+  int _imageSelectionGeneration = 0;
   bool _isGenerating = false;
 
   late EmployeeIdModel _employeeData;
@@ -76,6 +79,12 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
 
   @override
   void dispose() {
+    _imageSelectionGeneration++;
+    final ownedProfileImage = _ownedProfileImage;
+    _ownedProfileImage = null;
+    if (!_isGenerating) {
+      unawaited(deleteTemporaryImage(ownedProfileImage));
+    }
     _companyNameController.removeListener(_updatePreview);
     _nameController.removeListener(_updatePreview);
     _idNumberController.removeListener(_updatePreview);
@@ -111,11 +120,20 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
   }
 
   Future<void> _pickImage() async {
+    final generation = ++_imageSelectionGeneration;
     final picked = await pickAndEditImage(context);
-    if (picked != null && mounted) {
-      _profileImage = picked;
-      _updatePreview();
+    if (picked == null) return;
+
+    if (!mounted || generation != _imageSelectionGeneration) {
+      await deleteTemporaryImage(picked);
+      return;
     }
+
+    final previousOwnedImage = _ownedProfileImage;
+    _profileImage = picked;
+    _ownedProfileImage = picked;
+    _updatePreview();
+    unawaited(deleteTemporaryImage(previousOwnedImage));
   }
 
   void _handleEditRequest(String elementId) {
@@ -142,9 +160,12 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
     FocusScope.of(context).unfocus();
 
     setState(() {
+      // Late crop results must not replace the image handed to the editor.
+      _imageSelectionGeneration++;
       _isGenerating = true;
     });
 
+    final editorOwnedImage = _ownedProfileImage;
     try {
       final layers = buildEmployeeIdLayers(
         data: _employeeData,
@@ -172,7 +193,9 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
         _handleEditRequest(result);
       }
     } finally {
-      if (mounted) {
+      if (!mounted) {
+        unawaited(deleteTemporaryImage(editorOwnedImage));
+      } else {
         setState(() {
           _isGenerating = false;
         });

@@ -4,7 +4,12 @@ inputs:
   IPHONE_DEVICE_MODEL:
     description: 'Model of the iPhone device to be used when running tests'
     required: false
-    default: iPhone 17 Pro Max
+    default: iPhone 16 Pro Max
+
+  IOS_SIMULATOR_OS_VERSION:
+    description: 'iOS simulator runtime version constraint'
+    required: false
+    default: '18.5'
 
 runs:
   using: "composite"
@@ -12,7 +17,8 @@ runs:
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        cache: false
+        cache: true
+        flutter-version-file: pubspec.yaml
 
     - name: Update Podfile
       shell: bash
@@ -27,6 +33,7 @@ runs:
       with:
         model: ${{ inputs.IPHONE_DEVICE_MODEL }}
         wait_for_boot: true
+        os_version: ${{ inputs.IOS_SIMULATOR_OS_VERSION }}
 
     - name: Capture iPhone Screenshots
       shell: bash

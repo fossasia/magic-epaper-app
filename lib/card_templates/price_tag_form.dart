@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -52,6 +53,8 @@ class _PriceTagFormState extends State<PriceTagForm> {
   };
 
   File? _productImage;
+  File? _ownedProductImage;
+  int _imageSelectionGeneration = 0;
   Currency? _selectedCurrency;
   bool _isGenerating = false;
 
@@ -79,6 +82,12 @@ class _PriceTagFormState extends State<PriceTagForm> {
 
   @override
   void dispose() {
+    _imageSelectionGeneration++;
+    final ownedProductImage = _ownedProductImage;
+    _ownedProductImage = null;
+    if (!_isGenerating) {
+      unawaited(deleteTemporaryImage(ownedProductImage));
+    }
     _productNameController.removeListener(_updatePreview);
     _productDescriptionController.removeListener(_updatePreview);
     _priceController.removeListener(_updatePreview);
@@ -114,11 +123,20 @@ class _PriceTagFormState extends State<PriceTagForm> {
   }
 
   Future<void> _pickProductImage() async {
+    final generation = ++_imageSelectionGeneration;
     final picked = await pickAndEditImage(context);
-    if (picked != null && mounted) {
-      _productImage = picked;
-      _updatePreview();
+    if (picked == null) return;
+
+    if (!mounted || generation != _imageSelectionGeneration) {
+      await deleteTemporaryImage(picked);
+      return;
     }
+
+    final previousOwnedImage = _ownedProductImage;
+    _productImage = picked;
+    _ownedProductImage = picked;
+    _updatePreview();
+    unawaited(deleteTemporaryImage(previousOwnedImage));
   }
 
   void _openCurrencyPicker() {
@@ -158,9 +176,12 @@ class _PriceTagFormState extends State<PriceTagForm> {
     FocusScope.of(context).unfocus();
 
     setState(() {
+      // Late crop results must not replace the image handed to the editor.
+      _imageSelectionGeneration++;
       _isGenerating = true;
     });
 
+    final editorOwnedImage = _ownedProductImage;
     try {
       final layers = buildPriceTagLayers(
         data: _data,
@@ -188,7 +209,9 @@ class _PriceTagFormState extends State<PriceTagForm> {
         _handleEditRequest(result);
       }
     } finally {
-      if (mounted) {
+      if (!mounted) {
+        unawaited(deleteTemporaryImage(editorOwnedImage));
+      } else {
         setState(() {
           _isGenerating = false;
         });
