@@ -76,6 +76,24 @@ extension SortOptionLabel on SortOption {
   }
 }
 
+enum _FilterCategory { sort, brand, color, size, beta }
+
+class _FilterResult {
+  final SortOption sortOption;
+  final Set<Brand> selectedBrands;
+  final Set<ColorFilter> selectedColorFilters;
+  final Set<String> selectedSizes;
+  final bool showBeta;
+
+  const _FilterResult({
+    required this.sortOption,
+    required this.selectedBrands,
+    required this.selectedColorFilters,
+    required this.selectedSizes,
+    required this.showBeta,
+  });
+}
+
 class DisplaySelectionScreen extends StatefulWidget {
   const DisplaySelectionScreen({super.key});
 
@@ -133,7 +151,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   Set<Brand> _selectedBrands = {};
   Set<ColorFilter> _selectedColorFilters = {};
   Set<String> _selectedSizes = {};
-  SortOption _sortOption = SortOption.defaultOrder;
+  SortOption _sortOption = SortOption.sizeAsc;
   bool _showBeta = false;
 
   @override
@@ -145,25 +163,9 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   bool get _hasActiveFilters =>
       _selectedBrands.isNotEmpty ||
       _selectedColorFilters.isNotEmpty ||
-      _selectedSizes.isNotEmpty;
-
-  void _clearAllFilters() {
-    setState(() {
-      _selectedBrands = {};
-      _selectedColorFilters = {};
-      _selectedSizes = {};
-    });
-  }
-
-  int _colorRank(DisplayDevice d) {
-    if (d.colors.length <= 2) {
-      return 0;
-    }
-    if (d.colors.length == 3) {
-      return 1;
-    }
-    return 2;
-  }
+      _selectedSizes.isNotEmpty ||
+      _sortOption != SortOption.sizeAsc ||
+      _showBeta;
 
   double _sizeValue(DisplayDevice d) {
     final match = RegExp(r'(\d+(\.\d+)?)"').firstMatch(d.name);
@@ -176,38 +178,33 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   int Function(DisplayDevice, DisplayDevice) _comparatorFor(SortOption option) {
     switch (option) {
       case SortOption.defaultOrder:
+      case SortOption.nameAsc:
+      case SortOption.nameDesc:
+      case SortOption.sizeAsc:
         return (a, b) {
-          final rankCompare = _colorRank(a).compareTo(_colorRank(b));
-          if (rankCompare != 0) {
-            return rankCompare;
-          }
+          final sizeCompare = _sizeValue(a).compareTo(_sizeValue(b));
+          if (sizeCompare != 0) return sizeCompare;
+          return a.colors.length.compareTo(b.colors.length);
+        };
+      case SortOption.sizeDesc:
+        return (a, b) {
+          final sizeCompare = _sizeValue(b).compareTo(_sizeValue(a));
+          if (sizeCompare != 0) return sizeCompare;
+          return a.colors.length.compareTo(b.colors.length);
+        };
+      case SortOption.colorCountAsc:
+        return (a, b) {
+          final colorCompare = a.colors.length.compareTo(b.colors.length);
+          if (colorCompare != 0) return colorCompare;
           return _sizeValue(a).compareTo(_sizeValue(b));
         };
-      case SortOption.nameAsc:
-        return (a, b) => a.name.compareTo(b.name);
-      case SortOption.nameDesc:
-        return (a, b) => b.name.compareTo(a.name);
-      case SortOption.sizeAsc:
-        return (a, b) => _sizeValue(a).compareTo(_sizeValue(b));
-      case SortOption.sizeDesc:
-        return (a, b) => _sizeValue(b).compareTo(_sizeValue(a));
-      case SortOption.colorCountAsc:
-        return (a, b) => a.colors.length.compareTo(b.colors.length);
       case SortOption.colorCountDesc:
-        return (a, b) => b.colors.length.compareTo(a.colors.length);
+        return (a, b) {
+          final colorCompare = b.colors.length.compareTo(a.colors.length);
+          if (colorCompare != 0) return colorCompare;
+          return _sizeValue(a).compareTo(_sizeValue(b));
+        };
     }
-  }
-
-  Map<Brand, List<DisplayDevice>> get _groupedByBrand {
-    final map = <Brand, List<DisplayDevice>>{};
-    for (final d in _filteredDisplays) {
-      map.putIfAbsent(d.brand, () => []).add(d);
-    }
-    final comparator = _comparatorFor(_sortOption);
-    for (final list in map.values) {
-      list.sort(comparator);
-    }
-    return map;
   }
 
   String? _sizeOf(DisplayDevice d) {
@@ -225,8 +222,8 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
     return sizes;
   }
 
-  List<DisplayDevice> get _filteredDisplays {
-    return displays.where((d) {
+  List<DisplayDevice> get _sortedFilteredDisplays {
+    final filtered = displays.where((d) {
       final brandOk =
           _selectedBrands.isEmpty || _selectedBrands.contains(d.brand);
       final colorOk = _selectedColorFilters.isEmpty ||
@@ -236,6 +233,8 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
       final betaOk = _showBeta || !d.isBeta;
       return brandOk && colorOk && sizeOk && betaOk;
     }).toList();
+    filtered.sort(_comparatorFor(_sortOption));
+    return filtered;
   }
 
   void _onTap(BuildContext context, DisplayDevice display) {
@@ -255,367 +254,77 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
     );
   }
 
-  Future<void> _showSortSheet(BuildContext context) async {
-    await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setModalState) {
-            return SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: Dimens.spacingM, vertical: Dimens.spacingS),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.sortBy,
-                      style: const TextStyle(
-                          fontSize: Dimens.fontSizeL,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    const Divider(),
-                    Flexible(
-                      child: RadioGroup<SortOption>(
-                        groupValue: _sortOption,
-                        onChanged: (value) {
-                          if (value == null) {
-                            return;
-                          }
-                          setState(() => _sortOption = value);
-                          Navigator.pop(context);
-                        },
-                        child: ListView(
-                          shrinkWrap: true,
-                          children: SortOption.values.map((option) {
-                            return RadioListTile<SortOption>(
-                              activeColor: colorPrimary,
-                              value: option,
-                              title: Text(
-                                  option.label(AppLocalizations.of(context)!)),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Future<void> _showFilterSheet<T>({
-    required BuildContext context,
-    required String title,
-    required List<T> items,
-    required String Function(T) labelOf,
-    required Set<T> selected,
-    required void Function(Set<T>) onApply,
-  }) async {
-    final tempSelected = Set<T>.from(selected);
-
-    await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setModalState) {
-            return SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: Dimens.spacingM, vertical: Dimens.spacingS),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          title,
-                          style: const TextStyle(
-                              fontSize: Dimens.fontSizeL,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            setModalState(() => tempSelected.clear());
-                          },
-                          child: Text(AppLocalizations.of(context)!.clear),
-                        ),
-                      ],
-                    ),
-                    const Divider(),
-                    Flexible(
-                      child: ListView(
-                        shrinkWrap: true,
-                        children: items.map((item) {
-                          final isSelected = tempSelected.contains(item);
-                          return CheckboxListTile(
-                            activeColor: colorPrimary,
-                            value: isSelected,
-                            title: Text(labelOf(item)),
-                            controlAffinity: ListTileControlAffinity.leading,
-                            onChanged: (val) {
-                              setModalState(() {
-                                if (val == true) {
-                                  tempSelected.add(item);
-                                } else {
-                                  tempSelected.remove(item);
-                                }
-                              });
-                            },
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                    const SizedBox(height: Dimens.spacingS),
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton(
-                        style: FilledButton.styleFrom(
-                            backgroundColor: colorAccent),
-                        onPressed: () {
-                          onApply(tempSelected);
-                          Navigator.pop(context);
-                        },
-                        child: Text(AppLocalizations.of(context)!.apply),
-                      ),
-                    ),
-                    const SizedBox(height: Dimens.spacingS),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildFilterBox({
-    required String allLabel,
-    required int selectedCount,
-    required VoidCallback onTap,
-  }) {
-    final hasSelection = selectedCount > 0;
-    return Expanded(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(Dimens.radiusM),
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-              horizontal: Dimens.spacingS, vertical: Dimens.spacingSm),
-          decoration: BoxDecoration(
-            color:
-                hasSelection ? colorAccent.withValues(alpha: .1) : colorWhite,
-            border: Border.all(
-              color: hasSelection ? colorAccent : mdGrey400,
-              width: hasSelection ? 1.5 : Dimens.borderWidthThin,
-            ),
-            borderRadius: BorderRadius.circular(Dimens.radiusM),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: Text(
-                  hasSelection
-                      ? AppLocalizations.of(context)!
-                          .selectedCount(selectedCount)
-                      : allLabel,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: Dimens.fontSizeS,
-                    fontWeight: FontWeight.w600,
-                    color: hasSelection ? colorAccent : colorBlack,
-                  ),
-                ),
-              ),
-              Icon(Icons.keyboard_arrow_down,
-                  size: 18, color: hasSelection ? colorAccent : mdGrey400),
-            ],
-          ),
+  Future<void> _showFilterPanel() async {
+    final result = await Navigator.push<_FilterResult>(
+      context,
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (_) => _FilterScreen(
+          sortOption: _sortOption,
+          selectedBrands: _selectedBrands,
+          selectedColorFilters: _selectedColorFilters,
+          selectedSizes: _selectedSizes,
+          showBeta: _showBeta,
+          availableSizes: _availableSizes,
         ),
       ),
     );
-  }
-
-  Widget _buildFilterBar(AppLocalizations l) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: Dimens.spacingMd, vertical: Dimens.spacingS),
-      child: Row(
-        children: [
-          Expanded(
-            child: InkWell(
-              onTap: () => _showSortSheet(context),
-              borderRadius: BorderRadius.circular(Dimens.radiusM),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: Dimens.spacingS, vertical: Dimens.spacingSm),
-                decoration: BoxDecoration(
-                  color: colorWhite,
-                  border: Border.all(color: mdGrey400),
-                  borderRadius: BorderRadius.circular(Dimens.radiusM),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Icon(Icons.sort, size: 16, color: mdGrey400),
-                    const SizedBox(width: 4),
-                    Flexible(
-                      child: Text(
-                        _sortOption.label(l),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: Dimens.fontSizeS,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: Dimens.spacingS),
-          _buildFilterBox(
-            allLabel: l.allBrands,
-            selectedCount: _selectedBrands.length,
-            onTap: () => _showFilterSheet<Brand>(
-              context: context,
-              title: l.brand,
-              items: Brand.values,
-              labelOf: (b) => b.label(l),
-              selected: _selectedBrands,
-              onApply: (result) => setState(() => _selectedBrands = result),
-            ),
-          ),
-          const SizedBox(width: Dimens.spacingS),
-          _buildFilterBox(
-            allLabel: l.allColors,
-            selectedCount: _selectedColorFilters.length,
-            onTap: () => _showFilterSheet<ColorFilter>(
-              context: context,
-              title: l.colors,
-              items: ColorFilter.values,
-              labelOf: (c) => c.label(l),
-              selected: _selectedColorFilters,
-              onApply: (result) =>
-                  setState(() => _selectedColorFilters = result),
-            ),
-          ),
-          const SizedBox(width: Dimens.spacingS),
-          _buildFilterBox(
-            allLabel: l.allSizes,
-            selectedCount: _selectedSizes.length,
-            onTap: () => _showFilterSheet<String>(
-              context: context,
-              title: l.size,
-              items: _availableSizes,
-              labelOf: (s) => s,
-              selected: _selectedSizes,
-              onApply: (result) => setState(() => _selectedSizes = result),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBrandHeader(Brand brand, AppLocalizations l) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-          Dimens.spacingL, Dimens.spacingM, Dimens.spacingMd, Dimens.spacingS),
-      child: Text(
-        brand.label(l),
-        style: const TextStyle(
-          fontSize: Dimens.fontSizeL,
-          fontWeight: FontWeight.bold,
-          color: colorAccent,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildClearFiltersBar(AppLocalizations l) {
-    return Padding(
-      padding: const EdgeInsets.only(
-          left: Dimens.spacingMd,
-          right: Dimens.spacingMd,
-          bottom: Dimens.spacingS),
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: TextButton.icon(
-          onPressed: _clearAllFilters,
-          icon: const Icon(Icons.filter_alt_off_outlined, size: 16),
-          label: Text(l.clearAll),
-          style: TextButton.styleFrom(
-            foregroundColor: colorAccent,
-            padding: const EdgeInsets.symmetric(
-                horizontal: Dimens.spacingS, vertical: 0),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBetaToggle(AppLocalizations l) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: Dimens.spacingMd, vertical: Dimens.spacingXs),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Text(
-                l.showBetaDisplays,
-                style: const TextStyle(
-                    fontSize: Dimens.fontSizeS, fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(width: 4),
-              Tooltip(
-                message: l.showBetaDisplaysTooltip,
-                child:
-                    const Icon(Icons.info_outline, size: 14, color: mdGrey400),
-              ),
-            ],
-          ),
-          Switch(
-            value: _showBeta,
-            activeThumbColor: colorAccent,
-            onChanged: (val) => setState(() => _showBeta = val),
-          ),
-        ],
-      ),
-    );
+    if (result != null) {
+      setState(() {
+        _sortOption = result.sortOption;
+        _selectedBrands = result.selectedBrands;
+        _selectedColorFilters = result.selectedColorFilters;
+        _selectedSizes = result.selectedSizes;
+        _showBeta = result.showBeta;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context)!;
-    final grouped = _groupedByBrand;
+    final sortedDisplays = _sortedFilteredDisplays;
+
+    final grouped = <Brand, List<DisplayDevice>>{};
+    for (final d in sortedDisplays) {
+      grouped.putIfAbsent(d.brand, () => []).add(d);
+    }
+    final sortedBrands = grouped.keys.toList()
+      ..sort((a, b) =>
+          a.label(appLocalizations).compareTo(b.label(appLocalizations)));
 
     return ChangeNotifierProvider<ColorPaletteProvider>.value(
       value: getIt<ColorPaletteProvider>(),
       builder: (context, child) {
         return CommonScaffold(
           index: 0,
+          centerTitle: true,
           toolbarHeight: 70,
-          leadingUpOffset: 12,
+          actions: [
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.tune, color: colorWhite),
+                  tooltip: appLocalizations.filters,
+                  onPressed: _showFilterPanel,
+                ),
+                if (_hasActiveFilters)
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        color: Colors.amber,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ],
           titleWidget: Builder(
             builder: (context) {
               final double windowWidth = MediaQuery.of(context).size.width;
@@ -624,36 +333,35 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
               if (!showTitle) {
                 return const SizedBox.shrink();
               }
-              return Padding(
-                padding: const EdgeInsets.only(left: 5, right: Dimens.spacingL),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+              return FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      appLocalizations.appName,
+                      style: const TextStyle(
+                        fontSize: Dimens.fontSizeDisplay,
+                        fontWeight: FontWeight.bold,
+                        color: colorWhite,
+                      ),
+                    ),
+                    if (showSubtitle) ...[
+                      const SizedBox(height: Dimens.spacingS),
                       Text(
-                        appLocalizations.appName,
+                        _selectedBrands.length == 1
+                            ? _selectedBrands.first.label(appLocalizations)
+                            : appLocalizations.selectDisplayType,
                         style: const TextStyle(
-                          fontSize: Dimens.fontSizeDisplay,
-                          fontWeight: FontWeight.bold,
+                          fontSize: Dimens.fontSizeL,
                           color: colorWhite,
                         ),
                       ),
-                      if (showSubtitle) ...[
-                        const SizedBox(height: Dimens.spacingS),
-                        Text(
-                          appLocalizations.selectDisplayType,
-                          style: const TextStyle(
-                            fontSize: Dimens.fontSizeL,
-                            color: colorWhite,
-                          ),
-                        ),
-                      ],
                     ],
-                  ),
+                  ],
                 ),
               );
             },
@@ -663,12 +371,33 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
             bottom: true,
             child: Column(
               children: [
-                _buildFilterBar(appLocalizations),
-                _buildBetaToggle(appLocalizations),
-                if (_hasActiveFilters) _buildClearFiltersBar(appLocalizations),
-                const Divider(height: 1),
+                if (_hasActiveFilters)
+                  _ActiveFilterChips(
+                    selectedBrands: _selectedBrands,
+                    selectedColorFilters: _selectedColorFilters,
+                    selectedSizes: _selectedSizes,
+                    sortOption: _sortOption,
+                    showBeta: _showBeta,
+                    localizations: appLocalizations,
+                    onRemoveBrand: (b) =>
+                        setState(() => _selectedBrands.remove(b)),
+                    onRemoveColor: (c) =>
+                        setState(() => _selectedColorFilters.remove(c)),
+                    onRemoveSize: (s) =>
+                        setState(() => _selectedSizes.remove(s)),
+                    onResetSort: () =>
+                        setState(() => _sortOption = SortOption.sizeAsc),
+                    onClearBeta: () => setState(() => _showBeta = false),
+                    onClearAll: () => setState(() {
+                      _selectedBrands = {};
+                      _selectedColorFilters = {};
+                      _selectedSizes = {};
+                      _sortOption = SortOption.sizeAsc;
+                      _showBeta = false;
+                    }),
+                  ),
                 Expanded(
-                  child: grouped.isEmpty
+                  child: sortedDisplays.isEmpty
                       ? Center(
                           child: Text(
                             appLocalizations.noResultsFound,
@@ -682,15 +411,27 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                           child: CustomScrollView(
                             controller: _scrollController,
                             slivers: [
-                              for (final entry in grouped.entries) ...[
+                              for (final brand in sortedBrands) ...[
                                 SliverToBoxAdapter(
-                                  child: _buildBrandHeader(
-                                      entry.key, appLocalizations),
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        Dimens.spacingMd,
+                                        Dimens.spacingMd,
+                                        Dimens.spacingMd,
+                                        Dimens.spacingS),
+                                    child: Text(
+                                      brand.label(appLocalizations),
+                                      style: const TextStyle(
+                                        fontSize: Dimens.fontSizeL,
+                                        fontWeight: FontWeight.bold,
+                                        color: colorAccent,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 SliverPadding(
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: Dimens.spacingMd,
-                                  ),
+                                      horizontal: Dimens.spacingMd),
                                   sliver: SliverGrid(
                                     gridDelegate:
                                         const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -701,7 +442,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                                     ),
                                     delegate: SliverChildBuilderDelegate(
                                       (context, index) {
-                                        final display = entry.value[index];
+                                        final display = grouped[brand]![index];
                                         return DisplayCard.fill(
                                           key: Key(display.modelId),
                                           display: display,
@@ -709,14 +450,13 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
                                           onTap: () => _onTap(context, display),
                                         );
                                       },
-                                      childCount: entry.value.length,
+                                      childCount: grouped[brand]!.length,
                                     ),
                                   ),
                                 ),
-                                const SliverToBoxAdapter(
-                                  child: SizedBox(height: Dimens.spacingS),
-                                ),
                               ],
+                              const SliverToBoxAdapter(
+                                  child: SizedBox(height: Dimens.spacingMd)),
                             ],
                           ),
                         ),
@@ -726,6 +466,471 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
           ),
         );
       },
+    );
+  }
+}
+
+class _ActiveFilterChips extends StatelessWidget {
+  final Set<Brand> selectedBrands;
+  final Set<ColorFilter> selectedColorFilters;
+  final Set<String> selectedSizes;
+  final SortOption sortOption;
+  final bool showBeta;
+  final AppLocalizations localizations;
+  final void Function(Brand) onRemoveBrand;
+  final void Function(ColorFilter) onRemoveColor;
+  final void Function(String) onRemoveSize;
+  final VoidCallback onResetSort;
+  final VoidCallback onClearBeta;
+  final VoidCallback onClearAll;
+
+  const _ActiveFilterChips({
+    required this.selectedBrands,
+    required this.selectedColorFilters,
+    required this.selectedSizes,
+    required this.sortOption,
+    required this.showBeta,
+    required this.localizations,
+    required this.onRemoveBrand,
+    required this.onRemoveColor,
+    required this.onRemoveSize,
+    required this.onResetSort,
+    required this.onClearBeta,
+    required this.onClearAll,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final chips = <Widget>[];
+
+    if (sortOption != SortOption.sizeAsc) {
+      chips.add(_chip(sortOption.label(localizations), onResetSort));
+    }
+    for (final b in selectedBrands) {
+      chips.add(_chip(b.label(localizations), () => onRemoveBrand(b)));
+    }
+    for (final c in selectedColorFilters) {
+      chips.add(_chip(c.label(localizations), () => onRemoveColor(c)));
+    }
+    for (final s in selectedSizes) {
+      chips.add(_chip(s, () => onRemoveSize(s)));
+    }
+    if (showBeta) {
+      chips.add(_chip(localizations.betaDisplays, onClearBeta));
+    }
+    chips.add(
+      TextButton(
+        onPressed: onClearAll,
+        style: TextButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          foregroundColor: colorAccent,
+        ),
+        child: Text(localizations.clear,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+      ),
+    );
+
+    return Container(
+      color: const Color(0xFFF5F5F5),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(children: chips),
+      ),
+    );
+  }
+
+  Widget _chip(String label, VoidCallback onDelete) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 6),
+      child: ActionChip(
+        label: Text(label, style: const TextStyle(fontSize: 12)),
+        avatar: const Icon(Icons.close, size: 14, color: colorAccent),
+        onPressed: onDelete,
+        backgroundColor: colorAccent.withValues(alpha: 0.1),
+        labelStyle: const TextStyle(color: colorAccent),
+        side: BorderSide(color: colorAccent.withValues(alpha: 0.3)),
+        visualDensity: VisualDensity.compact,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+      ),
+    );
+  }
+}
+
+class _FilterScreen extends StatefulWidget {
+  final SortOption sortOption;
+  final Set<Brand> selectedBrands;
+  final Set<ColorFilter> selectedColorFilters;
+  final Set<String> selectedSizes;
+  final bool showBeta;
+  final List<String> availableSizes;
+
+  const _FilterScreen({
+    required this.sortOption,
+    required this.selectedBrands,
+    required this.selectedColorFilters,
+    required this.selectedSizes,
+    required this.showBeta,
+    required this.availableSizes,
+  });
+
+  @override
+  State<_FilterScreen> createState() => _FilterScreenState();
+}
+
+class _FilterScreenState extends State<_FilterScreen> {
+  late SortOption _sortOption;
+  late Set<Brand> _selectedBrands;
+  late Set<ColorFilter> _selectedColorFilters;
+  late Set<String> _selectedSizes;
+  late bool _showBeta;
+  _FilterCategory _activeCategory = _FilterCategory.sort;
+
+  @override
+  void initState() {
+    super.initState();
+    _sortOption = widget.sortOption;
+    _selectedBrands = Set.from(widget.selectedBrands);
+    _selectedColorFilters = Set.from(widget.selectedColorFilters);
+    _selectedSizes = Set.from(widget.selectedSizes);
+    _showBeta = widget.showBeta;
+  }
+
+  void _clearAll() {
+    setState(() {
+      _sortOption = SortOption.sizeAsc;
+      _selectedBrands = {};
+      _selectedColorFilters = {};
+      _selectedSizes = {};
+      _showBeta = false;
+    });
+  }
+
+  String _categoryLabel(_FilterCategory cat, AppLocalizations l) {
+    switch (cat) {
+      case _FilterCategory.sort:
+        return l.sortBy;
+      case _FilterCategory.brand:
+        return l.brand;
+      case _FilterCategory.color:
+        return l.colors;
+      case _FilterCategory.size:
+        return l.size;
+      case _FilterCategory.beta:
+        return l.betaDisplays;
+    }
+  }
+
+  int _categoryActiveCount(_FilterCategory cat) {
+    switch (cat) {
+      case _FilterCategory.sort:
+        return _sortOption != SortOption.sizeAsc ? 1 : 0;
+      case _FilterCategory.brand:
+        return _selectedBrands.length;
+      case _FilterCategory.color:
+        return _selectedColorFilters.length;
+      case _FilterCategory.size:
+        return _selectedSizes.length;
+      case _FilterCategory.beta:
+        return _showBeta ? 1 : 0;
+    }
+  }
+
+  Widget _buildLeftPanel(AppLocalizations l) {
+    return Container(
+      color: const Color(0xFFF2F2F2),
+      child: ListView(
+        children: _FilterCategory.values.map((cat) {
+          final isSelected = cat == _activeCategory;
+          final count = _categoryActiveCount(cat);
+          return InkWell(
+            onTap: () => setState(() => _activeCategory = cat),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimens.spacingS, vertical: 18),
+              decoration: BoxDecoration(
+                color: isSelected ? colorWhite : const Color(0xFFF2F2F2),
+                border: isSelected
+                    ? const Border(
+                        left: BorderSide(color: colorAccent, width: 3))
+                    : const Border(
+                        left: BorderSide(color: Colors.transparent, width: 3)),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      _categoryLabel(cat, l),
+                      style: TextStyle(
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.w500,
+                        fontSize: Dimens.fontSizeM,
+                        color: isSelected ? colorAccent : colorBlack,
+                      ),
+                    ),
+                  ),
+                  if (count > 0)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 1),
+                      decoration: BoxDecoration(
+                        color: colorAccent,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        '$count',
+                        style: const TextStyle(
+                          color: colorWhite,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildRightPanelContent(AppLocalizations l) {
+    switch (_activeCategory) {
+      case _FilterCategory.sort:
+        return RadioGroup<SortOption>(
+          groupValue: _sortOption,
+          onChanged: (val) {
+            if (val != null) setState(() => _sortOption = val);
+          },
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: SortOption.values
+                .where((o) =>
+                    o != SortOption.nameAsc &&
+                    o != SortOption.nameDesc &&
+                    o != SortOption.defaultOrder)
+                .map((option) {
+              return RadioListTile<SortOption>(
+                value: option,
+                title: Text(option.label(l),
+                    style: const TextStyle(fontSize: Dimens.fontSizeM)),
+              );
+            }).toList(),
+          ),
+        );
+      case _FilterCategory.brand:
+        return ListView(
+          padding: EdgeInsets.zero,
+          children: Brand.values.map((brand) {
+            final selected = _selectedBrands.contains(brand);
+            return CheckboxListTile(
+              fillColor: WidgetStateProperty.resolveWith((states) =>
+                  states.contains(WidgetState.selected)
+                      ? colorAccent
+                      : Colors.transparent),
+              checkColor: colorWhite,
+              side: const BorderSide(color: mdGrey400),
+              value: selected,
+              title: Text(brand.label(l),
+                  style: TextStyle(
+                      fontSize: Dimens.fontSizeM,
+                      fontWeight:
+                          selected ? FontWeight.w600 : FontWeight.normal)),
+              controlAffinity: ListTileControlAffinity.leading,
+              onChanged: (val) {
+                setState(() {
+                  if (val == true) {
+                    _selectedBrands.add(brand);
+                  } else {
+                    _selectedBrands.remove(brand);
+                  }
+                });
+              },
+            );
+          }).toList(),
+        );
+      case _FilterCategory.color:
+        return ListView(
+          padding: EdgeInsets.zero,
+          children: ColorFilter.values.map((c) {
+            final selected = _selectedColorFilters.contains(c);
+            return CheckboxListTile(
+              fillColor: WidgetStateProperty.resolveWith((states) =>
+                  states.contains(WidgetState.selected)
+                      ? colorAccent
+                      : Colors.transparent),
+              checkColor: colorWhite,
+              side: const BorderSide(color: mdGrey400),
+              value: selected,
+              title: Text(c.label(l),
+                  style: TextStyle(
+                      fontSize: Dimens.fontSizeM,
+                      fontWeight:
+                          selected ? FontWeight.w600 : FontWeight.normal)),
+              controlAffinity: ListTileControlAffinity.leading,
+              onChanged: (val) {
+                setState(() {
+                  if (val == true) {
+                    _selectedColorFilters.add(c);
+                  } else {
+                    _selectedColorFilters.remove(c);
+                  }
+                });
+              },
+            );
+          }).toList(),
+        );
+      case _FilterCategory.size:
+        return ListView(
+          padding: EdgeInsets.zero,
+          children: widget.availableSizes.map((size) {
+            final selected = _selectedSizes.contains(size);
+            return CheckboxListTile(
+              fillColor: WidgetStateProperty.resolveWith((states) =>
+                  states.contains(WidgetState.selected)
+                      ? colorAccent
+                      : Colors.transparent),
+              checkColor: colorWhite,
+              side: const BorderSide(color: mdGrey400),
+              value: selected,
+              title: Text(size,
+                  style: TextStyle(
+                      fontSize: Dimens.fontSizeM,
+                      fontWeight:
+                          selected ? FontWeight.w600 : FontWeight.normal)),
+              controlAffinity: ListTileControlAffinity.leading,
+              onChanged: (val) {
+                setState(() {
+                  if (val == true) {
+                    _selectedSizes.add(size);
+                  } else {
+                    _selectedSizes.remove(size);
+                  }
+                });
+              },
+            );
+          }).toList(),
+        );
+      case _FilterCategory.beta:
+        return ListView(
+          padding: const EdgeInsets.all(Dimens.spacingM),
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8F8F8),
+                borderRadius: BorderRadius.circular(Dimens.radiusM),
+                border: Border.all(color: const Color(0xFFE0E0E0)),
+              ),
+              child: SwitchListTile(
+                activeTrackColor: colorAccent,
+                activeThumbColor: colorWhite,
+                value: _showBeta,
+                title: Text(l.showBetaDisplays,
+                    style: const TextStyle(
+                        fontSize: Dimens.fontSizeM,
+                        fontWeight: FontWeight.w600)),
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(l.showBetaDisplaysTooltip,
+                      style: const TextStyle(
+                          fontSize: Dimens.fontSizeS, color: mdGrey400)),
+                ),
+                onChanged: (val) => setState(() => _showBeta = val),
+              ),
+            ),
+          ],
+        );
+    }
+  }
+
+  Widget _buildRightPanel(AppLocalizations l) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.spacingM, vertical: Dimens.spacingS),
+          decoration: const BoxDecoration(
+            border:
+                Border(bottom: BorderSide(color: Color(0xFFEEEEEE), width: 1)),
+          ),
+          child: Text(
+            _categoryLabel(_activeCategory, l),
+            style: const TextStyle(
+              fontSize: Dimens.fontSizeM,
+              fontWeight: FontWeight.bold,
+              color: colorBlack,
+            ),
+          ),
+        ),
+        Expanded(child: _buildRightPanelContent(l)),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    return Scaffold(
+      backgroundColor: colorWhite,
+      appBar: AppBar(
+        backgroundColor: colorWhite,
+        elevation: 1,
+        surfaceTintColor: Colors.transparent,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: colorBlack),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          l.filters,
+          style: const TextStyle(
+              color: colorBlack,
+              fontWeight: FontWeight.bold,
+              fontSize: Dimens.fontSizeL),
+        ),
+        actions: [
+          TextButton(
+            onPressed: _clearAll,
+            child: Text(
+              l.clearAll,
+              style: const TextStyle(color: colorAccent),
+            ),
+          ),
+        ],
+      ),
+      body: Row(
+        children: [
+          Flexible(flex: 2, child: _buildLeftPanel(l)),
+          const VerticalDivider(width: 1, thickness: 1),
+          Flexible(flex: 3, child: _buildRightPanel(l)),
+        ],
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.spacingMd, vertical: Dimens.spacingS),
+          child: FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: colorAccent),
+            onPressed: () {
+              Navigator.pop(
+                context,
+                _FilterResult(
+                  sortOption: _sortOption,
+                  selectedBrands: _selectedBrands,
+                  selectedColorFilters: _selectedColorFilters,
+                  selectedSizes: _selectedSizes,
+                  showBeta: _showBeta,
+                ),
+              );
+            },
+            child: Text(l.apply),
+          ),
+        ),
+      ),
     );
   }
 }

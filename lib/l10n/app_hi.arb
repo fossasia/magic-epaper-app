@@ -572,5 +572,7 @@
   "couldntLoadLibrary": "आपकी इमेज लाइब्रेरी लोड नहीं हो सकी",
   "couldntLoadLibrarySubtitle": "आपकी सहेजी गई इमेज लोड करते समय कुछ गड़बड़ हो गई। कृपया पुनः प्रयास करें।",
   "retry": "पुनः प्रयास करें",
-  "imageUnavailable": "इमेज उपलब्ध नहीं है"
+  "imageUnavailable": "इमेज उपलब्ध नहीं है",
+  "filters": "फ़िल्टर",
+  "betaDisplays": "बीटा"
 }
