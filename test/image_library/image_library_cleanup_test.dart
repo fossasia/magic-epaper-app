@@ -1,8 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' as ui;
 
+import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/image_library/models/saved_image_model.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 
@@ -26,6 +30,50 @@ void main() {
     await file.parent.create(recursive: true);
     await file.writeAsBytes(imageBytes);
     return file;
+  }
+
+  Future<SavedImage> createManagedCard(
+    String id, {
+    bool renderedExists = true,
+  }) async {
+    final rendered = File('${libraryDirectory.path}/images/${id}_contact.png');
+    if (renderedExists) await createImage(rendered.path);
+    final profile = await createImage(
+      '${libraryDirectory.path}/template_assets/${id}_contact_profile.png',
+    );
+    return SavedImage(
+      id: id,
+      name: 'Contact $id',
+      filePath: rendered.path,
+      createdAt: DateTime(2026),
+      source: 'template',
+      metadata: contactMetadata(profile),
+    );
+  }
+
+  Future<List<int>> cachedPixels(File file) async {
+    final stream = FileImage(file).resolve(ImageConfiguration.empty);
+    final completer = Completer<ImageInfo>();
+    final listener = ImageStreamListener(
+      (image, synchronousCall) => completer.complete(image),
+      onError: (Object error, StackTrace? stackTrace) {
+        completer.completeError(error, stackTrace);
+      },
+    );
+    stream.addListener(listener);
+    try {
+      final imageInfo = await completer.future;
+      try {
+        final data = await imageInfo.image.toByteData(
+          format: ui.ImageByteFormat.rawRgba,
+        );
+        return data!.buffer.asUint8List().toList();
+      } finally {
+        imageInfo.dispose();
+      }
+    } finally {
+      stream.removeListener(listener);
+    }
   }
 
   Future<void> seedLegacyCards(File crop, List<String> ids) async {
@@ -72,6 +120,8 @@ void main() {
   });
 
   tearDown(() async {
+    PaintingBinding.instance.imageCache.clear();
+    PaintingBinding.instance.imageCache.clearLiveImages();
     provider.dispose();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, null);
@@ -256,6 +306,8 @@ void main() {
     final crop =
         await createImage('${temporaryDirectory.path}/mep_crop_14.png');
     await seedLegacyCards(crop, ['1']);
+    final original = provider.savedImages.single;
+    final rendered = File(original.filePath);
     final oldMetadata = await metadataFile.readAsString();
     await Directory('${metadataFile.path}.tmp').create();
 
@@ -265,8 +317,156 @@ void main() {
     );
 
     expect(await crop.readAsBytes(), imageBytes);
+    expect(await rendered.readAsBytes(), imageBytes);
+    expect(provider.savedImages.single.toJson(), original.toJson());
+    expect(await metadataFile.readAsString(), oldMetadata);
+    final restarted = ImageLibraryProvider();
+    try {
+      await restarted.loadSavedImages();
+      expect(restarted.savedImages.single.toJson(), original.toJson());
+      expect(await crop.readAsBytes(), imageBytes);
+    } finally {
+      restarted.dispose();
+    }
+
+    await Directory('${metadataFile.path}.tmp').delete();
+    await provider.deleteImage('1');
+    expect(provider.savedImages, isEmpty);
+    expect(await rendered.exists(), isFalse);
+    expect(await crop.exists(), isFalse);
+    expect(jsonDecode(await metadataFile.readAsString()), isEmpty);
+  });
+
+  test(
+      'failed managed card deletion preserves files, metadata, and cached pixels',
+      () async {
+    final pngBytes = Uint8List.fromList(img.encodePng(
+      img.Image(width: 1, height: 1)..setPixelRgba(0, 0, 255, 0, 0, 255),
+    ));
+    await provider.saveImage(
+      name: 'Contact',
+      imageData: pngBytes,
+      source: 'template',
+      metadata: {
+        'contactCard': {'profileImageBytes': pngBytes},
+      },
+    );
+    final original = provider.savedImages.single;
+    final rendered = File(original.filePath);
+    final profile =
+        File(original.contactCardData!['profileImagePath'] as String);
+    for (final file in [rendered, profile]) {
+      expect(await cachedPixels(file), [255, 0, 0, 255]);
+    }
+    final oldMetadata = await metadataFile.readAsString();
+    await Directory('${metadataFile.path}.tmp').create();
+
+    await expectLater(
+      provider.deleteImage(original.id),
+      throwsA(isA<FileSystemException>()),
+    );
+
+    expect(provider.savedImages.single.toJson(), original.toJson());
+    expect(await metadataFile.readAsString(), oldMetadata);
+    for (final file in [rendered, profile]) {
+      expect(await file.readAsBytes(), pngBytes);
+      final status = await FileImage(file).obtainCacheStatus(
+        configuration: ImageConfiguration.empty,
+      );
+      expect(status!.keepAlive, isTrue);
+      expect(await cachedPixels(file), [255, 0, 0, 255]);
+    }
+    final restarted = ImageLibraryProvider();
+    try {
+      await restarted.loadSavedImages();
+      expect(restarted.savedImages.single.toJson(), original.toJson());
+    } finally {
+      restarted.dispose();
+    }
+
+    await Directory('${metadataFile.path}.tmp').delete();
+    await provider.deleteImage(original.id);
+    expect(provider.savedImages, isEmpty);
+    expect(jsonDecode(await metadataFile.readAsString()), isEmpty);
+    for (final file in [rendered, profile]) {
+      expect(await file.exists(), isFalse);
+      final status = await FileImage(file).obtainCacheStatus(
+        configuration: ImageConfiguration.empty,
+      );
+      expect(status!.untracked, isTrue);
+    }
+  });
+
+  test('missing rendered images keep metadata-referenced profiles for recovery',
+      () async {
+    final original = await createManagedCard('1', renderedExists: false);
+    final profile =
+        File(original.contactCardData!['profileImagePath'] as String);
+    final oldMetadata = jsonEncode([original.toJson()]);
+    await metadataFile.writeAsString(oldMetadata);
+
+    await provider.loadSavedImages();
+
+    expect(provider.savedImages, isEmpty);
+    expect(await profile.readAsBytes(), imageBytes);
+    expect(await metadataFile.readAsString(), oldMetadata);
+
+    await createImage(original.filePath);
+    await provider.loadSavedImages();
+    expect(provider.savedImages.single.toJson(), original.toJson());
+    expect(await profile.readAsBytes(), imageBytes);
+  });
+
+  test(
+      'mixed live and missing records preserve profiles while removing orphans',
+      () async {
+    final missing = await createManagedCard('1', renderedExists: false);
+    final live = await createManagedCard('2');
+    final orphan = await createImage(
+      '${libraryDirectory.path}/template_assets/3_contact_profile.png',
+    );
+    final oldMetadata = jsonEncode([missing.toJson(), live.toJson()]);
+    await metadataFile.writeAsString(oldMetadata);
+
+    await provider.loadSavedImages();
+
+    expect(provider.savedImages.single.toJson(), live.toJson());
+    for (final record in [missing, live]) {
+      final profile =
+          File(record.contactCardData!['profileImagePath'] as String);
+      expect(await profile.readAsBytes(), imageBytes);
+    }
+    expect(await orphan.exists(), isFalse);
     expect(await metadataFile.readAsString(), oldMetadata);
   });
+
+  for (final malformedJson in [false, true]) {
+    test(
+        '${malformedJson ? 'malformed' : 'incomplete'} metadata skips orphan cleanup',
+        () async {
+      final live = await createManagedCard('1');
+      final profile = File(live.contactCardData!['profileImagePath'] as String);
+      final orphanProfile = await createImage(
+        '${libraryDirectory.path}/template_assets/2_contact_profile.png',
+      );
+      final orphanRender =
+          await createImage('${libraryDirectory.path}/images/unused.png');
+      final oldMetadata = malformedJson
+          ? '{invalid'
+          : jsonEncode([
+              live.toJson(),
+              {'id': '2'},
+            ]);
+      await metadataFile.writeAsString(oldMetadata);
+
+      await provider.loadSavedImages();
+
+      for (final file in [profile, orphanProfile, orphanRender]) {
+        expect(await file.readAsBytes(), imageBytes);
+      }
+      expect(await metadataFile.readAsString(), oldMetadata);
+    });
+  }
 
   test('failed save keeps the legacy crop and removes managed files', () async {
     final crop = await createImage('${temporaryDirectory.path}/mep_crop_3.png');

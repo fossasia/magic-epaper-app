@@ -21,7 +21,8 @@
     locally with the card so that you can edit it again. Deleting the saved card or clearing the
     image library removes its stored profile photo. When an older temporary photo is moved into
     saved-card storage, the temporary copy is removed after the card is saved and no other saved
-    card references it.</p>
+    card references it. If a card deletion cannot be saved, its images are kept so you can retry.
+    A saved profile photo is also kept when its card's rendered image is temporarily missing.</p>
 
 <p><strong>Log Data</strong></p>
 <p>We want to inform you that whenever you use our Service, in case of an error in the app we collect

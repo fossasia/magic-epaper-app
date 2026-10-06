@@ -143,6 +143,7 @@ class ImageLibraryProvider extends ChangeNotifier {
     notifyListeners();
 
     var metadataLoadedSuccessfully = false;
+    final validTemplateAssetIds = <String>{};
     try {
       await _initializeDirectories();
       _savedImages = [];
@@ -164,6 +165,7 @@ class ImageLibraryProvider extends ChangeNotifier {
             for (final json in decoded) {
               try {
                 final image = SavedImage.fromJson(json);
+                validTemplateAssetIds.add(image.id);
                 if (await image.fileExists()) {
                   _savedImages.add(image);
                 } else {
@@ -195,7 +197,7 @@ class ImageLibraryProvider extends ChangeNotifier {
 
       if (metadataLoadedSuccessfully) {
         await _cleanupOrphanedFiles();
-        await _cleanupOrphanedTemplateAssets();
+        await _cleanupOrphanedTemplateAssets(validTemplateAssetIds);
       } else {
         AppLogger.warning(
           'Skipping orphan cleanup because metadata was not loaded completely',
@@ -377,13 +379,36 @@ class ImageLibraryProvider extends ChangeNotifier {
       final imageIndex = _savedImages.indexWhere((image) => image.id == id);
       if (imageIndex == -1) return;
       final image = _savedImages[imageIndex];
-      final file = File(image.filePath);
-      if (await file.exists()) {
-        await _deleteImageFile(file);
+      final previousImages = _savedImages;
+      _savedImages = List<SavedImage>.of(previousImages)..removeAt(imageIndex);
+      try {
+        await _persistMetadata();
+      } catch (_) {
+        _savedImages = previousImages;
+        rethrow;
       }
-      await _deleteTemplateAssets(id);
-      _savedImages.removeAt(imageIndex);
-      await _persistMetadata();
+
+      try {
+        final file = File(image.filePath);
+        if (await file.exists()) {
+          await _deleteImageFile(file);
+        }
+      } catch (error, stackTrace) {
+        AppLogger.warning(
+          'Failed to clean up deleted image file',
+          error,
+          stackTrace,
+        );
+      }
+      try {
+        await _deleteTemplateAssets(id);
+      } catch (error, stackTrace) {
+        AppLogger.warning(
+          'Failed to clean up deleted image profile asset',
+          error,
+          stackTrace,
+        );
+      }
       await _cleanupUnreferencedProfileImage(image.metadata);
       notifyListeners();
     } catch (e) {
@@ -587,8 +612,6 @@ class ImageLibraryProvider extends ChangeNotifier {
         }
       }
 
-      final fileSize = await _metadataFile!.length();
-      AppLogger.debug('Metadata file size: $fileSize bytes');
       AppLogger.debug('Metadata saved to: ${_metadataFile!.path}');
     } catch (e) {
       AppLogger.error('Error persisting metadata: $e');
@@ -596,10 +619,9 @@ class ImageLibraryProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _cleanupOrphanedTemplateAssets() async {
+  Future<void> _cleanupOrphanedTemplateAssets(Set<String> validImageIds) async {
     try {
       if (_templateAssetDirectory == null) return;
-      final validImageIds = _savedImages.map((image) => image.id).toSet();
       final files = await _templateAssetDirectory!.list().toList();
       for (final file in files) {
         if (file is! File) continue;
