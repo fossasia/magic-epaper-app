@@ -1331,6 +1331,7 @@
   "brandFossasia": "FOSSASIA",
   "brandGoodisplay": "GoodDisplay",
   "brandWaveshare": "Waveshare",
+  "brandSantek": "Santek",
   "sortBy": "Sort by",
   "sortDefault": "Default",
   "sortNameAsc": "Name (A-Z)",
@@ -1346,5 +1347,7 @@
   "badgeDisconnected": "The display was disconnected",
   "sketchFilter": "Sketch filter",
   "sketchFilterGenerating": "Generating sketch...",
-  "sketchFilterError": "Failed to apply sketch filter"
+  "sketchFilterError": "Failed to apply sketch filter",
+  "filters": "Filters",
+  "betaDisplays": "Beta"
 }

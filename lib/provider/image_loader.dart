@@ -21,8 +21,8 @@ class ImageLoader extends ChangeNotifier {
     final ImagePicker picker = ImagePicker();
     final XFile? file = await picker.pickImage(
       source: ImageSource.gallery,
-      maxWidth: 3500,
-      maxHeight: 3500,
+      maxWidth: 2000,
+      maxHeight: 2000,
     );
     if (file == null) return false;
 

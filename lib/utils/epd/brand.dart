@@ -4,6 +4,7 @@ enum Brand {
   fossasia,
   goodisplay,
   waveshare,
+  santek,
 }
 
 extension BrandLabel on Brand {
@@ -15,6 +16,8 @@ extension BrandLabel on Brand {
         return l.brandGoodisplay;
       case Brand.waveshare:
         return l.brandWaveshare;
+      case Brand.santek:
+        return l.brandSantek;
     }
   }
 }
