@@ -11,6 +11,7 @@ class CommonScaffold extends StatelessWidget {
   final double? toolbarHeight;
   final bool showBackButton;
   final double leadingUpOffset;
+  final bool centerTitle;
 
   const CommonScaffold({
     super.key,
@@ -22,6 +23,7 @@ class CommonScaffold extends StatelessWidget {
     this.toolbarHeight,
     this.showBackButton = false,
     this.leadingUpOffset = 0,
+    this.centerTitle = false,
   });
 
   @override
@@ -59,6 +61,7 @@ class CommonScaffold extends StatelessWidget {
               title,
               style: const TextStyle(color: colorWhite),
             ),
+        centerTitle: centerTitle,
         toolbarHeight: toolbarHeight,
         actions: actions,
       ),
