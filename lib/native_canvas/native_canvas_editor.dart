@@ -1340,7 +1340,9 @@ class _NativeCanvasEditorState extends State<NativeCanvasEditor> {
           Expanded(
             child: _BarButton(
               label: appLocalizations.canvas,
-              onTap: () => _cycleAndRerenderStickers(),
+              onTap: () {
+                _cycleAndRerenderStickers();
+              },
               iconWidget: Container(
                 width: 22,
                 height: 22,
