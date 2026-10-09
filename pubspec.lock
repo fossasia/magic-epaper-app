@@ -253,10 +253,10 @@ packages:
     dependency: "direct main"
     description:
       name: file_saver
-      sha256: "9d1be85cafaa728f091ccc9654e7876f915225838ce9ef184c012ab5e12a1607"
+      sha256: fdb82a10b134b6bd03c48599268eb4ca04d5424029d73b30733327f4957c4037
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.0"
+    version: "0.7.0"
   file_selector_linux:
     dependency: transitive
     description:
