@@ -41,8 +41,8 @@ The Magic ePaper badge is still a **prototype** and is not on general sale yet. 
 
 ## Features
 
-* **Image editor**: import a photo, rotate/flip, adjust brightness and contrast, and dither for ePaper (Floyd-Steinberg, Atkinson, Stucki, Sierra, Burkes, Halftone, Threshold).
-* **Canvas editor**: draw freehand, add text (fonts, size, colour), images and shapes, and generate QR/barcodes (QR, Data Matrix, Aztec, PDF417, Code 128/93/39, Codabar, EAN-13/8, ITF, UPC-A) with a live preview.
+* **Image editor**: import a photo, rotate/flip, adjust brightness and contrast, dither for ePaper (Floyd-Steinberg, Atkinson, Stucki, Sierra, Burkes, Halftone, Threshold), or apply a pencil sketch filter via on-device ONNX inference.
+* **Canvas editor**: draw freehand, add text (fonts, size, colour), images and shapes, and generate QR/barcodes (QR, Data Matrix, Aztec, PDF417, Code 128/93/39, Codabar, EAN-13/8, ITF, UPC-A) with a live preview. Use OCR to scan printed text or business cards directly into the canvas.
 * **Card templates**: Employee ID, Shop Price Tag, Entry Pass, Event Badge, Calendar, QR Tag, Weather Snapshot and Contact/Business card. Generate many at once from a CSV.
 * **NFC**: transfer designs to the badge, and read/write NDEF tags (text, URLs, vCards, app-launch records).
 * **Command console**: send raw hex/APDU commands to a tag for debugging.
@@ -53,6 +53,7 @@ The Magic ePaper badge is still a **prototype** and is not on general sale yet. 
 
 | Display | Colors | Model |
 | --- | --- | --- |
+| Santek EZ Sign 2.13" NFC | Black / White / Red / Yellow | SE0213A1-B04-YP-N |
 | Waveshare 2.13" NFC | tri-color | 17745 |
 | Waveshare 2.7" NFC | tri-color | 18136 |
 | Waveshare 2.9" NFC | tri-color | 17746 |
@@ -71,7 +72,7 @@ The Magic ePaper badge is still a **prototype** and is not on general sale yet. 
 - [x] NFC transfer to badges and NDEF read/write
 - [x] Bulk card generation from CSV and a reusable Image Library
 - [ ] Desktop support (Windows, macOS and Linux)
-- [ ] Support for more NFC ePaper badges
+- [x] Support for more NFC ePaper badges (Santek EZ Sign, Goodisplay and Waveshare)
 
 ## Usage
 
@@ -96,12 +97,14 @@ Read and write NDEF tags (text, URLs, vCards) from the side menu, and use the Co
 <table>
   <tr>
     <td><img src="./assets/docs/screenshots/adjust.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/sketch-filter.jpeg" width="250" alt="Sketch filter applied to a photo in the image editor"/></td>
     <td><img src="./assets/docs/screenshots/image-editor.jpeg" width="250"/></td>
-    <td><img src="./assets/docs/screenshots/custom-display.jpeg" width="250"/></td>
   </tr>
   <tr>
+    <td><img src="./assets/docs/screenshots/custom-display.jpeg" width="250"/></td>
     <td><img src="./assets/docs/screenshots/transfer.jpeg" width="250"/></td>
     <td><img src="./assets/docs/screenshots/badge.jpeg" width="250"/></td>
+    <td><img src="./assets/docs/screenshots/santek-epaper.jpeg" width="250" alt="Santek EZ Sign 2.13 inch e-paper badge displaying a geometric pattern"/></td>
   </tr>
 </table>
 
