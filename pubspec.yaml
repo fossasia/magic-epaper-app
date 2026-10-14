@@ -19,7 +19,7 @@ dependencies:
   provider: ^6.1.5+1
   shared_preferences: ^2.5.6
   # nfc_manager: ^3.5.0
-  flutter_nfc_kit: ^3.6.2
+  flutter_nfc_kit: ^3.7.0
   convert: ^3.1.2
   flutter_svg: ^2.0.16
   image: ^4.12.0
