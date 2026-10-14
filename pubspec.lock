@@ -332,10 +332,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_nfc_kit
-      sha256: a2b324785173930f1b5afac8b190637d612593b994ecfd0a5334b72a841b9298
+      sha256: aaf11749318e7e5cf8c54eb6c3ee02685ccc7021efd3cf467a5f106cdc752a66
       url: "https://pub.dev"
     source: hosted
-    version: "3.6.2"
+    version: "3.7.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
