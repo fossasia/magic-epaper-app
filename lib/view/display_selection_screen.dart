@@ -19,6 +19,8 @@ import 'package:magicepaperapp/view/widgets/display_card.dart';
 import 'package:provider/provider.dart';
 import 'package:magicepaperapp/theme/colors.dart';
 
+import '../utils/epd/oepl_ble_displays.dart';
+
 enum ColorFilter { bw, bwr, bwry }
 
 extension ColorFilterLabel on ColorFilter {
@@ -103,6 +105,13 @@ class DisplaySelectionScreen extends StatefulWidget {
 
 class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
   final List<DisplayDevice> displays = [
+    OeplBle29Bwry(),
+    OeplBle29Bwr(),
+    OeplBle29Bw(),
+    OeplBle35Bwry(),
+    OeplBle213Bwry(),
+    OeplBle213Bwr(),
+    OeplBle213Bw(),
     GDEY0154D67(),
     GDEY0213B74(),
     GDEY029T94(),
