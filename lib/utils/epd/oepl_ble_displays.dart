@@ -170,6 +170,8 @@ class OeplBle213Bwr extends OeplBleDisplay {
   @override
   bool get isBeta => false;
   @override
+  String get imgPath => ImageAssets.OEPLBLE213BWR;
+  @override
   List<Color> get colors => [Colors.white, Colors.black, Colors.red];
 }
 

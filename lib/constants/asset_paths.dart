@@ -41,6 +41,9 @@ class ImageAssets {
   static const String GDEM037F52 = 'assets/images/displays/GDEM037F52.png';
   static const String GDEM042F52 = 'assets/images/displays/GDEM042F52.png';
 
+  static const String OEPLBLE213BWR =
+      'assets/images/displays/OEPLBLE213BWR.png';
+
   static const String epaper37Bw = 'assets/images/displays/epaper_3.7_bw.webp';
   static const String customExport = 'assets/images/displays/export_image.webp';
   static const String waveshare2_9 =
