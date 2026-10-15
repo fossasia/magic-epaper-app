@@ -75,10 +75,10 @@ abstract class OeplBleDisplay extends DisplayDevice {
 
   @override
   Future<void> transfer(
-      BuildContext context,
-      img.Image image, {
-        Waveform? waveform,
-      }) {
+    BuildContext context,
+    img.Image image, {
+    Waveform? waveform,
+  }) {
     return OeplTransferDialog.show(context, image: image, display: this);
   }
 }

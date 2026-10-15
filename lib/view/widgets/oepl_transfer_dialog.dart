@@ -13,13 +13,15 @@ import '../../utils/epd/oepl_protocol.dart';
 // TODO: move these strings to the ARB files like the rest of the app.
 class _Texts {
   static const scanning = 'Looking for badges named ATC_…';
-  static const noneFound = 'No badge found yet. Make sure it is powered on and close to the phone.';
+  static const noneFound =
+      'No badge found yet. Make sure it is powered on and close to the phone.';
   static const pickBadge = 'Select your badge';
   static const rescan = 'Scan again';
   static const cancel = 'Cancel';
   static const close = 'Close';
   static const retry = 'Try again';
-  static const bluetoothOff = 'Bluetooth is off, unsupported or not authorized.';
+  static const bluetoothOff =
+      'Bluetooth is off, unsupported or not authorized.';
   static const uploaded =
       'Image sent. The badge refreshes its screen now, this can take a few seconds.';
   static const alreadyPresent =
@@ -271,7 +273,8 @@ class _OeplTransferDialogState extends State<OeplTransferDialog> {
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.bluetooth),
                     title: Text(d.name ?? d.deviceId),
-                    subtitle: Text(d.rssi == null ? d.deviceId : '${d.rssi} dBm'),
+                    subtitle:
+                        Text(d.rssi == null ? d.deviceId : '${d.rssi} dBm'),
                     onTap: () => _transfer(d),
                   ),
               ],

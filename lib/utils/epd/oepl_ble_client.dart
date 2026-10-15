@@ -7,7 +7,6 @@ import 'package:universal_ble/universal_ble.dart';
 
 import 'oepl_protocol.dart';
 
-
 typedef OeplProgressCallback = void Function(double? progress, String status);
 
 enum OeplUploadResult {
@@ -32,7 +31,6 @@ class _UploadSession {
   }
 }
 
-
 class OeplBleClient {
   OeplBleClient({this.onLog});
 
@@ -56,7 +54,6 @@ class OeplBleClient {
   bool get isConnected => _deviceId != null && !_disconnected;
 
   void _log(String message) => onLog?.call(message);
-
 
   static Stream<BleDevice> scan({
     List<String> namePrefixes = const [defaultNamePrefix],
@@ -104,7 +101,6 @@ class OeplBleClient {
     return controller.stream;
   }
 
-
   static bool _isOeplUuid(String uuid) {
     final u = uuid.toLowerCase();
     return u == '1337' || u.startsWith('00001337-');
@@ -148,6 +144,7 @@ class OeplBleClient {
       OeplProtocol.serviceUuid,
       OeplProtocol.characteristicUuid,
     );
+    await Future<void>.delayed(const Duration(milliseconds: 450));
     _log('Connected to $deviceId');
   }
 
@@ -173,10 +170,7 @@ class OeplBleClient {
     }
   }
 
-  /// Makes a running [uploadImage] fail with "cancelled".
   void abort() => _session?.fail(OeplException('Transfer cancelled.'));
-
-  // ------------------------------------------------------------- commands ----
 
   void _requireConnected() {
     if (!isConnected) throw OeplException('Not connected to a badge.');
@@ -197,16 +191,22 @@ class OeplBleClient {
   }
 
   Future<OeplDisplayInfo?> readDisplayInfo({
-    Duration timeout = const Duration(seconds: 5),
+    Duration timeout = const Duration(seconds: 2),
+    int attempts = 3,
   }) async {
     _requireConnected();
-    final completer = Completer<OeplDisplayInfo?>();
-    _infoCompleter = completer;
-    await _send(OeplProtocol.command(OeplProtocol.cmdReadDisplayInfo));
-    return completer.future.timeout(timeout, onTimeout: () {
-      _infoCompleter = null;
-      return null;
-    });
+    for (var i = 0; i < attempts; i++) {
+      final completer = Completer<OeplDisplayInfo?>();
+      _infoCompleter = completer;
+      await _send(OeplProtocol.command(OeplProtocol.cmdReadDisplayInfo));
+      final info = await completer.future.timeout(timeout, onTimeout: () {
+        _infoCompleter = null;
+        return null;
+      });
+      if (info != null) return info;
+      _log('No display info (attempt ${i + 1}/$attempts)');
+    }
+    return null;
   }
 
   Future<OeplUploadResult> uploadImage({
