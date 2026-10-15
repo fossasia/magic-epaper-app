@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:magicepaperapp/theme/colors.dart';
 import 'package:magicepaperapp/utils/epd/oepl_ble_displays.dart';
 import 'package:universal_ble/universal_ble.dart';
@@ -10,23 +11,7 @@ import 'package:universal_ble/universal_ble.dart';
 import '../../utils/epd/oepl_ble_client.dart';
 import '../../utils/epd/oepl_protocol.dart';
 
-// TODO: move these strings to the ARB files like the rest of the app.
-class _Texts {
-  static const scanning = 'Looking for badges named ATC_…';
-  static const noneFound =
-      'No badge found yet. Make sure it is powered on and close to the phone.';
-  static const pickBadge = 'Select your badge';
-  static const rescan = 'Scan again';
-  static const cancel = 'Cancel';
-  static const close = 'Close';
-  static const retry = 'Try again';
-  static const bluetoothOff =
-      'Bluetooth is off, unsupported or not authorized.';
-  static const uploaded =
-      'Image sent. The badge refreshes its screen now, this can take a few seconds.';
-  static const alreadyPresent =
-      'The badge already shows this exact image, so it was not refreshed.';
-}
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 enum _Phase { scanning, transferring, done, failed }
 
@@ -95,7 +80,7 @@ class _OeplTransferDialogState extends State<OeplTransferDialog> {
       if (state == AvailabilityState.poweredOff ||
           state == AvailabilityState.unauthorized ||
           state == AvailabilityState.unsupported) {
-        throw OeplException(_Texts.bluetoothOff);
+        throw OeplException(appLocalizations.oeplBluetoothOff);
       }
       if (!mounted) return;
 
@@ -139,13 +124,14 @@ class _OeplTransferDialogState extends State<OeplTransferDialog> {
       _phase = _Phase.transferring;
       _scanActive = false;
       _progress = null;
-      _status = 'Connecting to ${device.name ?? device.deviceId}…';
+      _status = appLocalizations
+          .oeplConnectingToDevice(device.name ?? device.deviceId);
     });
 
     try {
       await _client.connect(device.deviceId);
 
-      _setProgress(null, 'Reading display info…');
+      _setProgress(null, appLocalizations.oeplReadingDisplayInfo);
       final info = await _client.readDisplayInfo();
 
       var image = widget.image;
@@ -174,8 +160,8 @@ class _OeplTransferDialogState extends State<OeplTransferDialog> {
       setState(() {
         _phase = _Phase.done;
         _message = result == OeplUploadResult.uploaded
-            ? _Texts.uploaded
-            : _Texts.alreadyPresent;
+            ? appLocalizations.oeplImageSent
+            : appLocalizations.oeplImageAlreadyPresent;
       });
     } catch (e) {
       _fail(e);
@@ -246,7 +232,11 @@ class _OeplTransferDialogState extends State<OeplTransferDialog> {
             ),
           if (_scanActive) const SizedBox(width: 12),
           Expanded(
-            child: Text(_scanActive ? _Texts.scanning : _Texts.noneFound),
+            child: Text(
+              _scanActive
+                  ? appLocalizations.oeplScanning
+                  : appLocalizations.oeplNoBadgeFound,
+            ),
           ),
         ],
       );
@@ -261,7 +251,7 @@ class _OeplTransferDialogState extends State<OeplTransferDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(_Texts.pickBadge),
+          Text(appLocalizations.oeplSelectBadge),
           const SizedBox(height: 8),
           Flexible(
             child: ListView(
@@ -291,37 +281,37 @@ class _OeplTransferDialogState extends State<OeplTransferDialog> {
         return [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text(_Texts.cancel),
+            child: Text(appLocalizations.cancel),
           ),
           if (!_scanActive)
             TextButton(
               onPressed: _startScan,
-              child: const Text(_Texts.rescan),
+              child: Text(appLocalizations.rescan),
             ),
         ];
       case _Phase.transferring:
         return [
           TextButton(
             onPressed: _cancelTransfer,
-            child: const Text(_Texts.cancel),
+            child: Text(appLocalizations.cancel),
           ),
         ];
       case _Phase.done:
         return [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text(_Texts.close),
+            child: Text(appLocalizations.close),
           ),
         ];
       case _Phase.failed:
         return [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text(_Texts.close),
+            child: Text(appLocalizations.close),
           ),
           TextButton(
             onPressed: _startScan,
-            child: const Text(_Texts.retry),
+            child: Text(appLocalizations.tryAgain),
           ),
         ];
     }

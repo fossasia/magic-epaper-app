@@ -1350,5 +1350,23 @@
   "sketchFilterGenerating": "Generating sketch...",
   "sketchFilterError": "Failed to apply sketch filter",
   "filters": "Filters",
-  "betaDisplays": "Beta"
+  "betaDisplays": "Beta",
+  "rescan": "Scan again",
+  "tryAgain": "Try again",
+  "oeplScanning": "Looking for badges named ATC_…",
+  "oeplNoBadgeFound": "No badge found yet. Make sure it is powered on and close to the phone.",
+  "oeplSelectBadge": "Select your badge",
+  "oeplBluetoothOff": "Bluetooth is off, unsupported or not authorized.",
+  "oeplImageSent": "Image sent. The badge refreshes its screen now, this can take a few seconds.",
+  "oeplImageAlreadyPresent": "The badge already shows this exact image, so it was not refreshed.",
+  "oeplConnectingToDevice": "Connecting to {deviceName}…",
+  "@oeplConnectingToDevice": {
+    "description": "Status message while connecting to an OEPL BLE device",
+    "placeholders": {
+      "deviceName": {
+        "type": "String"
+      }
+    }
+  },
+  "oeplReadingDisplayInfo": "Reading display info…"
 }

@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:image/image.dart' as img;
 
-/// Error raised by the OEPL BLE layer. [message] is safe to show to the user.
 class OeplException implements Exception {
   OeplException(this.message);
   final String message;
@@ -13,7 +12,6 @@ class OeplException implements Exception {
   String toString() => message;
 }
 
-/// What the badge reports for command 0x0005 ("Read Screen infos").
 class OeplDisplayInfo {
   const OeplDisplayInfo({
     required this.width,
@@ -21,17 +19,14 @@ class OeplDisplayInfo {
     required this.colors,
   });
 
-  /// Native canvas size in the orientation the firmware expects.
   final int width;
   final int height;
 
-  /// Number of colors excluding white: 1 = BW, 2 = BWR, 3 = BWRY.
   final int colors;
 
   bool get hasRed => colors >= 2;
   bool get hasYellow => colors >= 3;
 
-  /// [payload] is the notification without the 2 command bytes.
   static OeplDisplayInfo? tryParse(Uint8List payload) {
     if (payload.length < 31) return null;
     int u16(int o) => payload[o] | (payload[o + 1] << 8);
@@ -45,8 +40,6 @@ class OeplDisplayInfo {
   }
 }
 
-/// Wire format of the ATC_BLE_OEPL firmware, ported 1:1 from the reference
-/// web uploader. Everything here is pure Dart (no BLE) so it can be unit tested.
 class OeplProtocol {
   OeplProtocol._();
 
@@ -56,17 +49,14 @@ class OeplProtocol {
   static const int blockDataSize = 4096;
   static const int blockPartDataSize = 230;
 
-  /// ATT header (3) + command (2) + part header (3) + payload (230).
   static const int minMtu = 3 + 2 + 3 + blockPartDataSize;
 
-  // Commands (app -> badge)
-  static const int cmdTransferStart = 0x0002; // sent on every block request
-  static const int cmdTransferDone = 0x0003; // sent when the upload ends
+  static const int cmdTransferStart = 0x0002;
+  static const int cmdTransferDone = 0x0003;
   static const int cmdReadDisplayInfo = 0x0005;
   static const int cmdDataInfo = 0x0064;
   static const int cmdBlockPart = 0x0065;
 
-  // Notifications (badge -> app)
   static const int evtPartError = 0x00C4;
   static const int evtPartAck = 0x00C5;
   static const int evtBlockRequest = 0x00C6;
@@ -74,7 +64,6 @@ class OeplProtocol {
   static const int evtAlreadyPresent = 0x00C8;
   static const int evtError = 0xFFFF;
 
-  // Data types for cmdDataInfo
   static const int typeRawBw = 0x20;
   static const int typeRawColor = 0x21;
   static const int typeCompressed = 0x30;
@@ -86,8 +75,6 @@ class OeplProtocol {
     out.setRange(2, out.length, payload);
     return out;
   }
-
-  // ---------------------------------------------------------------- CRC ----
 
   static final List<int> _crcTable = List<int>.generate(256, (i) {
     var c = i;
@@ -105,9 +92,6 @@ class OeplProtocol {
     return (crc ^ 0xFFFFFFFF) & 0xFFFFFFFF;
   }
 
-  /// `[len lo, len hi, sum lo, sum hi, ...data]`. Used for the whole-image
-  /// "version" hash and for every 4 KiB block. The length is deliberately
-  /// truncated to 16 bits, exactly like the web uploader does.
   static Uint8List frameWithHeader(List<int> data) {
     final out = Uint8List(4 + data.length);
     var sum = 0;
@@ -124,30 +108,25 @@ class OeplProtocol {
 
   static int dataVersion(List<int> payload) => crc32(frameWithHeader(payload));
 
-  // ------------------------------------------------------ data info cmd ----
-
   static Uint8List dataInfoCommand({
     required int version,
     required int size,
     required int dataType,
   }) {
     final b = ByteData(17);
-    b.setUint8(0, 0xFF); // checksum placeholder
-    b.setUint32(1, version, Endian.little); // 64-bit LE version, high half = 0
+    b.setUint8(0, 0xFF);
+    b.setUint32(1, version, Endian.little);
     b.setUint32(5, 0, Endian.little);
     b.setUint32(9, size, Endian.little);
     b.setUint8(13, dataType);
-    b.setUint8(14, 0); // data type argument
-    b.setUint16(15, 0, Endian.little); // next check-in
+    b.setUint8(14, 0);
+    b.setUint16(15, 0, Endian.little);
     return command(cmdDataInfo, b.buffer.asUint8List());
   }
-
-  // -------------------------------------------------------------- blocks ----
 
   static int blockCount(int payloadLength) =>
       (payloadLength + blockDataSize - 1) ~/ blockDataSize;
 
-  /// Splits one 4 KiB block of [payload] into ready-to-send 0x0065 commands.
   static List<Uint8List> buildBlockParts(Uint8List payload, int blockId) {
     final start = blockId * blockDataSize;
     final end = min(start + blockDataSize, payload.length);
@@ -173,15 +152,6 @@ class OeplProtocol {
     return parts;
   }
 
-  // --------------------------------------------------------------- image ----
-
-  /// Packs [image] into the badge bit planes (MSB first, row-major, no row
-  /// padding):
-  ///   white  -> plane1 0, plane2 0
-  ///   black  -> plane1 1, plane2 0
-  ///   red    -> plane1 0, plane2 1
-  ///   yellow -> plane1 1, plane2 1
-  /// Plane 2 is only emitted when the panel has a red and/or yellow channel.
   static Uint8List encodePlanes(
     img.Image image, {
     required bool hasRed,
@@ -218,8 +188,6 @@ class OeplProtocol {
       }
     }
 
-    // The web uploader inverts a zero-filled partial last byte, so the unused
-    // trailing bits of plane 1 end up as 1.
     final rem = total & 7;
     if (rem != 0) plane1[planeLen - 1] |= 0xFF >> rem;
 
@@ -230,7 +198,6 @@ class OeplProtocol {
         .takeBytes();
   }
 
-  /// Builds what gets sent through the block protocol plus its data type.
   static ({Uint8List payload, int dataType}) buildPayload(
     img.Image image, {
     required bool hasRed,
@@ -255,7 +222,7 @@ class OeplProtocol {
       (w >> 8) & 0xFF,
       h & 0xFF,
       (h >> 8) & 0xFF,
-      colored ? 2 : 1, // number of planes
+      colored ? 2 : 1,
     ]);
 
     final raw = (BytesBuilder(copy: false)
@@ -263,11 +230,8 @@ class OeplProtocol {
           ..add(planes))
         .takeBytes();
 
-    // 4 KiB window: the firmware inflates with a small dictionary.
     final deflated = ZLibEncoder(level: 9, windowBits: 12).convert(raw);
 
-    // The size prefix is the size of the planes, NOT including the 6-byte
-    // header (same as the web uploader).
     final out = Uint8List(4 + deflated.length);
     ByteData.view(out.buffer).setUint32(0, planes.length, Endian.little);
     out.setRange(4, out.length, deflated);
@@ -275,9 +239,6 @@ class OeplProtocol {
     return (payload: out, dataType: typeCompressed);
   }
 
-  /// The badge reports its native canvas size, which is usually the portrait
-  /// version of what the app edits (e.g. 128x296 vs 296x128). Rotates when the
-  /// sizes are swapped and refuses anything else.
   static img.Image adaptToDisplay(
     img.Image image,
     int width,
