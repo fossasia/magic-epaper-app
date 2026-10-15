@@ -3,6 +3,10 @@ import 'dart:math' show min;
 import 'dart:typed_data';
 
 import 'package:image/image.dart' as img;
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
+
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 class OeplException implements Exception {
   OeplException(this.message);
@@ -250,8 +254,12 @@ class OeplProtocol {
       return img.copyRotate(image, angle: quarterTurns == 3 ? 270 : 90);
     }
     throw OeplException(
-      'Size mismatch: the badge is ${width}x$height but the image is '
-      '${image.width}x${image.height}. Pick the model that matches your badge.',
+      appLocalizations.oeplSizeMismatch(
+        width,
+        height,
+        image.width,
+        image.height,
+      ),
     );
   }
 }

@@ -3,9 +3,13 @@ import 'dart:math' show min;
 import 'dart:typed_data';
 
 import 'package:image/image.dart' as img;
+import 'package:magicepaperapp/l10n/app_localizations.dart';
+import 'package:magicepaperapp/provider/getitlocator.dart';
 import 'package:universal_ble/universal_ble.dart';
 
 import 'oepl_protocol.dart';
+
+AppLocalizations get appLocalizations => getIt.get<AppLocalizations>();
 
 typedef OeplProgressCallback = void Function(double? progress, String status);
 
@@ -129,10 +133,7 @@ class OeplBleClient {
 
     final services = await UniversalBle.discoverServices(deviceId);
     if (!services.any((s) => _isOeplUuid(s.uuid))) {
-      throw OeplException(
-        'This device does not expose the OEPL service (0x1337). '
-        'Is it running ATC_BLE_OEPL?',
-      );
+      throw OeplException(appLocalizations.oeplServiceNotFound);
     }
 
     _valueSub = UniversalBle.characteristicValueStream(
@@ -150,7 +151,7 @@ class OeplBleClient {
 
   void _handleDisconnect() {
     _disconnected = true;
-    _session?.fail(OeplException('The badge disconnected.'));
+    _session?.fail(OeplException(appLocalizations.oeplBadgeDisconnected));
     _infoCompleter?.complete(null);
     _infoCompleter = null;
   }
@@ -170,16 +171,19 @@ class OeplBleClient {
     }
   }
 
-  void abort() => _session?.fail(OeplException('Transfer cancelled.'));
+  void abort() =>
+      _session?.fail(OeplException(appLocalizations.oeplTransferCancelled));
 
   void _requireConnected() {
-    if (!isConnected) throw OeplException('Not connected to a badge.');
+    if (!isConnected) {
+      throw OeplException(appLocalizations.oeplNotConnectedToBadge);
+    }
   }
 
   Future<void> _send(Uint8List data) async {
     final id = _deviceId;
     if (id == null || _disconnected) {
-      throw OeplException('Not connected to a badge.');
+      throw OeplException(appLocalizations.oeplNotConnectedToBadge);
     }
     await UniversalBle.write(
       id,
@@ -218,7 +222,7 @@ class OeplBleClient {
     Duration inactivityTimeout = const Duration(seconds: 30),
   }) async {
     _requireConnected();
-    onProgress?.call(null, 'Encoding image…');
+    onProgress?.call(null, appLocalizations.oeplEncodingImage);
 
     final built = OeplProtocol.buildPayload(
       image,
@@ -240,7 +244,7 @@ class OeplBleClient {
         size: built.payload.length,
         dataType: built.dataType,
       ));
-      onProgress?.call(0, 'Waiting for the badge…');
+      onProgress?.call(0, appLocalizations.oeplWaitingForBadge);
       return await session.completer.future;
     } finally {
       _watchdog?.cancel();
@@ -253,7 +257,7 @@ class OeplBleClient {
     final session = _session;
     if (session == null) return;
     _watchdog = Timer(_inactivityTimeout, () {
-      session.fail(OeplException('The badge stopped responding.'));
+      session.fail(OeplException(appLocalizations.oeplBadgeStoppedResponding));
     });
   }
 
@@ -297,7 +301,8 @@ class OeplBleClient {
       case OeplProtocol.evtAlreadyPresent:
         await _finish(OeplUploadResult.alreadyPresent);
       case OeplProtocol.evtError:
-        _session?.fail(OeplException('The badge rejected the command.'));
+        _session
+            ?.fail(OeplException(appLocalizations.oeplBadgeRejectedCommand));
       default:
         _log('Unhandled notification 0x${cmd.toRadixString(16)}');
     }
@@ -307,14 +312,18 @@ class OeplBleClient {
     final s = _session;
     if (s == null) return;
     if (payload.length < 11) {
-      s.fail(OeplException('Malformed block request from the badge.'));
+      s.fail(OeplException(appLocalizations.oeplMalformedBlockRequest));
       return;
     }
 
     final blockId = payload[9];
     final blocks = OeplProtocol.blockCount(s.payload.length);
     if (blockId >= blocks) {
-      s.fail(OeplException('The badge asked for block $blockId of $blocks.'));
+      s.fail(
+        OeplException(
+          appLocalizations.oeplInvalidBlockRequested(blockId, blocks),
+        ),
+      );
       return;
     }
 
@@ -322,7 +331,10 @@ class OeplBleClient {
     s.partErrors = 0;
     s.partIndex = 0;
     s.parts = OeplProtocol.buildBlockParts(s.payload, blockId);
-    _reportProgress(s, 'Sending block ${blockId + 1}/$blocks…');
+    _reportProgress(
+      s,
+      appLocalizations.oeplSendingBlock(blockId + 1, blocks),
+    );
 
     await _send(OeplProtocol.command(OeplProtocol.cmdTransferStart));
     await Future<void>.delayed(const Duration(milliseconds: 50));
@@ -336,7 +348,10 @@ class OeplBleClient {
     s.partIndex++;
     s.partErrors = 0;
     final blocks = OeplProtocol.blockCount(s.payload.length);
-    _reportProgress(s, 'Sending block ${s.blockId + 1}/$blocks…');
+    _reportProgress(
+      s,
+      appLocalizations.oeplSendingBlock(s.blockId + 1, blocks),
+    );
 
     if (s.partIndex < s.parts.length) {
       await _send(s.parts[s.partIndex]);
@@ -349,7 +364,9 @@ class OeplBleClient {
 
     s.partErrors++;
     if (s.partErrors > _maxPartRetries) {
-      s.fail(OeplException('Too many transmission errors.'));
+      s.fail(
+        OeplException(appLocalizations.oeplTooManyTransmissionErrors),
+      );
       return;
     }
     _log('Part ${s.partIndex} of block ${s.blockId} failed, retrying '
