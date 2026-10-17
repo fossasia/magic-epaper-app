@@ -5,6 +5,7 @@ enum Brand {
   goodisplay,
   waveshare,
   santek,
+  openEpaperLink,
 }
 
 extension BrandLabel on Brand {
@@ -18,6 +19,8 @@ extension BrandLabel on Brand {
         return l.brandWaveshare;
       case Brand.santek:
         return l.brandSantek;
+      case Brand.openEpaperLink:
+        return l.brandOpenEpaperLink;
     }
   }
 }
