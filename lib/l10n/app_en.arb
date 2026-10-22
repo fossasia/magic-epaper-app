@@ -1332,6 +1332,7 @@
   "brandGoodisplay": "GoodDisplay",
   "brandWaveshare": "Waveshare",
   "brandSantek": "Santek",
+  "brandOpenEpaperLink": "OpenEpaperLink",
   "sortBy": "Sort by",
   "sortDefault": "Default",
   "sortNameAsc": "Name (A-Z)",
@@ -1349,5 +1350,75 @@
   "sketchFilterGenerating": "Generating sketch...",
   "sketchFilterError": "Failed to apply sketch filter",
   "filters": "Filters",
-  "betaDisplays": "Beta"
+  "betaDisplays": "Beta",
+  "rescan": "Scan again",
+  "tryAgain": "Try again",
+  "oeplScanning": "Looking for badges named ATC_…",
+  "oeplNoBadgeFound": "No badge found yet. Make sure it is powered on and close to the phone.",
+  "oeplSelectBadge": "Select your badge",
+  "oeplBluetoothOff": "Bluetooth is off, unsupported or not authorized.",
+  "oeplImageSent": "Image sent. The badge refreshes its screen now, this can take a few seconds.",
+  "oeplImageAlreadyPresent": "The badge already shows this exact image, so it was not refreshed.",
+  "oeplConnectingToDevice": "Connecting to {deviceName}…",
+  "@oeplConnectingToDevice": {
+    "description": "Status message while connecting to an OEPL BLE device",
+    "placeholders": {
+      "deviceName": {
+        "type": "String"
+      }
+    }
+  },
+  "oeplReadingDisplayInfo": "Reading display info…",
+  "oeplServiceNotFound": "This device does not expose the OEPL service (0x1337). Is it running ATC_BLE_OEPL?",
+  "oeplBadgeDisconnected": "The badge disconnected.",
+  "oeplTransferCancelled": "Transfer cancelled.",
+  "oeplNotConnectedToBadge": "Not connected to a badge.",
+  "oeplEncodingImage": "Encoding image…",
+  "oeplWaitingForBadge": "Waiting for the badge…",
+  "oeplBadgeStoppedResponding": "The badge stopped responding.",
+  "oeplBadgeRejectedCommand": "The badge rejected the command.",
+  "oeplMalformedBlockRequest": "Malformed block request from the badge.",
+  "oeplInvalidBlockRequested": "The badge asked for block {blockId} of {blocks}.",
+  "@oeplInvalidBlockRequested": {
+    "description": "Error message when OEPL badge requests an invalid block index",
+    "placeholders": {
+      "blockId": {
+        "type": "int"
+      },
+      "blocks": {
+        "type": "int"
+      }
+    }
+  },
+  "oeplSendingBlock": "Sending block {current}/{total}…",
+  "@oeplSendingBlock": {
+    "description": "Progress message when sending a data block to OEPL badge",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "oeplTooManyTransmissionErrors": "Too many transmission errors.",
+  "oeplSizeMismatch": "Size mismatch: the badge is {badgeWidth}x{badgeHeight} but the image is {imageWidth}x{imageHeight}. Pick the model that matches your badge.",
+  "@oeplSizeMismatch": {
+    "description": "Error message when image size does not match OEPL badge display size",
+    "placeholders": {
+      "badgeWidth": {
+        "type": "int"
+      },
+      "badgeHeight": {
+        "type": "int"
+      },
+      "imageWidth": {
+        "type": "int"
+      },
+      "imageHeight": {
+        "type": "int"
+      }
+    }
+  }
 }
