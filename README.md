@@ -82,6 +82,10 @@ The Magic ePaper badge is still a **prototype** and is not on general sale yet. 
 
 Read and write NDEF tags (text, URLs, vCards) from the side menu, and use the Command Console to send raw hex/APDU commands to a tag.
 
+**Sketch filter:** in the image editor, open **Adjust Image** and toggle **Sketch filter** to convert a photo to a pencil-sketch style before dithering.
+
+**OCR scan:** in the canvas editor, tap the **Scan** button in the toolbar to photograph printed text or a business card and insert the recognised text directly into the canvas.
+
 ## Permissions
 
 | Permission | Purpose |
@@ -104,6 +108,8 @@ Read and write NDEF tags (text, URLs, vCards) from the side menu, and use the Co
     <td><img src="./assets/docs/screenshots/custom-display.jpeg" width="250"/></td>
     <td><img src="./assets/docs/screenshots/transfer.jpeg" width="250"/></td>
     <td><img src="./assets/docs/screenshots/badge.jpeg" width="250"/></td>
+  </tr>
+  <tr>
     <td><img src="./assets/docs/screenshots/santek-epaper.jpeg" width="250" alt="Santek EZ Sign 2.13 inch e-paper badge displaying a geometric pattern"/></td>
   </tr>
 </table>
@@ -223,7 +229,7 @@ Opening this repository in VS Code, GitHub Codespaces or another supported edito
 
 **USB pass-through (entirely inside the container)**
 
-> **Windows** and **macOS** need a working **USB/IP** setup. See the [Docker Desktop documentation](https://docs.docker.com/desktop/features/usbip/) and this [blog post](https://blog.golioth.io/usb-docker-windows-macos/).
+> **Windows** and **macOS** need a working **USB/IP** setup. See the [Docker Desktop documentation](https://docs.docker.com/desktop/features/usbip/) and [this blog post](https://blog.golioth.io/usb-docker-windows-macos/).
 
 The Dev Container bind-mounts `/dev/bus/usb/` and sets the correct access controls. Enable [USB debugging](https://developer.android.com/tools/adb#Enabling) on your phone and run `adb devices`; if it shows up, run `flutter run` to push a development build to your device.
 
