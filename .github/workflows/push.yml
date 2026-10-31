@@ -331,7 +331,7 @@ jobs:
           echo "${{ needs.common.outputs.VERSION_CODE }}" > ./versionCode.txt
           git clone --branch=app https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.repository }} app
           
-          gh release upload ${{ steps.run-release-drafter.outputs.tag_name }} app/magic-epaper-main-release.apk ./versionCode.txt --clobber
+          gh release upload ${{ steps.run-release-drafter.outputs.tag_name }} app/magic-epaper-main-arm64-v8a-release.apk ./versionCode.txt --clobber
 
   screenshots-android:
     name: Screenshots (Android)

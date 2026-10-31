@@ -47,9 +47,23 @@ runs:
         VERSION_NAME: ${{inputs.VERSION_NAME}}
         VERSION_CODE: ${{inputs.VERSION_CODE}}
       run: |
-        flutter build apk --debug --build-name $VERSION_NAME --build-number $VERSION_CODE
-        flutter build apk --build-name $VERSION_NAME --build-number $VERSION_CODE
-        flutter build appbundle --build-name $VERSION_NAME --build-number $VERSION_CODE
+        flutter build apk \
+          --debug \
+          --build-name $VERSION_NAME \
+          --build-number $VERSION_CODE
+        flutter build apk \
+          --build-name $VERSION_NAME \
+          --build-number $VERSION_CODE \
+          --obfuscate \
+          --split-debug-info=./debug-symbols \
+          --target-platform android-arm64 \
+          --split-per-abi
+        flutter build appbundle \
+          --build-name $VERSION_NAME \
+          --build-number $VERSION_CODE \
+          --obfuscate \
+          --split-debug-info=./debug-symbols \
+          --target-platform android-arm64
 
     - name: Store APK file
       uses: actions/upload-artifact@v7
