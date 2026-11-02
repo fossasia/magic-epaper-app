@@ -56,8 +56,7 @@ runs:
           --build-number $VERSION_CODE \
           --obfuscate \
           --split-debug-info=./debug-symbols \
-          --target-platform android-arm64 \
-          --split-per-abi
+          --target-platform android-arm64
         flutter build appbundle \
           --build-name $VERSION_NAME \
           --build-number $VERSION_CODE \
