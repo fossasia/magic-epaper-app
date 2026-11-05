@@ -31,7 +31,7 @@ dependencies:
   url_launcher: ^6.3.3
   google_fonts: ^9.0.0
   file_picker: ^13.3.0
-  mobile_scanner: ^7.4.2
+  mobile_scanner: ^7.5.0
   barcode_widget: ^2.0.4
   google_mlkit_text_recognition: ^0.17.1
   currency_picker: ^2.0.21
