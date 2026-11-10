@@ -59,6 +59,7 @@ class _ContactCardFormState extends State<ContactCardForm> {
   };
 
   File? _profileImage;
+  File? _pickedImage;
   bool _isGenerating = false;
   ContactQrMode _qrMode = ContactQrMode.vCard;
 
@@ -90,6 +91,7 @@ class _ContactCardFormState extends State<ContactCardForm> {
 
   @override
   void dispose() {
+    deleteTempImage(_pickedImage);
     _fullNameController.removeListener(_updatePreview);
     _jobTitleController.removeListener(_updatePreview);
     _companyController.removeListener(_updatePreview);
@@ -131,10 +133,16 @@ class _ContactCardFormState extends State<ContactCardForm> {
 
   Future<void> _pickImage() async {
     final picked = await pickAndEditImage(context);
-    if (picked != null && mounted) {
-      _profileImage = picked;
-      _updatePreview();
+    if (picked == null) return;
+    if (!mounted) {
+      deleteTempImage(picked);
+      return;
     }
+    final previous = _pickedImage;
+    _pickedImage = picked;
+    _profileImage = picked;
+    _updatePreview();
+    deleteTempImage(previous);
   }
 
   void _handleEditRequest(String elementId) {

@@ -28,3 +28,12 @@ Future<File?> pickAndEditImage(BuildContext context) async {
   await outFile.writeAsBytes(cropped);
   return outFile;
 }
+
+Future<void> deleteTempImage(File? file) async {
+  if (file == null) return;
+  try {
+    if (await file.exists()) await file.delete();
+  } on FileSystemException catch (e) {
+    debugPrint('Could not delete temporary image ${file.path}: $e');
+  }
+}
