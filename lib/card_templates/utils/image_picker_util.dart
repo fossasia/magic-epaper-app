@@ -6,6 +6,7 @@ import 'package:magicepaperapp/utils/image_source_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 final ImagePicker _picker = ImagePicker();
+int _cropCounter = 0;
 
 Future<File?> pickAndEditImage(BuildContext context) async {
   final source = await chooseImageSource(context);
@@ -23,7 +24,7 @@ Future<File?> pickAndEditImage(BuildContext context) async {
   final dir = await getTemporaryDirectory();
   await dir.create(recursive: true);
   final outFile = File(
-    '${dir.path}/mep_crop_${DateTime.now().microsecondsSinceEpoch}.png',
+    '${dir.path}/mep_crop_${DateTime.now().microsecondsSinceEpoch}_${_cropCounter++}.png',
   );
   await outFile.writeAsBytes(cropped);
   return outFile;
