@@ -49,6 +49,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
   };
 
   File? _profileImage;
+  File? _pickedImage;
   bool _isGenerating = false;
 
   late EventBadgeModel _badgeData;
@@ -75,6 +76,7 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
 
   @override
   void dispose() {
+    deleteTempImage(_pickedImage);
     _eventNameController.removeListener(_updatePreview);
     _attendeeNameController.removeListener(_updatePreview);
     _roleController.removeListener(_updatePreview);
@@ -111,10 +113,16 @@ class _EventBadgeFormState extends State<EventBadgeForm> {
 
   Future<void> _pickImage() async {
     final picked = await pickAndEditImage(context);
-    if (picked != null && mounted) {
-      _profileImage = picked;
-      _updatePreview();
+    if (picked == null) return;
+    if (!mounted) {
+      deleteTempImage(picked);
+      return;
     }
+    final previous = _pickedImage;
+    _pickedImage = picked;
+    _profileImage = picked;
+    _updatePreview();
+    deleteTempImage(previous);
   }
 
   void _handleEditRequest(String elementId) {
