@@ -28,7 +28,10 @@ Future<void> _expectNoCrashWhenDisposedDuringEdit(
 
   await tester.pumpWidget(
     MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: <LocalizationsDelegate<dynamic>>[
+        AppLocalizations.delegate,
+        ...GlobalMaterialLocalizations.delegates,
+      ],
       supportedLocales: AppLocalizations.supportedLocales,
       navigatorObservers: <NavigatorObserver>[recorder],
       home: Builder(

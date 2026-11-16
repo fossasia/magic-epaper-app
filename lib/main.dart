@@ -1,8 +1,4 @@
-import 'package:cupertino_ui/cupertino_ui.dart'
-    show GlobalCupertinoLocalizations;
-import 'package:flutter_localizations/flutter_localizations.dart'
-    as flutter_localizations;
-import 'package:material_ui/material_ui.dart';
+  import 'package:material_ui/material_ui.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:magicepaperapp/provider/getitlocator.dart';
@@ -61,9 +57,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           localizationsDelegates: <LocalizationsDelegate<dynamic>>[
             AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            flutter_localizations.GlobalWidgetsLocalizations.delegate,
+            ...GlobalMaterialLocalizations.delegates,
           ],
           supportedLocales: AppLocalizations.supportedLocales,
           locale: localeProvider.locale,
