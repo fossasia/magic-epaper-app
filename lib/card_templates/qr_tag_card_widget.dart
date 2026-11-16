@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:magicepaperapp/card_templates/qr_tag_badge.dart';
 import 'package:magicepaperapp/card_templates/qr_tag_model.dart';
 import 'package:magicepaperapp/constants/dimens.dart';

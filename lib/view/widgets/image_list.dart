@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/image_library/services/image_filter_helper.dart';
 import 'package:magicepaperapp/utils/epd/display_device.dart';

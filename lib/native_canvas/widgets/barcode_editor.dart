@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
 import 'package:barcode_widget/barcode_widget.dart';

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/santek/widgets/santek_transfer_dialog.dart';

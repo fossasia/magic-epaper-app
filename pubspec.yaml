@@ -8,7 +8,7 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=3.3.4 <4.0.0"
-  flutter: '3.47.9'
+  flutter: '3.50.0'
 
 dependencies:
   flutter:
@@ -47,6 +47,8 @@ dependencies:
     path: rust_builder
   flutter_rust_bridge: 2.13.0
   universal_ble: ^3.2.0
+  material_ui: any
+  cupertino_ui: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:magicepaperapp/theme/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';

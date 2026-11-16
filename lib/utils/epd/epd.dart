@@ -1,5 +1,5 @@
 import 'package:image/image.dart' as img;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 import 'package:magicepaperapp/utils/epd/display_device.dart';
 import 'package:magicepaperapp/utils/epd/driver/waveform.dart';

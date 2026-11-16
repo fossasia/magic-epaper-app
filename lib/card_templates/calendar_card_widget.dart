@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:magicepaperapp/card_templates/calendar_model.dart';
 import 'package:magicepaperapp/theme/colors.dart';
