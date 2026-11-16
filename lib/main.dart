@@ -1,3 +1,7 @@
+import 'package:cupertino_ui/cupertino_ui.dart'
+    show GlobalCupertinoLocalizations;
+import 'package:flutter_localizations/flutter_localizations.dart'
+    as flutter_localizations;
 import 'package:material_ui/material_ui.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';
@@ -55,7 +59,12 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Magic ePaper',
           debugShowCheckedModeBanner: false,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: <LocalizationsDelegate<dynamic>>[
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            flutter_localizations.GlobalWidgetsLocalizations.delegate,
+          ],
           supportedLocales: AppLocalizations.supportedLocales,
           locale: localeProvider.locale,
           builder: (context, child) {
