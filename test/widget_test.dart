@@ -8,7 +8,7 @@
 // Visit https://flutter.dev/to/widget-testing for
 // more information about Widget testing.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

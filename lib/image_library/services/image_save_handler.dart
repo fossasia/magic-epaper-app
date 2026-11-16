@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/image_library/image_library.dart';
 import 'package:magicepaperapp/image_library/provider/image_library_provider.dart';

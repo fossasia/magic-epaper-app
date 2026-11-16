@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:magicepaperapp/card_templates/card_template_result.dart';
 import 'package:magicepaperapp/card_templates/qr_tag_badge.dart';
 import 'package:magicepaperapp/card_templates/qr_tag_card_widget.dart';

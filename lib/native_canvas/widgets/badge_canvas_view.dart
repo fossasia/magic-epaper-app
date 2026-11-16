@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:magicepaperapp/native_canvas/models/canvas_element.dart';
 import 'package:magicepaperapp/native_canvas/widgets/editable_element.dart';
 

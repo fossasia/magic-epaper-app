@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:barcode_widget/barcode_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:magicepaperapp/native_canvas/models/canvas_document.dart';
 import 'package:magicepaperapp/native_canvas/models/canvas_element.dart';

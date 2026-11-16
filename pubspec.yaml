@@ -47,6 +47,7 @@ dependencies:
     path: rust_builder
   flutter_rust_bridge: 2.13.0
   universal_ble: ^3.2.0
+  material_ui: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

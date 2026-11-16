@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:barcode_widget/barcode_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:magicepaperapp/card_templates/restaurant_menu_model.dart';
 import 'package:magicepaperapp/theme/colors.dart';

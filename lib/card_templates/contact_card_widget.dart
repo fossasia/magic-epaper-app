@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:magicepaperapp/card_templates/contact_card_badge.dart';
 import 'package:magicepaperapp/card_templates/contact_card_model.dart';
 import 'package:magicepaperapp/constants/dimens.dart';

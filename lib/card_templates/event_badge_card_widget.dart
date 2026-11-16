@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:magicepaperapp/card_templates/event_badge_model.dart';
 import 'package:magicepaperapp/card_templates/template_card_preview.dart';
 import 'package:magicepaperapp/l10n/app_localizations.dart';

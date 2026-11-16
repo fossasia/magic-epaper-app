@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:magicepaperapp/utils/epd/configurable_editor.dart';
 import 'package:magicepaperapp/utils/epd/display_device.dart';
 import 'package:magicepaperapp/utils/epd/gdey037z03.dart';

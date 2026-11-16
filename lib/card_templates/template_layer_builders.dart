@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:barcode_widget/barcode_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:magicepaperapp/card_templates/contact_card_model.dart';
 import 'package:magicepaperapp/card_templates/employee_id_model.dart';
 import 'package:magicepaperapp/card_templates/entry_pass_tag_model.dart';

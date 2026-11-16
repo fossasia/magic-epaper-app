@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:magicepaperapp/card_templates/utils/image_picker_util.dart';
 import 'package:magicepaperapp/card_templates/employee_id_card_widget.dart';
 import 'package:magicepaperapp/card_templates/employee_id_model.dart';

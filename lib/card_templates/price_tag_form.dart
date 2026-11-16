@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:currency_picker/currency_picker.dart';
 import 'package:magicepaperapp/card_templates/utils/image_picker_util.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';

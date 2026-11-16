@@ -1,5 +1,5 @@
 import 'package:magicepaperapp/view/widgets/navigation_drawer.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:magicepaperapp/constants/color_constants.dart';
 
 class CommonScaffold extends StatelessWidget {

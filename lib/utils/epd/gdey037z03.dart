@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:magicepaperapp/constants/asset_paths.dart';
 import 'package:magicepaperapp/utils/epd/driver/uc8253.dart';
 import 'package:magicepaperapp/utils/image_processing/image_processing.dart';

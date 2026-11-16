@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:image/image.dart' as img;
 import 'package:magicepaperapp/utils/epd/driver/waveform.dart';
 import 'package:magicepaperapp/utils/image_processing/image_processing.dart';
