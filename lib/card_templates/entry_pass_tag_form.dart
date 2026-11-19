@@ -48,6 +48,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
   };
 
   File? _profileImage;
+  File? _pickedImage;
   bool _isGenerating = false;
 
   late EntryPassTagModel _passData;
@@ -74,6 +75,7 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
 
   @override
   void dispose() {
+    deleteTempImage(_pickedImage);
     _venueNameController.removeListener(_updatePreview);
     _visitorNameController.removeListener(_updatePreview);
     _passTypeController.removeListener(_updatePreview);
@@ -110,10 +112,16 @@ class _EntryPassTagFormState extends State<EntryPassTagForm> {
 
   Future<void> _pickImage() async {
     final picked = await pickAndEditImage(context);
-    if (picked != null && mounted) {
-      _profileImage = picked;
-      _updatePreview();
+    if (picked == null) return;
+    if (!mounted) {
+      deleteTempImage(picked);
+      return;
     }
+    final previous = _pickedImage;
+    _pickedImage = picked;
+    _profileImage = picked;
+    _updatePreview();
+    deleteTempImage(previous);
   }
 
   Future<void> _scanQrData() async {

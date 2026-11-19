@@ -50,6 +50,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
   };
 
   File? _profileImage;
+  File? _pickedImage;
   bool _isGenerating = false;
 
   late EmployeeIdModel _employeeData;
@@ -76,6 +77,7 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
 
   @override
   void dispose() {
+    deleteTempImage(_pickedImage);
     _companyNameController.removeListener(_updatePreview);
     _nameController.removeListener(_updatePreview);
     _idNumberController.removeListener(_updatePreview);
@@ -112,10 +114,16 @@ class _EmployeeIdFormState extends State<EmployeeIdForm> {
 
   Future<void> _pickImage() async {
     final picked = await pickAndEditImage(context);
-    if (picked != null && mounted) {
-      _profileImage = picked;
-      _updatePreview();
+    if (picked == null) return;
+    if (!mounted) {
+      deleteTempImage(picked);
+      return;
     }
+    final previous = _pickedImage;
+    _pickedImage = picked;
+    _profileImage = picked;
+    _updatePreview();
+    deleteTempImage(previous);
   }
 
   void _handleEditRequest(String elementId) {
