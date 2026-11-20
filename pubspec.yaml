@@ -48,7 +48,7 @@ dependencies:
   flutter_rust_bridge: 2.13.0
   universal_ble: ^3.3.0
   material_ui: 1.11.1
-  cupertino_ui: any
+  cupertino_ui: 1.1.7
 dev_dependencies:
   flutter_test:
     sdk: flutter
