@@ -47,7 +47,7 @@ dependencies:
     path: rust_builder
   flutter_rust_bridge: 2.13.0
   universal_ble: ^3.3.0
-  material_ui: any
+  material_ui: 1.11.1
   cupertino_ui: any
 dev_dependencies:
   flutter_test:
