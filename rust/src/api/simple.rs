@@ -513,7 +513,10 @@ pub fn apply_sketch_filter_rust(
         .map_err(|e| format!("Inference failed: {}", e))?;
 
     let out_tensor = outputs.remove(0).into_tensor();
-    let output_data = out_tensor.as_slice::<f32>()
+    let output_data = out_tensor
+        .try_as_plain_ram()
+        .map_err(|e| format!("Failed to access tensor data: {}", e))?
+        .as_slice::<f32>()
         .map_err(|e| format!("Failed to extract tensor data: {}", e))?;
     let mut raw: Vec<u8> = Vec::with_capacity(w * h * 4);
     for y in 0..h {
