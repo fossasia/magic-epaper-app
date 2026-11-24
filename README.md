@@ -1,6 +1,8 @@
-<img height="200px" src="./assets/icons/app_icon_desktop.png" align="right" />
+<p align="center">
+  <img height="200px" src="./assets/icons/app_icon_desktop.png" alt="Magic ePaper app icon" />
+</p>
 
-# Magic ePaper
+<h1 align="center">Magic ePaper</h1>
 
 [![Build](https://img.shields.io/github/actions/workflow/status/fossasia/magic-epaper-app/push.yml?branch=main&label=build&logo=github)](https://github.com/fossasia/magic-epaper-app/actions/workflows/push.yml)
 [![License](https://img.shields.io/github/license/fossasia/magic-epaper-app)](LICENSE.md)
