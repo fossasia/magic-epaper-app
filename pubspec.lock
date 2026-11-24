@@ -390,10 +390,10 @@ packages:
     dependency: "direct main"
     description:
       name: fluttertoast
-      sha256: a5c39007e19fff5eeb7810d5be651c02bb5a1c06104bdd203b037bbfe49bd827
+      sha256: af237c0801b908200f5069835009fb4b95e548e1878b2202ab5627c9555a39af
       url: "https://pub.dev"
     source: hosted
-    version: "10.0.2"
+    version: "10.0.3"
   fuchsia_remote_debug_protocol:
     dependency: transitive
     description: flutter
