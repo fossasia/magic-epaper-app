@@ -13,6 +13,7 @@ import 'package:magicepaperapp/utils/epd/goodisplay_3color.dart';
 import 'package:magicepaperapp/utils/epd/goodisplay_4color.dart';
 import 'package:magicepaperapp/utils/epd/santek_displays.dart';
 import 'package:magicepaperapp/utils/epd/waveshare_displays.dart';
+import 'package:magicepaperapp/vidabay/vidabay_display.dart';
 import 'package:magicepaperapp/view/image_editor.dart';
 import 'package:magicepaperapp/view/widgets/common_scaffold_widget.dart';
 import 'package:magicepaperapp/view/widgets/display_card.dart';
@@ -138,6 +139,7 @@ class _DisplaySelectionScreenState extends State<DisplaySelectionScreen> {
     GDEM0154F51H(),
     GDEM037F52(),
     GDEM042F52(),
+    VidabaySnap(),
     GDEQ031T10(),
     Gdey037z03BW(),
     Gdey037z03(),

@@ -6,6 +6,7 @@ enum Brand {
   waveshare,
   santek,
   openEpaperLink,
+  vidabay,
 }
 
 extension BrandLabel on Brand {
@@ -21,6 +22,8 @@ extension BrandLabel on Brand {
         return l.brandSantek;
       case Brand.openEpaperLink:
         return l.brandOpenEpaperLink;
+      case Brand.vidabay:
+        return l.brandVidabay;
     }
   }
 }
