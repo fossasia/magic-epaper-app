@@ -48,7 +48,7 @@ runs:
 
     - name: Install create-dmg
       shell: bash
-      run: brew install create-dmg
+      run: brew list create-dmg >/dev/null 2>&1 || brew install create-dmg
 
     - name: Create DMG Archive
       shell: bash

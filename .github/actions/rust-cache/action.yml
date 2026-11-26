@@ -11,6 +11,6 @@ runs:
           ~/.cargo/git
           ~/.rustup/toolchains
           ~/.rustup/update
-        key: ${{ runner.os }}-${{ runner.arch }}-${{ github.job }}-rust-${{ hashFiles('rust/Cargo.lock', 'rust/Cargo.toml') }}
+        key: ${{ runner.os }}-${{ runner.arch }}-rust-${{ hashFiles('rust/Cargo.lock', 'rust/Cargo.toml') }}
         restore-keys: |
-          ${{ runner.os }}-${{ runner.arch }}-${{ github.job }}-rust-
+          ${{ runner.os }}-${{ runner.arch }}-rust-
