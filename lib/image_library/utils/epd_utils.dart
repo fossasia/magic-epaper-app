@@ -6,10 +6,12 @@ import 'package:magicepaperapp/utils/epd/gdey037z03bw.dart';
 import 'package:magicepaperapp/utils/epd/waveshare_displays.dart';
 import 'package:magicepaperapp/utils/epd/gdeq031t10.dart';
 import 'package:magicepaperapp/utils/epd/santek_displays.dart';
+import 'package:magicepaperapp/vidabay/vidabay_display.dart';
 
 class EpdUtils {
   static final List<DisplayDevice Function()> _deviceFactories = [
     () => SantekEzSign2in13(),
+    () => VidabaySnap(),
     () => Gdey037z03(),
     () => Gdey037z03BW(),
     () => GDEQ031T10(),
