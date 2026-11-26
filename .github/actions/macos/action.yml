@@ -15,15 +15,27 @@ runs:
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        cache: false # TODO set to <true> after https://github.com/actions/runner/issues/449 is fixed
+        cache: true
         flutter-version-file: pubspec.yaml
+
+    - name: Cache CocoaPods
+      uses: actions/cache@v6
+      with:
+        path: |
+          macos/Pods
+          ~/Library/Caches/CocoaPods
+          ~/.cocoapods
+        key: ${{ runner.os }}-cocoapods-${{ hashFiles('macos/Podfile', 'pubspec.lock') }}
+
+    - name: Cache Rust
+      uses: ./.github/actions/rust-cache
 
     - name: Update Podfile & Dependencies
       shell: bash
       run: |
         cd ./macos
         flutter pub get
-        pod install --repo-update
+        pod install
 
     - name: Build macOS App
       shell: bash

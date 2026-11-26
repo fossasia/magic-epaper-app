@@ -19,6 +19,9 @@ runs:
         cache: true
         flutter-version-file: pubspec.yaml
 
+    - name: Cache Rust
+      uses: ./.github/actions/rust-cache
+
     - name: Install dependencies
       shell: bash
       run: |

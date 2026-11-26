@@ -12,14 +12,27 @@ runs:
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        cache: false
+        cache: true
+        flutter-version-file: pubspec.yaml
+
+    - name: Cache CocoaPods
+      uses: actions/cache@v6
+      with:
+        path: |
+          ios/Pods
+          ~/Library/Caches/CocoaPods
+          ~/.cocoapods
+        key: ${{ runner.os }}-cocoapods-${{ hashFiles('ios/Podfile', 'pubspec.lock') }}
+
+    - name: Cache Rust
+      uses: ./.github/actions/rust-cache
 
     - name: Update Podfile
       shell: bash
       run: |
         cd ./ios
         flutter pub get
-        pod install --repo-update
+        pod install
 
     - name: Create iPhone Simulator
       id: iphone_sim

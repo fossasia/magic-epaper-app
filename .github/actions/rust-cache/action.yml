@@ -1,0 +1,16 @@
+name: "Rust Build Cache"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Cache Rust dependencies and toolchains
+      uses: actions/cache@v6
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          ~/.rustup/toolchains
+          ~/.rustup/update
+        key: ${{ runner.os }}-${{ runner.arch }}-${{ github.job }}-rust-${{ hashFiles('rust/Cargo.lock', 'rust/Cargo.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ runner.arch }}-${{ github.job }}-rust-
