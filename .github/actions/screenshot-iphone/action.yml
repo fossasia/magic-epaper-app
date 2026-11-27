@@ -34,6 +34,10 @@ runs:
         flutter pub get
         pod install
 
+    - name: Build iOS Simulator App
+      shell: bash
+      run: flutter build ios --simulator --debug --no-codesign
+
     - name: Create iPhone Simulator
       id: iphone_sim
       uses: futureware-tech/simulator-action@v6
@@ -44,7 +48,7 @@ runs:
     - name: Capture iPhone Screenshots
       shell: bash
       run: |
-        DEVICE_NAME="${{ inputs.IPHONE_DEVICE_MODEL }}" flutter drive --driver=test_integration/test_driver.dart --target=test_integration/screenshots.dart -d "${{ steps.iphone_sim.outputs.udid }}"
+        DEVICE_NAME="${{ inputs.IPHONE_DEVICE_MODEL }}" flutter drive --use-application-binary=build/ios/iphonesimulator/Runner.app --driver=test_integration/test_driver.dart --target=test_integration/screenshots.dart -d "${{ steps.iphone_sim.outputs.udid }}"
 
     - name: Update Fastlane Metadata
       if: ${{ github.event_name == 'push' }}
