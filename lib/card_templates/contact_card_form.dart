@@ -59,6 +59,8 @@ class _ContactCardFormState extends State<ContactCardForm> {
   };
 
   File? _profileImage;
+  File? _pickedImage;
+  bool _photoReferencedBySavedCard = false;
   bool _isGenerating = false;
   ContactQrMode _qrMode = ContactQrMode.vCard;
 
@@ -90,6 +92,7 @@ class _ContactCardFormState extends State<ContactCardForm> {
 
   @override
   void dispose() {
+    if (!_photoReferencedBySavedCard) deleteTempImage(_pickedImage);
     _fullNameController.removeListener(_updatePreview);
     _jobTitleController.removeListener(_updatePreview);
     _companyController.removeListener(_updatePreview);
@@ -131,10 +134,16 @@ class _ContactCardFormState extends State<ContactCardForm> {
 
   Future<void> _pickImage() async {
     final picked = await pickAndEditImage(context);
-    if (picked != null && mounted) {
-      _profileImage = picked;
-      _updatePreview();
+    if (picked == null) return;
+    if (!mounted) {
+      deleteTempImage(picked);
+      return;
     }
+    final previous = _pickedImage;
+    _pickedImage = picked;
+    _profileImage = picked;
+    _updatePreview();
+    deleteTempImage(previous);
   }
 
   void _handleEditRequest(String elementId) {
@@ -195,6 +204,7 @@ class _ContactCardFormState extends State<ContactCardForm> {
           result,
           metadata: {'contactCard': _contactData.toJson()},
         );
+        _photoReferencedBySavedCard = true;
         if (widget.existingImageId != null) {
           Navigator.of(context).pop(templateResult);
         } else {
